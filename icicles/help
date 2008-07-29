@@ -1,0 +1,604 @@
+[Icicles Help on the Web]                        [Icicles Doc, Part 1]
+[Icicles Options & Faces]                        [Icicles Doc, Part 2]
+
+
+
+ 
+                     Icicles Minibuffer Completion
+                     -----------------------------
+
+Minibuffer input can be completed in several ways.
+These are the main Icicles actions and their minibuffer key bindings:
+
+ * Show this help.                           C-?
+     For help on individual completion candidates, see "Show help on
+     individual completion candidates", below.
+
+ * Abandon or commit your input.
+     Abandon input                           C-g
+     Commit input to Emacs                   RET
+       Complete partial input, then commit   <S-return>
+
+ * Change the set of completion candidates.  Modify your input.
+     Edit your input                         (just edit in minibuffer)
+     Erase your input (clear minibuffer)     M-k
+     Erase input portion that doesn't match  C-M-l
+     Retrieve previous completion inputs     C-l, C-S-l
+     Match another regexp (chaining)         M-*
+     Satisfy another predicate (chaining)    M-&
+     Remove a candidate from set of matches  delete, S-mouse-2
+     Yank text at cursor into minibuffer     M-.
+     Insert text (string) from a variable    C-=
+     Insert `icicle-list-join-string'        C-M-j
+     Insert key description (key completion) M-q
+
+ * Complete your current input in the minibuffer.
+     Apropos (regexp) completion             M-x icicle-apropos-complete
+       Without displaying candidates         <C-M-tab>
+       Complete and match another regexp     S-SPC
+     Prefix completion
+       As much as possible                   TAB
+         Without displaying candidates       <C-M-tab>
+       A word at a time                      M-SPC
+     Complete and commit (if required match) <S-return>
+     Complete search string using past input M-x icicle-apropos-complete
+
+ * Display/navigate completions for current input (in *Completions*).
+     Show completion candidates
+       Prefix completion                     TAB (repeat)
+       Apropos completion                    M-x icicle-apropos-complete
+     Move between minibuffer and list        <C-insert>
+     Cycle among completion candidates       right, left, TAB, <left>
+       Within a *Completions* column         down, up
+     Choose a completion candidate           RET, <mouse-2>
+
+ * Cycle among input candidates.
+     Prefix-completion candidates            down, up
+     Apropos-completion candidates           next, prior
+     Minibuffer history items                M-n, M-p
+     Completion history items                C-l, C-S-l
+
+ * Show help on individual completion candidates.
+     Current candidate                       C-M-RET, C-M-mouse-2
+     Next, previous prefix-match candidate   C-M-down, C-M-up
+     Next, previous apropos-match candidate  C-M-next, C-M-prior
+
+ * Choose a previous input from the minibuffer history.
+     Apropos-complete against history items  M-h, <M-pause>
+     Restrict candidates to history items    <M-pause>
+     List history items first in Completions C-M-,
+     Cycle among minibuffer history items    M-n, M-p
+     Search among minibuffer history items   M-s, M-r
+
+ * Multi-commands: Act on completion candidates.
+   For alternative action, use `C-S-' instead of `C-' (except `C-!').
+     Current candidate                       C-RET, C-mouse-2
+     Next, previous prefix-match candidate   C-down, C-up
+     Next, previous apropos-match candidate  C-next, C-prior
+     All candidates at once
+       Primary action                        C-!
+       Alternative action                    C-S-insert
+     Delete object named by candidate        S-delete
+     Remove candidate from set of matches    delete, S-mouse-2
+     Save candidate (add to those saved)     insert, M-S-mouse-2
+     Object-action: apply a fn to candidate  M-RET
+
+ * Search and replace (e.g. `C-`').
+     Use alternative action keys (prefix `C-S-') to navigate.
+     Toggle input highlighting at all hits   C-^
+     Toggle whole-word searching             M-q
+     Toggle escaping of special regexp chars C-`
+     Toggle removal of search highlighting   C-.
+
+     Replace all                             C-S-insert
+     Redefine the replacement string         M-,
+     Toggle literal replacement              C-M-`
+     Toggle replacement of whole search hit  C-,
+     Toggle replacement of common match      C-M-|
+
+ * Perform set operations on candidate sets.
+     Remove candidate from current set       delete, S-mouse-2
+     Add current candidate to saved set      insert, M-S-mouse-2
+     Save candidates in current set to...
+       `icicle-saved-completion-candidates'  C-M->
+       another variable                      C-M-}
+       a cache file                          C-}
+     Retrieve saved set from...
+       `icicle-saved-completion-candidates'  C-M-<
+       another variable                      C-M-{
+       a cache file                          C-{
+     Add candidates in current set           C->
+     Save, add selected candidates (region)  C-M-), C-)
+     Add new or update existing saved set
+       M-x icicle-add/update-saved-completion-set
+     Remove a saved completion set
+       M-x icicle-remove-saved-completion-set
+     Swap current and saved sets             C-%
+     Define current set by evaluating sexp   C-:
+     Restrict candidates to history items    <M-pause>
+     Set complement                          C-~
+     Set difference                          C--
+     Set union                               C-+
+     Set intersection                        C-*
+     Set intersection using regexp           M-*
+     Set intersection using predicate        M-&
+       Save current predicate to a variable  C-M-&
+       Insert string variable as input       C-=
+
+ * Toggle Icicles options on the fly.
+     Using `~' for your home directory       M-~
+     Change sort order                       C-,
+     Change alternative sort order           M-,
+     Swap alternative sort                   C-M-,
+     Change apropos match function           M-(
+     Removal of duplicate candidates         C-$
+     Inclusion of proxy candidates           C-M-_
+     Case sensitivity                        C-S-a
+     Highlighting of past inputs             <C-pause>
+     Angle brackets for key names            C-<
+     Ignoring certain file extensions        C-.
+     Checking for remote file names          C-^
+     Ignoring space prefix                   M-_
+     Input expansion to common match         C-|
+     Incremental completion                  C-#
+     Fuzzy prefix completion                 C-(
+     Escaping of special regexp chars        C-`
+     `icicle-search' all-current highlights  C-^
+     Whole-word searching                    M-q
+     Removal of `icicle-search' highlighting C-.
+     Replacement of whole search hit         C-,
+     Replacement of expanded common match    C-M-|
+
+ * Adjust Icicles options incrementally on the fly (uses Do Re Mi).
+     `icicle-candidate-width-factor'         M-x icicle-doremi-candidate-width-factor
+     `icicle-inter-candidates-min-spaces'    M-x icicle-doremi-inter-candidates-min-spaces
+
+Remember: You can always input any character (e.g. TAB) that is bound
+          to a command by preceding it with C-q.
+
+Though it has no direct connection with completion, you can use `M-:'
+in the minibuffer at any time to evaluate an Emacs-Lisp expression.
+This calls `icicle-pp-eval-expression-in-minibuffer', which displays
+the result in the echo area or a popup buffer, *Pp Eval Output*.
+It also provides some of the Emacs-Lisp key bindings during expression
+editing.
+
+----------------------------------------------------------------------
+ 
+Customize Icicles: `M-x icicle-customize-icicles-group'.
+Summary of customizable options and faces (alphabetical order).
+
+Some of the binary options can be toggled; their toggle keys are
+mentioned here.
+
+* `completion-ignore-case', `read-file-name-completion-ignore-case'
+                                         - Case sensitivity? (`C-A')
+* `completion-ignored-extensions'        - Ignored filenames (`C-.')
+* `icicle-add-buffer-name-flag'          - Add candidate's buffer?
+* `icicle-add-proxy-candidates-flag'     - Include proxies? (`C-M-_')
+* `icicle-alternative-sort-function'     - Other sort (`M-,', `C-M-,')
+* `icicle-top-level-key-bindings'        - Bind top-level commands
+* `icicle-buffer-*'                      - `icicle-buffer' options
+* `icicle-candidate-width-factor'        - Width %, candidate columns
+* `icicle-change-region-background-flag' - Change region color?
+* `icicle-change-sort-order-completion-flag' - Control `C-,' behavior
+* `icicle-color-themes'                  - For `icicle-color-theme'
+* `icicle-complete-keys-self-insert-flag'- `S-TAB' for self-insert?
+* `icicle-Completions-display-min-input-chars' - Remove *Completions*
+                                           if fewer chars input
+* `icicle-Completions-frame-at-right-flag'- *Completions* at right?
+* `icicle-Completions-window-default-width' - Width of *Completions*
+* `icicle-Completions-window-max-height'  - Max lines in *Completions*
+* `icicle-cycle-into-subdirs-flag'       - Explore subdirectories?
+* `icicle-cycling-respects-completion-mode-flag' - Completion mode
+                                           affects cycling mode?
+* `icicle-default-thing-insertion'       - Control behavior of M-.
+* `icicle-default-value'                 - How to treat default value
+* `icicle-expand-input-to-common-match-flag'- Expand input? (`C-|')
+* `icicle-fuzzy-completion-flag'         - Fuzzy completion? (`C-(')
+* `icicle-highlight-historical-candidates-flag'
+                                         - Highlight past input?
+* `icicle-highlight-input-initial-whitespace-flag'
+                                         - Highlight input whitespace?
+* `icicle-ignore-space-prefix-flag'      - See initial space? (`M-_')
+* `icicle-incremental-completion-delay'  - Before update *Completions*
+* `icicle-incremental-completion-flag'   - Icompletion? (`C-#')
+* `icicle-incremental-completion-threshold'- # of candidates for delay
+* `icicle-input-string'                  - String inserted by `C-='
+* `icicle-inter-candidates-min-spaces'   - Min spaces among candidates
+* `icicle-key-descriptions-use-<>-flag' - Key shown as "<>"? (`C-<')
+* `icicle-keymaps-for-key-completion'    - `S-TAB' = key-complete maps
+* `icicle-kmacro-ring-max'               - Icicles `kmacro-ring-max'
+* `icicle-list-end-string', `icicle-list-join-string'
+                                         - Multi-completion join/end
+* `icicle-list-nth-parts-join-string'    - Join split-candidate parts
+* `icicle-mark-position-in-candidate'    - Mark position in cycling
+* `icicle-minibuffer-setup-hook'         - Functions run after setup
+* `icicle-modal-cycle-up-keys', `icicle-modal-cycle-down-keys'
+                                         - Keys for modal cycling
+* `icicle-point-position-in-candidate'   - Cursor position in cycling
+* `icicle-redefine-standard-commands-flag'- Redefine std commands?
+* `icicle-regexp-quote-flag'             - Escape chars? (`C-`')
+* `icicle-regexp-search-ring-max'        - `regexp-search-ring-max'
+* `icicle-region-alist'                  - Alist of saved regions
+* `icicle-region-auto-open-files-flag'   - Open saved-region files?
+* `icicle-region-background'             - Background for region
+* `icicle-region-alist'                  - List of regions
+* `icicle-regions-name-length-max'       - # chars to name a region
+* `icicle-require-match-flag'            - Override REQUIRE-MATCH?
+* `icicle-saved-completion-sets'         - Completion sets for `C-M-<'
+* `icicle-next-apropos-match-function'   - Change match func (`M-(')
+* `icicle-search-cleanup-flag'           - Remove search highlighting?
+                                           (`C-.')
+* `icicle-search-context-match-predicate'- Search-context predicate
+* `icicle-search-highlight-all-current-flag'- In each hit (`C-^')
+* `icicle-search-highlight-context-levels-flag' -
+                                           Highlight match subgroups?
+* `icicle-search-highlight-threshold'    - # hits to highlight at once
+* `icicle-search-hook'                   - Functions run by `C-c `'
+* `icicle-search-replace-common-match-flag' - Replace ECM? (`C-M-|')
+* `icicle-search-replace-literally-flag' - Replace text literally?
+* `icicle-search-replace-whole-candidate-flag' - Replace input match
+                                           or whole search hit?(`C-,')
+* `icicle-search-ring-max'               - Icicles `search-ring-max'
+* `icicle-search-whole-word-flag'        - Find whole words? (`M-q')
+* `icicle-show-Completions-help-flag'    - Show *Completions* help?
+* `icicle-show-Completions-initially-flag'- Show *Completions* first?
+* `icicle-sort-function'                 - Sort candidates (`C-,')
+* `icicle-sort-functions-alist'          - Functions for sorting
+* `icicle-special-candidate-regexp'      - To highlight special cands
+* `icicle-TAB-shows-candidates-flag'     - 1st `TAB' shows candidates?
+* `icicle-test-for-remote-files-flag'    - Check remote files? (`C-^')
+* `icicle-thing-at-point-functions'      - Functions to yank things
+* `icicle-top-level-when-sole-completion-flag' -
+                                           Exit if single completion?
+* `icicle-touche-pas-aux-menus-flag'     - Add to standard menus?
+* `icicle-transform-function'            - Remove duplicates (`C-$')
+* `icicle-update-input-hook'             - Fns run when input changes
+* `icicle-use-~-for-home-dir-flag'       - Use `~' for $HOME (`M-~')
+* `icicle-use-candidates-only-once-flag' - Remove used candidate?
+* `icicle-word-completion-keys'          - Keys for word completion
+* `icicle-WYSIWYG-Completions-flag'      - WYSIWYG for *Completions*
+* `icicle-yank-function'                 - Yank function to use
+
+Faces that highlight input in minibuffer.
+
+* `icicle-complete-input'               - Input when it is complete
+* `icicle-match-highlight-minibuffer'   - Matched part of input
+* `icicle-whitespace-highlight'         - Initial whitespace in input
+
+Faces that highlight candidates in buffer *Completions*.
+
+* `icicle-common-match-highlight-Completions' - Max common substring
+* `icicle-current-candidate-highlight'  - Highlight cycle candidate
+* `icicle-historical-candidate'         - Highlight candidates used
+* `icicle-match-highlight-Completions'  - Matched part of input
+
+Faces that highlight for command `icicle-search'.
+
+* `icicle-search-current-input'         - What input matches
+* `icicle-search-main-regexp-current'   - Current match of 1st regexp
+* `icicle-search-main-regexp-others'    - Other matches of 1st regexp
+
+----------------------------------------------------------------------
+ 
+Some top-level Icicles commands (alphabetical order, with exceptions).
+Some are bound in Icicle mode.  Bind the others to keys you like.
+See recommended bindings in `icicles.el'.
+Multi-commands are indicated by `+': They act any number of times.
+You can tell a multi-command when you execute it by the fact that the
+input prompt is prefixed by `+'.
+
++ `clear-option' (alias)               - Set binary option to nil
++ `icicle-add-buffer-candidate'        - To always-candidate buffer
++ `icicle-remove-buffer-candidate'     -   From same
+  `icicle-add-buffer-config'           - To `icicle-buffer-configs'
++ `icicle-remove-buffer-config'        -   From same
+  `icicle-add-region'                  - To `icicle-region-alist'
++ `icicle-remove-region'               -   From same
+  `icicle-add/update-saved-completion-set' - To
+                                        `icicle-saved-completion-sets'
++ `icicle-remove-saved-completion-set' -   From same
+  `icicle-apropos'                     - `apropos', but shows matches
+  `icicle-apropos-command'             - Enhanced `apropos-command'
+  `icicle-apropos-variable'            - Enhanced `apropos-variable'
+  `icicle-apropos-zippy'               - Show matching Zippy quotes
++ `icicle-bookmark'(`-other-window')   - Jump to bookmark
++ `icicle-buffer'(`-other-window')     - Switch to buffer (`C-x b')
++ `icicle-buffer-config'               - Pick `icicle-buffer' options
++ `icicle-buffer-list'                 - Choose a list of buffer names
+  `icicle-change-alternative-sort-order' - Choose an alternative sort
+  `icicle-change-sort-order'           - Choose a sort order
++ `icicle-color-theme'                 - Change color theme
++ `icicle-comint-command'              - Reuse command (`C-c TAB')
++ `icicle-comint-search'               - Reuse command (`C-c `')
++ `icicle-command-abbrev'              - `M-x' + abbrevs (`C-x SPC')
++ `icicle-compilation-search'          - Show hits (`C-c `')
++ `icicle-complete-keys'               - Complete keys (`S-TAB')
+  `icicle-complete-thesaurus-entry'    - Complete word (`C-/')
+  `icicle-completion-help'             - Display this help
++ `icicle-customize-face'              - Multi-`customize-face'
+  `icicle-customize-icicles-group'     - Customize options and faces
++ `icicle-delete-file'                 - Delete file/directory
++ `icicle-delete-windows'              - Delete windows (`C-u C-x 0')
++ `icicle-doc'                         - Show doc for fn, var, or face
+  `icicle-doremi-candidate-width-factor' - +/- candidate column width
+  `icicle-doremi-inter-candidates-min-spaces' - +/- candidate spacing
++ `icicle-execute-extended-command'    - Execute command - multi-`M-x'
++ `icicle-execute-named-keyboard-macro' - Execute named keyboard macro
++ `icicle-find-file'(`-other-window')  - Visit file/dir (`C-x C-f')
++ `icicle-find-first-tag'(`-other-window') - Find source def (tag)
++ `icicle-font'                        - Change font of frame
++ `icicle-frame-bg'                    - Change background of frame
++ `icicle-frame-fg'                    - Change foreground of frame
++ `icicle-fundoc'                      - Show function description
++ `icicle-goto-global-marker'          - Go to a global marker
++ `icicle-goto-marker'                 - Go to a marker in this buffer
++ `icicle-imenu'                       - Navigate among Imenu entries
++ `icicle-Info-goto-node'              - Multi-cmd `Info-goto-node'
++ `icicle-Info-index'                  - Multi-command `Info-index'
++ `icicle-Info-menu'                   - Multi-command `Info-menu'
++ `icicle-insert-kill'                 - Like `yank', without rotating
++ `icicle-insert-thesaurus-entry'      - Insert thesaurus entry
++ `icicle-kill-buffer'                 - Kill buffer (`C-x k')
++ `icicle-kmacro'                      - Execute keyboard macro (`f5')
++ `icicle-locate-file'(`-other-window') - Visit file in a directory
++ `icicle-map'                         - Apply function to alist items
+  `icy-mode' or `icicle-mode'          - Toggle Icicle mode
++ `icicle-occur'                       - Enhanced `occur' (`C-c '')
++ `icicle-other-window-or-frame'       - Other window/frame (`C-x o')
++ `icicle-plist'                       - Show symbols, property lists
++ `icicle-recent-file'(`-other-window') - Open recently used file
++ `icicle-reset-option-to-nil'         - Set binary option to nil
+  `icicle-save-string-to-variable'     - Save text for use with `C-='
++ `icicle-search'                      - Search (`C-c `')
++ `icicle-search-keywords'             - Search for keywords (`C-c ^')
++ `icicle-search-region'               - Search multiple regions
++ `icicle-find-tag'                    - Find definition (tag) (`M-.')
++ `icicle-search-text-property'        - Search for face... (`C-c "')
++ `icicle-search-word'                 - Search for whole word
++ `icicle-select-frame'                - Select a frame by name
++ `icicle-select-region'               - Select a region
++ `icicle-select-window'               - Select window by buffer name
+  `icicle-send-bug-report'             - Send Icicles bug report
++ `icicle-set-option-to-t'             - Set binary option to t
+  `icicle-toggle-~-for-home-dir'       - Toggle using `~' for $HOME
+  `icicle-toggle-alternative-sorting'  - Swap alternative sort
+  `icicle-toggle-angle-brackets'       - Toggle angle brackets
+  `icicle-toggle-case-sensitivity'     - Toggle case sensitivity
+  `icicle-toggle-expand-to-common-match' - Toggle input ECM expansion
+  `icicle-toggle-fuzzy-completion'     - Toggle fuzzy completion
+  `icicle-toggle-highlight-all-current' - Toggle max search highlight
+  `icicle-toggle-highlight-historical-candidates'
+                                       - Toggle past-input highlight
+  `icicle-toggle-ignored-extensions'   - Toggle ignored files
+  `icicle-toggle-ignored-space-prefix' - Toggle ignoring space prefix
+  `icicle-toggle-incremental-completion' - Toggle icompletion
++ `icicle-toggle-option'               - Toggle binary user option
+  `icicle-toggle-proxy-candidates'     - Toggle proxy candidates
+  `icicle-toggle-regexp-quote'         - Toggle regexp escaping
+  `icicle-next-apropos-match-function' - Change match func (`M-(')
+  `icicle-toggle-search-cleanup'       - Toggle highlight removal
+  `icicle-toggle-search-replace-common-match' - Toggle ECM replacement
+  `icicle-toggle-search-whole-word'    - Toggle whole-word searching
+  `icicle-toggle-sorting'              - Toggle sorting
+  `icicle-toggle-transforming'         - Toggle duplicate removal
+  `icicle-toggle-WYSIWYG-Completions'  - Toggle WYSIWYG *Completions*
++ `icicle-vardoc'                      - Show variable description
++ `icicle-where-is'                    - `where-is' multi-command
+  `icicle-yank-insert'                 - `yank' + completion (`C-y')
++ `toggle' (alias)                     - Toggle binary user option
+
+Send an Icicles bug report: `M-x icicle-send-bug-report'.
+
+----------------------------------------------------------------------
+ 
+These are all of the top-level bindings in Icicle mode:
+
+key             binding
+---             -------
+
+C-c             Prefix Command
+C-h             Prefix Command
+C-x             Prefix Command
+<backtab>       icicle-kmacro
+<pause>         icicle-switch-to/from-minibuffer
+<remap>         Prefix Command
+<tab>           icicle-generic-S-tab
+
+<remap> <abort-recursive-edit>  icicle-abort-recursive-edit
+<remap> <delete-window>         icicle-delete-window
+<remap> <delete-windows-for>    icicle-delete-window
+<remap> <eval-expression>       icicle-pp-eval-expression
+<remap> <exchange-point-and-mark>
+                                icicle-exchange-point-and-mark
+<remap> <execute-extended-command>
+                                icicle-execute-extended-command
+<remap> <find-file>             icicle-find-file
+<remap> <find-file-other-window>
+                                icicle-find-file-other-window
+<remap> <find-tag>              icicle-find-tag
+<remap> <find-tag-other-window>
+                                icicle-find-first-tag-other-window
+<remap> <kill-buffer>           icicle-kill-buffer
+<remap> <kill-buffer-and-its-windows>
+                                icicle-kill-buffer
+<remap> <minibuffer-keyboard-quit>
+                                icicle-abort-recursive-edit
+<remap> <other-window>          icicle-other-window-or-frame
+<remap> <other-window-or-frame>
+                                icicle-other-window-or-frame
+<remap> <pop-tag-mark>          icicle-pop-tag-mark
+<remap> <pp-eval-expression>    icicle-pp-eval-expression
+<remap> <switch-to-buffer>      icicle-buffer
+<remap> <switch-to-buffer-other-window>
+                                icicle-buffer-other-window
+<remap> <where-is>              icicle-where-is
+<remap> <yank>                  icicle-yank-insert
+
+C-h C-o         icicle-describe-option-of-type
+
+C-x ESC         Prefix Command
+C-x SPC         icicle-command-abbrev
+C-x 5           Prefix Command
+
+C-c "           icicle-search-text-property
+C-c $           icicle-search-word
+C-c '           icicle-occur
+C-c /           icicle-complete-thesaurus-entry
+C-c =           icicle-imenu
+C-c ^           icicle-search-keywords
+C-c `           icicle-search-generic
+
+C-x 5 o         icicle-select-frame
+
+C-x M-e         icicle-execute-named-keyboard-macro
+
+----------------------------------------------------------------------
+ 
+These are all of the minibuffer bindings during completion:
+
+key             binding
+---             -------
+
+C-a             icicle-beginning-of-line+
+C-e             icicle-end-of-line+
+C-g             icicle-abort-recursive-edit
+C-g             icicle-abort-recursive-edit
+TAB             icicle-prefix-complete
+C-j             icicle-insert-newline-in-minibuffer
+C-l             icicle-retrieve-previous-input
+RET             exit-minibuffer
+C-w             icicle-kill-region
+ESC             Prefix Command
+C-^             icicle-dispatch-C-^
+SPC             icicle-self-insert
+?               icicle-self-insert
+C-S-a           icicle-toggle-case-sensitivity
+C-S-l           icicle-retrieve-next-input
+S-SPC           icicle-apropos-complete-and-narrow
+C-!             icicle-all-candidates-action
+C-#             icicle-toggle-incremental-completion
+C-$             icicle-toggle-transforming
+C-%             icicle-candidate-set-swap
+C-(             icicle-toggle-fuzzy-completion
+C-)             icicle-candidate-set-save-more-selected
+C-*             icicle-candidate-set-intersection
+C-+             icicle-candidate-set-union
+C-,             icicle-dispatch-C-comma
+C--             icicle-candidate-set-difference
+C-.             icicle-dispatch-C-.
+C-:             icicle-candidate-set-define
+C-<             icicle-toggle-angle-brackets
+C-=             icicle-insert-string-from-variable
+C->             icicle-candidate-set-save-more
+C-?             icicle-completion-help
+C-`             icicle-toggle-regexp-quote
+C-{             icicle-candidate-set-retrieve-from-cache-file
+C-|             icicle-toggle-expand-to-common-match
+C-}             icicle-candidate-set-save-to-cache-file
+C-~             icicle-candidate-set-complement
+<C-M-S-iso-lefttab>             icicle-apropos-complete-no-display
+<C-M-S-tab>                     icicle-apropos-complete-no-display
+<C-M-down>      icicle-help-on-next-prefix-candidate
+<C-M-f1>        icicle-help-on-candidate
+<C-M-help>      icicle-help-on-candidate
+<C-M-next>      icicle-help-on-next-apropos-candidate
+<C-M-prior>     icicle-help-on-previous-apropos-candidate
+<C-M-return>    icicle-help-on-candidate
+<C-M-tab>       icicle-prefix-complete-no-display
+<C-M-up>        icicle-help-on-previous-prefix-candidate
+<C-S-down>      icicle-next-prefix-candidate-alt-action
+<C-S-insert>    icicle-all-candidates-alt-action
+<C-S-next>      icicle-next-apropos-candidate-alt-action
+<C-S-prior>     icicle-previous-apropos-candidate-alt-action
+<C-S-return>    icicle-candidate-alt-action
+<C-S-up>        icicle-previous-prefix-candidate-alt-action
+<C-down>        icicle-next-prefix-candidate-action
+<C-f1>          icicle-help-on-candidate
+<C-help>        icicle-help-on-candidate
+<C-insert>      icicle-switch-to-Completions-buf
+<C-next>        icicle-next-apropos-candidate-action
+<C-pause>       icicle-toggle-highlight-historical-candidates
+<C-prior>       icicle-previous-apropos-candidate-action
+<C-return>      icicle-candidate-action
+<C-tab>         file-cache-minibuffer-complete
+<C-tab>         file-cache-minibuffer-complete
+<C-up>          icicle-previous-prefix-candidate-action
+<M-S-backspace>                 icicle-erase-minibuffer
+<M-S-delete>                    icicle-erase-minibuffer
+<M-pause>       icicle-keep-only-past-inputs
+<M-return>      icicle-candidate-read-fn-invoke
+<S-delete>      icicle-delete-candidate-object
+<backtab>       icicle-kmacro
+<delete>        icicle-remove-candidate
+<down>          icicle-next-prefix-candidate
+<insert>        icicle-save/unsave-candidate
+<next>          icicle-next-apropos-candidate
+<prior>         icicle-previous-apropos-candidate
+<remap>         Prefix Command
+<tab>           icicle-prefix-complete
+<up>            icicle-previous-prefix-candidate
+
+<remap> <backward-delete-char-untabify>
+                                icicle-backward-delete-char-untabify
+<remap> <backward-kill-paragraph>
+                                icicle-backward-kill-paragraph
+<remap> <backward-kill-sentence>
+                                icicle-backward-kill-sentence
+<remap> <backward-kill-sexp>    icicle-backward-kill-sexp
+<remap> <backward-kill-word>    icicle-backward-kill-word
+<remap> <delete-backward-char>  icicle-delete-backward-char
+<remap> <delete-char>           icicle-delete-char
+<remap> <digit-argument>        icicle-digit-argument
+<remap> <kill-line>             icicle-kill-line
+<remap> <kill-paragraph>        icicle-kill-paragraph
+<remap> <kill-sexp>             icicle-kill-sexp
+<remap> <kill-word>             icicle-kill-word
+<remap> <mouse-yank-secondary>  icicle-mouse-yank-secondary
+<remap> <negative-argument>     icicle-negative-argument
+<remap> <reposition-window>     icicle-kill-failed-input
+<remap> <self-insert-command>   icicle-self-insert
+<remap> <transpose-chars>       icicle-transpose-chars
+<remap> <transpose-sexps>       icicle-transpose-sexps
+<remap> <transpose-words>       icicle-transpose-words
+<remap> <universal-argument>    icicle-universal-argument
+<remap> <yank-pop>              icicle-yank-pop
+
+C-M-j           icicle-insert-list-join-string
+C-M-_           icicle-toggle-proxy-candidates
+M-SPC           icicle-prefix-word-complete
+M-$             icicle-candidate-set-truncate
+M-&             icicle-narrow-candidates-with-predicate
+M-(             icicle-next-apropos-match-function
+M-*             icicle-narrow-candidates
+M-,             icicle-dispatch-M-comma
+M-.             icicle-insert-string-at-point
+M-:             icicle-pp-eval-expression-in-minibuffer
+M-_             icicle-toggle-ignored-space-prefix
+M-h             icicle-history
+M-k             icicle-erase-minibuffer-or-history-element
+M-n             next-history-element
+M-o             icicle-insert-history-element
+M-p             previous-history-element
+M-q             icicle-dispatch-M-q
+M-r             previous-matching-history-element
+M-s             next-matching-history-element
+M-v             switch-to-completions
+M-~             icicle-toggle-~-for-home-dir
+C-M-&           icicle-save-predicate-to-variable
+C-M-)           icicle-candidate-set-save-selected
+C-M-,           icicle-toggle-alternative-sorting
+C-M-/           icicle-prefix-complete
+C-M-<           icicle-candidate-set-retrieve
+C-M->           icicle-candidate-set-save
+C-M-`           icicle-toggle-literal-replacement
+C-M-{           icicle-candidate-set-retrieve-from-variable
+C-M-|           icicle-toggle-search-replace-common-match
+C-M-}           icicle-candidate-set-save-to-variable
+
+----------------------------------------------------------------------
+
+[Icicles Help on the Web]                        [Icicles Doc, Part 1]
+[Icicles Options & Faces]                        [Icicles Doc, Part 2]
+

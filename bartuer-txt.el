@@ -1,0 +1,5 @@
+(defun indent-or-complete-for-text-mode ()
+  (interactive)
+  (if (looking-at "\\>")
+      (hippie-expand nil)
+    (indent-relative)))
