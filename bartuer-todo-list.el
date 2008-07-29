@@ -19,7 +19,11 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Why dot file is reloaded?
 
         Feature:
-                Need a git module? (master)
+
+                Need a git module?(C-u C-x v v, checkout, modify,
+                checkin, then the modeline is checkouted out or the
+                switched branch)
+
                 M-* should reserved for tag ;Done
                 should have one place for all key define? ;No
                 need learn more about map define ;Done
