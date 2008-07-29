@@ -20,9 +20,8 @@ dot emacs files, \\[bartuer-general-todo-list], "
 
         Feature:
 
-                Need a git module?(C-u C-x v v, checkout, modify,
-                checkin, then the modeline is checkouted out or the
-                switched branch)
+                Need a git module?(modify, C-u C-x v v, checkin,
+                switch branch )
 
                 M-* should reserved for tag ;Done
                 should have one place for all key define? ;No
