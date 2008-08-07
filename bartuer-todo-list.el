@@ -19,6 +19,7 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Why dot file is reloaded?
 
         Feature:
+                Add winner-mode default ;Done
                 Need a git module?(seems the emacs vc-mode has poor support for git?)
                 M-* should reserved for tag ;Done
                 should have one place for all key define? ;No
@@ -73,6 +74,12 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Create dwim compile & eval binding.  ;No
 
 TIPS:
+        to input greek, arabic charactor, just toggle accordingly
+        input method. If only insert one or two charactor, just using
+        the C-x 8, 
+
+        recode-region can  apply to a region.
+
         M-( can insert parentheses, M-) can just like C-M-e and C-m,
         these command is very convenient for write lisp.
 
@@ -86,7 +93,7 @@ TIPS:
         quit the search first, you can query-replace, you can
         highlight, you can list matches.
 
-                C-\\             isearch-toggle-input-method
+                C-\\            isearch-toggle-input-method
                 C-^             isearch-toggle-specified-input-method
 
                 C-M-r           isearch-repeat-backward
