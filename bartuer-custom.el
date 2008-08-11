@@ -48,6 +48,7 @@
  '(max-mini-window-height 0.7)
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
+ '(ps-multibyte-buffer (quote bdf-font))
  '(rst-level-face-base-color "")
  '(safe-local-variable-values (quote ((TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
  '(scroll-conservatively 10)

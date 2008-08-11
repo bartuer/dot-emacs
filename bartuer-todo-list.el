@@ -74,6 +74,9 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Create dwim compile & eval binding.  ;No
 
 TIPS:
+        mule-diag display detail information for coding-system and
+        naturl languages. 
+
         to input greek, arabic charactor, just toggle accordingly
         input method. If only insert one or two charactor, just using
         the C-x 8, 
