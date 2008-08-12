@@ -163,7 +163,10 @@
       (error "No dict args given"))
   (dict-get-answer word))
 (when (fboundp 'dict-get-answer)
-  (global-set-key "\C-\M-m" 'mydict))
+  (global-set-key "\C-\M-m" 'mydict)
+  (add-hook 'view-mode-hook
+            (lambda ()
+              (define-key view-mode-map "\M-j" 'mydict))))
 
 (if (fboundp 'server-start)
     (server-start))
