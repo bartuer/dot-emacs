@@ -76,6 +76,8 @@
     (previous-error)))
 (global-set-key "\C-\M-p" 'ctrl-meta-p-dwim)
 
+(global-set-key "\C-x\M-t" 'transpose-paragraphs)
+
 (defalias 'f 'auto-fill-mode)
 
 (global-set-key "\C-j" 'eval-last-sexp)
@@ -113,6 +115,10 @@
     (delete-other-windows)))
 (global-set-key "\M- " 'meta-space-dwim)
 (global-set-key "\M-k" 'other-window)
+(add-hook 'diff-mode-hook
+          (lambda ()
+            (define-key diff-mode-map "\M-k" 'other-window)
+            (define-key diff-mode-map "\M-h" 'diff-hunk-kill)))
 (global-set-key "\M-o" 'kill-sentence)
 (global-set-key [(prior)] 'scroll-other-window-down)
 (global-set-key [(next)] 'scroll-other-window)
