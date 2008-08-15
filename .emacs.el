@@ -189,7 +189,11 @@
 
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
+
 ;; M-TAB do the tags and symbol complete
+(defalias 'tl (quote (lambda ()
+                       (interactive)
+                       (list-tags (buffer-file-name)))))
 (defalias 'ta 'tags-apropos)
 (defalias 'ts 'tags-search)
 (defalias 'tq 'tags-query-replace)
