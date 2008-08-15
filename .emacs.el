@@ -192,6 +192,7 @@
 ;; M-TAB do the tags and symbol complete
 (defalias 'ta 'tags-apropos)
 (defalias 'ts 'tags-search)
+(defalias 'tq 'tags-query-replace)
 
 (require 'icicles nil t)
 (global-set-key [(f6)] 'icicle-complete-keys)
