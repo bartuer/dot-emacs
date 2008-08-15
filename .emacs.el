@@ -107,19 +107,23 @@
 (global-set-key "\C-xc" 'copy-to-buffer)
 (global-set-key "\C-xa" 'append-to-buffer)
 
+(require 'winner nil t)
 (defun meta-space-dwim()
   "multiple bindings for M-SPC"
   (interactive)
   (if (windowp (car (window-tree)))
-      (just-one-space)
+      (winner-undo)
     (delete-other-windows)))
 (global-set-key "\M- " 'meta-space-dwim)
+
 (global-set-key "\M-k" 'other-window)
-(add-hook 'diff-mode-hook
-          (lambda ()
-            (define-key diff-mode-map "\M-k" 'other-window)
-            (define-key diff-mode-map "\M-h" 'diff-hunk-kill)))
+(if (require 'diff-mode nil t)
+    (add-hook 'diff-mode-hook
+              (lambda ()
+                (define-key diff-mode-map "\M-k" 'other-window)
+                (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
 (global-set-key "\M-o" 'kill-sentence)
+
 (global-set-key [(prior)] 'scroll-other-window-down)
 (global-set-key [(next)] 'scroll-other-window)
 
@@ -180,9 +184,14 @@
     (desktop-read))
 (if (fboundp 'show-paren-mode)
     (show-paren-mode 1))
+(if (fboundp 'winner-mode)
+    (winner-mode 1))
 
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
+;; M-TAB do the tags and symbol complete
+(defalias 'ta 'tags-apropos)
+(defalias 'ts 'tags-search)
 
 (require 'icicles nil t)
 (global-set-key [(f6)] 'icicle-complete-keys)
@@ -201,10 +210,10 @@
       (define-key map "\C-s" 'icicle-narrow-candidates)
       (define-key map "\M-l" 'switch-to-buffer)
       (define-key map "\M-k" 'other-window)
-      (define-key map "\C-\M-n" 'icicle-retrieve-previous-input)
-      (define-key map "\C-\M-p" 'icicle-retrieve-next-input)
-      (define-key map "\C-n" 'icicle-help-on-next-apropos-candidate)
-      (define-key map "\C-p" 'icicle-help-on-previous-apropos-candidate))))
+      (define-key map "\C-n" 'icicle-next-apropos-candidate-action)
+      (define-key map "\C-p" 'icicle-previous-apropos-candidate-action)
+      (define-key map "\C-\M-n" 'icicle-help-on-next-apropos-candidate)
+      (define-key map "\C-\M-p" 'icicle-help-on-previous-apropos-candidate))))
 (add-hook 'icicle-mode-hook 'bartuer-icicle-key-map)
 (when(fboundp 'icy-mode) 
   (defalias 'i 'icy-mode)
