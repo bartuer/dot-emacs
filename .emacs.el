@@ -89,7 +89,7 @@
 (add-hook 'comint-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)))
-(global-set-key [(f5)] 'shell-command)
+(global-set-key [(f5)] 'compile)
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
 
@@ -150,9 +150,8 @@
 (defalias 'fr 'make-frame)
 
 (global-set-key "\M-8" 'find-dired)
-(global-set-key [(f8)] 'grep-find)
 (global-set-key "\M-9" 'grep-find)
-(global-set-key [(f9)] 'list-matching-lines)
+(global-set-key [(f9)] 'grep-find)
 (global-set-key "\M-0" 'list-matching-lines)
 (global-set-key "\C-\M-s" 'isearch-forward)
 (global-set-key "\C-\M-r" 'isearch-backward)
@@ -162,6 +161,7 @@
 (defalias 'q 'query-replace-regexp)
 
 (global-set-key [(f7)] 'man-follow)
+(global-set-key [(f8)] 'info-lookup-symbol)
 (defalias 'm 'woman)
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
 
