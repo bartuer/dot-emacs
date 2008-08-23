@@ -515,7 +515,9 @@ the databases until a match is found, and then stop searching."
       (save-excursion (set-buffer buffer)
 		      (goto-char (point-min))
 		      (display-buffer buffer)))
-     ((string-match "exited abnormally with code" msg)
+     ((string-match "exited abnormally with code 20" msg)
+      (list (command-execute 'dict)))
+      (string-match "exited abnormally with code" msg)
       (message msg)))))
 
 (defsubst dict-default-dict-entry ()
@@ -535,10 +537,8 @@ This guess is based on the text surrounding the cursor."
   "Lookup a WORD in the dictionary."
   (interactive (list (let* ((default-entry (dict-default-dict-entry))
 	     (input (read-string
-		     (format "Dict entry%s: "
-			     (if (string= default-entry "")
-				 ""
-			       (format " (default %s)" default-entry))))))
+                     (format "Dict -s [prefix,suffix,substring,re,lev,soundex,word] ")
+                     (format "-s lev %s" default-entry) )))
 	(if (string= input "")
 	    (if (string= default-entry "")
 		(error "No dict args given") default-entry) input))))
