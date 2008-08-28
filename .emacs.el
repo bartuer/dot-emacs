@@ -186,10 +186,11 @@
     (show-paren-mode 1))
 (if (fboundp 'winner-mode)
     (winner-mode 1))
+(if (fboundp 'which-function-mode)
+    (which-function-mode 1))
 
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
-
 ;; M-TAB do the tags and symbol complete
 (defalias 'tl (quote (lambda ()
                        (interactive)
@@ -197,6 +198,7 @@
 (defalias 'ta 'tags-apropos)
 (defalias 'ts 'tags-search)
 (defalias 'tq 'tags-query-replace)
+(defalias 'im 'imenu)
 
 (require 'icicles nil t)
 (global-set-key [(f6)] 'icicle-complete-keys)
@@ -262,3 +264,8 @@
 
 (autoload 'bartuer-clearcase-load "bartuer-clearcase.el" "for clearcase" t)
 (defalias 'cc 'bartuer-clearcase-load)
+
+(autoload 'bartuer-gdb-load "bartuer-gdb.el" "for gdb" t)
+(add-hook 'gud-mode-hook 'bartuer-gdb-load)
+(add-to-list 'auto-mode-alist
+             '("\\.gdb$" . gdb-script-mode))

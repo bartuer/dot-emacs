@@ -518,7 +518,7 @@ the databases until a match is found, and then stop searching."
      ((string-match "exited abnormally with code 20" msg)
       (list (command-execute 'dict)))
       (string-match "exited abnormally with code" msg)
-      (message msg)))))
+      (message msg))))
 
 (defsubst dict-default-dict-entry ()
   "Make a guess at a default dict entry.
