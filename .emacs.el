@@ -269,3 +269,6 @@
 (add-hook 'gud-mode-hook 'bartuer-gdb-load)
 (add-to-list 'auto-mode-alist
              '("\\.gdb$" . gdb-script-mode))
+
+(autoload 'bartuer-read-mark "bartuer-mark.el" "for record note" t)
+(define-key view-mode-map "\C-j" 'bartuer-read-mark)
