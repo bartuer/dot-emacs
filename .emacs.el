@@ -22,17 +22,50 @@
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
 
-(defun mark-whole-sentence()
-  (interactive)
-  (backward-sentence)
-  (mark-end-of-sentence 1))
-(global-set-key "\C-cs" 'mark-whole-sentence)
+(defun mark-whole-sexp(&optional arg)
+  "Mark sexp contain the point, \\[mark-whole-sexp]
 
-(defun mark-whole-sexp()
-  (interactive)
-  (backward-up-list)
-  (mark-sexp 1))
+If give a positive ARG, mark sexp ARG levels outside from point.
+  Using \\[repeat] mark one level once.
+
+If give a negative ARG, will undo the last mark action, thus the
+  inner level sexp is marked.  There is no difference between
+  negative variant.  "
+  (interactive "p")
+  (unless arg (setq arg 1))
+  (cond ((> arg 0)
+         (progn
+           (backward-up-list arg)
+           (mark-sexp 1)))
+        ((< arg 0)
+         (when (not (and transient-mark-mode mark-active))
+           (error "Cannot cancel sexps mark without marked sexp"))
+         (set-mark-command 0)
+         (set-mark-command 0)
+         (backward-sexp)
+         (down-list)
+         (mark-whole-sexp)
+         )))
 (global-set-key "\C-cp" 'mark-whole-sexp)
+
+(defun mark-whole-sentence (&optional arg)
+  "Steal from `mark-paragraph', \\[mark-whole-sentence].  "
+  (interactive "p\np")
+  (unless arg (setq arg 1))
+  (when (zerop arg)
+    (error "Cannot mark zero sentences"))
+  (cond ((or (and (eq last-command this-command) (mark t))
+		  (and transient-mark-mode mark-active))
+	 (set-mark
+	  (save-excursion
+	    (goto-char (mark))
+	    (forward-sentence arg)
+	    (point))))
+	(t
+	 (forward-sentence arg)
+	 (push-mark nil t t)
+	 (backward-sentence arg))))
+(global-set-key "\C-cs" 'mark-whole-sentence)
 
 (defun kill-whole-sexp(keep-this)
   (interactive "P")
@@ -268,6 +301,10 @@
 (add-hook 'after-init-hook (lambda ()
                              (add-hook 'after-save-hook 'bartuer-general-byte-compile-dot-file t nil)
                              ))
+(defun diff-dot-file()
+  (interactive)
+  (diff "~/etc/el/.emacs.el" "~/.emacs.el" "-u"))
+(defalias 'dd 'diff-dot-file)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
