@@ -44,13 +44,13 @@ If give a negative ARG, will undo the last mark action, thus the
          (set-mark-command 0)
          (backward-sexp)
          (down-list)
-         (mark-whole-sexp)
-         )))
+         (when (scan-lists (point) 1 -1)
+           (mark-whole-sexp)))))
 (global-set-key "\C-cp" 'mark-whole-sexp)
 
 (defun mark-whole-sentence (&optional arg)
   "Steal from `mark-paragraph', \\[mark-whole-sentence].  "
-  (interactive "p\np")
+  (interactive "p")
   (unless arg (setq arg 1))
   (when (zerop arg)
     (error "Cannot mark zero sentences"))
