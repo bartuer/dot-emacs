@@ -22,7 +22,17 @@
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
 
-(global-set-key "\C-\M-y" 'mark-sexp)
+(defun mark-whole-sentence()
+  (interactive)
+  (backward-sentence)
+  (mark-end-of-sentence 1))
+(global-set-key "\C-cs" 'mark-whole-sentence)
+
+(defun mark-whole-sexp()
+  (interactive)
+  (backward-up-list)
+  (mark-sexp 1))
+(global-set-key "\C-cp" 'mark-whole-sexp)
 
 (defun kill-whole-sexp(keep-this)
   (interactive "P")
@@ -31,13 +41,13 @@
   (progn
     (backward-up-list)
     (kill-sexp))))
-(global-set-key "\C-x\M-k" 'kill-whole-sexp)
+(global-set-key "\C-x\C-\M-k" 'kill-whole-sexp)
 
-(defun kill-whole-sentene()
+(defun kill-whole-sentence()
   (interactive)
   (backward-kill-sentence)
   (kill-sentence))
-(global-set-key "\C-x\C-\M-k" 'kill-whole-sentene)
+(global-set-key "\C-x\M-k" 'kill-whole-sentence)
 
 (defun meta-n-dwim()
   "multiple bindings for M-n"
