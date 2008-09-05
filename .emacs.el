@@ -119,6 +119,12 @@ If give a negative ARG, will undo the last mark action, thus the
     (previous-error)))
 (global-set-key "\C-\M-p" 'ctrl-meta-p-dwim)
 
+(global-set-key "\C-i" '(lambda ()
+                          (interactive)
+                          (cond ((indent-for-tab-command))
+                                (t (indent-relative-maybe))
+                                (t (indent-for-comment)))))
+
 (global-set-key "\C-x\M-t" 'transpose-paragraphs)
 
 (defalias 'f 'auto-fill-mode)
