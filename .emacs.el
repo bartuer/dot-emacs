@@ -47,6 +47,7 @@ If give a negative ARG, will undo the last mark action, thus the
          (when (scan-lists (point) 1 -1)
            (mark-whole-sexp)))))
 (global-set-key "\C-cp" 'mark-whole-sexp)
+(global-set-key "\C-x\C-\M-@" 'mark-whole-sexp)
 
 (defun mark-whole-sentence (&optional arg)
   "Steal from `mark-paragraph', \\[mark-whole-sentence].  "
@@ -66,6 +67,7 @@ If give a negative ARG, will undo the last mark action, thus the
 	 (push-mark nil t t)
 	 (backward-sentence arg))))
 (global-set-key "\C-cs" 'mark-whole-sentence)
+(global-set-key "\C-x\M-s" 'mark-whole-sentence)
 
 (defun kill-whole-sexp(keep-this)
   (interactive "P")
