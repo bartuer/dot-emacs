@@ -21,6 +21,11 @@
 (global-set-key "\C-ck" 'kill-region) ;delete to the beginning "\C-x-DEL",move 1
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
+(global-set-key "\C-i" '(lambda ()
+                          (interactive)
+                          (cond ((indent-for-tab-command))
+                                (t (indent-relative-maybe))
+                                (t (indent-for-comment)))))
 
 (defun mark-whole-sexp(&optional arg)
   "Mark sexp contain the point, \\[mark-whole-sexp]
@@ -50,7 +55,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-x\C-\M-@" 'mark-whole-sexp)
 
 (defun mark-whole-sentence (&optional arg)
-  "Steal from `mark-paragraph', \\[mark-whole-sentence].  "
+  "\\[mark-whole-sentence], Steal from `mark-paragraph'"
   (interactive "p")
   (unless arg (setq arg 1))
   (when (zerop arg)
@@ -83,6 +88,9 @@ If give a negative ARG, will undo the last mark action, thus the
   (backward-kill-sentence)
   (kill-sentence))
 (global-set-key "\C-x\M-k" 'kill-whole-sentence)
+
+(global-set-key "\C-x\M-t" 'transpose-sentences)
+(global-set-key "\C-x\C-\M-t" 'transpose-paragraphs) ;\C-\M-t bind transpose-sexps
 
 (defun meta-n-dwim()
   "multiple bindings for M-n"
@@ -120,14 +128,6 @@ If give a negative ARG, will undo the last mark action, thus the
       (backward-list)
     (previous-error)))
 (global-set-key "\C-\M-p" 'ctrl-meta-p-dwim)
-
-(global-set-key "\C-i" '(lambda ()
-                          (interactive)
-                          (cond ((indent-for-tab-command))
-                                (t (indent-relative-maybe))
-                                (t (indent-for-comment)))))
-
-(global-set-key "\C-x\M-t" 'transpose-paragraphs)
 
 (defalias 'f 'auto-fill-mode)
 
