@@ -19,7 +19,12 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Why dot file is reloaded?
 
         Feature:
+
                 Add winner-mode default ;Done
+                
+                Learn Autotype info node
+                Using calc-mode complete complex computation, not calculator
+                Delicious Wikipedia and quickURL
                 Need a git module?(seems the emacs vc-mode has poor support for git?)
                 M-* should reserved for tag ;Done
                 should have one place for all key define? ;No
@@ -74,6 +79,12 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Create dwim compile & eval binding.  ;No
 
 TIPS:
+        install the result of edit-tab-stops, then edit simple table
+        without enable table-insert. 
+
+        edit buffer in enriched-mode, and print the buffer to ps with
+        faces.
+
         mule-diag display detail information for coding-system and
         naturl languages. 
 

@@ -37,6 +37,7 @@
  '(grep-highlight-matches t)
  '(gud-gdb-command-name "ssh root@192.168.1.2 LD_LIBRARY_PATH=/mnt/msc_int0/lib /mnt/msc_int0/bin/gdb -annotate=3 -q -x /vobs/gdb/init.gdb  ")
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
+ '(hippie-expand-verbose nil)
  '(ibuffer-saved-filter-groups (quote (("urls" ("urls" (name . "urls"))))))
  '(ibuffer-saved-filters (quote (("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-apropos-cycle-next-keys (quote ([next])))
