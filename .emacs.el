@@ -20,12 +20,14 @@
 (global-set-key "\C-c\C-k" 'kill-region) ;for case <BS> does not mean <DEL>,anywhere
 (global-set-key "\C-ck" 'kill-region) ;delete to the beginning "\C-x-DEL",move 1
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
+
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
 (global-set-key "\C-i" '(lambda ()
                           (interactive)
-                          (cond ((indent-for-tab-command))
-                                (t (indent-relative-maybe))
-                                (t (indent-for-comment)))))
+                          (if (not (window-minibuffer-p))
+                              (cond ((indent-for-tab-command))
+                                    (t (indent-relative-maybe))
+                                    (t (indent-for-comment))))))
 
 (defun mark-whole-sexp(&optional arg)
   "Mark sexp contain the point, \\[mark-whole-sexp]
