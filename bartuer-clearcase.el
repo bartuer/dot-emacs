@@ -44,8 +44,20 @@
 ;; . -exec -l '{}' \; totally anti intuit.  And more, clearcase find
 ;; tools inhered both find(1) great merit and such sucks attribute,
 ;; the bad design should be throw away early but indeed carry on for
-;; ever, one generation by another.
+;; ever, one generation by another.  Normally a version control system
+;; need it's own filesystem or database, some time a filesystem is
+;; implement as a database, thus user need a language to query the
+;; database, for clearcase there is a query language, for general
+;; filesystem, this is the find syntax, indeed the clearcase find is a
+;; interface let user using the query language.  But clearcasel.el
+;; lack the find or query language ability, what I really want is a
+;; vc-dired-mode display the clearcase special attribute of version
+;; files, and a utils like find-dired let user using the clearcase
+;; query language to operation on the file set he can express with
+;; such language. 
+
 
 ;; clean clearcase binding, now only add diff utils.  Design new
 ;; feature of clearcase mode, document and code for implement is
 ;; ready.
+

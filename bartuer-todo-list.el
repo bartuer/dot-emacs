@@ -21,7 +21,9 @@ dot emacs files, \\[bartuer-general-todo-list], "
         Feature:
 
                 Add winner-mode default ;Done
-                
+                C++ header file's mode, and c++ code standard
+                At least revert-buffer and dired-mode can accelorate shell command.
+                should let tmeplate file do not show ?                
                 Learn Autotype info node
                 Using calc-mode complete complex computation, not calculator
                 Delicious Wikipedia and quickURL
