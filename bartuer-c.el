@@ -1,6 +1,7 @@
 (defun bartuer-c-common ()
   "for c and C++ language
 "
+  (require 'make-mode)
   (c-subword-mode 1)
   ;; is it possible to guess the code style ?
   ;; now I using the c-file-style in file varible
