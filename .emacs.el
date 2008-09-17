@@ -210,7 +210,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-\M-r" 'isearch-backward)
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
-(defalias 'h 'how-many)
 (defalias 'q 'query-replace-regexp)
 
 (global-set-key [(f7)] 'man-follow)
@@ -259,7 +258,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (when icicle-mode
     (let ((map minibuffer-local-completion-map))
       (define-key map [(f1)] 'icicle-completion-help) 
-      (define-key map "M-o" 'icicle-erase-minibuffer-or-history-element)
+      (define-key map "\M-o" 'icicle-erase-minibuffer-or-history-element)
       (define-key map "\M-v" 'icicle-switch-to-Completions-buf)
       (define-key map "\C-w" 'backward-kill-word)
       (define-key map "\C-\M-y" 'icicle-apropos-complete-and-narrow)
