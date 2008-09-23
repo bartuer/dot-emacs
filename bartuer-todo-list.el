@@ -83,7 +83,8 @@ dot emacs files, \\[bartuer-general-todo-list], "
 TIPS:
         install the result of edit-tab-stops, then edit simple table
         without enable table-insert. 
-
+        using make-hippie-expand-function you can define your own
+        symbol dict and using them when typing. 
         edit buffer in enriched-mode, and print the buffer to ps with
         faces.
 
