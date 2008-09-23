@@ -22,7 +22,6 @@
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
  '(fill-column 70)
- '(find-function-C-source-directory "/home/bartuer/src/emacs/src" t)
  '(find-grep-options "-vE \".svn|drw|svn-base|*.pyc\"")
  '(find-ls-option (quote ("-exec ls -ld {} \\;" . "-ld")))
  '(gdb-debug-log-max nil)
@@ -42,7 +41,6 @@
  '(ibuffer-saved-filter-groups (quote (("urls" ("urls" (name . "urls"))))))
  '(ibuffer-saved-filters (quote (("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-apropos-cycle-next-keys (quote ([next])))
- '(ido-create-new-buffer (quote always))
  '(indent-tabs-mode nil)
  '(isearch-resume-in-command-history t)
  '(kill-read-only-ok t)
@@ -54,7 +52,7 @@
  '(next-screen-context-lines 0)
  '(ps-multibyte-buffer (quote bdf-font))
  '(rst-level-face-base-color "")
- '(safe-local-variable-values (quote ((TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
+ '(safe-local-variable-values (quote ((minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
  '(scroll-conservatively 10)
  '(search-whitespace-regexp "[ 	
 ]+")

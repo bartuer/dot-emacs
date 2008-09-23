@@ -138,9 +138,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (add-hook 'shell-mode-hook
           (lambda ()
-            (ansi-color-for-comint-mode-on)
-            (define-key shell-mode-map "\C-\M-i" 'shell-dynamic-complete-environment-variable)
-            )
+            (ansi-color-for-comint-mode-on)))
 (add-hook 'comint-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)))
@@ -212,7 +210,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-\M-r" 'isearch-backward)
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
-(defalias 'h 'how-many)
 (defalias 'q 'query-replace-regexp)
 
 (global-set-key [(f7)] 'man-follow)
@@ -244,10 +241,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (fboundp 'which-function-mode)
     (which-function-mode 1))
 
-(require 'ispell nil t)
-(if (fboundp 'ispell-region)
-    (ispell-region (point-min) (point-min)))
-
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
 ;; M-TAB do the tags and symbol complete
@@ -265,7 +258,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (when icicle-mode
     (let ((map minibuffer-local-completion-map))
       (define-key map [(f1)] 'icicle-completion-help) 
-      (define-key map "M-o" 'icicle-erase-minibuffer-or-history-element)
+      (define-key map "\M-o" 'icicle-erase-minibuffer-or-history-element)
       (define-key map "\M-v" 'icicle-switch-to-Completions-buf)
       (define-key map "\C-w" 'backward-kill-word)
       (define-key map "\C-\M-y" 'icicle-apropos-complete-and-narrow)
@@ -335,3 +328,6 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-read-mark "bartuer-mark.el" "for record note" t)
 (define-key view-mode-map "\C-j" 'bartuer-read-mark)
+
+(autoload 'js2-mode "js2" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
