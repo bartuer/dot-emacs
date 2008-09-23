@@ -136,9 +136,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-j" 'eval-last-sexp)
 (defalias 'e 'eval-current-buffer)
 
+
 (add-hook 'shell-mode-hook
           (lambda ()
-            (ansi-color-for-comint-mode-on)))
+            (ansi-color-for-comint-mode-on)
+            (define-key shell-mode-map "\C-\M-i" 'shell-dynamic-complete-environment-variable)
+            )
 (add-hook 'comint-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)))
@@ -241,6 +244,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (fboundp 'which-function-mode)
     (which-function-mode 1))
 
+(global-set-key "\C-\M-_" 'ispell-complete-word)
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
 ;; M-TAB do the tags and symbol complete
