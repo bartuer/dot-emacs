@@ -140,7 +140,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'shell-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)
-            (define-key shell-mode-map "\C-\M-i" 'shell-dynamic-complete-environment-variable)
+            (define-key shell-mode-map "\C-\M-i"
+              'shell-dynamic-complete-environment-variable)
             )
 (add-hook 'comint-mode-hook
           (lambda ()
@@ -243,6 +244,10 @@ If give a negative ARG, will undo the last mark action, thus the
     (winner-mode 1))
 (if (fboundp 'which-function-mode)
     (which-function-mode 1))
+
+(require 'ispell nil t)
+(if (fboundp 'ispell-region)
+    (ispell-region (point-min) (point-min)))
 
 (global-set-key "\C-\M-_" 'ispell-complete-word)
 (global-set-key "\M-/" 'hippie-expand)
