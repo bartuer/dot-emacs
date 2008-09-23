@@ -1,5 +1,7 @@
-(defun indent-or-complete-for-text-mode ()
-  (interactive)
-  (if (looking-at "\\>")
-      (hippie-expand nil)
-    (indent-relative)))
+(defun bartuer-txt-load ()
+  "for text mode"
+  (require 'flyspell)
+  (if (fboundp 'turn-on-flyspell)
+      (turn-on-flyspell))
+  (auto-fill-mode)
+  )

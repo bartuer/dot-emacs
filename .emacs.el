@@ -340,3 +340,6 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
+(add-hook 'text-mode-hook 'bartuer-txt-load)
