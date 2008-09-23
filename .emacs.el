@@ -142,7 +142,7 @@ If give a negative ARG, will undo the last mark action, thus the
             (ansi-color-for-comint-mode-on)
             (define-key shell-mode-map "\C-\M-i"
               'shell-dynamic-complete-environment-variable)
-            )
+            ))
 (add-hook 'comint-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)))
