@@ -26,7 +26,6 @@ dot emacs files, \\[bartuer-general-todo-list], "
                         jshell help frame work
 
 
-
         Bugs:
                 Ispell-complete-word do not work.  ;Done, help-char t
                 Fix prefix binding help do not work.  ;Done, help-char t <f1>
