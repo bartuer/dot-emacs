@@ -7,6 +7,25 @@ dot emacs files, \\[bartuer-general-todo-list], "
     (if (buffer-size)
         (erase-buffer))
     (insert "TODO LIST:
+       National day to do:
+    
+                result:
+                        test application
+                        javascript test suit
+                        log file show how it works
+                        gdbscript show how it works
+                        script cope with merge and checkin
+                                                
+                        introduce document describe the big picture of software architecture
+                        reference document describe how to read,save,compile,test and debug
+                        tutorial document step by step
+
+                        jshell source
+                        jshell remove
+                        jshell test frame work
+                        jshell help frame work
+
+
 
         Bugs:
                 Ispell-complete-word do not work.  ;Done, help-char t
@@ -15,7 +34,7 @@ dot emacs files, \\[bartuer-general-todo-list], "
                 Turn off the debug?     ;Done
                 Emacs-lisp-mode hook cann't load before dot emacs.  ;Done
                 debug-on-error-ignore is ugly, do not list all in dot file ;Done
-                Some time ibuffer not work, restart it first ;Maybe because of compile warning
+                Some time ibuffer not work, restart it first ;Maybe because of compile warning ;Done
                 Why dot file is reloaded?
 
         Feature:
