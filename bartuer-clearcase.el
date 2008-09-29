@@ -56,6 +56,12 @@
 ;; query language to operation on the file set he can express with
 ;; such language. 
 
+;; the major three design flaw of clearcase is: first, it lacks clear
+;; language manipulate branch. second, it's document format not follow
+;; standard, so many utils can quick access and navigate in document
+;; sections can not apply to clearcase manpage. third, because of the
+;; first flaw, it is a bit hard for tools developer to add feature
+;; that issue batch action on branch easily, as seen in clearcase.el.
 
 ;; clean clearcase binding, now only add diff utils.  Design new
 ;; feature of clearcase mode, document and code for implement is
