@@ -249,7 +249,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (fboundp 'ispell-region)
     (ispell-region (point-min) (point-min)))
 
-(global-set-key "\C-\M-_" 'ispell-complete-word)
+(global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
 (global-set-key "\M-/" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
 ;; M-TAB do the tags and symbol complete
