@@ -322,10 +322,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'after-init-hook (lambda ()
                              (add-hook 'after-save-hook 'bartuer-general-byte-compile-dot-file t nil)
                              ))
-(defun diff-dot-file()
-  (interactive)
-  (diff "~/etc/el/.emacs.el" "~/.emacs.el" "-u"))
-(defalias 'dd 'diff-dot-file)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
