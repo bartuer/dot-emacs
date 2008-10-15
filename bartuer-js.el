@@ -12,7 +12,7 @@
   "setup the connection to jsh"
   (interactive)
   (setq js-process
-        (make-network-process :name "io" :host "127.0.0.1" :service "8889")))
+        (make-network-process :name "io" :host "192.168.1.2" :service "8889")))
   
 (defun send-expression-jsh (expression)
   "prompt for a expression, then send it to remote inner server in jsh"
