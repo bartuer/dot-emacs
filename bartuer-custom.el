@@ -23,7 +23,7 @@
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
  '(fill-column 70)
- '(find-function-C-source-directory "/home/bartuer/src/emacs/src" t)
+ '(find-function-C-source-directory "/home/bartuer/src/emacs/src/emacs" t)
  '(find-grep-options "-vE \".svn|drw|svn-base|*.pyc\"")
  '(find-ls-option (quote ("-exec ls -ld {} \\;" . "-ld")))
  '(gdb-debug-log-max nil)
