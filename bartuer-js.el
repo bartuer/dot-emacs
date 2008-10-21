@@ -1,14 +1,17 @@
 (defun bartuer-js-load ()
   "for javascript language
 "
+  (require 'flyspell nil t)
+  (when (fboundp 'flyspell-prog-mode)
+    (flyspell-prog-mode))
   (autoload 'connect-jsh "bartuer-js" nil t)
   (autoload 'send-expression-jsh "bartuer-js" nil t)
   (autoload 'send-fuction-jsh "bartuer-js" nil t)
   (autoload 'send-region-jsh "bartuer-js" nil t)
   (autoload 'send-buffer-jsh "bartuer-js" nil t)
-  (define-key js2-mode-map "\C-x\C-e" 'send-expression-jsh)
+  (define-key js2-mode-map "\C-x\C-e" 'send-fuction-jsh)
   (define-key js2-mode-map "\C-\M-x" 'send-buffer-jsh)
-  (define-key js2-mode-map "\C-j" 'send-fuction-jsh)
+  (define-key js2-mode-map "\C-j" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-c" 'send-region-jsh))
 
 (defvar js-process nil)

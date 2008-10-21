@@ -37,13 +37,16 @@
   (basic-save-buffer)
   (set-buffer (car note-buffer))
   (message "note added")
-  (kill-buffer-and-window)))
+  (kill-buffer-and-window)
+  (set-buffer note-orginal-buffer)
+  (deactivate-mark)))
 
 (defun bartuer-read-mark () 
   (interactive)
    (setq mark-buffer
           (list (find-file-noselect
            (format "%s-marks" (bookmark-buffer-name)))))
+   (setq note-orginal-buffer (current-buffer))
    (let ((target-file-name (buffer-file-name))
          (target-line-number (line-number-at-pos))
          (target-buffer (current-buffer))
