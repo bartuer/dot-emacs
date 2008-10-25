@@ -247,7 +247,10 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'ispell nil t)
 (if (fboundp 'ispell-region)
-    (ispell-region (point-min) (point-min)))
+    (progn
+     (ispell-region (point-min) (point-min))
+     (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
+     ))
 
 (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
 (global-set-key "\M-/" 'hippie-expand)
@@ -319,10 +322,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'after-init-hook (lambda ()
                              (add-hook 'after-save-hook 'bartuer-general-byte-compile-dot-file t nil)
                              ))
-(defun diff-dot-file()
-  (interactive)
-  (diff "~/etc/el/.emacs.el" "~/.emacs.el" "-u"))
-(defalias 'dd 'diff-dot-file)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
@@ -340,3 +339,9 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(autoload 'bartuer-js-load "bartuer-js" nil t)
+(add-hook 'js2-mode-hook 'bartuer-js-load)
+
+(autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
+(add-hook 'text-mode-hook 'bartuer-txt-load)
