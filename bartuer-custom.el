@@ -20,6 +20,7 @@
  '(describe-char-unidata-list (quote (name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored old-name iso-10646-comment uppercase lowercase titlecase)))
  '(desktop-path (quote ("~/etc/el/session" "~" ".")))
  '(django-test-setting "vote.tests.settings")
+ '(edebug-trace t)
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
  '(fill-column 70)
