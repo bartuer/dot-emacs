@@ -346,7 +346,19 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
 
-(require 'xscheme nil t)
 (autoload 'bartuer-scheme-load "bartuer-scheme.el" "for scheme mode" t)
+(autoload 'start-scheme "xscheme.el" "start scheme interaction buffer" t)
 (add-hook 'scheme-mode-hook 'bartuer-scheme-load)
 (add-to-list 'auto-mode-alist '("\\.scm$" . scheme-mode))
+(defun scheme (buffer-name)
+  (interactive
+   (list (read-buffer "Scheme interaction buffer: "
+		      "*scheme-scratch*"
+		      nil)))
+  (if (not (fboundp 'bartuer-scheme-load))
+      (progn
+        (autoload  'bartuer-scheme-load "bartuer-scheme.el" "for scheme mode" t)
+        (bartuer-scheme-load)
+        (start-scheme buffer-name))
+    (start-scheme buffer-name)))
+
