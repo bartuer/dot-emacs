@@ -346,5 +346,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
 
-(autoload 'scheme-mode "xscheme.el" "for scheme mode" t)
+(autoload 'bartuer-scheme-load "bartuer-scheme.el" "for scheme mode" t)
+(add-hook 'scheme-mode-hook 'bartuer-scheme-load)
 (add-to-list 'auto-mode-alist '("\\.scm$" . scheme-mode))
