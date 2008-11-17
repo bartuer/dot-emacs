@@ -56,6 +56,7 @@
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(ps-multibyte-buffer (quote bdf-font))
+ '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")) ("irc.exoweb.net" :user-name "bartuer" :channels ("#exoweb" "#labs" "#genesis") nil nil))))
  '(rst-level-face-base-color "")
  '(safe-local-variable-values (quote ((minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
  '(scroll-conservatively 10)
