@@ -21,6 +21,8 @@
  '(desktop-path (quote ("~/etc/el/session" "~" ".")))
  '(django-test-setting "vote.tests.settings")
  '(edebug-trace t)
+ '(emms-player-list (quote (emms-player-mplayer)))
+ '(emms-stream-default-action "play")
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
  '(fill-column 70)
@@ -51,12 +53,13 @@
  '(kill-read-only-ok t)
  '(line-number-mode t)
  '(list-matching-lines-default-context-lines 0)
+ '(load-path (quote ("~/etc/el" "~/etc/el/icicles" "~/local/share/emacs/23.0.60/site-lisp" "~/local/share/emacs/site-lisp" "~/local/share/emacs/23.0.60/lisp" "~/local/share/emacs/23.0.60/lisp/url" "~/local/share/emacs/23.0.60/lisp/toolbar" "~/local/share/emacs/23.0.60/lisp/textmodes" "~/local/share/emacs/23.0.60/lisp/progmodes" "~/local/share/emacs/23.0.60/lisp/play" "~/local/share/emacs/23.0.60/lisp/org" "~/local/share/emacs/23.0.60/lisp/obsolete" "~/local/share/emacs/23.0.60/lisp/nxml" "~/local/share/emacs/23.0.60/lisp/nxml/char-name" "~/local/share/emacs/23.0.60/lisp/nxml/char-name/unicode" "~/local/share/emacs/23.0.60/lisp/net" "~/local/share/emacs/23.0.60/lisp/mh-e" "~/local/share/emacs/23.0.60/lisp/mail" "~/local/share/emacs/23.0.60/lisp/language" "~/local/share/emacs/23.0.60/lisp/international" "~/local/share/emacs/23.0.60/lisp/gnus" "~/local/share/emacs/23.0.60/lisp/eshell" "~/local/share/emacs/23.0.60/lisp/erc" "~/local/share/emacs/23.0.60/lisp/emulation" "~/local/share/emacs/23.0.60/lisp/emacs-lisp" "~/local/share/emacs/23.0.60/lisp/calendar" "~/local/share/emacs/23.0.60/lisp/calc" "~/local/share/emacs/23.0.60/leim" "~/local/share/emacs/23.0.60/site-lisp/emms")) t)
  '(make-backup-files nil)
  '(max-mini-window-height 0.7)
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(ps-multibyte-buffer (quote bdf-font))
- '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")) ("irc.exoweb.net" :user-name "bartuer" :channels ("#exoweb" "#labs" "#genesis") nil nil))))
+ '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")))))
  '(rst-level-face-base-color "")
  '(safe-local-variable-values (quote ((minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
  '(scroll-conservatively 10)
@@ -71,6 +74,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(flymake-errline ((((class color)) (:inverse-video t))))
  '(flymake-warnline ((t (:underline t))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
