@@ -8,5 +8,6 @@
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-m" 'c-context-line-break)
   (define-key makefile-mode-map "\C-j" 'recompile)
+  (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-j" 'recompile))
 
