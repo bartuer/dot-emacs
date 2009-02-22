@@ -362,3 +362,15 @@ If give a negative ARG, will undo the last mark action, thus the
         (start-scheme buffer-name))
     (start-scheme buffer-name)))
 
+(require 'ess-site nil t)
+(autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
+(add-hook 'ess-mode-hook 'bartuer-ess-load)
+
+(autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
+(add-hook 'org-mode-hook 'bartuer-org-load)
+
+(put 'dired-find-alternate-file 'disabled nil)
+
+(put 'upcase-region 'disabled nil)
+
+(put 'downcase-region 'disabled nil)

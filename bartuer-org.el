@@ -9,5 +9,4 @@
   (define-key org-mode-map "\C-j" 'org-meta-return)
   ;; add a hook when saving also export to a html
   ;; setup a webserver, can quick access one page org content locally
-  
 )
