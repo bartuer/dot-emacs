@@ -13,5 +13,6 @@
   ;; setup a webserver, can quick access one page org content locally
   (setq org-link-abbrev-alist
         '(("gfcn" . "http://www.google.com/finance?fstype=ii&q=%s&gl=cn")
-          ("gf" . "http://www.google.com/finance?q=%s")))
+          ("gf" . "http://www.google.com/finance?q=%s")
+          ("rt" . "http://www.reuters.com/finance/stocks/overview?symbol=%s")))
 )

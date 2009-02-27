@@ -365,6 +365,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
 (add-hook 'ess-mode-hook 'bartuer-ess-load)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cu" 'org-insert-link-global)
+(global-set-key "\C-co" 'org-open-at-point-global)
 
 (autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (add-hook 'org-mode-hook 'bartuer-org-load)
