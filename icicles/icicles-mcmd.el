@@ -432,8 +432,8 @@ Removes *Completions* window."
 ;;;
 ;;; Return the number of the completion.
 ;;;
-(or (fboundp 'old-mouse-choose-completion)
-(fset 'old-mouse-choose-completion (symbol-function 'mouse-choose-completion)))
+;; (or (fboundp 'old-mouse-choose-completion)
+;; (fset 'old-mouse-choose-completion (symbol-function 'mouse-choose-completion)))
 
 ;;;###autoload
 (defun icicle-mouse-choose-completion (event) ; Bound to `mouse-2' in *Completions*.
