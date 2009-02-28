@@ -7,6 +7,8 @@
   ;; now the move by function method does not work well, basically it
   ;; can be resolved a bit by this hack or better method show below ,
   ;; using the ess-eval-function-or-paragraph-and-step
+
+  ;; just M-x R, start inferior R process
   (setq ess-function-pattern "\\(^ ?function\\|^.*<- function\\)\\( ?([^)]*)\\)\\( ?[^{].*$\\|{.*}\\)")
   (flyspell-mode)
   (define-key ess-mode-map "\C-j" 'ess-eval-line)
