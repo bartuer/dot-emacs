@@ -5,6 +5,7 @@
   ;; If there is more than one, they won't work right.
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
+ '(blink-cursor-mode t)
  '(bookmark-default-file "~/etc/el/bookmark/.emacs.bmk")
  '(bookmark-save-flag 1)
  '(case-fold-search t)
@@ -78,6 +79,7 @@
   ;; If there is more than one, they won't work right.
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
+ '(cursor ((t (:foreground "white"))))
  '(custom-comment-tag ((((class color) (background light)) (:foreground "cyan"))))
  '(flymake-errline ((((class color)) (:inverse-video t))))
  '(flymake-warnline ((t (:underline t))))
