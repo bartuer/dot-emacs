@@ -98,4 +98,5 @@
  '(org-drawer ((t (:foreground "cyan" :weight bold))))
  '(org-level-1 ((t (:foreground "cyan"))))
  '(org-level-7 ((t (:foreground "cyan"))))
+ '(org-link ((((class color) (background dark)) (:foreground "Pink" :underline t))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "green")))))
