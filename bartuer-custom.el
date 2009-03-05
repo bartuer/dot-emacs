@@ -70,6 +70,7 @@
 ]+")
  '(size-indication-mode t)
  '(transient-mark-mode t)
+ '(user-mail-address "bartuer@gmail.com")
  '(view-read-only t))
  
 (custom-set-faces
