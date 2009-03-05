@@ -94,4 +94,8 @@
  '(mode-line ((t (:inverse-video t))))
  '(mode-line-buffer-id ((t (:background "yellow" :foreground "green" :weight bold))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:inverse-video nil))))
+ '(org-agenda-structure ((t (:foreground "cyan" :weight bold))))
+ '(org-drawer ((t (:foreground "cyan" :weight bold))))
+ '(org-level-1 ((t (:foreground "cyan"))))
+ '(org-level-7 ((t (:foreground "cyan"))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "green")))))
