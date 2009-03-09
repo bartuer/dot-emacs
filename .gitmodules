@@ -16,3 +16,6 @@
 [submodule "vendor/rhtml-mode"]
 	path = vendor/rhtml-mode
 	url = git://github.com/eschulte/rhtml.git
+[submodule "vendor/yasnippet"]
+	path = vendor/yasnippet
+	url = git://github.com/defunkt/yasnippet.git
