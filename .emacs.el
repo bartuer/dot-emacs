@@ -374,6 +374,18 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (add-hook 'org-mode-hook 'bartuer-org-load)
 
+(defun git-grep (command-args)
+  "Run grep over git documents"
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (list (read-shell-command "grep git docs: "
+                               "find ~/local/share/doc/git-doc -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
+
+   (when command-args              
+     (let ((null-device nil))		; see grep
+       (grep command-args))))
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
