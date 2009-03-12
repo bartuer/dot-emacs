@@ -1,0 +1,52 @@
+this clip let you do after him, very cool.
+
+how to download and install it
+
+when enter the rails directory, rinari is auto turned on
+
+execute the help script and jump to the generated files
+
+C-c ; f c	rinari-find-controller
+C-c ; f e	rinari-find-environment
+C-c ; f f	rinari-find-file-in-project
+C-c ; f h	rinari-find-helper
+C-c ; f i	rinari-find-migration
+C-c ; f j	rinari-find-javascript
+C-c ; f l	rinari-find-plugin
+C-c ; f m	rinari-find-model
+C-c ; f n	rinari-find-configuration
+C-c ; f o	rinari-find-log
+C-c ; f p	rinari-find-public
+C-c ; f s	rinari-find-script
+C-c ; f t	rinari-find-test
+C-c ; f v	rinari-find-view
+C-c ; f w	rinari-find-worker
+C-c ; f x	rinari-find-fixture
+C-c ; f y	rinari-find-stylesheet
+
+these find file know the concept of rails, so you can jump between
+concept not the filename, you do not map the concept and file in your
+brain, just jump directly 
+
+in the buffer execute command like rinari-web-server rinari-rake, just
+do something at the point is very quick, first of all, I want to
+figure out how to bind update the brower when I save the buffer:
+start server
+rake db:migrate
+
+
+can using the server log as compilation buffer, and jump directly
+to the error source
+
+how to render partial
+
+record it again , for the guy will type the topics before he show
+them.
+
+how to run test :
+rak is the shell of rails, run test from it,
+
+Console:
+you can get a console and check all symbol there, and using tab to
+complete and learn more
+

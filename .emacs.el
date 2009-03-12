@@ -151,7 +151,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-1" 'shell)
 
 (add-hook 'dired-load-hook (lambda () (load "dired-x")))
-(global-set-key "\M-2" 'find-file)
+(global-set-key "\M-8" 'find-file)
 (defalias 'ff 'find-file-at-point)
 
 (require 'ibuffer nil t)
@@ -206,7 +206,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key [(f4)] 'f4)
 (defalias 'fr 'make-frame)
 
-(global-set-key "\M-8" 'find-dired)
 (global-set-key "\M-9" 'grep-find)
 (global-set-key [(f9)] 'grep-find)
 (global-set-key "\M-0" 'list-matching-lines)
@@ -304,6 +303,21 @@ If give a negative ARG, will undo the last mark action, thus the
 (when (fboundp 'ido-mode)
   (setq-default ido-mode 'both)
   (ido-mode 1))
+
+(autoload 'file-cache-ido-read "bartuer-filecache.el" "prompt to ido filecache" t nil)
+(autoload 'file-cache-ido-find-file "bartuer-filecache.el" "using ido find filecache" t nil)
+(autoload 'file-cache-add-this-file "bartuer-filecache.el" "when kill buffer, add to filename cache" t nil)
+(autoload 'bartuer-filecache-load "bartuer-filecache.el" "for access file cache" t)
+(bartuer-filecache-load)
+
+(require 'magit nil t)
+(global-set-key "\C-xg" 'magit-status)
+
+(require 'cheat)
+
+(autoload 'bartuer-rails-load "bartuer-rails.el"
+  "load all mark language mode"
+  t nil)
 
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
