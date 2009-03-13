@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: assert_response
 # --
-#!/usr/bin/env ruby
+assert_response :${1:success}

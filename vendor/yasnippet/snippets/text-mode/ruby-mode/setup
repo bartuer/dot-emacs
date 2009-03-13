@@ -1,4 +1,7 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: setup method
 # --
-#!/usr/bin/env ruby
+def setup
+  super
+  $0
+end

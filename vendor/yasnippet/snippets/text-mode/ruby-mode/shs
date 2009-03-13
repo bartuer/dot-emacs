@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should satisfy
 # --
-#!/usr/bin/env ruby
+${1:actual}.should satisfy { |obj| ${2:code} }

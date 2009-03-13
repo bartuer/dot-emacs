@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: redirect_to (controller)
 # --
-#!/usr/bin/env ruby
+redirect_to ${1:url}

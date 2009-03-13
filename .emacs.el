@@ -252,8 +252,10 @@ If give a negative ARG, will undo the last mark action, thus the
      ))
 
 (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
-(global-set-key "\M-/" 'hippie-expand)
+(global-set-key "\M-i" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
+(global-set-key "\M-/" 'tab-to-tab-stop)
+
 ;; M-TAB do the tags and symbol complete
 (defalias 'tl (quote (lambda ()
                        (interactive)
@@ -312,12 +314,44 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
+(defun git-grep (command-args)
+  "Run grep over git documents"
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (list (read-shell-command "grep git docs: "
+                               "find ~/local/share/doc/git-doc -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
+   (when command-args              
+     (let ((null-device nil))		; see grep
+       (grep command-args))))
 
-(require 'cheat)
+(require 'cheat nil t)                  ;if I can insert buffer with shell command, why I need this?
+(require 'gist nil t)
 
-(autoload 'bartuer-rails-load "bartuer-rails.el"
+
+(require 'rinari nil t)
+
+(require 'ruby-mode nil t)
+(add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
+
+(autoload 'css-mode "css-mode-simple.el"
+  "mode for css file" t nil)
+(require 'css-mode nil t)
+(add-to-list 'auto-mode-alist '("\.css$" . css-mode))
+
+(autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
+  "mode for yaml file" t nil)
+(require 'yaml-mode nil t)
+(add-to-list 'auto-mode-alist '("\.yml$" . yaml-mode))
+
+(require 'rhtml-mode nil t)
+(autoload 'bartuer-nxhtml-load "bartuer-nxhtml.el"
   "load all mark language mode"
   t nil)
+
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
 
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
@@ -387,18 +421,6 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (add-hook 'org-mode-hook 'bartuer-org-load)
-
-(defun git-grep (command-args)
-  "Run grep over git documents"
-  (interactive
-   (progn
-     (grep-compute-defaults)
-     (list (read-shell-command "grep git docs: "
-                               "find ~/local/share/doc/git-doc -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
-
-   (when command-args              
-     (let ((null-device nil))		; see grep
-       (grep command-args))))
 
 (put 'dired-find-alternate-file 'disabled nil)
 

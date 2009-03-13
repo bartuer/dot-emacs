@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: assert_raise(..) { .. }
 # --
-#!/usr/bin/env ruby
+assert_raise(${1:Exception}) do
+  $0
+end

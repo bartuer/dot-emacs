@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: before(:each)
 # --
-#!/usr/bin/env ruby
+before(:each) do
+  $0
+end

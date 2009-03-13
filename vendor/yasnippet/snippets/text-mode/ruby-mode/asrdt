@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: assert_redirected_to
 # --
-#!/usr/bin/env ruby
+assert_redirected_to "${1:url or hash}"

@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: do ... end
 # --
-#!/usr/bin/env ruby
+do |${1:item}|
+$0`(indent-according-to-mode)`
+end

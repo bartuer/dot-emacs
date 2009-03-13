@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: ruby-mode
 # --
-#!/usr/bin/env ruby
+# -*- ruby -*-

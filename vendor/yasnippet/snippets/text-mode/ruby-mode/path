@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: named_path(args)
 # --
-#!/usr/bin/env ruby
+${1:named}_path(${2:args...})

@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should ==
 # --
-#!/usr/bin/env ruby
+${1:actual}.should == ${2:expected}$0

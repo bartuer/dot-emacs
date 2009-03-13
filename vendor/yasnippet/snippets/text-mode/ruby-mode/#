@@ -1,3 +1,4 @@
-#name : # =>
+# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
+#name: #{...}
 # --
-# => 
+#{$0}

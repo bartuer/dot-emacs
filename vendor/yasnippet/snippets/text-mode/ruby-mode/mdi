@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: migrate drop index
 # --
-#!/usr/bin/env ruby
+remove_index :${1:table_name}, :${2:column}

@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should respond_to
 # --
-#!/usr/bin/env ruby
+${1:actual}.should respond_to(${2:names})

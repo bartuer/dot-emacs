@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: puts "DBG: ..."
 # --
-#!/usr/bin/env ruby
+puts "DBG: ${1:var}=#{${1:var}.inspect}"

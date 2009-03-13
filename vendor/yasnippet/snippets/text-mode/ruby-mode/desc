@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: desc
 # --
-#!/usr/bin/env ruby
+describe ${1:Class} do
+  $0
+end

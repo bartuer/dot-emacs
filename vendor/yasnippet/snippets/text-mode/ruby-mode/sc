@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: context '...'
 # --
-#!/usr/bin/env ruby
+context '${1:description}' do
+  $0
+end

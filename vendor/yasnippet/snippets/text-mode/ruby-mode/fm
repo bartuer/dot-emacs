@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: flexmock(...)
 # --
-#!/usr/bin/env ruby
+flexmock(${1:object})$0

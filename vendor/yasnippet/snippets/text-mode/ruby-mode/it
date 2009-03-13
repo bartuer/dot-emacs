@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: it '...'
 # --
-#!/usr/bin/env ruby
+it 'should ${1:description}' do
+  $0
+end

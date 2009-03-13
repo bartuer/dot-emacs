@@ -1,4 +1,7 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: teardown method
 # --
-#!/usr/bin/env ruby
+def teardown
+  super
+  $0
+end

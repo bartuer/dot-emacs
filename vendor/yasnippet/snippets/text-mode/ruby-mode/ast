@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: assert_throws(..) { .. }
 # --
-#!/usr/bin/env ruby
+assert_throws(:${1:expected}) do
+  $0
+end

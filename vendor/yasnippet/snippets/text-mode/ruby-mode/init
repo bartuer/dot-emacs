@@ -1,4 +1,6 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name : def initialize(...)
 # --
-#!/usr/bin/env ruby
+def initialize(${1:args})
+  $0
+end

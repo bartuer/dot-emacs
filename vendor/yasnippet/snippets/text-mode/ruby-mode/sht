@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should throw_symbol
 # --
-#!/usr/bin/env ruby
+${1:actual}.should throw_symbol(${2:symbol})

@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should match
 # --
-#!/usr/bin/env ruby
+${1:actual}.should match(/${2:regex}/)

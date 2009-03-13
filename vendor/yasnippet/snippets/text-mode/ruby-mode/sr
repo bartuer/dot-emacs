@@ -1,4 +1,4 @@
 # -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-# name : /usr/bin/env ruby
+#name: should_receive
 # --
-#!/usr/bin/env ruby
+should_receive(:${1:method})$0
