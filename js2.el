@@ -122,9 +122,10 @@
 (eval-when-compile
   (require 'cl))
 
-(require 'cc-mode)     ; (only) for `c-populate-syntax-table'
-(require 'cc-langs)    ; it's here in Emacs 21...
-(require 'cc-engine)  ; for `c-paragraph-start' et. al.
+(eval-and-compile
+  (require 'cc-mode)     ; (only) for `c-populate-syntax-table'
+  (require 'cc-langs)    ; it's here in Emacs 21...
+  (require 'cc-engine))  ; for `c-paragraph-start' et. al.
 
 (defvar js2-emacs22 (>= emacs-major-version 22))
 

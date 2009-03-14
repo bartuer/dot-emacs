@@ -334,6 +334,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ruby-mode nil t)
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 
+(require 'ri nil t)
+
 (autoload 'css-mode "css-mode-simple.el"
   "mode for css file" t nil)
 (require 'css-mode nil t)

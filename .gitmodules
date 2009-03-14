@@ -1,9 +1,6 @@
 [submodule "vendor/rinari"]
 	path = vendor/rinari
 	url = git://github.com/eschulte/rinari.git
-[submodule "vendor/twilight-emacs"]
-	path = vendor/twilight-emacs
-	url = git://github.com/crafterm/twilight-emacs.git
 [submodule "vendor/magit"]
 	path = vendor/magit
 	url = git://github.com/technomancy/magit.git
@@ -13,12 +10,12 @@
 [submodule "vendor/gist"]
 	path = vendor/gist
 	url = git://github.com/defunkt/gist.el.git
-[submodule "vendor/rhtml-mode"]
-	path = vendor/rhtml-mode
-	url = git://github.com/eschulte/rhtml.git
 [submodule "vendor/yasnippet"]
 	path = vendor/yasnippet
 	url = git://github.com/defunkt/yasnippet.git
 [submodule "vendor/rhtml"]
 	path = vendor/rhtml
 	url = git://github.com/eschulte/rhtml.git
+[submodule "vendor/ri"]
+	path = vendor/ri
+	url = git://github.com/technomancy/ri.el.git
