@@ -328,6 +328,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'cheat nil t)                  ;if I can insert buffer with shell command, why I need this?
 (require 'gist nil t)
 
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
 
 (require 'rinari nil t)
 
@@ -347,13 +350,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.yml$" . yaml-mode))
 
 (require 'rhtml-mode nil t)
-(autoload 'bartuer-nxhtml-load "bartuer-nxhtml.el"
-  "load all mark language mode"
-  t nil)
+(add-hook 'rhtml-mode-hook
+     	  (lambda () (rinari-launch)))
 
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
+(require 'mumamo-fun)
+(setq mumamo-chunk-coloring 'submode-colored)
+(add-to-list 'auto-mode-alist '("\\.html\\.erb\\'" . eruby-html-mumamo))
 
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
