@@ -414,6 +414,9 @@ If give a negative ARG, will undo the last mark action, thus the
         (start-scheme buffer-name))
     (start-scheme buffer-name)))
 
+(autoload 'bartuer-elisp-load "bartuer-elisp.el" "for edit elisp" t)
+(add-hook 'elisp-mode-hook 'bartuer-elisp-load)
+
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
 (add-hook 'ess-mode-hook 'bartuer-ess-load)
