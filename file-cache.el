@@ -7,6 +7,7 @@
 (file-cache-add-directory "~/rails-learn/depot/app/views")
 (file-cache-add-directory "~/rails-learn/depot/app/views/products")
 (file-cache-add-directory "~/rails-learn/depot/app/views/layouts")
+(file-cache-add-directory "~/rails-learn/depot/app/views/store")
 (file-cache-add-directory "~/rails-learn/depot/config")
 (file-cache-add-directory "~/rails-learn/depot/config/environments")
 (file-cache-add-directory "~/rails-learn/depot/config/initializers")

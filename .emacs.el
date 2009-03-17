@@ -356,14 +356,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'rhtml-mode nil t)
 (add-hook 'rhtml-mode-hook
      	  (lambda () (rinari-launch)))
-
-(autoload 'bartuer-html-load "~/etc/el/bartuer-html.el"
-  "mode html modifications" t nil)
-(add-hook 'html-mode-hook 'bartuer-html-load)
+(add-to-list 'auto-mode-alist '("\\.rhtml" . rhtml-mode))
+(add-to-list 'auto-mode-alist '("\\.erb" . rhtml-mode))
 
 (require 'mumamo-fun)
 (setq mumamo-chunk-coloring 'submode-colored)
-(add-to-list 'auto-mode-alist '("\\.html\\.erb\\'" . eruby-html-mumamo))
+(add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's

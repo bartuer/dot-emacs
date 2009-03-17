@@ -256,6 +256,7 @@ from your conf/database.sql file."
 allowing jumping between errors and source code.  With optional
 prefix argument allows editing of the server command arguments."
   (interactive "P")
+  (call-process "kill-rails-server")
   (let* ((default-directory (rinari-root))
 	 (script (concat (expand-file-name "server"
 					   (file-name-as-directory
