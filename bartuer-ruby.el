@@ -1,7 +1,7 @@
 (defun bartuer-ruby-assign ()
   "insert the =>"
   (interactive)
-  (insert "=>"))
+  (insert " => "))
 
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
