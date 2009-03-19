@@ -353,9 +353,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'yaml-mode nil t)
 (add-to-list 'auto-mode-alist '("\.yml$" . yaml-mode))
 
+(autoload 'bartuer-rhtml-load "~/etc/el/bartuer-rhtml.el" "mode for rhtml" nil t)
 (require 'rhtml-mode nil t)
 (add-hook 'rhtml-mode-hook
-     	  (lambda () (rinari-launch)))
+     	  (lambda ()
+            (rinari-launch)
+            (bartuer-rhtml-load)))
 (add-to-list 'auto-mode-alist '("\\.rhtml" . rhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.erb" . rhtml-mode))
 
