@@ -69,6 +69,7 @@
  '(scroll-conservatively 10)
  '(search-whitespace-regexp "[ 	
 ]+")
+ '(sgml-tag-alist (quote (("![" ("ignore" t) ("include" t)) ("!attlist") ("!doctype") ("!element") ("!entity"))))
  '(size-indication-mode t)
  '(transient-mark-mode t)
  '(user-mail-address "bartuer@gmail.com")

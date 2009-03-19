@@ -1,4 +1,3 @@
-(file-cache-add-directory "~/local/bin")
 (file-cache-add-directory "~/bin")
 (file-cache-add-directory "~/rails-learn/depot")
 (file-cache-add-directory "~/rails-learn/depot")
