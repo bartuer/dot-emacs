@@ -92,6 +92,7 @@
  '(icicle-search-context-level-8 ((((background dark)) nil)))
  '(icicle-special-candidate ((((background dark)) nil)))
  '(link ((((class color) (background light)) (:foreground "cyan" :underline t))))
+ '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))
  '(mode-line ((t (:inverse-video t))))
  '(mode-line-buffer-id ((t (:background "yellow" :foreground "green" :weight bold))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:inverse-video nil))))
