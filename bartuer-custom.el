@@ -84,6 +84,7 @@
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
  '(cursor ((t (:foreground "white"))))
  '(custom-comment-tag ((((class color) (background light)) (:foreground "cyan"))))
+ '(erb-face ((((class color) (min-colors 8)) nil)))
  '(flymake-errline ((((class color)) (:inverse-video t))))
  '(flymake-warnline ((t (:underline t))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
