@@ -325,7 +325,7 @@ If give a negative ARG, will undo the last mark action, thus the
      (let ((null-device nil))		; see grep
        (grep command-args))))
 
-(require 'cheat nil t)                  ;if I can insert buffer with shell command, why I need this?
+(require 'cheat nil t)            
 (require 'gist nil t)
 
 (require 'yasnippet)
