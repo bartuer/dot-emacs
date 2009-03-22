@@ -45,7 +45,7 @@
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(hippie-expand-verbose t)
- '(ibuffer-saved-filter-groups (quote (("urls" ("urls" (name . "urls"))))))
+ '(ibuffer-saved-filter-groups (quote (("version" ("lisp" (used-mode . emacs-lisp-mode)) ("page" (used-mode . Man-mode)) ("dir" (used-mode . dired-mode)) ("shell" (mode . shell-mode))) ("urls" ("urls" (name . "urls"))))))
  '(ibuffer-saved-filters (quote (("objc" (mode . objc-mode)) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icicle-apropos-cycle-next-keys (quote ([next])))
  '(ido-create-new-buffer (quote always))
