@@ -6,5 +6,7 @@
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
   (yas/minor-mode-auto-on)
-  (define-key ruby-mode-map "\M-=" 'bartuer-ruby-assign))
+  (define-key ruby-mode-map "\M-=" 'bartuer-ruby-assign)
+  (define-key inf-ruby-mode-map "\M-=" 'bartuer-ruby-assign)
+  (define-key rhtml-mode-map "\M-=" 'bartuer-ruby-assign))
   
