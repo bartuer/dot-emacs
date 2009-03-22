@@ -340,6 +340,7 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for ruby mode" t nil)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
 
 (require 'ri nil t)
 
@@ -366,6 +367,7 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq mumamo-chunk-coloring 'submode-colored)
 ;; (add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
+(add-to-list 'auto-mode-alist '("\\.log" . auto-revert-mode))
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
   dot emacs files, \\[bartuer-general-todo-list]," t nil)
