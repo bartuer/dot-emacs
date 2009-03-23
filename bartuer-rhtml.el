@@ -2,7 +2,7 @@
 (defun bartuer-rhtml-load ()
   "mode hooks for rhtml"
   (yas/minor-mode-auto-on)
-  (define-key rhtml-mode-map "\C-\M-k" 'sgml-delet-tag)
+  (define-key rhtml-mode-map "\C-\M-k" 'sgml-delete-tag)
   (define-key rhtml-mode-map "\C-\M-f" 'sgml-skip-tag-forward)
   (define-key rhtml-mode-map "\C-\M-b" 'sgml-skip-tag-backward)
   (define-key rhtml-mode-map "\C-c\C-a" 'sgml-attributes)
