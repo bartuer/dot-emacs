@@ -2,7 +2,7 @@
 #name: <fieldset></fieldset>
 # --
 <fieldset>
-  <legend> $1 <legend>
+  <legend> $1 </legend>
       <% ${2:form_for} do %>
         <p>
           <label for="${3:name}">${4:Name}:</label>
