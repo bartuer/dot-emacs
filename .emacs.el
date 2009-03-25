@@ -341,6 +341,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\.builder$" . ruby-mode))
 
 (load  "~/etc/el/vendor/ri/ri.el")
 
