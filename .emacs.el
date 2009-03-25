@@ -314,6 +314,9 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
+(autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
+(add-hook 'magit-mode-hook 'bartuer-magit-load)
+
 (defun git-grep (command-args)
   "Run grep over git documents"
   (interactive
