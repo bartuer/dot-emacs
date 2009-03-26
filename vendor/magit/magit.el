@@ -1823,8 +1823,8 @@ in log buffer."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") 'magit-log-edit-commit)
     (define-key map (kbd "C-c C-a") 'magit-log-edit-toggle-amending)
-    (define-key map (kbd "M-p") 'log-edit-previous-comment)
-    (define-key map (kbd "M-n") 'log-edit-next-comment)
+    (define-key map (kbd "M-p") 'backward-paragraph)
+    (define-key map (kbd "M-n") 'forward-paragraph)
     map))
 
 (defvar magit-pre-log-edit-window-configuration nil)
