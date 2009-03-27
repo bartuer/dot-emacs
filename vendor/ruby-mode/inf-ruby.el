@@ -311,7 +311,7 @@ Must not contain ruby meta characters.")
         (goto-char m)
         (insert ruby-eval-separator "\n")
         (set-marker m (point))))
-    (comint-send-string (ruby-proc) (format "eval <<'%s', nil, %S, %d\n" term file line))
+    (comint-send-string (ruby-proc) (format "eval <<'%s', nil, '%s', %d\n" term file line))
     (comint-send-region (ruby-proc) start end)
     (comint-send-string (ruby-proc) (concat "\n" term "\n"))))
 
