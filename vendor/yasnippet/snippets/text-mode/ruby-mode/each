@@ -1,0 +1,3 @@
+#name : object.each { |item| ... }
+# --
+${1:items}.each { |${2:item}| $0 }

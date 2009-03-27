@@ -105,4 +105,6 @@
  '(org-level-1 ((t (:foreground "cyan"))))
  '(org-level-7 ((t (:foreground "cyan"))))
  '(org-link ((((class color) (background dark)) (:foreground "Pink" :underline t))))
- '(which-func ((((background dark)) (:background "yellow" :foreground "green")))))
+ '(which-func ((((background dark)) (:background "yellow" :foreground "green"))))
+ '(yas/field-highlight-face ((t (:background "blue"))))
+ '(yas/mirror-highlight-face ((t (:background "blue")))))
