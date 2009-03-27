@@ -256,6 +256,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-j" 'dabbrev-expand)
 (global-set-key "\M-/" 'tab-to-tab-stop)
 
+;; if the major mode has bind M-TAB to complete symbol, then
+;; flyspell-auto-correct-word will bind to C-c M-TAB , if major mode not
+;; using M-TAB, then M-TAB is flyspell-auto-correct-word
+(autoload 'bartuer-flyspell-load "bartuer-flyspell.el" "flyspell modification")
+(add-hook 'flyspell-mode-hook 'bartuer-flyspell-load)
+
 ;; M-TAB do the tags and symbol complete
 (defalias 'tl (quote (lambda ()
                        (interactive)
