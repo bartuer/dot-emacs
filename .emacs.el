@@ -251,7 +251,6 @@ If give a negative ARG, will undo the last mark action, thus the
      (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
      ))
 
-(global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
 (global-set-key "\M-i" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
 (global-set-key "\M-/" 'tab-to-tab-stop)
