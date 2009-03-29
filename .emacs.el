@@ -343,10 +343,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'rinari nil t)
 
 (require 'ruby-mode nil t)
-(require 'bartuer-ruby-load nil t)
 (autoload 'bartuer-ruby-load "~/etc/el/bartuer-ruby.el"
   "mode for ruby mode" t nil)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
+(add-hook 'inf-ruby-mode-hook 'baruter-ruby-load)
+
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.builder$" . ruby-mode))
