@@ -42,7 +42,8 @@ If give a negative ARG, will undo the last mark action, thus the
   (unless arg (setq arg 1))
   (cond ((> arg 0)
          (progn
-           (backward-up-list arg)
+           (unless (eq (syntax-class (syntax-after (point))) 4)
+             (backward-up-list arg))
            (mark-sexp 1)))
         ((< arg 0)
          (when (not (and transient-mark-mode mark-active))
@@ -53,8 +54,11 @@ If give a negative ARG, will undo the last mark action, thus the
          (down-list)
          (when (scan-lists (point) 1 -1)
            (mark-whole-sexp)))))
+
+(global-set-key "\C-cc" 'mark-whole-sexp)
+(global-set-key "\C-c\C-c" 'mark-whole-sexp)
 (global-set-key "\C-cp" 'mark-whole-sexp)
-(global-set-key "\C-x\C-\M-@" 'mark-whole-sexp)
+(global-set-key "\C-c\C-p" 'mark-whole-sexp)
 
 (defun mark-whole-sentence (&optional arg)
   "\\[mark-whole-sentence], Steal from `mark-paragraph'"
@@ -351,6 +355,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.builder$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
 
 (load  "~/etc/el/vendor/ri/ri.el")
 
