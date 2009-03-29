@@ -360,7 +360,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.builder$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
 
-(load  "~/etc/el/vendor/ri/ri.el")
+(autoload 'ri "~/etc/el/vendor/ri/ri-ruby.el"
+  "query ruby document" nil t)
+(defalias 'r 'ri)                       ; need check fastri-server and
+                                        ; start it?
 
 (autoload 'css-mode "css-mode-simple.el"
   "mode for css file" t nil)
