@@ -192,7 +192,7 @@ If give a negative ARG, will undo the last mark action, thus the
   "select the first frame "
   (interactive)
   (select-frame-by-name "F1"))
-(global-set-key "\C-z" 'f1)
+
 (defun f2()
   "select frame 2"
   (interactive)
@@ -320,6 +320,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'file-cache-add-this-file "bartuer-filecache.el" "when kill buffer, add to filename cache" t nil)
 (autoload 'bartuer-filecache-load "bartuer-filecache.el" "for access file cache" t)
 (bartuer-filecache-load)
+
+(require 'anything nil t)
+(global-set-key "\C-z" 'anything)
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
