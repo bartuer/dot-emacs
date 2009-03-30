@@ -69,7 +69,7 @@
   "The ruby program name.")
 
 ;; must using full path, can not start with $HOME or ~
-(defvar ri-ruby-script "/Users/bartuer/etc/el/vendor/ri/ri-emacs.rb"
+(defvar ri-ruby-script "/Users/bartuer/etc/el/vendor/ri/bin/ri-emacs"
   "the ruby script to communicate with")
 
 (defvar ri-ruby-process nil
@@ -119,7 +119,7 @@
                  (let ((output (with-current-buffer ri-ruby-process-buffer
                       (buffer-substring (point-min)
                                         (point-max)))))
-                   (error "can not start ruby script.\n" output)))))
+                   (error (princ output))))))
       (set-process-filter ri-ruby-process t)
       (kill-buffer ri-ruby-process-buffer))))
 
@@ -193,7 +193,7 @@
 	 (classes (ri-ruby-process-get-expr "CLASS_LIST" keyw))
 	 (class (cond ((null classes) nil)
 		      ((null (cdr classes)) (caar classes))
-		      (t (completing-read (concat prompt keyw
+		      (t (ido-completing-read (concat prompt keyw
 						  " classname: ")
 					  classes nil t)))))
     (list keyw class)))
