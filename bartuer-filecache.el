@@ -3,7 +3,7 @@
 (defun file-cache-ido-find-file (file)
   "Using ido, interactively open file from file cache'.
 First select a file, matched using ido-switch-buffer against the contents
-in ile-cache-alist'. If the file exist in more than one
+in file-cache-alist'. If the file exist in more than one
 directory, select directory. Lastly the file is opened."
   (interactive (list (file-cache-ido-read "File: "
                                           (mapcar
