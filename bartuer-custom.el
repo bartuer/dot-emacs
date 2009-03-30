@@ -99,7 +99,7 @@
  '(icicle-search-context-level-8 ((((background dark)) nil)))
  '(icicle-special-candidate ((((background dark)) nil)))
  '(link ((((class color) (background light)) (:foreground "cyan" :underline t))))
- '(magit-item-highlight ((((class color) (background dark)) (:foreground "green"))))
+ '(magit-item-highlight ((nil (:foreground "green"))))
  '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))
  '(magit-section-title ((t (:inherit magit-header :foreground "red" :weight bold))))
  '(mode-line ((t (:inverse-video t))))
