@@ -188,9 +188,8 @@
 	 (prompt (concat "method- or classname"
 			 (if default (concat " (default " default ")") "")
 			 ": "))
-	 (keyw (ido-completing-read prompt
-                                    (ri-ruby-complete-method ""  nil t)
-                                    nil t "" 'ri-ruby-history default))
+	 (keyw (completing-read prompt 'ri-ruby-complete-method
+				nil t "" 'ri-ruby-history default))
 	 (classes (ri-ruby-process-get-expr "CLASS_LIST" keyw))
 	 (class (cond ((null classes) nil)
 		      ((null (cdr classes)) (caar classes))
