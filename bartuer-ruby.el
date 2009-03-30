@@ -7,7 +7,8 @@
   "mode hooks for ruby"
   (require 'rcodetools nil t)
   (require 'anything-rcodetools)
-  (require 'ruby-eletric nil t)
+  (load "~/etc/el/vendor/ruby-mode/ruby-electric.el")
+  (require 'ruby-eletric-mode nil t)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
