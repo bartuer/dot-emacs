@@ -248,6 +248,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (fboundp 'which-function-mode)
     (which-function-mode 1))
 
+(require 'auto-install nil t)
+
 (require 'ispell nil t)
 (if (fboundp 'ispell-region)
     (progn
@@ -342,6 +344,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'cheat nil t)            
 (require 'gist nil t)
+(require 'pastie nil t)
 
 (require 'yasnippet)
 (yas/initialize)
