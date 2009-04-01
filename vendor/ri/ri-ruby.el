@@ -185,11 +185,11 @@
   (let* ((curr (current-word))
 	 (match (ri-ruby-process-get-expr "LAMBDA" curr))
 	 (default (if match curr nil))
-	 (prompt (concat "method- or classname"
+	 (prompt (concat "method or classname"
 			 (if default (concat " (default " default ")") "")
 			 ": "))
 	 (keyw (completing-read prompt 'ri-ruby-complete-method
-				nil t "" 'ri-ruby-history default))
+				nil nil "" 'ri-ruby-history default))
 	 (classes (ri-ruby-process-get-expr "CLASS_LIST" keyw))
 	 (class (cond ((null classes) nil)
 		      ((null (cdr classes)) (caar classes))
