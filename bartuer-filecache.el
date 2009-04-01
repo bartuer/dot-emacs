@@ -41,6 +41,7 @@ directory, select directory. Lastly the file is opened."
          (file-cache-add-directory "~/local/share/doc/")
          (file-cache-add-directory "~/local/share/")
          (file-cache-add-directory "~/local/share/info")
+         (file-cache-add-directory "~/rails-learn")
          (load "~/etc/el/file-cache.el")
          (add-hook 'kill-buffer-hook 'file-cache-add-this-file)
          (global-set-key "\M-2" 'file-cache-ido-find-file))))
