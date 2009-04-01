@@ -19,9 +19,9 @@
       (princ
        (ri-ruby-process-get-lines "DISPLAY_INFO" item)))))
 
-
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
+  (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-mode)

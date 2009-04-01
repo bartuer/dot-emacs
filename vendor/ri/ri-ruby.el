@@ -253,7 +253,6 @@ printf
 
 (defun ri (keyw &optional class)
   "Execute `ri'."
-  (setq icicle-candidate-help-fn 'bartuer-ruby-ri)      
   (interactive (ri-ruby-read-keyw))
   (let* ((method (if class (concat class "#" keyw) keyw))
 	(info (ri-ruby-process-get-lines "DISPLAY_INFO" method)))
