@@ -352,10 +352,25 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'rinari nil t)
 
+(require 'flymake nil t)
+(require 'rcodetools nil t)
+(require 'anything-rcodetools)
+(load "~/etc/el/vendor/ruby-mode/ruby-electric.el")
+(require 'ruby-eletric-mode nil t)
 (require 'ruby-mode nil t)
+(push '(".+\\.rb$" flymake-ruby-init)
+      flymake-allowed-file-name-masks)
+(push '("Rakefile$" flymake-ruby-init)
+      flymake-allowed-file-name-masks)
+(push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
+      flymake-err-line-patterns)
+
 (autoload 'bartuer-ruby-load "~/etc/el/bartuer-ruby.el"
   "mode for ruby mode" t nil)
+(autoload 'flymake-ruby-init "~/etc/el/bartuer-ruby.el"
+  "using ruby -c check syntax" t nil)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
+
 
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
