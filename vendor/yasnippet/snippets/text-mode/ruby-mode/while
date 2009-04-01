@@ -1,0 +1,5 @@
+#name : while ... ; ... end
+# --
+while ${1:element} 
+  $0
+end
