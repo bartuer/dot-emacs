@@ -12,6 +12,14 @@
   (interactive)
   (insert " => "))
 
+(defun bartuer-ruby-ri (entry)
+  "return the documents of entry"
+  (let ((item (widget-princ-to-string entry)))
+    (with-output-to-temp-buffer (format "ri %s" item) 
+      (princ
+       (ri-ruby-process-get-lines "DISPLAY_INFO" item)))))
+
+
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
   (yas/minor-mode-auto-on)

@@ -128,7 +128,8 @@
       (let ((output (with-current-buffer buffer
                       (buffer-substring (point-min)
                                         (point-max)))))
-	(error "Process is not running.\n" output))))
+	(error "Process is not running.\n" output)))
+  )
 
 (defun ri-ruby-process-get-expr (cmd param)
   (ri-ruby-get-process)
@@ -151,6 +152,7 @@
 	(kill-buffer ri-ruby-process-buffer))))
 
 (defun ri-ruby-process-get-lines (cmd param)
+  
   (ri-ruby-get-process)
   (if (equal param "") nil
     (let ((ri-ruby-process-buffer (generate-new-buffer " ri-ruby-output"))
@@ -251,6 +253,7 @@ printf
 
 (defun ri (keyw &optional class)
   "Execute `ri'."
+  (setq icicle-candidate-help-fn 'bartuer-ruby-ri)      
   (interactive (ri-ruby-read-keyw))
   (let* ((method (if class (concat class "#" keyw) keyw))
 	(info (ri-ruby-process-get-lines "DISPLAY_INFO" method)))
