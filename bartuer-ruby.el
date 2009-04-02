@@ -21,6 +21,8 @@
 
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
+  (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
+  (visit-tags-table "~/local/src/rails/TAGS.rtags")
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
