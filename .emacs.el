@@ -9,6 +9,7 @@
 (setq-default source-directory (expand-file-name "~/src/emacs/emacs/"))
 (setq-default major-mode 'text-mode)
 
+
 (defalias 'p 'finder-commentary)
 (defalias 'c 'emacs-lisp-byte-compile)
 (add-to-list 'load-path (expand-file-name "~/etc/el/icicles"))
@@ -358,17 +359,17 @@ If give a negative ARG, will undo the last mark action, thus the
 (load "~/etc/el/vendor/ruby-mode/ruby-electric.el")
 (require 'ruby-eletric-mode nil t)
 (require 'ruby-mode nil t)
+
+(autoload 'bartuer-ruby-load "~/etc/el/bartuer-ruby.el"
+  "mode for ruby mode" t nil)
+(autoload 'flymake-ruby-init "~/etc/el/bartuer-ruby.el"
+  "using ruby -c check syntax" t nil)
 (push '(".+\\.rb$" flymake-ruby-init)
       flymake-allowed-file-name-masks)
 (push '("Rakefile$" flymake-ruby-init)
       flymake-allowed-file-name-masks)
 (push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
       flymake-err-line-patterns)
-
-(autoload 'bartuer-ruby-load "~/etc/el/bartuer-ruby.el"
-  "mode for ruby mode" t nil)
-(autoload 'flymake-ruby-init "~/etc/el/bartuer-ruby.el"
-  "using ruby -c check syntax" t nil)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
 
 
@@ -469,14 +470,18 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
 (add-hook 'ess-mode-hook 'bartuer-ess-load)
+
+
+(autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cu" 'org-insert-link-global)
 (global-set-key "\C-co" 'org-open-at-point-global)
-
-(autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (add-hook 'org-mode-hook 'bartuer-org-load)
+
+(autoload 'textile-minor-mode "textile-minor-mode.el" "for org mode" t)
+(require 'textile-minor-mode nil t)
 
 (put 'dired-find-alternate-file 'disabled nil)
 

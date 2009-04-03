@@ -1,3 +1,6 @@
+(file-cache-add-directory "/Users/bartuer/etc/el/vendor/rcodetools/lib")
+(file-cache-add-directory "/Users/bartuer/etc/el/vendor/rcodetools/bin")
+(file-cache-add-directory "/Users/bartuer/etc/el/vendor/rcodetools")
 (file-cache-add-directory "~/bin")
 (file-cache-add-directory "/tmp")
 (file-cache-add-directory "~/org")

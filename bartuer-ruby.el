@@ -21,15 +21,23 @@
 
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
+
+  ;; pre load to speed up
   (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
   (visit-tags-table "~/local/src/rails/TAGS.rtags")
+  (rct-fork)
+
+  ;; toggle these modes
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-mode)
   (flymake-mode)
+
+  ;; bindings
+  (define-key ruby-mode-map "\C-j" 'xmp)
+  (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
-  (define-key ruby-mode-map "\C-j" 'ruby-send-block)
   (define-key ruby-mode-map "\C-m" 'reindent-then-newline-and-indent)
   (define-key ruby-mode-map [(f7)] 'ri-ruby-show-args)
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
