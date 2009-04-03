@@ -25,7 +25,6 @@
   ;; pre load to speed up
   (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
   (visit-tags-table "~/local/src/rails/TAGS.rtags")
-  (rct-fork)
 
   ;; toggle these modes
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
@@ -41,7 +40,8 @@
   (define-key ruby-mode-map "\C-m" 'reindent-then-newline-and-indent)
   (define-key ruby-mode-map [(f7)] 'ri-ruby-show-args)
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
-  (define-key ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything) 
+  (define-key ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything)
+  (define-key inf-ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything) 
   (define-key ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map [(f7)] 'ri-ruby-show-args)
