@@ -33,10 +33,18 @@
   (flyspell-mode)
   (flymake-mode)
 
+  ;; if in test buffer, will do test
+  (if (fboundp 'xmp)
+      (add-hook 'before-save-hook 'xmp)) 
+  
   ;; bindings
   (define-key ruby-mode-map "\C-j" 'xmp)
   (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
+  (define-key ruby-mode-map "\C-\M-n" 'ctrl-meta-n-dwim)
+  (define-key ruby-mode-map "\C-\M-p" 'ctrl-meta-p-dwim)
+  (define-key ruby-mode-map "\C-\M-a" 'ruby-beginning-of-block)
+  (define-key ruby-mode-map "\C-\M-e" 'ruby-end-of-block)
   (define-key ruby-mode-map "\C-m" 'reindent-then-newline-and-indent)
   (define-key ruby-mode-map [(f7)] 'ri-ruby-show-args)
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
