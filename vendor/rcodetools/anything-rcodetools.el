@@ -88,7 +88,12 @@
     (set-buffer anything-current-buffer)
     (search-backward pattern)
     (delete-char (length pattern)))
-  (insert (car (split-string pair "\t"))))
+  (insert (car (split-string pair "\t")))
+  (let* ((method (current-word))
+         (info (ri-ruby-process-get-lines "DISPLAY_ARGS" method)))
+    (when info
+      (message "%s" info)))
+  )
 
 (setq rct-complete-symbol-function 'rct-complete-symbol--anything)
 (defvar anything-c-source-complete-ruby
