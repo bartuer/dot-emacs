@@ -162,6 +162,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ibuffer nil t)
 (when (fboundp 'ibuffer)
   (defalias 'j 'ibuffer))
+(ibuffer)
+(ibuffer-switch-to-saved-filter-groups "normal")
 (global-set-key "\M-=" 'switch-to-buffer)
 (global-set-key "\M-l" 'switch-to-buffer)
 (global-set-key "\M-4" 'kill-buffer-and-window)
