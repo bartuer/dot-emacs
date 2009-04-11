@@ -1,0 +1,26 @@
+escape ``
+bindkey -t "\033[1;3A" stuff "\033\033OA"
+bindkey -t "\033[1;3B" stuff "\033\033OB"
+bindkey -t "\033[1;3C" stuff "\033\033OC"
+bindkey -t "\033[1;3D" stuff "\033\033OD"
+screen -t "fastri" 5
+stuff "fastri-server &\012"
+
+screen -t "shell" 6
+
+screen -t "ec-1" 1
+stuff "~/local/bin/emacsclient -t"
+
+screen -t "ec-2" 2
+stuff "~/local/bin/emacsclient -t"
+
+screen -t "ec-3" 3
+stuff "~/local/bin/emacsclient -t"
+
+screen -t "ec-4" 4
+stuff "~/local/bin/emacsclient -t"
+
+screen -t "e" 0
+stuff "~/local/bin/emacs-23.0.60 -nw -fg yellow\012"
+
+
