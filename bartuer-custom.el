@@ -66,7 +66,7 @@
  '(max-mini-window-height 0.7)
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
- '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org")))
+ '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org" "~/rails-learn/depot/sbs.org")))
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
  '(ps-multibyte-buffer (quote bdf-font))
