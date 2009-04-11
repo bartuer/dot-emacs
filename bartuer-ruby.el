@@ -34,8 +34,11 @@
   (flymake-mode)
 
   ;; if in test buffer, will do test
+  ;; C-u C-j initialize the rct option
+  ;; be attension to remove test loader
   (if (fboundp 'xmp)
-      (add-hook 'before-save-hook 'xmp)) 
+      (add-hook 'before-save-hook (lambda ()
+                                    (xmp (car rct-option-history))))) 
   
   ;; bindings
   (define-key ruby-mode-map "\C-j" 'xmp)
@@ -47,6 +50,7 @@
   (define-key ruby-mode-map "\C-\M-e" 'ruby-end-of-block)
   (define-key ruby-mode-map "\C-m" 'reindent-then-newline-and-indent)
   (define-key ruby-mode-map [(f7)] 'ri-ruby-show-args)
+
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
   (define-key ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything)
   (define-key inf-ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything) 
