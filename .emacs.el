@@ -162,8 +162,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ibuffer nil t)
 (when (fboundp 'ibuffer)
   (defalias 'j 'ibuffer))
-(ibuffer)
-(ibuffer-switch-to-saved-filter-groups "normal")
 (global-set-key "\M-=" 'switch-to-buffer)
 (global-set-key "\M-l" 'switch-to-buffer)
 (global-set-key "\M-4" 'kill-buffer-and-window)
@@ -242,8 +240,6 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (if (fboundp 'server-start)
     (server-start))
-(if (fboundp 'desktop-read)
-    (desktop-read))
 (if (fboundp 'show-paren-mode)
     (show-paren-mode 1))
 (if (fboundp 'winner-mode)
@@ -490,3 +486,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (put 'upcase-region 'disabled nil)
 
 (put 'downcase-region 'disabled nil)
+
+(ibuffer)
+(ibuffer-switch-to-saved-filter-groups "normal")
