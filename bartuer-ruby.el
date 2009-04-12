@@ -33,8 +33,14 @@
   (flyspell-mode)
   (flymake-mode)
 
+  ;; if in test buffer, will do test
+  ;; C-u C-j initialize the rct option
+  ;; be attension to remove test loader
+  (if (fboundp 'xmp)
+      (add-hook 'before-save-hook (lambda ()
+                                    (xmp (car rct-option-history))))) 
+  
   ;; bindings
-  ;; C-u C-j to INITIALIZE the rct OPTION
   (define-key ruby-mode-map "\C-j" 'xmp)
   (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)

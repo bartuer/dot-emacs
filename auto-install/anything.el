@@ -2386,6 +2386,8 @@ action."
         ;;select the default action
         (setq action (cdar action)))
     (unless clear-saved-action (setq anything-saved-action nil))
+    (goto-char (car anything-current-position))
+    (set-window-start (selected-window) (cdr anything-current-position))
     (if (and selection action)
         (anything-funcall-with-source
          source  action
