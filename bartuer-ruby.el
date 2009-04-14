@@ -39,8 +39,22 @@
   (if (fboundp 'xmp)
       (add-hook 'before-save-hook (lambda ()
                                     (xmp (car rct-option-history))))) 
+
+  ;; Imporve xml-filter: if some error occured, should throw a
+  ;; compilation buffer include the error backtrace, not only dump it
+  ;; at end of the file.
+  ;; 
+  ;; So, if there is no error, I do not need check the result at end
+  ;; of the file, in error case I switch to the compile/correct loop
+  ;; immediately.  See rinari's solution for the same problem.
+  ;; 
+  ;; Such solution can save screen space, do not need monit the end
+  ;; file in one frame anymore, and more, will create an useful tool
+  ;; to reading code, for I can generate a raise, and get the call
+  ;; stack there, go through them to understand the related codes. The
+  ;; idea is as same as reading code through debugger.
+
   
-  ;; bindings
   (define-key ruby-mode-map "\C-j" 'xmp)
   (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
