@@ -4,7 +4,7 @@
 ;;;
 ;;; Use and distribution subject to the terms of the Ruby license.
 
-(defvar xmpfilter-command-name "ruby -S xmpfilter --dev --fork --detect-rbtest"
+(defvar xmpfilter-command-name "ruby -S xmpfilter --no-warnings --dev --fork --detect-rbtest"
   "The xmpfilter command name.")
 (defvar rct-doc-command-name "ruby -S rct-doc --dev --fork --detect-rbtest"
   "The rct-doc command name.")
