@@ -35,7 +35,11 @@
 
   ;; if in test buffer, will do test
   ;; C-u C-j initialize the rct option
-  ;; be attension to remove test loader
+  ;; rake -t test_... TEST=test_file
+  ;; then,
+  ;; REMOVE test loader
+  ;; REMOVE ruby binary
+  ;; normally it is the include path
   (if (fboundp 'xmp)
       (add-hook 'before-save-hook (lambda ()
                                     (xmp (car rct-option-history))))) 
