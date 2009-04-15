@@ -1,4 +1,3 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: assert_kind_of(..)
+#name: assert_kind_of .. 
 # --
-assert_kind_of(${1:ExpectedKind}, ${2:actual_instance})$0
+assert_kind_of ${1:Kind}, ${2:instance} $0

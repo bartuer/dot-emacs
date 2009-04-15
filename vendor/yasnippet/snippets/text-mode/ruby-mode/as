@@ -1,4 +1,3 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: assert(..)
+#name: assert ..
 # --
-assert(${1:test}, "${2:Failure message.}")$0
+assert ${1:test}, "${2:Failure message.}" $0
