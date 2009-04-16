@@ -162,7 +162,7 @@ class XMPFilter
     has_backtrace = false
 
     if @output_stdout and (s = stdout.read) != ""
-      has_backtrace = true  if  /Error:/ =~ s 
+      has_backtrace = true  if  /Error:|Failure:/ =~ s 
       f << s.inject(""){|s,line| s + "#{line}".chomp + "\n" }
     end
     has_backtrace ? File.rename(rct_emacs_tmp, rct_emacs_backtrace) : File.rename(rct_emacs_tmp, rct_emacs_message)
