@@ -38,7 +38,7 @@
 
 (defun bartuer-xmp (&optional option)
   "dump the xmpfilter output apropose"
-  (interactive)
+  (interactive (rct-interactive))
   (xmp option)
   (if (file-exists-p "/tmp/rct-emacs-backtrace")
       (pop-to-buffer 
