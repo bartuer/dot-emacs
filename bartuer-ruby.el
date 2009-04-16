@@ -19,6 +19,41 @@
       (princ
        (ri-ruby-process-get-lines "DISPLAY_INFO" item)))))
 
+;; Imporve xml-filter: if some error occured, should throw a
+;; compilation buffer include the error backtrace, not only dump it
+;; at end of the file.
+;; 
+;; So, if there is no error, I do not need check the result at end
+;; of the file, in error case I switch to the compile/correct loop
+;; immediately.  See rinari's solution for the same problem.
+;; 
+;; Such solution can save screen space, do not need monit the end
+;; file in one frame anymore, and more, will create an useful tool
+;; to reading code, for I can generate a raise, and get the call
+;; stack there, go through them to understand the related codes. The
+;; idea is as same as reading code through debugger.
+;;
+;; And the successful test result will not mess up version control,
+;; meaningless to record that in VC.
+
+(defun bartuer-xmp (&optional option)
+  "dump the xmpfilter output apropose"
+  (interactive)
+  (xmp option)
+  (if (file-exists-p "/tmp/rct-emacs-backtrace")
+      (pop-to-buffer 
+       (ruby-compilation-do "rct-compilation"
+                            (cons "cat" (list "/tmp/rct-emacs-backtrace")))))
+  (if (file-exists-p "/tmp/rct-emacs-message")
+      (with-current-buffer
+          (get-buffer-create "rct-result")
+        (if (buffer-size)
+            (erase-buffer))
+        (with-output-to-string (call-process "cat" nil t nil "/tmp/rct-emacs-message"))    
+        (goto-char (point-min))
+        (display-buffer "rct-result")
+        t)))
+
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
 
@@ -40,26 +75,11 @@
   ;; REMOVE test loader
   ;; REMOVE ruby binary
   ;; normally it is the include path
-  (if (fboundp 'xmp)
+  (if (fboundp 'bartuer-xmp)
       (add-hook 'before-save-hook (lambda ()
-                                    (xmp (car rct-option-history))))) 
+                                    (bartuer-xmp (car rct-option-history))))) 
 
-  ;; Imporve xml-filter: if some error occured, should throw a
-  ;; compilation buffer include the error backtrace, not only dump it
-  ;; at end of the file.
-  ;; 
-  ;; So, if there is no error, I do not need check the result at end
-  ;; of the file, in error case I switch to the compile/correct loop
-  ;; immediately.  See rinari's solution for the same problem.
-  ;; 
-  ;; Such solution can save screen space, do not need monit the end
-  ;; file in one frame anymore, and more, will create an useful tool
-  ;; to reading code, for I can generate a raise, and get the call
-  ;; stack there, go through them to understand the related codes. The
-  ;; idea is as same as reading code through debugger.
-
-  
-  (define-key ruby-mode-map "\C-j" 'xmp)
+  (define-key ruby-mode-map "\C-j" 'bartuer-xmp)
   (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
   (define-key ruby-mode-map "\C-\M-n" 'ctrl-meta-n-dwim)

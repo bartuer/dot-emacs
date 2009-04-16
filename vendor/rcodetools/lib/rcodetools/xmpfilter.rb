@@ -146,9 +146,26 @@ class XMPFilter
       annotated_multi_line(l, $1, $3, runtime_data, idx += 1)
     }
     ret = final_decoration(annotated, output)
+
+    # (ruby-compilation-do "rct-compilation" (cons "cat" (list "/tmp/ruby-emacs-compile")))
+    # if there is no error, then dump the result to message
+    # if there is error, need check the backtrace, dump the stack to compilation buffer
+    # which file exist gave the information what happened 
+    rct_emacs_message = "/tmp/rct-emacs-message"
+    rct_emacs_backtrace = "/tmp/rct-emacs-backtrace"
+    rct_emacs_tmp = "/tmp/rct-emacs-tmp"
+    # compress below to one line
+    
+    File.unlink rct_emacs_message if File.exist? rct_emacs_message
+    File.unlink rct_emacs_backtrace if File.exist? rct_emacs_backtrace
+    f = File.open(rct_emacs_tmp, "w")
+    has_backtrace = false
+
     if @output_stdout and (s = stdout.read) != ""
-      ret << s.inject(""){|s,line| s + "# >> #{line}".chomp + "\n" }
+      has_backtrace = true  if  /Error:/ =~ s 
+      f << s.inject(""){|s,line| s + "#{line}".chomp + "\n" }
     end
+    has_backtrace ? File.rename(rct_emacs_tmp, rct_emacs_backtrace) : File.rename(rct_emacs_tmp, rct_emacs_message)
     ret
   end
 
