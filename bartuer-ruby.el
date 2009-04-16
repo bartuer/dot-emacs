@@ -51,7 +51,6 @@
             (erase-buffer))
         (with-output-to-string (call-process "cat" nil t nil "/tmp/rct-emacs-message"))    
         (goto-char (point-min))
-        (display-buffer "rct-result")
         t)))
 
 (defun bartuer-ruby-load ()
