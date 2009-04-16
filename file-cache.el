@@ -1,3 +1,5 @@
+(file-cache-add-directory "~/local/src/rails/activerecord/test/cases/associations")
+(file-cache-add-directory "~/local/src/rails/activerecord/test/cases")
 (file-cache-add-directory "~/local/src/rails/activesupport/lib/")
 (file-cache-add-directory "~/local/src/rails/activesupport/lib/active_support")
 (file-cache-add-directory "~/local/src/rails/activesupport/lib/active_support/cache")
