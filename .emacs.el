@@ -375,7 +375,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.builder$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\.rake" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\.rake$" . ruby-mode))
 
 (load  "~/etc/el/vendor/ri/ri-ruby.el")
 (require 'ri nil t)
