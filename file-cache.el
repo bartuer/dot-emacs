@@ -1,3 +1,5 @@
+(file-cache-add-directory "~/local/src/rails/activerecord/test/models")
+(file-cache-add-directory "~/local/src/rails/activerecord/test/fixtures/")
 (file-cache-add-directory "~/local/src/rails/activerecord/test/cases/associations")
 (file-cache-add-directory "~/local/src/rails/activerecord/test/cases")
 (file-cache-add-directory "~/local/src/rails/activesupport/lib/")
@@ -64,7 +66,6 @@
 (file-cache-add-directory "~/rails-learn/depot/public/stylesheets")
 (file-cache-add-directory "~/rails-learn/depot/script")
 (file-cache-add-directory "~/rails-learn/depot/script/performance")
-(file-cache-add-directory "~/rails-learn/depot/script/process")
 (file-cache-add-directory "~/rails-learn/depot/test")
 (file-cache-add-directory "~/rails-learn/depot/test/fixtures")
 (file-cache-add-directory "~/rails-learn/depot/test/functional")
