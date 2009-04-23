@@ -437,7 +437,7 @@ If give a negative ARG, will undo the last mark action, thus the
                     )
                     (if (file-exists-p dot-cpp-file)
                         (c++-mode))))))
-  (if (search-forward-regexp "^#import ")
+  (if (search-forward-regexp "^#import " (point-max) t 1)
       (objc-mode)))
 (add-hook 'find-file-hook 'bartuer-choose-header-mode)
 
