@@ -424,6 +424,23 @@ If give a negative ARG, will undo the last mark action, thus the
                              (add-hook 'after-save-hook 'bartuer-general-byte-compile-dot-file t nil)
                              ))
 
+;; open proper mode according to the implement file types for head file
+(defun bartuer-choose-header-mode ()
+  (interactive)
+  (if (string-equal (substring (buffer-file-name) -2) ".h")
+      (progn
+        (let ((dot-m-file (concat (substring (buffer-file-name) 0 -1) "m"))
+              (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp")))
+              (if (file-exists-p dot-m-file)
+                  (progn
+                    (objc-mode)
+                    )
+                    (if (file-exists-p dot-cpp-file)
+                        (c++-mode))))))
+  (if (search-forward-regexp "^#import ")
+      (objc-mode)))
+(add-hook 'find-file-hook 'bartuer-choose-header-mode)
+
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
 
