@@ -56,8 +56,6 @@ If give a negative ARG, will undo the last mark action, thus the
          (when (scan-lists (point) 1 -1)
            (mark-whole-sexp)))))
 
-(global-set-key "\C-cc" 'mark-whole-sexp)
-(global-set-key "\C-c\C-c" 'mark-whole-sexp)
 (global-set-key "\C-cp" 'mark-whole-sexp)
 (global-set-key "\C-c\C-p" 'mark-whole-sexp)
 
@@ -443,6 +441,29 @@ If give a negative ARG, will undo the last mark action, thus the
         (if (search-forward-regexp "^#import " (point-max) t 1)
             (objc-mode)))))
 (add-hook 'find-file-hook 'bartuer-choose-header-mode)
+
+(defun bartuer-toggle-target ()
+  (cond ((or (string-equal (substring (buffer-file-name) -2) ".c")
+             (string-equal (substring (buffer-file-name) -2) ".m"))
+         (concat (substring (buffer-file-name) 0 -1) "h"))
+        ((string-equal (substring (buffer-file-name) -4) ".cpp")
+         (concat (substring (buffer-file-name) 0 -3) "h"))
+        ((and (string-equal (substring (buffer-file-name) -2) ".h")
+             (equal major-mode 'objc-mode))
+         (concat (substring (buffer-file-name) 0 -1) "m"))
+        ((and (string-equal (substring (buffer-file-name) -2) ".h")
+             (equal major-mode 'c-mode))
+         (concat (substring (buffer-file-name) 0 -1) "c"))
+        ((and (string-equal (substring (buffer-file-name) -2) ".h")
+             (equal major-mode 'c++-mode))
+         (concat (substring (buffer-file-name) 0 -1) "cpp"))))
+
+(defun bartuer-toggle-header ()
+  (interactive)
+  (if (file-exists-p (bartuer-toggle-target))
+        (find-file (bartuer-toggle-target))))
+
+(global-set-key "\C-cc" 'bartuer-toggle-header)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
