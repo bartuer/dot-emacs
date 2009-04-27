@@ -1,0 +1,13 @@
+#name : delay
+# --
+id ${1:instance} = nil;
+while ( $1 == nil )
+{
+  NSAutoreleasePool *aPool = [[NSAutoreleasePool alloc] init];
+  if( $1 = [${2:obj} ${3:msg}] )
+  {
+    [$1 retain];
+  }
+  [aPool release];
+}
+return [$1 autorelease];
