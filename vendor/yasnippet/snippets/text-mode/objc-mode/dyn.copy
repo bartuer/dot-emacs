@@ -4,7 +4,7 @@
 
 - (${1:id}) ${2:value}
 {
-  return $2;
+  return [[$2 ${3:copy}] autorelease];
 }
 
 - (void) set${2:$(capitalize text)}:($1)aValue
@@ -12,6 +12,6 @@
   if ( $2 != aValue)
   {
     [$2 release];
-    $2 = [aValue ${3:mutable}$0copy];
+    $2 = [aValue $3];
   }
 }

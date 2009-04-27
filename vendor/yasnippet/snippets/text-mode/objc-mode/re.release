@@ -1,0 +1,3 @@
+#name : release
+# --
+[${1:obj} release];

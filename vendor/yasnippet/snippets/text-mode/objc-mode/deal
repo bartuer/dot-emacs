@@ -1,5 +1,9 @@
 - (void) dealloc
-{
+{/* do not DO resource except memory management here*/
+  
+  // set all weak reference to nil
+
+  // release all strong reference
   [$0 release];    
   [super dealloc];
 }
