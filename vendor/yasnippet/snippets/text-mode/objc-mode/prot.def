@@ -1,0 +1,9 @@
+#name : define
+# --
+@protocol ${1:Name}<${2:protocol_list}>
+
+@required
+$3
+@optional
+$4
+@end

@@ -1,0 +1,7 @@
+#name : with NSEnumerator
+# --
+NSEnumerator *enumerator = [${1:collection_instance} ${2:getEnumerator}];
+for (${3:type} *element in enumerator)
+{
+  $0
+}

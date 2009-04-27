@@ -1,0 +1,3 @@
+#name : [receiver signature]
+# --
+[${1:receiver} performSelector:${2:aSEL}];

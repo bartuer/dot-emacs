@@ -348,7 +348,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
-
+(global-set-key "\C-cy" (lambda ()
+                               (interactive)
+                               (message "load yas")
+                               (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
 (require 'rinari nil t)
 
 (require 'flymake nil t)
@@ -436,9 +439,9 @@ If give a negative ARG, will undo the last mark action, thus the
                     (objc-mode)
                     )
                     (if (file-exists-p dot-cpp-file)
-                        (c++-mode))))))
-  (if (search-forward-regexp "^#import " (point-max) t 1)
-      (objc-mode)))
+                        (c++-mode))))
+        (if (search-forward-regexp "^#import " (point-max) t 1)
+            (objc-mode)))))
 (add-hook 'find-file-hook 'bartuer-choose-header-mode)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)

@@ -1,0 +1,4 @@
+#name : compile time
+# --
+SEL ${1:symbol};
+$1 = @selector(${2:aSignature});

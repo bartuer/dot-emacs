@@ -1,0 +1,3 @@
+#name : retain, ...
+# --
+retain, ${1:attr2}$0

@@ -1,0 +1,19 @@
+#name : protocol
+# --
+@interface ${1:Class} : ${2:SuperClass} $3 <${4:protocols}>
+{
+  @public
+    $5
+  @protected
+    $6
+  @private
+    $7
+}
+
+// property define
+$8
+
+// message define
+$9
+
+@end

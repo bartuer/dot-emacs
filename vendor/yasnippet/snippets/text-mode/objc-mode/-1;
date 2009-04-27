@@ -1,0 +1,3 @@
+#name : one
+# --
+- (${1:void})${2:msg1}With${3:msg2}:(${4:p1_type})${5:p1};
