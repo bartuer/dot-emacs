@@ -180,7 +180,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (require 'diff-mode nil t)
     (add-hook 'diff-mode-hook
               (lambda ()
-                (define-key diff-mode-map "\M-k" 'other-window)
+               (define-key diff-mode-map "\M-k" 'other-window)
                 (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
 (global-set-key "\M-o" 'kill-sentence)
 
@@ -464,6 +464,9 @@ If give a negative ARG, will undo the last mark action, thus the
         (find-file (bartuer-toggle-target))))
 
 (global-set-key "\C-cc" 'bartuer-toggle-header)
+
+(load "~/etc/el/bartuer-objc.el")
+(add-hook 'objc-mode-hook 'bartuer-objc-load)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)

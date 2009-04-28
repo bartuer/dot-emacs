@@ -1320,6 +1320,42 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
   :group 'flymake
   :type 'boolean)
 
+(defvar flymake-objc-compiler "gcc")
+(defvar flymake-objc-compile-options nil)
+(defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only"))
+
+(defun flymake-objc-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name)))
+         (options flymake-objc-compile-default-options))
+    (list flymake-objc-compiler (append options (list local-file)))))
+
+(defun bartuer-flymake-err-info ()
+  "return the flymake erro info"
+  (let ((line-err-info-list
+          (car (flymake-find-err-info flymake-err-info
+                                    (flymake-current-line-no)))))
+    (cond ((eq nil line-err-info-list)
+           nil)
+          (t
+           (flymake-ler-text (car line-err-info-list))))))
+
+(defun bartuer-flymake-post-command-hook ()
+  "show flymake info hook when run in non window environment"
+  (interactive)
+  (setq erro-msg (bartuer-flymake-err-info))
+  (unless (or (eq flymake-last-position (point))
+              (eq nil erro-msg)
+              (string-equal " Isearch" isearch-mode)
+              )
+    (progn
+      (message erro-msg )
+      (setq flymake-last-position (point))
+      )))
+
 ;;;###autoload
 (define-minor-mode flymake-mode
   "Minor mode to do on-the-fly syntax checking.
@@ -1335,6 +1371,7 @@ With arg, turn Flymake mode on if and only if arg is positive."
       (add-hook 'after-change-functions 'flymake-after-change-function nil t)
       (add-hook 'after-save-hook 'flymake-after-save-hook nil t)
       (add-hook 'kill-buffer-hook 'flymake-kill-buffer-hook nil t)
+      (add-hook 'post-command-hook 'bartuer-flymake-post-command-hook nil t)
       ;;+(add-hook 'find-file-hook 'flymake-find-file-hook)
 
       (flymake-report-status "" "")
@@ -1350,6 +1387,7 @@ With arg, turn Flymake mode on if and only if arg is positive."
     (remove-hook 'after-change-functions 'flymake-after-change-function t)
     (remove-hook 'after-save-hook 'flymake-after-save-hook t)
     (remove-hook 'kill-buffer-hook 'flymake-kill-buffer-hook t)
+    (remove-hook 'post-command-hook 'bartuer-flymake-post-command-hook t)
     ;;+(remove-hook 'find-file-hook (function flymake-find-file-hook) t)
 
     (flymake-delete-own-overlays)
