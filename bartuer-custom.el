@@ -94,7 +94,7 @@
  '(cursor ((t (:foreground "white"))))
  '(custom-comment-tag ((((class color) (background light)) (:foreground "cyan"))))
  '(erb-face ((((class color) (min-colors 8)) nil)))
- '(flymake-errline ((((class color)) (:background "red"))))
+ '(flymake-errline ((((class color)) (:background "yellow" :foreground "red"))))
  '(flymake-warnline ((t (:background "pink"))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
  '(icicle-complete-input ((((background dark)) (:foreground "green"))))
