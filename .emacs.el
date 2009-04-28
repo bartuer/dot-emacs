@@ -463,7 +463,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (if (file-exists-p (bartuer-toggle-target))
         (find-file (bartuer-toggle-target))))
 
-(global-set-key "\C-cc" 'bartuer-toggle-header)
+(global-set-key "\C-cj" 'bartuer-toggle-header)
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
