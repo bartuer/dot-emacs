@@ -180,7 +180,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (if (require 'diff-mode nil t)
     (add-hook 'diff-mode-hook
               (lambda ()
-               (define-key diff-mode-map "\M-k" 'other-window)
+                (define-key diff-mode-map "\M-k" 'other-window)
                 (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
 (global-set-key "\M-o" 'kill-sentence)
 
