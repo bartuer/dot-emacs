@@ -1320,10 +1320,14 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
   :group 'flymake
   :type 'boolean)
 
-(defvar flymake-objc-compiler "gcc")
-(defvar flymake-objc-compile-options nil)
-(defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only"))
+(defvar flymake-objc-compiler "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0")
+(defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only" "-std=c99" "-isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.2.sdk"))
 (defvar flymake-last-position nil)
+
+(defcustom flymake-objc-compile-options '("-I.")
+  "Compile option for objc check."
+  :group 'flymake
+  :type '(repeat (string)))
 
 (defun flymake-objc-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
@@ -1332,7 +1336,7 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
                        temp-file
                        (file-name-directory buffer-file-name)))
          (options flymake-objc-compile-default-options))
-    (list flymake-objc-compiler (append options (list local-file)))))
+    (list flymake-objc-compiler (append options flymake-objc-compile-options (list local-file)))))
 
 (defun bartuer-flymake-err-info ()
   "return the flymake erro info"
