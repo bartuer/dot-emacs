@@ -1353,16 +1353,23 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
               (string-equal " Isearch" isearch-mode)
               )
     (progn
-      (message erro-msg )
+      (message erro-msg)
       (setq flymake-last-position (point))
       )))
+
+(defvar flymake-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-\M-n" 'flymake-goto-next-error)
+    (define-key map "\C-\M-p" 'flymake-goto-prev-error)
+    map)
+  "Minor mode keymap for flymake mode")
 
 ;;;###autoload
 (define-minor-mode flymake-mode
   "Minor mode to do on-the-fly syntax checking.
 When called interactively, toggles the minor mode.
 With arg, turn Flymake mode on if and only if arg is positive."
-  :group 'flymake :lighter flymake-mode-line
+  :group 'flymake :lighter flymake-mode-line :keymap flymake-mode-map
   (cond
 
    ;; Turning the mode ON.
