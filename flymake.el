@@ -1323,6 +1323,7 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
 (defvar flymake-objc-compiler "gcc")
 (defvar flymake-objc-compile-options nil)
 (defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only"))
+(defvar flymake-last-position nil)
 
 (defun flymake-objc-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
