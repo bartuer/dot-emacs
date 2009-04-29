@@ -468,6 +468,67 @@ If give a negative ARG, will undo the last mark action, thus the
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
 
+(defun mac-control ()
+  "insert key symbol for shift"
+  (interactive)
+  (insert "⌃ "))
+(global-set-key "\C-c1" 'mac-control)
+
+(defun mac-shift ()
+  "insert key symbol for shift"
+  (interactive)
+  (insert "⇧ "))
+(global-set-key "\C-c2" 'mac-shift)
+
+(defun mac-command ()
+  "insert key symbol for command"
+  (interactive)
+  (insert "⌘ "))
+(global-set-key "\C-c3" 'mac-command)
+
+(defun mac-option ()
+  "insert key symbol for option"
+  (interactive)
+  (insert "⌥ "))
+(global-set-key "\C-c4" 'mac-option)
+
+(defun mac-delete ()
+  "insert key symbol for delete"
+  (interactive)
+  (insert "⌦ "))
+(global-set-key "\C-c5" 'mac-delete)
+
+(defun mac-backspace ()
+  "insert key symbol for backspace"
+  (interactive)
+  (insert "⌫ "))
+(global-set-key "\C-c6" 'mac-backspace)
+
+(defun mac-up ()
+  "insert key symbol for arrow up"
+  (interactive)
+  (insert "↑"))
+(global-set-key "\C-c7" 'mac-up)
+
+(defun mac-down ()
+  "insert key symbol for arrow down"
+  (interactive)
+  (insert "↓"))
+(global-set-key "\C-c8" 'mac-down)
+
+(defun mac-left ()
+  "insert key symbol for arrow left"
+  (interactive)
+  (insert "← "))
+(global-set-key "\C-c9" 'mac-left)
+
+(defun mac-right ()
+  "insert key symbol for arrow right"
+  (interactive)
+  (insert "→ "))
+(global-set-key "\C-c0" 'mac-right)
+
+  
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
 
