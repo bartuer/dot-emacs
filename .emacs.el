@@ -324,7 +324,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (bartuer-filecache-load)
 
 (require 'anything nil t)
+(setq anything-candidate-number-limit nil)
+(require 'anything-match-plugin nil t)
+
 (global-set-key "\C-z" 'anything)
+(when (fboundp 'anything)
+  (defalias 'k 'anything))
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
