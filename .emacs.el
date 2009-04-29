@@ -324,10 +324,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (bartuer-filecache-load)
 
 (require 'anything nil t)
-(setq anything-candidate-number-limit nil)
+(setq anything-candidate-number-limit 200)
 (require 'anything-match-plugin nil t)
-
-(global-set-key "\C-z" 'anything)
+(require 'anything-complete nil t)
+(when (require 'anything-show-completion nil t)
+    (use-anything-show-completion 'rct-complete-symbol--anything
+                                  '(length pattern)))
+(global-set-key "\C-l" 'anything)       
+(global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
 (when (fboundp 'anything)
   (defalias 'k 'anything))
 
