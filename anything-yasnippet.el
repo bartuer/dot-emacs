@@ -1,8 +1,26 @@
 (require 'anything)
 
+
+(defvar anything-objc-parameter-define-re "\\(:([a-zA-Z_0-9_-\\<\\>,()\\*\\ ]*)[a-zA-Z0-9_-]+\\|\\.\\.\\.\\)"
+  "(type)name")
+
+(setq test ":(int32_t)integer :(NSInteger (*)(id, id, void *))comparator :(id <NSDecimalNumberBehaviors>)behavior :(const char *)types, ...")
+((lambda (signature)
+  (replace-regexp-in-string
+   anything-objc-parameter-define-re
+   "${1\\&}"
+   signature
+   )) test)
+
+  
 (defun yasnippet-complete-obj-message (signature)
   "constructure an snippet according to the objc signature string"
-  (message signature))
+  (insert "anything-expand")
+  (yas/define 'objc-mode
+              "anything-expand"
+              signature)
+  (yas/expand))
+              
 
 (defvar anything-objc-message-re "\\(\\(^[-+]?\\ *([a-zA-Z_0-9<>\\ \\*]*)\\)\\([a-zA-Z0-9_+:()<>,\\ \\.\\*]*\\).*\177\\(.*\\)\001.*$\\)"
   "1:return type 2:signature\177 3:message name\001")
@@ -28,8 +46,8 @@
                 (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
      )
     (action
-     ("Completion" . yasnippet-complete))
-    (persistent-action . yasnippet-complete)))
+     ("Completion" . yasnippet-complete-obj-message))
+    (persistent-action . yasnippet-complete-obj-message)))
 
 (defun anything-etags-complete-objc-message ()
   (interactive)
