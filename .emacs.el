@@ -9,7 +9,8 @@
 (setq-default source-directory (expand-file-name "~/src/emacs/emacs/"))
 (setq-default major-mode 'text-mode)
 
-
+(defalias 'n 'rename-buffer)
+(defalias 'r 'revert-buffer)
 (defalias 'p 'finder-commentary)
 (defalias 'c 'emacs-lisp-byte-compile)
 (add-to-list 'load-path (expand-file-name "~/etc/el/icicles"))
@@ -324,12 +325,17 @@ If give a negative ARG, will undo the last mark action, thus the
 (bartuer-filecache-load)
 
 (require 'anything nil t)
-(setq anything-candidate-number-limit 200)
+(setq anything-candidate-number-limit nil)
 (require 'anything-match-plugin nil t)
 (require 'anything-complete nil t)
 (when (require 'anything-show-completion nil t)
+  (progn
     (use-anything-show-completion 'rct-complete-symbol--anything
-                                  '(length pattern)))
+                                  '(length pattern))
+    (use-anything-show-completion 'anything-lisp-complete-symbol-partial-match
+                                  '(length pattern))))
+
+    
 (global-set-key "\C-l" 'anything)       
 (global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
 (when (fboundp 'anything)
