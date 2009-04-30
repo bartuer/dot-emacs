@@ -19,8 +19,8 @@
 (defun yasnippet-complete-obj-message (msg)
   "constructure an snippet according to the objc signature string"
   (setq para-fun '(lambda (para)
-                                   (setq count (1+ count))
-                                   (format ":${%d%s}" count para)))
+                    (setq count (1+ count))
+                    (format ":${%d%s}" count para)))
   (setq signature-template ((lambda (signature)
                               (let ((count 0))
                                 (replace-regexp-in-string
@@ -32,7 +32,8 @@
   (yas/define 'objc-mode
               "anything"
               signature-template)
-  (message signature-template)
+  (message (format "objc-complete:%s" msg))
+  ;; TODO:need hooks disable/endable flymake
   (yas/expand))
               
 
@@ -57,7 +58,7 @@
      . (lambda ()
          (mapcar 'anything-objc-etags-parser
                (split-string
-                (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
+                (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n"))) ;TODO: if I have more TAGS?
      )
     (action
      ("Completion" . yasnippet-complete-obj-message))
