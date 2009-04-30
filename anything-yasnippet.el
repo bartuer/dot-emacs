@@ -1,24 +1,38 @@
 (require 'anything)
-
+(require 'yasnippet)
 
 (defvar anything-objc-parameter-define-re "\\(:([a-zA-Z_0-9_-\\<\\>,()\\*\\ ]*)[a-zA-Z0-9_-]+\\|\\.\\.\\.\\)"
   "(type)name")
 
+
 (setq test ":(int32_t)integer :(NSInteger (*)(id, id, void *))comparator :(id <NSDecimalNumberBehaviors>)behavior :(const char *)types, ...")
 ((lambda (signature)
-  (replace-regexp-in-string
-   anything-objc-parameter-define-re
-   "${1\\&}"
-   signature
-   )) test)
+   (let ((count 0))
+     (replace-regexp-in-string
+      anything-objc-parameter-define-re
+      (lambda (para)
+        (setq count (1+ count))
+        (format " :${%d%s}" count para))
+        signature))) test)
 
   
-(defun yasnippet-complete-obj-message (signature)
+(defun yasnippet-complete-obj-message (msg)
   "constructure an snippet according to the objc signature string"
-  (insert "anything-expand")
+  (setq para-fun '(lambda (para)
+                                   (setq count (1+ count))
+                                   (format ":${%d%s}" count para)))
+  (setq signature-template ((lambda (signature)
+                              (let ((count 0))
+                                (replace-regexp-in-string
+                                 anything-objc-parameter-define-re
+                                 para-fun
+                                 signature))
+                              ) msg))
+  (insert "anything")
   (yas/define 'objc-mode
-              "anything-expand"
-              signature)
+              "anything"
+              signature-template)
+  (message signature-template)
   (yas/expand))
               
 
@@ -26,7 +40,7 @@
   "1:return type 2:signature\177 3:message name\001")
 
 (defun anything-objc-etags-parser (candidate)
-  "parse the etags candidate, return (label . signature)"
+  "parse the etags candidate, return (lable . signature)"
   (when (string-match anything-objc-message-re candidate)
     (let* ((lable
             (concat
@@ -50,8 +64,7 @@
     (persistent-action . yasnippet-complete-obj-message)))
 
 (defun anything-etags-complete-objc-message ()
+  "using anything framework search iphone cocoa etags, select one signature feed to yasnippet "
   (interactive)
   (let ((anything-sources (list anything-c-source-complete-etags-objc)))
     (anything)))
-
-(anything-etags-complete-objc-message)

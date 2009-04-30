@@ -335,6 +335,8 @@ If give a negative ARG, will undo the last mark action, thus the
     (use-anything-show-completion 'rct-complete-symbol--anything
                                   '(length pattern))
     (use-anything-show-completion 'anything-lisp-complete-symbol-partial-match
+                                  '(length pattern))
+    (use-anything-show-completion 'anything-etags-complete-objc-message
                                   '(length pattern))))
 
     

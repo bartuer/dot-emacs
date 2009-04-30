@@ -3,6 +3,7 @@
   (interactive)
   (flyspell-prog-mode)
   (flymake-mode t)
+  (define-key objc-mode-map "\C-\M-i" 'anything-etags-complete-objc-message)
 )
 
 
