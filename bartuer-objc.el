@@ -1,3 +1,5 @@
+(require 'anything-yasnippet)
+
 (defun bartuer-objc-load ()
   "mode hooks for objc"
   (interactive)

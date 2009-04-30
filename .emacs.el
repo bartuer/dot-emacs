@@ -336,9 +336,11 @@ If give a negative ARG, will undo the last mark action, thus the
                                   '(length pattern))
     (use-anything-show-completion 'anything-lisp-complete-symbol-partial-match
                                   '(length pattern))
-    (use-anything-show-completion 'anything-etags-complete-objc-message
-                                  '(length pattern))))
+    
+                                  ))
 
+;; (use-anything-show-completion 'anything-etags-complete-objc-message
+;;                                   '(length pattern))
     
 (global-set-key "\C-l" 'anything)       
 (global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
@@ -372,6 +374,8 @@ If give a negative ARG, will undo the last mark action, thus the
                                (interactive)
                                (message "load yas")
                                (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
+(add-hook 'yas/after-exit-snippet-hook (lambda ()
+                                            (flymake-mode t)))
 (require 'rinari nil t)
 
 (require 'flymake nil t)
