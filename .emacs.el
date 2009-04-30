@@ -10,7 +10,9 @@
 (setq-default major-mode 'text-mode)
 
 (defalias 'n 'rename-buffer)
-(defalias 'r 'revert-buffer)
+(defalias 'r (lambda ()
+               (interactive)
+               (revert-buffer t t)))
 (defalias 'p 'finder-commentary)
 (defalias 'c 'emacs-lisp-byte-compile)
 (add-to-list 'load-path (expand-file-name "~/etc/el/icicles"))
