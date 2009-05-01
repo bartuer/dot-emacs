@@ -4,7 +4,8 @@
 
 (defvar anything-objc-parameter-define-re "\\(:([a-zA-Z_0-9_-\\<\\>,()\\*\\ ]*)[a-zA-Z0-9_-]+\\|\\.\\.\\.\\)"
   "(type)name")
-  
+
+
 (defun yasnippet-complete-obj-message (msg)
   "constructure an snippet according to the objc signature string"
   (flymake-mode nil)
@@ -29,6 +30,7 @@
 (defvar anything-objc-message-re "\\(\\(^[-+]?\\ *([a-zA-Z_0-9<>\\ \\*]*)\\)\\([a-zA-Z0-9_+:()<>,\\ \\.\\*]*\\).*\177\\(.*\\)\001.*$\\)"
   "1:return type 2:signature\177 3:message name\001")
 
+
 (defun anything-objc-etags-parser (candidate)
   "parse the etags candidate, return (lable . signature)"
   (when (string-match anything-objc-message-re candidate)
@@ -41,18 +43,26 @@
       (cons lable signature)))
   )
 
-(defvar anything-c-source-complete-etags-objc
-  '((name . "Etags Method Completion")
-    (candidates
-     . (lambda ()
-         (mapcar 'anything-objc-etags-parser
-               (split-string
-                (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n"))) ;TODO: if I have more TAGS?
-     )
-    (action
-     ("Completion" . yasnippet-complete-obj-message))
-    (volatile)
-     ))
+
+(defvar anything-etags-completion-table nil)
+
+
+(setq anything-c-source-complete-etags-objc
+      '((name . "Etags Method Completion")
+        (candidates . anything-etags-completion-table)
+        (init
+         . 
+         (lambda ()
+           (condition-case x
+               (setq anything-etags-completion-table (mapcar 'anything-objc-etags-parser
+                                                             (split-string
+                                                              (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
+             (error (setq anything-etags-completion-table nil))
+             )))
+        (action
+         ("Completion" . yasnippet-complete-obj-message))
+        ))
+
 
 (defun anything-etags-complete-objc-message ()
   "using anything framework search iphone cocoa etags, select one signature feed to yasnippet "

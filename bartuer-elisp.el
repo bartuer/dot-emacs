@@ -1,5 +1,6 @@
 (defun bartuer-elisp-load ()
   "added when edit elisp file"
+  (interactive)
   (define-key emacs-lisp-mode-map "\C-c\C-i" (lambda ()
                                                (interactive)
                                                (insert "(interactive)")))

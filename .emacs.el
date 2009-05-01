@@ -330,17 +330,17 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq anything-candidate-number-limit nil)
 (require 'anything-match-plugin nil t)
 (require 'anything-complete nil t)
-(when (require 'anything-show-completion nil t)
+
+
+(when (require 'anything-show-completion)
   (progn
     (use-anything-show-completion 'rct-complete-symbol--anything
                                   '(length pattern))
     (use-anything-show-completion 'anything-lisp-complete-symbol-partial-match
                                   '(length pattern))
-    
-                                  ))
-
-;; (use-anything-show-completion 'anything-etags-complete-objc-message
-;;                                   '(length pattern))
+    (use-anything-show-completion 'anything-etags-complete-objc-message
+                                  '(length pattern))
+    ))
     
 (global-set-key "\C-l" 'anything)       
 (global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
@@ -554,7 +554,10 @@ If give a negative ARG, will undo the last mark action, thus the
   (insert "→ "))
 (global-set-key "\C-c0" 'mac-right)
 
-  
+
+(autoload 'bartuer-elisp-load "bartuer-elisp.el" "for emacs lisp" t)
+(add-hook 'emacs-lisp-mode-hook 'bartuer-elisp-load)
+
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
 
