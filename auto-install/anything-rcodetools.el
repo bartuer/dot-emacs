@@ -93,7 +93,7 @@
 (setq rct-complete-symbol-function 'rct-complete-symbol--anything)
 (defvar anything-c-source-complete-ruby
   '((name . "Ruby Method Completion")
-    (candidates . rct-method-completion-table)
+    (candidates . (lambda () rct-method-completion-table))
     (init
      . (lambda ()
          (condition-case x

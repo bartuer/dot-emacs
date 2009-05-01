@@ -330,18 +330,21 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq anything-candidate-number-limit nil)
 (require 'anything-match-plugin nil t)
 (require 'anything-complete nil t)
+(require 'anything-show-completion)
+
+(when (require 'anything-show-completion nil t)
+  (progn
+    (use-anything-show-completion 'anything-etags-complete-objc-message
+                                  '(message-length))
+    ))
 
 
-(when (require 'anything-show-completion)
+(when (require 'anything-show-completion nil t)
   (progn
     (use-anything-show-completion 'rct-complete-symbol--anything
                                   '(length pattern))
-    (use-anything-show-completion 'anything-lisp-complete-symbol-partial-match
-                                  '(length pattern))
-    (use-anything-show-completion 'anything-etags-complete-objc-message
-                                  '(length pattern))
     ))
-    
+
 (global-set-key "\C-l" 'anything)       
 (global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
 (when (fboundp 'anything)

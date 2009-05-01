@@ -5,10 +5,15 @@
 (defvar anything-objc-parameter-define-re "\\(:([a-zA-Z_0-9_-\\<\\>,()\\*\\ ]*)[a-zA-Z0-9_-]+\\|\\.\\.\\.\\)"
   "(type)name")
 
+(setq objc-message-length 0)
 
-(defun yasnippet-complete-obj-message (msg)
+(defun message-length ()
+  objc-message-length)
+
+(defun yasnippet-complete-objc-message (msg)
   "constructure an snippet according to the objc signature string"
   (flymake-mode nil)
+  (setq objc-message-length (length msg))
   (setq para-fun '(lambda (para)
                     (setq count (1+ count))
                     (format ":${%d%s}" count para)))
@@ -44,24 +49,27 @@
   )
 
 
-(defvar anything-etags-completion-table nil)
-
+(setq anything-yasnippet-completion-table nil)
 
 (setq anything-c-source-complete-etags-objc
       '((name . "Etags Method Completion")
-        (candidates . anything-etags-completion-table)
+        (candidates 
+         .
+         (lambda () anything-yasnippet-completion-table)) ;to using completion show , must using a function
         (init
          . 
          (lambda ()
            (condition-case x
-               (setq anything-etags-completion-table (mapcar 'anything-objc-etags-parser
-                                                             (split-string
-                                                              (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
-             (error (setq anything-etags-completion-table nil))
-             )))
+               (setq anything-yasnippet-completion-table (mapcar 'anything-objc-etags-parser
+                                                             (split-string (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
+             (error (setq anything-yasnippet-completion-table nil))
+             )
+           )
+         )
         (action
-         ("Completion" . yasnippet-complete-obj-message))
+         ("Completion" . yasnippet-complete-objc-message))
         ))
+
 
 
 (defun anything-etags-complete-objc-message ()
