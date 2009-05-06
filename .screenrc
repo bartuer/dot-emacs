@@ -1,4 +1,5 @@
 escape ``
+encoding utf-8
 bindkey -t "\033[1;3A" stuff "\033\033OA"
 bindkey -t "\033[1;3B" stuff "\033\033OB"
 bindkey -t "\033[1;3C" stuff "\033\033OC"

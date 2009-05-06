@@ -223,7 +223,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (global-set-key [(f7)] 'man-follow)
 (global-set-key [(f8)] 'info-lookup-symbol)
-(defalias 'm 'woman)
+(defalias 'm 'flymake-mode)
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
 
 (require 'dict nil t)
@@ -345,8 +345,8 @@ If give a negative ARG, will undo the last mark action, thus the
                                   '(length pattern))
     ))
 
-(global-set-key "\C-l" 'anything)       
-(global-set-key "\C-z" 'recenter-top-bottom) ;also can using C-M-l
+(global-set-key "\C-z" 'anything)            ;if implement code sense minor mode, not frequently access
+(global-set-key "\C-l" 'recenter-top-bottom) ;also can using C-M-l
 (when (fboundp 'anything)
   (defalias 'k 'anything))
 
