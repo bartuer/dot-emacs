@@ -7095,147 +7095,154 @@ the end of the current subtree.
 Normally, files will be opened by an appropriate application.  If the
 optional argument IN-EMACS is non-nil, Emacs will visit the file."
   (interactive "P")
-  (org-load-modules-maybe)
-  (move-marker org-open-link-marker (point))
-  (setq org-window-config-before-follow-link (current-window-configuration))
-  (org-remove-occur-highlights nil nil t)
-  (if (org-at-timestamp-p t)
-      (org-follow-timestamp-link)
-    (let (type path link line search (pos (point)))
-      (catch 'match
-	(save-excursion
-	  (skip-chars-forward "^]\n\r")
-	  (when (org-in-regexp org-bracket-link-regexp)
-	    (setq link (org-link-unescape (org-match-string-no-properties 1)))
-	    (while (string-match " *\n *" link)
-	      (setq link (replace-match " " t t link)))
-	    (setq link (org-link-expand-abbrev link))
-	    (if (string-match org-link-re-with-space2 link)
-		(setq type (match-string 1 link) path (match-string 2 link))
-	      (setq type "thisfile" path link))
-	    (throw 'match t)))
 
-	(when (get-text-property (point) 'org-linked-text)
-	  (setq type "thisfile"
-		pos (if (get-text-property (1+ (point)) 'org-linked-text)
-			(1+ (point)) (point))
-		path (buffer-substring
-		      (previous-single-property-change pos 'org-linked-text)
-		      (next-single-property-change pos 'org-linked-text)))
-	  (throw 'match t))
+  (cond
+   ((stringp (ffap-file-at-point)) (browse-url
+                                    (file-name-directory
+                                     (expand-file-name
+                                      (ffap-file-at-point)))))
+   (t (progn  
+        (org-load-modules-maybe)
+        (move-marker org-open-link-marker (point))
+        (setq org-window-config-before-follow-link (current-window-configuration))
+        (org-remove-occur-highlights nil nil t)
+        (if (org-at-timestamp-p t)
+            (org-follow-timestamp-link)
+          (let (type path link line search (pos (point)))
+            (catch 'match
+              (save-excursion
+                (skip-chars-forward "^]\n\r")
+                (when (org-in-regexp org-bracket-link-regexp)
+                  (setq link (org-link-unescape (org-match-string-no-properties 1)))
+                  (while (string-match " *\n *" link)
+                    (setq link (replace-match " " t t link)))
+                  (setq link (org-link-expand-abbrev link))
+                  (if (string-match org-link-re-with-space2 link)
+                      (setq type (match-string 1 link) path (match-string 2 link))
+                    (setq type "thisfile" path link))
+                  (throw 'match t)))
 
-	(save-excursion
-	  (when (or (org-in-regexp org-angle-link-re)
-		    (org-in-regexp org-plain-link-re))
-	    (setq type (match-string 1) path (match-string 2))
-	    (throw 'match t)))
-	(when (org-in-regexp "\\<\\([^><\n]+\\)\\>")
-	  (setq type "tree-match"
-		path (match-string 1))
-	  (throw 'match t))
-	(save-excursion
-	  (when (org-in-regexp (org-re "\\(:[[:alnum:]_@:]+\\):[ \t]*$"))
-	    (setq type "tags"
-		  path (match-string 1))
-	    (while (string-match ":" path)
-	      (setq path (replace-match "+" t t path)))
-	    (throw 'match t))))
-      (unless path
-	(error "No link found"))
-      ;; Remove any trailing spaces in path
-      (if (string-match " +\\'" path)
-	  (setq path (replace-match "" t t path)))
+              (when (get-text-property (point) 'org-linked-text)
+                (setq type "thisfile"
+                      pos (if (get-text-property (1+ (point)) 'org-linked-text)
+                              (1+ (point)) (point))
+                      path (buffer-substring
+                            (previous-single-property-change pos 'org-linked-text)
+                            (next-single-property-change pos 'org-linked-text)))
+                (throw 'match t))
 
-      (cond
+              (save-excursion
+                (when (or (org-in-regexp org-angle-link-re)
+                          (org-in-regexp org-plain-link-re))
+                  (setq type (match-string 1) path (match-string 2))
+                  (throw 'match t)))
+              (when (org-in-regexp "\\<\\([^><\n]+\\)\\>")
+                (setq type "tree-match"
+                      path (match-string 1))
+                (throw 'match t))
+              (save-excursion
+                (when (org-in-regexp (org-re "\\(:[[:alnum:]_@:]+\\):[ \t]*$"))
+                  (setq type "tags"
+                        path (match-string 1))
+                  (while (string-match ":" path)
+                    (setq path (replace-match "+" t t path)))
+                  (throw 'match t))))
+            (unless path
+              (error "No link found"))
+            ;; Remove any trailing spaces in path
+            (if (string-match " +\\'" path)
+                (setq path (replace-match "" t t path)))
 
-       ((assoc type org-link-protocols)
-	(funcall (nth 1 (assoc type org-link-protocols)) path))
+            (cond
 
-       ((equal type "mailto")
-	(let ((cmd (car org-link-mailto-program))
-	      (args (cdr org-link-mailto-program)) args1
-	      (address path) (subject "") a)
-	  (if (string-match "\\(.*\\)::\\(.*\\)" path)
-	      (setq address (match-string 1 path)
-		    subject (org-link-escape (match-string 2 path))))
-	  (while args
-	    (cond
-	     ((not (stringp (car args))) (push (pop args) args1))
-	     (t (setq a (pop args))
-		(if (string-match "%a" a)
-		    (setq a (replace-match address t t a)))
-		(if (string-match "%s" a)
-		    (setq a (replace-match subject t t a)))
-		(push a args1))))
-	  (apply cmd (nreverse args1))))
+             ((assoc type org-link-protocols)
+              (funcall (nth 1 (assoc type org-link-protocols)) path))
 
-       ((member type '("http" "https" "ftp" "news"))
-	(browse-url (concat type ":" (org-link-escape
-				      path org-link-escape-chars-browser))))
+             ((equal type "mailto")
+              (let ((cmd (car org-link-mailto-program))
+                    (args (cdr org-link-mailto-program)) args1
+                    (address path) (subject "") a)
+                (if (string-match "\\(.*\\)::\\(.*\\)" path)
+                    (setq address (match-string 1 path)
+                          subject (org-link-escape (match-string 2 path))))
+                (while args
+                  (cond
+                   ((not (stringp (car args))) (push (pop args) args1))
+                   (t (setq a (pop args))
+                      (if (string-match "%a" a)
+                          (setq a (replace-match address t t a)))
+                      (if (string-match "%s" a)
+                          (setq a (replace-match subject t t a)))
+                      (push a args1))))
+                (apply cmd (nreverse args1))))
 
-       ((member type '("message"))
-	(browse-url (concat type ":" path)))
+             ((member type '("http" "https" "ftp" "news"))
+              (browse-url (concat type ":" (org-link-escape
+                                            path org-link-escape-chars-browser))))
 
-       ((string= type "tags")
-	(org-tags-view in-emacs path))
-       ((string= type "thisfile")
-	(if in-emacs
-	    (switch-to-buffer-other-window
-	     (org-get-buffer-for-internal-link (current-buffer)))
-	  (org-mark-ring-push))
-	(let ((cmd `(org-link-search
-		     ,path
-		     ,(cond ((equal in-emacs '(4)) 'occur)
-			    ((equal in-emacs '(16)) 'org-occur)
-			    (t nil))
-		     ,pos)))
-	  (condition-case nil (eval cmd)
-	    (error (progn (widen) (eval cmd))))))
+             ((member type '("message"))
+              (browse-url (concat type ":" path)))
 
-       ((string= type "tree-match")
-	(org-occur (concat "\\[" (regexp-quote path) "\\]")))
+             ((string= type "tags")
+              (org-tags-view in-emacs path))
+             ((string= type "thisfile")
+              (if in-emacs
+                  (switch-to-buffer-other-window
+                   (org-get-buffer-for-internal-link (current-buffer)))
+                (org-mark-ring-push))
+              (let ((cmd `(org-link-search
+                           ,path
+                           ,(cond ((equal in-emacs '(4)) 'occur)
+                                  ((equal in-emacs '(16)) 'org-occur)
+                                  (t nil))
+                           ,pos)))
+                (condition-case nil (eval cmd)
+                  (error (progn (widen) (eval cmd))))))
 
-       ((string= type "file")
-	(if (string-match "::\\([0-9]+\\)\\'" path)
-	    (setq line (string-to-number (match-string 1 path))
-		  path (substring path 0 (match-beginning 0)))
-	  (if (string-match "::\\(.+\\)\\'" path)
-	      (setq search (match-string 1 path)
-		    path (substring path 0 (match-beginning 0)))))
-	(if (string-match "[*?{]" (file-name-nondirectory path))
-	    (dired path)
-	  (org-open-file path in-emacs line search)))
+             ((string= type "tree-match")
+              (org-occur (concat "\\[" (regexp-quote path) "\\]")))
 
-       ((string= type "news")
-	(require 'org-gnus)
-	(org-gnus-follow-link path))
+             ((string= type "file")
+              (if (string-match "::\\([0-9]+\\)\\'" path)
+                  (setq line (string-to-number (match-string 1 path))
+                        path (substring path 0 (match-beginning 0)))
+                (if (string-match "::\\(.+\\)\\'" path)
+                    (setq search (match-string 1 path)
+                          path (substring path 0 (match-beginning 0)))))
+              (if (string-match "[*?{]" (file-name-nondirectory path))
+                  (dired path)
+                (org-open-file path in-emacs line search)))
 
-       ((string= type "shell")
-	(let ((cmd path))
-	  (if (or (not org-confirm-shell-link-function)
-		  (funcall org-confirm-shell-link-function
-			   (format "Execute \"%s\" in shell? "
-				   (org-add-props cmd nil
-				     'face 'org-warning))))
-	      (progn
-		(message "Executing %s" cmd)
-		(shell-command cmd))
-	    (error "Abort"))))
+             ((string= type "news")
+              (require 'org-gnus)
+              (org-gnus-follow-link path))
 
-       ((string= type "elisp")
-	(let ((cmd path))
-	  (if (or (not org-confirm-elisp-link-function)
-		  (funcall org-confirm-elisp-link-function
-			   (format "Execute \"%s\" as elisp? "
-				   (org-add-props cmd nil
-				     'face 'org-warning))))
-	      (message "%s => %s" cmd (eval (read cmd)))
-	    (error "Abort"))))
+             ((string= type "shell")
+              (let ((cmd path))
+                (if (or (not org-confirm-shell-link-function)
+                        (funcall org-confirm-shell-link-function
+                                 (format "Execute \"%s\" in shell? "
+                                         (org-add-props cmd nil
+                                           'face 'org-warning))))
+                    (progn
+                      (message "Executing %s" cmd)
+                      (shell-command cmd))
+                  (error "Abort"))))
 
-       (t
-	(browse-url-at-point)))))
-  (move-marker org-open-link-marker nil)
-  (run-hook-with-args 'org-follow-link-hook))
+             ((string= type "elisp")
+              (let ((cmd path))
+                (if (or (not org-confirm-elisp-link-function)
+                        (funcall org-confirm-elisp-link-function
+                                 (format "Execute \"%s\" as elisp? "
+                                         (org-add-props cmd nil
+                                           'face 'org-warning))))
+                    (message "%s => %s" cmd (eval (read cmd)))
+                  (error "Abort"))))
+
+             (t
+              (browse-url-at-point)))))
+        (move-marker org-open-link-marker nil)
+        (run-hook-with-args 'org-follow-link-hook)))))
 
 ;;;; Time estimates
 
