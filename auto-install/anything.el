@@ -811,29 +811,14 @@
 ;; (@* "User Configuration")
 
 ;; This is only an example. Customize it to your own taste!
-(defvar anything-sources `(((name . "Buffers")
-                            (candidates
-                             . (lambda ()
-                                 (remove-if (lambda (name)
-                                              (or (equal name anything-buffer)
-                                                  (eq ?\  (aref name 0))))
-                                            (mapcar 'buffer-name (buffer-list)))))
-			    (type . buffer))
+(defvar anything-sources `(
+                           ((name . "Imenu")
+                            (candidates . anything-c-imenu-candidates)
+                            (anything-c-imenu-default-action elm)
+                            (unless (fboundp 'semantic-imenu-tag-overlay)
+                              (action . anything-c-imenu-default-action))
+                            "See (info \"(emacs)Imenu\")")
 
-                           ((name . "File Name History")
-                            (candidates . file-name-history)
-                            (match (lambda (candidate)
-                                     ;; list basename matches first
-                                     (string-match 
-                                      anything-pattern 
-                                      (file-name-nondirectory candidate)))
-
-                                   (lambda (candidate)                                     
-                                     ;; and then directory part matches
-                                     (let ((dir (file-name-directory candidate)))
-                                       (if dir
-                                           (string-match anything-pattern dir)))))
-                            (type . file))
 
                            ((name . "Files from Current Directory")
                             (init . (lambda ()
@@ -842,32 +827,42 @@
                             (candidates . (lambda ()
                                             (directory-files
                                              anything-default-directory)))
-                            (type . file))
-
-                           ((name . "Manual Pages")
-                            (candidates . ,(progn
-                                             ;; XEmacs doesn't have a woman :)
-                                             (declare (special woman-file-name
-                                                               woman-topic-all-completions))
-                                             (condition-case nil
-                                                 (progn
-                                                   (require 'woman)
-                                                   (woman-file-name "")
-                                                   (sort (mapcar 'car
-                                                                 woman-topic-all-completions)
-                                                         'string-lessp))
-                                               (error nil))))
-                            (action . (("Open Manual Page" . woman)))
-                            (requires-pattern . 2))
-
-                           ((name . "Complex Command History")
+                            (type . file)
+                            (candidate-transformer . anything-c-shadow-boring-files))
+                           
+                                                      
+                           ((name . "Syntax Completion")
+                            (candidates 
+                             .
+                             (lambda () anything-yasnippet-completion-table))
+                            (init
+                             . 
+                             (lambda ()
+                               (condition-case x
+                                   (setq anything-yasnippet-completion-table
+                                         (anything-syntax-parser))
+                                 (error
+                                  (setq anything-yasnippet-completion-table nil))
+                                 )
+                               )
+                             )
+                            (action
+                             ("Completion" . yasnippet-complete-syntax-expand))
+                            )
+                           
+                           ((name . "Kill Ring")
+                            (init . (lambda () (anything-attrset 'last-command last-command)))
                             (candidates . (lambda ()
-                                            (mapcar 'prin1-to-string
-                                                    command-history)))
-                            (action . (("Repeat Complex Command" . 
-                                        (lambda (c)
-                                          (eval (read c))))))
-                            (delayed)))
+                                            (loop for kill in kill-ring
+                                                  unless (or (< (length kill) anything-kill-ring-threshold)
+                                                             (string-match "^[\\s\\t]+$" kill))
+                                                  collect kill)))
+                            (action . anything-c-kill-ring-action)
+                                (last-command)
+                                (migemo)
+                                (multiline)
+                            )
+                           )
   "The source of candidates for anything.
 It accepts symbols:
  (setq anything-sources (list anything-c-foo anything-c-bar))

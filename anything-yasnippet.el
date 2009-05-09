@@ -76,7 +76,16 @@
   (let ((anything-sources (list anything-c-source-complete-etags-objc)))
     (anything)))
 
+
+(defun yasnippet-complete-syntax-expand (msg)
+  "constructure an snippet according to the syntax signature string"
+  (flymake-mode nil)
+  (insert msg)
+  (yas/expand))
+
 (setq anything-yasnippet-completion-table nil)
+
+(setq snippet-dot-re "\\(^[a-z0-9+-]*\\)\\.\\(.*$\\)")
 
 (defun anything-syntax-parser ()
   "return (lable . expand-short-cut)"
@@ -93,11 +102,16 @@
                      (file-name-nondirectory file) "\t"
                      (with-temp-buffer
                        (insert-file-contents file nil nil nil t)
-                       (string-match "\\(name *: *\\)\\(.*\n\\).*"
-                                     (buffer-substring-no-properties (point-min) (point-max)))
-                       (match-string 2))))
-                       (stub                          
-                        (file-name-nondirectory file)))  ;file-name
+                       (when 
+                           (string-match "\\(name *: *\\)\\(.*\n\\).*"
+                                         (buffer-substring-no-properties (point-min) (point-max)))
+                         (match-string 2)))))
+                   (stub
+                    (let ((filename (file-name-nondirectory file)))
+                      (if (string-match snippet-dot-re filename)
+                          (match-string 1 filename)
+                        (substring filename 0)))
+                    ))
               (push (cons lable stub)
                     syntax-expand-list))))))
     (mapcar (lambda (x) x) syntax-expand-list)

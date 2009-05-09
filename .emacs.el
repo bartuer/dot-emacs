@@ -282,6 +282,46 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'im 'imenu)
 (global-set-key "\M-." 'anything-etags-select-from-here)
 
+(setq anything-sources
+      '(((name . "Imenu")
+         (candidates . anything-c-imenu-candidates)
+         (action . anything-c-imenu-default-action)
+         "See (info \"(emacs)Imenu\")")
+
+        ((name . "Syntax Completion")
+         (candidates 
+          .
+          (lambda () anything-yasnippet-completion-table))
+         (init
+          . 
+          (lambda ()
+            (condition-case x
+                (setq anything-yasnippet-completion-table
+                      (anything-syntax-parser))
+              (error
+               (setq anything-yasnippet-completion-table nil))
+              )
+            )
+          )
+         (action
+          ("Completion" . yasnippet-complete-syntax-expand))
+         )
+        
+        ((name . "Kill Ring")
+         (init . (lambda () (anything-attrset 'last-command last-command)))
+         (candidates . (lambda ()
+                         (loop for kill in kill-ring
+                               unless (or (< (length kill) anything-kill-ring-threshold)
+                                          (string-match "^[\\s\\t]+$" kill))
+                               collect kill)))
+         (action . anything-c-kill-ring-action)
+         (last-command)
+         (migemo)
+         (multiline)
+         )
+        ))
+
+(require 'anything-yasnippet)
 (require 'anything-etags)
 (require 'icicles nil t)
 (global-set-key [(f6)] 'icicle-complete-keys)
