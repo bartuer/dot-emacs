@@ -1,4 +1,4 @@
-#name : Benchmark.bmbm(...) do ... end
+#name : Benchmark.bmbm
 # --
 Benchmark.bmbm(${1:10}) do |x|
   $0

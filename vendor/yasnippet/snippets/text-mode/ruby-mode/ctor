@@ -1,5 +1,4 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name : def initialize(...)
+#name : initialize
 # --
 def initialize(${1:args})
   ${1:$

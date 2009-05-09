@@ -1,5 +1,4 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: teardown do ... end
+#name : teardown do ... end
 # --
 teardown do
   $0

@@ -1,5 +1,4 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: do ... end
+#name : do
 # --
 do |${1:item}|
 $0`(indent-according-to-mode)`

@@ -1,3 +1,3 @@
-#name : deep_copy(...)
+#name : deep_copy
 # --
 Marshal.load(Marshal.dump($0))

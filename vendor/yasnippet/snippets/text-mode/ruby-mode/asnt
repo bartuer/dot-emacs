@@ -1,4 +1,4 @@
-#name: assert_nothing_thrown { .. }
+#name : assert_nothing_thrown
 # --
 assert_nothing_thrown do
   $0

@@ -1,7 +1,6 @@
 (require 'anything)
 (require 'yasnippet)
 
-
 (defvar anything-objc-parameter-define-re "\\(:([a-zA-Z_0-9_-\\<\\>,()\\*\\ ]*)[a-zA-Z0-9_-]+\\|\\.\\.\\.\\)"
   "(type)name")
 
@@ -71,11 +70,61 @@
         ))
 
 
-
 (defun anything-etags-complete-objc-message ()
   "using anything framework search iphone cocoa etags, select one signature feed to yasnippet "
   (interactive)
   (let ((anything-sources (list anything-c-source-complete-etags-objc)))
+    (anything)))
+
+(setq anything-yasnippet-completion-table nil)
+
+(defun anything-syntax-parser ()
+  "return (lable . expand-short-cut)"
+  (setq current-mode-snippet-directory
+        (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
+                (prin1-to-string major-mode)))
+  (let* ((syntax-expand-list nil))
+    (when (file-directory-p current-mode-snippet-directory)
+      (progn 
+        (dolist (file (yas/directory-files current-mode-snippet-directory t))
+          (when (file-readable-p file)
+            (let* ((lable
+                    (concat
+                     (file-name-nondirectory file) "\t"
+                     (with-temp-buffer
+                       (insert-file-contents file nil nil nil t)
+                       (string-match "\\(name *: *\\)\\(.*\n\\).*"
+                                     (buffer-substring-no-properties (point-min) (point-max)))
+                       (match-string 2))))
+                       (stub                          
+                        (file-name-nondirectory file)))  ;file-name
+              (push (cons lable stub)
+                    syntax-expand-list))))))
+    (mapcar (lambda (x) x) syntax-expand-list)
+    ))
+
+(setq anything-c-source-complete-syntax
+      '((name . "Syntax Completion")
+        (candidates 
+         .
+         (lambda () anything-yasnippet-completion-table))
+        (init
+         . 
+         (lambda ()
+           (condition-case x
+               (setq anything-yasnippet-completion-table (anything-syntax-parser))
+             (error (setq anything-yasnippet-completion-table nil))
+             )
+           )
+         )
+        (action
+         ("Completion" . yasnippet-complete-syntax-expand))
+        ))
+
+(defun anything-complete-syntax-expand ()
+  "finish using current mode's syntax snippet "
+  (interactive)
+  (let ((anything-sources (list anything-c-source-complete-syntax)))
     (anything)))
 
 (provide 'anything-yasnippet)

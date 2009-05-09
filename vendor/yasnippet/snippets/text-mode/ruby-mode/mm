@@ -1,4 +1,4 @@
-#name : def method_missing ... end
+#name : method_missing ... end
 # --
 def method_missing(method, *args)
   $0

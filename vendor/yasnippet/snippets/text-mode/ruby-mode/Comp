@@ -1,4 +1,4 @@
-#name : include Comparable; def <=> ... end
+#name : Comparable then def <=>
 # --
 include Comparable
 

@@ -1,5 +1,4 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: should change
+#name : should change
 # --
 lambda do
   $0

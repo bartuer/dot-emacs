@@ -1,5 +1,4 @@
-# -*- mode: ruby; require-final-newline: nil; backup-inhibited: t -*-
-#name: should raise_error
+#name : should raise_error
 # --
 lambda do
   $0

@@ -1,4 +1,4 @@
-#name : while ... ; ... end
+#name : while
 # --
 while ${1:element} 
   $0
