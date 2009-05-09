@@ -33,6 +33,11 @@
                                     (t (indent-relative-maybe))
                                     (t (indent-for-comment))))))
 
+
+(global-set-key "\C-l" (lambda ()
+                         (interactive)
+                         (recenter-top-bottom 0)))
+                         
 (defun mark-whole-sexp(&optional arg)
   "Mark sexp contain the point, \\[mark-whole-sexp]
 
@@ -346,7 +351,6 @@ If give a negative ARG, will undo the last mark action, thus the
     ))
 
 (global-set-key "\C-z" 'anything)            ;if implement code sense minor mode, not frequently access
-(global-set-key "\C-l" 'recenter-top-bottom) ;also can using C-M-l
 (when (fboundp 'anything)
   (defalias 'k 'anything))
 
