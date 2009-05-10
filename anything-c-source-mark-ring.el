@@ -4,7 +4,7 @@
 
 
 (defvar anything-c-source-mark-ring
-  '((name . "mark-ring")
+  '((name . "Mark Ring")
     (candidates . anything-c-source-mark-ring-candidates)
     (action . (("Goto line" . (lambda (candidate)
                                 (goto-line (string-to-number candidate))))))
@@ -38,7 +38,7 @@
 
 ;; global-mark
 (defvar anything-c-source-global-mark-ring
-  '((name . "global-mark-ring")
+  '((name . "Global Mark Ring")
     (candidates . anything-c-source-global-mark-ring-candidates)
     (action . (("Goto line" . (lambda (candidate)
                                 (let ((items (split-string candidate ":")))
