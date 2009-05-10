@@ -7097,10 +7097,12 @@ optional argument IN-EMACS is non-nil, Emacs will visit the file."
   (interactive "P")
 
   (cond
-   ((stringp (ffap-file-at-point)) (browse-url
-                                    (file-name-directory
-                                     (expand-file-name
-                                      (ffap-file-at-point)))))
+   ((and (stringp (ffap-file-at-point))
+         (not (string-match-p "^http:.*" (ffap-string-at-point))))
+    (browse-url
+     (file-name-directory
+      (expand-file-name
+       (ffap-file-at-point)))))
    (t (progn  
         (org-load-modules-maybe)
         (move-marker org-open-link-marker (point))
