@@ -45,6 +45,7 @@
  '(gdb-speedbar-auto-raise t)
  '(gdb-use-separate-io-buffer t)
  '(global-font-lock-mode t nil (font-lock))
+ '(global-mark-ring-max 32)
  '(grep-find-command "find . -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE ")
  '(grep-highlight-matches t)
  '(gud-gdb-command-name "ssh root@192.168.1.2 LD_LIBRARY_PATH=/mnt/msc_int0/lib /mnt/msc_int0/bin/gdb -annotate=3 -q -x /vobs/gdb/init.gdb  ")
