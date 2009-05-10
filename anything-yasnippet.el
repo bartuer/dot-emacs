@@ -85,7 +85,7 @@
 
 (setq anything-yasnippet-completion-table nil)
 
-(setq snippet-dot-re "\\(^[a-z0-9+-]*\\)\\.\\(.*$\\)")
+(setq snippet-dot-re "\\(^.*\\)\\.\\(.*$\\)")
 
 (defun anything-syntax-parser ()
   "return (lable . expand-short-cut)"
@@ -110,11 +110,12 @@
                     (let ((filename (file-name-nondirectory file)))
                       (if (string-match snippet-dot-re filename)
                           (match-string 1 filename)
-                        (substring filename 0)))
+                          filename
+                        ))
                     ))
               (push (cons lable stub)
                     syntax-expand-list))))))
-    (mapcar (lambda (x) x) syntax-expand-list)
+                    syntax-expand-list
     ))
 
 (setq anything-c-source-complete-syntax

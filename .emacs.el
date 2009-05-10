@@ -288,25 +288,8 @@ If give a negative ARG, will undo the last mark action, thus the
          (action . anything-c-imenu-default-action)
          "See (info \"(emacs)Imenu\")")
 
-        ((name . "Syntax Completion")
-         (candidates 
-          .
-          (lambda () anything-yasnippet-completion-table))
-         (init
-          . 
-          (lambda ()
-            (condition-case x
-                (setq anything-yasnippet-completion-table
-                      (anything-syntax-parser))
-              (error
-               (setq anything-yasnippet-completion-table nil))
-              )
-            )
-          )
-         (action
-          ("Completion" . yasnippet-complete-syntax-expand))
-         )
-        
+        anything-c-source-complete-syntax
+                
         ((name . "Kill Ring")
          (init . (lambda () (anything-attrset 'last-command last-command)))
          (candidates . (lambda ()
