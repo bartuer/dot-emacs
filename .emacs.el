@@ -1,3 +1,4 @@
+
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
@@ -282,11 +283,36 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'im 'imenu)
 (global-set-key "\M-." 'anything-etags-select-from-here)
 
+(defun anything-imenu-jump (p)
+  "(number-or-marker-p p), need move window first"
+  (if (> p 100)
+      (set-window-start (selected-window) (- p 100))
+    (set-window-start (selected-window) 1))
+  (goto-char p)
+  )
+
+(defun anything-c-imenu-kiss-action (elm)
+  "The kiss action for `anything-c-source-imenu'."
+  (push-mark)
+  (let ((path (split-string elm anything-c-imenu-delimiter))
+        (alist anything-c-cached-imenu-alist))
+    (if (> (length path) 1)
+        (progn
+          (setq alist (assoc (car path) alist))
+          (anything-imenu-jump (cdr
+                      (assoc (cadr path) alist)))
+          )
+          (let ((position (cdr
+                  (assoc elm alist))))
+            (anything-imenu-jump position)
+            ))))
+
 (setq anything-sources
-      '(((name . "Imenu")
+      '(
+        ((name . "Imenu Jump")
          (candidates . anything-c-imenu-candidates)
-         (action . anything-c-imenu-default-action)
-         "See (info \"(emacs)Imenu\")")
+         (action . anything-c-imenu-kiss-action)
+         )
 
         anything-c-source-complete-syntax
                 
