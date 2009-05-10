@@ -315,7 +315,11 @@ If give a negative ARG, will undo the last mark action, thus the
          )
 
         anything-c-source-complete-syntax
-                
+
+        ;; seems kill ring is not useful than mark ring for programming, right?
+        anything-c-source-mark-ring
+        anything-c-source-global-mark-ring
+        
         ((name . "Kill Ring")
          (init . (lambda () (anything-attrset 'last-command last-command)))
          (candidates . (lambda ()
