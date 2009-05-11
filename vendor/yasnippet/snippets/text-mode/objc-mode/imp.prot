@@ -2,7 +2,7 @@
 # --
 // all properties need @synthesize or @dynamic
 
-@implement ${1:ClassName} <${2:CategoryName}>
+@implementation ${1:ClassName} <${2:CategoryName}>
 // all instance variable need dealloc
 $0
 @end

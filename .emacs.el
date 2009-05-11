@@ -436,6 +436,11 @@ If give a negative ARG, will undo the last mark action, thus the
                                (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
 (add-hook 'yas/after-exit-snippet-hook (lambda ()
                                             (flymake-mode t)))
+
+(defalias 'y (lambda ()
+               (interactive)
+               (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
+
 (require 'rinari nil t)
 
 (require 'flymake nil t)
@@ -550,6 +555,7 @@ If give a negative ARG, will undo the last mark action, thus the
         (find-file (bartuer-toggle-target))))
 
 (global-set-key "\C-cj" 'bartuer-toggle-header)
+(global-set-key "\C-c\C-j" 'bartuer-toggle-header)
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)

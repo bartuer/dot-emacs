@@ -1,4 +1,4 @@
-- (${1:void})${2:msg1}With${3:msg_2}:(${4:p1_type})${5:p1} ${6:msg_3}:(${7:p2_type})${8:p2}
+- (${1:void}) ${2:msg1}With${3:msg_2}:(${4:p1_type})${5:p1} ${6:msg_3}:(${7:p2_type})${8:p2}
 {
   $0
   return $1();

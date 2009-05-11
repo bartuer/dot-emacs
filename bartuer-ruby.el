@@ -64,7 +64,7 @@
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
-  (flyspell-mode)
+  (flyspell-prog-mode)
   (flymake-mode)
 
   ;; if in test buffer, will do test

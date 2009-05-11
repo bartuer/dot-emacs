@@ -1,3 +1,6 @@
+(file-cache-add-directory "~/local/src/silk")
+(file-cache-add-directory "~/local/src/silk/Classes")
+(file-cache-add-directory "~/local/src/silk/test")
 (file-cache-add-directory "~/local/src/FOSS_iphone_application/touchcode/TouchJSON/Source")
 (file-cache-add-directory "~/local/src/FOSS_iphone_application/touchcode/TouchJSON/Source/Extensons")
 (file-cache-add-directory "~/local/src/FOSS_iphone_application/touchcode/TouchJSON/Source/JSON/")
