@@ -5,10 +5,4 @@ if ($2)
 {
   [$2 autorelease];
 }
-else
-{
-  fprintf(stderr, "%s:%d %s alloc and init failed",
-          __FILE__, __LINE__,
-          [NSStringFromClass($1) UTF8String]);        
-}
 $0

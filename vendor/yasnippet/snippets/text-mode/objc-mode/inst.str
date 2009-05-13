@@ -1,13 +1,9 @@
-#name : static checking
+#name : instance a string
 # it is dangerous write code like:
 # id o = [Class alloc];
 # [o init];
 # [o msg];
 # for [o init] maybe return another object, not only return nil problem.
 # --
-${1:type} *${2:instance} = [[${1:Type} alloc] init];
-if ($2)
-{
-  $0
-  [$2 release];
-}
+[[NSString alloc] initWithString:${1}];$0
+
