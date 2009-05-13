@@ -1,0 +1,3 @@
+#name : assert throw specific with name
+# --
+STAssertThrowsSpecificNamed(${1:expr}, ${2:exception}, ${3:name}, "${4:should }$0");

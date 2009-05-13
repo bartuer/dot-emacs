@@ -1,0 +1,3 @@
+#name : assert throw
+# --
+STAssertThrows(${1:expr}, "${2:should }$0");

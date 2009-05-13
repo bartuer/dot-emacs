@@ -1,0 +1,3 @@
+#name : assert less than or equal
+# --
+STAssertLessThanOrEqual(${1:one}, ${2:two}, "${3:should }$0");
