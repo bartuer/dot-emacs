@@ -1,3 +1,3 @@
 #name : assert nil
 # --
-STAssertNil(${1:one}, "${2:should }$0");
+STAssertNil(${1:one}, @"${2:should }$0");
