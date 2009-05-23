@@ -4,7 +4,7 @@
 # superclass's init would return a object not the self, assign it to self
 # --
 - (id) initWith${1:$(capitalize text)}:(${2:type_of_para} *)${1:para};//move me to header
-- (id) initWith${1:$(capitalize text)}:($2)$1
+- (id) initWith${1:$(capitalize text)}:($2 *)$1
 {
   if (self = [super ${4:designated_init}])
   {
