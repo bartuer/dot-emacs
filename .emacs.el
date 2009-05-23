@@ -272,6 +272,7 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; using M-TAB, then M-TAB is flyspell-auto-correct-word
 (autoload 'bartuer-flyspell-load "bartuer-flyspell.el" "flyspell modification")
 (add-hook 'flyspell-mode-hook 'bartuer-flyspell-load)
+(global-set-key "\C-c\C-\M-n" 'flyspell-goto-next-error)
 
 ;; M-TAB do the tags and symbol complete
 (defalias 'tl (quote (lambda ()
