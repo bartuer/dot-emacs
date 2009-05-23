@@ -1,4 +1,3 @@
-for (${1:type} *element in ${2:collection})
-{
+for (${1:type} *element in ${2:collection}) {
   $0
 }

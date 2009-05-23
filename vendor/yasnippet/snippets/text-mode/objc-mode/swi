@@ -1,5 +1,4 @@
-switch (${1:color})
-{
+switch (${1:color}) {
   case ${2:red}:
     $3
     break;

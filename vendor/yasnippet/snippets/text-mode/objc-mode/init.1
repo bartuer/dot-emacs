@@ -6,12 +6,10 @@
 - (id) initWith${1:$(capitalize text)}:(${2:type_of_para} *)${1:para};//move me to header
 - (id) initWith${1:$(capitalize text)}:($2 *)$1
 {
-  if (self = [super ${4:designated_init}])
-  {
+  if (self = [super ${4:designated_init}]) {
     
     //check as early as possible
-    if($1 == nil) 
-    {
+    if($1 == nil) {
       [self release];
       return nil;
     }

@@ -9,8 +9,7 @@
 
 - (void) set${2:$(capitalize text)}:($1)aValue
 {
-  if ( $2 != aValue )
-  {
+  if ( $2 != aValue ) {
     [$2 release];
     $2 = [aValue retain];
   }

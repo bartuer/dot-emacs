@@ -6,8 +6,7 @@
 # for [o init] maybe return another object, not only return nil problem.
 # --
 ${1:type} *${2:instance} = [[${1:Type} alloc] init];
-if ($2)
-{
+if ($2) {
   $0
   [$2 release];
 }
