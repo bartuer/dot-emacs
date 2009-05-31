@@ -1,11 +1,11 @@
 #name :singleton
 # --
-static ${1:class} *$1SharedInstance = nil;
-$0+ ($1 *) sharedInstance;//move me to header
-+ ($1 *) sharedInstance
+static ${1:class} *${2:instance} = nil;
+$0+ ($1 *) $2;//move me to header
++ ($1 *) $2
 {
-   if($1SharedInstance == nil)
-     $1SharedInstance = [[$1 alloc] init];
+   if($2 == nil)
+     $2 = [[$1 alloc] init];
 
-   return $1SharedInstance;
+   return $2;
 }

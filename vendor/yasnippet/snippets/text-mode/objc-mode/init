@@ -6,7 +6,7 @@
 - (id) init; //move me to header
 - (id) init
 {
-  if (self = [super ${1:designated_init}]) {
+  if ((self = [super ${1:designated_init}]) != nil) {
     // assign instance variable directly, do not using accessors
     $0
     
