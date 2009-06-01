@@ -1,3 +1,6 @@
+(file-cache-add-directory "~/local/src/ruby/trunk/lib/webrick")
+(file-cache-add-directory "~/local/src/ruby/trunk/lib/webrick/httpauth/")
+(file-cache-add-directory "~/local/src/ruby/trunk/lib/webrick/httpservlet/")
 (file-cache-add-directory "~/local/src/silk")
 (file-cache-add-directory "~/local/src/silk/Classes")
 (file-cache-add-directory "~/local/src/silk/test")
