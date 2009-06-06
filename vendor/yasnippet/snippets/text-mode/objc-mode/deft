@@ -1,6 +1,6 @@
 # name : test function for sentest
 # --
-- (void) test${1:msg1}
+- (void) test$1
 {
   $0
 }
