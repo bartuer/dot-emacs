@@ -7,6 +7,6 @@ class ${1:$
                                    (buffer-file-name))))))
            (cond
              ((string-match "_" fn) (replace-match "" nil nil fn))
-              (t fn)))}
-  $0
+              (t fn)))} < ${2:base}
+  init$0
 end
