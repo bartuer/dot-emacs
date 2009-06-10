@@ -300,14 +300,17 @@ If give a negative ARG, will undo the last mark action, thus the
         (alist anything-c-cached-imenu-alist))
     (if (> (length path) 1)
         (progn
-          (setq alist (assoc (car path) alist))
+          (setq alist (last (mapcar (lambda (elem)
+                                      (setq alist
+                                            (assoc elem alist)))
+                                    path)))
           (anything-imenu-jump (cdr
-                      (assoc (cadr path) alist)))
+                                (assoc (car (last path)) alist)))
           )
-          (let ((position (cdr
-                  (assoc elm alist))))
-            (anything-imenu-jump position)
-            ))))
+      (let ((position (cdr
+                       (assoc elm alist))))
+        (anything-imenu-jump position)
+        ))))
 
 (setq anything-sources
       '(
@@ -500,6 +503,7 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
 (add-to-list 'auto-mode-alist '("\\.log" . auto-revert-mode))
+(add-to-list 'auto-mode-alist '("cheat-sheet" . follow-mode))
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
   dot emacs files, \\[bartuer-general-todo-list]," t nil)

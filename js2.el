@@ -6818,6 +6818,8 @@ builtins, the Mozilla builtins, etc."
 ;; During parsing we accumulate an entry for each definition in
 ;; the variable `js2-imenu-recorder', like so:
 ;;
+;; (imenu--make-index-alist)
+;; 
 ;; '((a 5)
 ;;   (b 25)
 ;;   (foo 100)

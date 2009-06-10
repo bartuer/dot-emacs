@@ -63,6 +63,7 @@
  '(ido-max-window-height 4)
  '(indent-tabs-mode nil)
  '(isearch-resume-in-command-history t)
+ '(js2-highlight-level 3)
  '(kill-read-only-ok t)
  '(line-number-mode t)
  '(list-matching-lines-default-context-lines 0)
