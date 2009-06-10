@@ -6952,7 +6952,7 @@ variable `js2-imenu-recorder'."
           ;; As a policy decision, we record the position of the property,
           ;; not the position of the `function' keyword, since the property
           ;; is effectively the name of the function.
-          (push (append qname (list left) (list (+ pos (js2-node-pos e))))
+          (push (append qname (list left) (list (+ pos (js2-node-abs-pos e))))
                 js2-imenu-recorder)
           (js2-record-function-qname right qname)))
        ;; foo: {object-literal} -- add foo to qname and recurse
