@@ -671,6 +671,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for edit elisp" t)
 (add-hook 'elisp-mode-hook 'bartuer-elisp-load)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
