@@ -6785,7 +6785,9 @@ builtins, the Mozilla builtins, etc."
 ;;         }
 ;;       }
 ;;     } -- nested obj lit assigned to nested prop get, using function position
-;;  (function($){ $.function(){}})(lib) -- pattern for extent library
+;;  (function($){ $.name = function(){}})(lib) -- pattern for extent library
+;;  (function() { function funcname(){}})() -- function expression
+;;  lib.extend({name:function() {}}) -- extend library
 ;;  function foo()  -- function declaration
 ;;  foo = function()  -- function expression assigned to variable
 ;;  foo.bar.baz = function()  -- function expr assigned to nested property-get
