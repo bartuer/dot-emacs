@@ -6787,6 +6787,7 @@ builtins, the Mozilla builtins, etc."
 ;;       }
 ;;     }
 ;;  })(); -- such such "nested obj lit assigned to nested prop get" does not work?
+;;  (function($){ $.function(){}})(lib) -- pattern for extent library
 ;;  function foo()  -- function declaration
 ;;  foo = function()  -- function expression assigned to variable
 ;;  foo.bar.baz = function()  -- function expr assigned to nested property-get
