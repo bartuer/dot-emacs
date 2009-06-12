@@ -6779,14 +6779,12 @@ builtins, the Mozilla builtins, etc."
 ;; include:
 ;;
 ;;  (function($){})(library) -- function as a namespace to prevent pollution
-;;  (function(){
-;;     Sizzle.selectors = {
+;;  selectors = {
 ;;       relative: {
-;;         "+": function(checkSet, part, isXML){
+;;         "+": function(){
 ;;         }
 ;;       }
-;;     }
-;;  })(); -- such such "nested obj lit assigned to nested prop get" does not work?
+;;     } -- nested obj lit assigned to nested prop get, using function position
 ;;  (function($){ $.function(){}})(lib) -- pattern for extent library
 ;;  function foo()  -- function declaration
 ;;  foo = function()  -- function expression assigned to variable
@@ -6972,7 +6970,7 @@ variable `js2-imenu-recorder'."
           ;; As a policy decision, we record the position of the property,
           ;; not the position of the `function' keyword, since the property
           ;; is effectively the name of the function.
-          (push (append qname (list left) (list (+ pos (js2-node-pos e))))
+          (push (append qname (list left) (list (js2-node-abs-pos right)))
                 js2-imenu-recorder)
           (js2-record-function-qname right qname)))
        ;; foo: {object-literal} -- add foo to qname and recurse
