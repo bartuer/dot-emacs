@@ -7704,8 +7704,12 @@ Last token scanned is the close-curly for the function body."
           (js2-define-symbol js2-FUNCTION
                              (js2-name-node-name name)
                              fn-node))
-      (if (and name
-               (eq function-type 'FUNCTION_EXPRESSION_STATEMENT))
+
+      (if  (and name
+               (or 
+                (eq function-type 'FUNCTION_EXPRESSION_STATEMENT)
+                (eq function-type 'FUNCTION_STATEMENT))
+               )
           (js2-record-imenu-functions fn-node)))
 
     (setf (js2-node-len fn-node) (- js2-ts-cursor pos)
