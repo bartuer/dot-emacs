@@ -6997,10 +6997,6 @@ For instance, following a 'this' reference requires a parent function node."
       (setq head (car chain))
 
       (cond
-       ;; if top-level/external, keep as-is
-       ;; ((js2-node-top-level-decl-p head)
-       ;;         (push chain result))
-       ;; check for a this-reference
        ((eq (js2-node-type head) js2-THIS)
         (setq fn (js2-node-parent-script-or-fn head))
         ;; if there is no parent function, or if the parent function
@@ -7630,7 +7626,6 @@ Last token scanned is the close-curly for the function body."
                                        :name lambda-function-position
                                        :len 0))
         ))
-;;;       nil)  ; anonymous function:  leave name as null
 
      (t
       ;; function random-member-expr(...)
