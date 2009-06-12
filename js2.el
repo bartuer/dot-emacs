@@ -9121,6 +9121,9 @@ Returns the list in reverse order.  Consumes the right-paren token."
             while
             (js2-match-token js2-COMMA))
       (js2-must-match js2-RP "msg.no.paren.arg")
+      (dolist (arg result)
+        (when (js2-object-node-p arg)
+          (js2-record-object-literal arg (list))))
       result)))
 
 (defun js2-parse-member-expr (&optional allow-call-syntax)
