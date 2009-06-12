@@ -6779,6 +6779,14 @@ builtins, the Mozilla builtins, etc."
 ;; include:
 ;;
 ;;  (function($){})(library) -- function as a namespace to prevent pollution
+;;  (function(){
+;;     Sizzle.selectors = {
+;;       relative: {
+;;         "+": function(checkSet, part, isXML){
+;;         }
+;;       }
+;;     }
+;;  })(); -- such such "nested obj lit assigned to nested prop get" does not work?
 ;;  function foo()  -- function declaration
 ;;  foo = function()  -- function expression assigned to variable
 ;;  foo.bar.baz = function()  -- function expr assigned to nested property-get
