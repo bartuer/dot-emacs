@@ -63,6 +63,8 @@
  '(ido-max-window-height 4)
  '(indent-tabs-mode nil)
  '(isearch-resume-in-command-history t)
+ '(js2-allow-member-expr-as-function-name t)
+ '(js2-allow-rhino-new-expr-initializer t)
  '(js2-highlight-level 3)
  '(kill-read-only-ok t)
  '(line-number-mode t)

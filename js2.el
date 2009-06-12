@@ -6778,6 +6778,7 @@ builtins, the Mozilla builtins, etc."
 ;; are readily recognizable at parse-time; the forms we attempt to recognize
 ;; include:
 ;;
+;;  (function($){})(library) -- function as a namespace to prevent pollution
 ;;  function foo()  -- function declaration
 ;;  foo = function()  -- function expression assigned to variable
 ;;  foo.bar.baz = function()  -- function expr assigned to nested property-get
@@ -6818,7 +6819,17 @@ builtins, the Mozilla builtins, etc."
 ;; During parsing we accumulate an entry for each definition in
 ;; the variable `js2-imenu-recorder', like so:
 ;;
+;; to see generated imenu:
 ;; (imenu--make-index-alist)
+;;
+;; to see the syntax tree:
+;; breakpoint after [[setf%20js2%20node%20len%20root%20end%20pos][parse]] 
+;; (js2-node-child-list root)
+;; 
+;; or, M-x js2-node-at-point
+;; 
+;; js2-function-node defined:
+;; [[file:~/local/src/js2/js2-ast.el::defstruct%20js2%20function%20node][function-node]]
 ;; 
 ;; '((a 5)
 ;;   (b 25)
@@ -6952,7 +6963,7 @@ variable `js2-imenu-recorder'."
           ;; As a policy decision, we record the position of the property,
           ;; not the position of the `function' keyword, since the property
           ;; is effectively the name of the function.
-          (push (append qname (list left) (list (+ pos (js2-node-abs-pos e))))
+          (push (append qname (list left) (list (+ pos (js2-node-pos e))))
                 js2-imenu-recorder)
           (js2-record-function-qname right qname)))
        ;; foo: {object-literal} -- add foo to qname and recurse
@@ -6984,10 +6995,11 @@ For instance, following a 'this' reference requires a parent function node."
     (dolist (chain chains)
       ;; examine the head of each node to get its defining scope
       (setq head (car chain))
+
       (cond
        ;; if top-level/external, keep as-is
-       ((js2-node-top-level-decl-p head)
-        (push chain result))
+       ;; ((js2-node-top-level-decl-p head)
+       ;;         (push chain result))
        ;; check for a this-reference
        ((eq (js2-node-type head) js2-THIS)
         (setq fn (js2-node-parent-script-or-fn head))
@@ -7000,7 +7012,11 @@ For instance, following a 'this' reference requires a parent function node."
                                         (gethash fn js2-imenu-function-map)))
             ;; else discard head node and prefix parent fn qname, which is
             ;; the parent-chain sans tail, to this chain.
-            (push (append (butlast parent-chain) (cdr chain)) result))))))
+            (push (append (butlast parent-chain) (cdr chain)) result))))
+
+       (t
+        (push chain result))        
+       ))
     ;; finally replace each node in each chain with its name.
     (dolist (chain result)
       (setq p chain)
@@ -7609,7 +7625,12 @@ Last token scanned is the close-curly for the function body."
         (js2-must-match js2-LP "msg.no.paren.parms")))
 
      ((js2-match-token js2-LP)
-      nil)  ; anonymous function:  leave name as null
+      (let ((lambda-function-position (format "lambda-function-at-%d" js2-token-beg)))
+        (setq name (make-js2-name-node :pos js2-token-beg
+                                       :name lambda-function-position
+                                       :len 0))
+        ))
+;;;       nil)  ; anonymous function:  leave name as null
 
      (t
       ;; function random-member-expr(...)
@@ -7627,9 +7648,13 @@ Last token scanned is the close-curly for the function body."
         (progn
           (setq synthetic-type 'FUNCTION_EXPRESSION)
           (js2-parse-highlight-member-expr-fn-name member-expr-node))
-      (if name
+      (if (and name
+               (not (string-match-p
+                     "lambda-function-at-[0-9]+"
+                     (js2-name-node-name name) )))
           (js2-set-face name-beg name-end
-                        'font-lock-function-name-face 'record)))
+                        'font-lock-function-name-face 'record))
+      )
 
     (if (and (neq synthetic-type 'FUNCTION_EXPRESSION)
              (plusp (js2-name-node-length name)))
