@@ -62,4 +62,32 @@
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
   
+(defun flat-alist (entry)
+  (if (listp (cdr entry))
+      (mapcan (lambda (sub)
+                (if (consp (cdr sub))
+                    (mapcar
+                     (lambda (subentry)
+                       (concat (car entry) "." subentry))
+                     (flat-alist sub))
+                  (list (concat
+                         (car entry) "." (car sub) ""
+                         (format "%d,%d\n"
+                                 (line-number-at-pos (cdr sub))
+                                 (let ((pos (cdr sub)))
+                                   (if (markerp pos)
+                                       (marker-position pos)
+                                     pos)))))))
+              (cdr entry))
+    (list (format "%s%d,%d\n" (car (car (list entry)))
+                  (line-number-at-pos (cdr (car (list entry))))
+                  (let ((pos (cdr (car (list entry)))))
+                    (if (markerp pos)
+                        (marker-position pos)
+                      pos))))))
 
+(defun imenu-2-etags ()
+  (interactive)                         
+  (cdr (mapcan
+   'flat-alist
+   (imenu--make-index-alist)))) 
