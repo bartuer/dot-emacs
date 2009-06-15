@@ -91,3 +91,25 @@
    'flat-alist
    (imenu--make-index-alist))))
 
+(defun write-etags (filename)
+  "should invoke it in virtual dired mode"
+  (interactive)
+  (setq etags-string-size 0)
+  (setq etags-string "")
+  ;; open result buffer
+  (with-current-buffer (find-file (expand-file-name filename))
+    (setq etags-string (imenu-2-etags))
+    (setq etags-string-size (apply '+ (mapcar 'length etags-string)))
+    )
+  (with-current-buffer
+      (get-buffer-create "imenu-2-etags")
+    (when (buffer-size)
+      (erase-buffer))
+    (insert "\n")
+    (insert (expand-file-name filename))
+    (insert (format ",%d\n" etags-string-size))
+    (mapcar 'insert etags-string)
+    (write-region (point-min) (point-max) "/tmp/TAGS" t)
+    )
+  )
+
