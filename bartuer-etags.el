@@ -1,4 +1,5 @@
 (defun get-string-of-line (lineno)
+  "Get the content of the line LINENO"
   (save-excursion
     (goto-line lineno)
     (beginning-of-line)
@@ -9,6 +10,12 @@
     ))
 
 (defun add-etags-search-head (line)
+  "Completion content of a TAGS file record according to line number information
+
+A TAGS file record should be:
+string in filesyntax meaning stringline number,position
+
+Also see `tags-table-list'."
   (let* ((start (string-match "" line))
          (end (string-match "," line start))
          (lineno (substring line (+ 1 start) end)))
@@ -18,6 +25,9 @@
      line)))
 
 (defun flat-alist (entry)
+  "Go through alist returned by `imenu--make-index-alist'
+
+Also see `imenu-2-etags'."
   (if (listp (cdr entry))
       (mapcan (lambda (sub)
                 (if (consp (cdr sub))
@@ -45,14 +55,24 @@
                       pos))))))
 
 (defun imenu-2-etags ()
+  "convert imenu to etags string list
+
+Also see `generate-etags'."
   (mapcar 'add-etags-search-head 
           (cdr (mapcan
                 'flat-alist
                 (imenu--make-index-alist)))))
 
+(defvar emacs-etags-file-name "/tmp/TAGS"
+  "`generate-etags''s output
+
+Default is at the directory indicated when invoke `generate-etags'.")
+
 (defun write-etags (filename)
-  "should invoke it in virtual dired mode"
-  (interactive)
+  "parse a file and write the parse result (for using as TAGS) to TAGS file
+
+FILENAME the file to be parsed
+Also see `generate-etags', the result is written to `emacs-etags-file-name'"
   (setq etags-string-size 0)
   (setq etags-string "")
 
@@ -68,11 +88,19 @@
     (insert (expand-file-name filename))
     (insert (format ",%d\n" etags-string-size))
     (mapcar 'insert etags-string)
-    (write-region (point-min) (point-max) "/tmp/TAGS" t)
+    (write-region (point-min) (point-max) emacs-etags-file-name t)
     )
   )
 
 (defun generate-etags (dir pattern)
+  "Generate TAGS file using file's imenu parse result.
+
+DIR is the root directory to process
+PATTERN is file name pattern to process
+
+About imenu, see `imenu'.  About TAGS, see `tags-table-list'.
+
+The result is written to `emacs-etags-file-name'."
   (interactive
    "Ddirectory: \nsfile-name : ")
   (let ((files (butlast (split-string (shell-command-to-string

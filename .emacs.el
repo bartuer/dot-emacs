@@ -283,6 +283,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'tq 'tags-query-replace)
 (defalias 'im 'imenu)
 (global-set-key "\M-." 'anything-etags-select-from-here)
+(load "~/etc/el/bartuer-etags.el")
 
 (load "~/etc/el/anything-c-source-mark-ring.el")
 (defun anything-imenu-jump (p)
