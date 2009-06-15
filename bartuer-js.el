@@ -136,3 +136,15 @@
     )
   )
 
+
+(defun generate-etags (dir pattern)
+  (interactive
+   "Ddirectory: \nsfile-name : ")
+  (let ((files (butlast (split-string (shell-command-to-string
+                              (concat
+                               "find "
+                               dir
+                               " -name "
+                               (shell-quote-argument pattern)))
+                               "\n"))))
+    (mapcar 'write-etags files)))
