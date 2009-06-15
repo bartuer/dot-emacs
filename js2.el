@@ -6895,7 +6895,9 @@ function and see (using this map) whether it is the tail of a chain.
 If so, we replace the this-node with a copy of the parent's qname."
   (unless js2-imenu-function-map
     (setq js2-imenu-function-map (make-hash-table :test 'eq)))
-  (puthash fn-node qname js2-imenu-function-map))
+  (puthash fn-node qname js2-imenu-function-map)
+  (puthash qname fn-node js2-imenu-function-map)
+  )
 
 (defun js2-record-imenu-functions (node &optional var)
   "Record function definitions for imenu.
@@ -6918,9 +6920,13 @@ VAR, if non-nil, is the expression that NODE is being assigned to."
         (cond
          ;; foo.bar.baz = function
          (fun-p
-          (push (nconc qname (list (js2-node-pos node)))
+          (push (setq func-node-name (nconc qname (list (js2-node-pos node))))
                 js2-imenu-recorder)
-          (js2-record-function-qname node qname))
+
+          (unless js2-imenu-function-map
+                  (setq js2-imenu-function-map (make-hash-table :test 'eq)))
+          (puthash node qname js2-imenu-function-map)
+          (puthash func-node-name node js2-imenu-function-map))
          ;; foo.bar.baz = object-literal
          ;; look for nested functions:  {a: {b: function() {...} }}
          ((js2-object-node-p node)
@@ -6972,9 +6978,15 @@ variable `js2-imenu-recorder'."
           ;; As a policy decision, we record the position of the property,
           ;; not the position of the `function' keyword, since the property
           ;; is effectively the name of the function.
-          (push (append qname (list left) (list (js2-node-abs-pos right)))
-                js2-imenu-recorder)
-          (js2-record-function-qname right qname)))
+          (push (setq fn-name (append
+                               qname
+                               (list left)
+                               (list (js2-node-abs-pos right)))) js2-imenu-recorder)
+          (unless js2-imenu-function-map
+            (setq js2-imenu-function-map (make-hash-table :test 'eq)))
+          (puthash right qname js2-imenu-function-map)
+          (puthash fn-name right js2-imenu-function-map)
+       ))
        ;; foo: {object-literal} -- add foo to qname and recurse
        ((js2-object-node-p right)
         (js2-record-object-literal right
@@ -6995,6 +7007,27 @@ that it's an external variable, which must also be in the top-level scope."
      ((setq defining-scope (js2-get-defining-scope this-scope name))
       (js2-ast-root-p defining-scope))
      (t t))))
+
+(defun js2-function-signature (fname)
+  (let ((fn (gethash fname js2-imenu-function-map))
+        (node (and (js2-node-p (car fname))
+                   (car fname))))
+    (if fn
+        (concat 
+         "("
+         (let* ((params (mapcar
+                         'js2-name-node-name
+                         (js2-function-node-params fn)))
+                (parastring (append
+                             (mapcar (lambda (para)
+                                       (concat para ", "))
+                                     (butlast params))
+                             (last params))))
+           (apply 'concat parastring))
+         ")")
+      (if node
+          (js2-node-qname-component node)
+        nil))))
 
 (defun js2-browse-postprocess-chains (chains)
   "Modify function-declaration name chains after parsing finishes.
@@ -7025,10 +7058,19 @@ For instance, following a 'this' reference requires a parent function node."
     ;; finally replace each node in each chain with its name.
     (dolist (chain result)
       (setq p chain)
+      (setq para (js2-function-signature p))
       (while p
         (if (js2-node-p (setq elem (car p)))
-            (setcar p (js2-node-qname-component elem)))
-        (setq p (cdr p))))
+            (setcar p (js2-node-qname-component elem))
+          (setq p (cdr p))))
+      (when (eq (string-match "(.*)" para) 0)
+        (setq c chain)
+        (let ((funcname (nth (- (length c) 2) c)))
+          (while c
+            (if (eq (car c) funcname)
+                (setcar c (concat (car c) para))
+              (setq c (cdr c))))))
+      )
     result))
 
 ;; Merge name chains into a trie-like tree structure of nested lists.

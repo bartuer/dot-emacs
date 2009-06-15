@@ -87,7 +87,7 @@
                       pos))))))
 
 (defun imenu-2-etags ()
-  (interactive)                         
   (cdr (mapcan
    'flat-alist
-   (imenu--make-index-alist)))) 
+   (imenu--make-index-alist))))
+
