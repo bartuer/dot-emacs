@@ -103,6 +103,7 @@ About imenu, see `imenu'.  About TAGS, see `tags-table-list'.
 The result is written to `emacs-etags-file-name'."
   (interactive
    "Ddirectory: \nsfile-name : ")
+  (setq emacs-etags-file-name (concat dir "/TAGS"))
   (let ((files (butlast (split-string (shell-command-to-string
                               (concat
                                "find "
