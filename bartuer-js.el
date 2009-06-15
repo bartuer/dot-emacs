@@ -61,17 +61,38 @@
   (interactive)
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
-  
+
+(defun get-string-of-line (lineno)
+  (save-excursion
+    (goto-line lineno)
+    (beginning-of-line)
+    (setq beg (point))
+    (end-of-line)
+    (setq end (point))
+    (buffer-substring-no-properties beg end)
+    ))
+
+(defun add-etags-search-head (line)
+  (let* ((start (string-match "" line))
+         (end (string-match "," line start))
+         (lineno (substring line (+ 1 start) end)))
+    (concat
+     (get-string-of-line (read lineno))
+     ""
+     line)))
+
 (defun flat-alist (entry)
   (if (listp (cdr entry))
       (mapcan (lambda (sub)
                 (if (consp (cdr sub))
                     (mapcar
                      (lambda (subentry)
-                       (concat (car entry) "." subentry))
+                       (concat
+                        (car entry)
+                        "." subentry))
                      (flat-alist sub))
                   (list (concat
-                         (car entry) "." (car sub) ""
+                         (car entry) "." (car sub) ""
                          (format "%d,%d\n"
                                  (line-number-at-pos (cdr sub))
                                  (let ((pos (cdr sub)))
@@ -79,7 +100,8 @@
                                        (marker-position pos)
                                      pos)))))))
               (cdr entry))
-    (list (format "%s%d,%d\n" (car (car (list entry)))
+    (list (format "%s%d,%d\n"
+                  (car (car (list entry)))
                   (line-number-at-pos (cdr (car (list entry))))
                   (let ((pos (cdr (car (list entry)))))
                     (if (markerp pos)
@@ -87,22 +109,23 @@
                       pos))))))
 
 (defun imenu-2-etags ()
-  (cdr (mapcan
-   'flat-alist
-   (imenu--make-index-alist))))
+  (mapcar 'add-etags-search-head 
+          (cdr (mapcan
+                'flat-alist
+                (imenu--make-index-alist)))))
 
 (defun write-etags (filename)
   "should invoke it in virtual dired mode"
   (interactive)
   (setq etags-string-size 0)
   (setq etags-string "")
-  ;; open result buffer
+
   (with-current-buffer (find-file (expand-file-name filename))
     (setq etags-string (imenu-2-etags))
     (setq etags-string-size (apply '+ (mapcar 'length etags-string)))
     )
-  (with-current-buffer
-      (get-buffer-create "imenu-2-etags")
+  
+  (with-current-buffer (get-buffer-create "imenu-2-etags")
     (when (buffer-size)
       (erase-buffer))
     (insert "\n")
