@@ -654,7 +654,7 @@ If give a negative ARG, will undo the last mark action, thus the
          (local-file (file-relative-name
 		      temp-file
 		      (file-name-directory buffer-file-name))))
-    (list "rhino" (list (expand-file-name "~/local/src/rhino-1.7/jslint.js") local-file))))
+    (list "rhino" (list (expand-file-name "~/local/src/jslint/jslint.js") local-file))))
 
 (setq flymake-err-line-patterns 
       (cons '("^Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\): \\(.+\\)$"  
