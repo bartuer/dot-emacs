@@ -648,6 +648,19 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
+(defun flymake-jslint-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+		     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+		      temp-file
+		      (file-name-directory buffer-file-name))))
+    (list "rhino" (list (expand-file-name "~/local/src/rhino-1.7/jslint.js") local-file))))
+
+(setq flymake-err-line-patterns 
+      (cons '("^Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\): \\(.+\\)$"  
+	      nil 1 2 3)
+	    flymake-err-line-patterns))
+
 (autoload 'bartuer-js-load "bartuer-js" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
 

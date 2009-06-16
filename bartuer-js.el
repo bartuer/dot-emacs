@@ -4,6 +4,7 @@
   (require 'flyspell nil t)
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
+  (flymake-mode t)
   (autoload 'connect-jsh "bartuer-js" nil t)
   (autoload 'send-expression-jsh "bartuer-js" nil t)
   (autoload 'send-fuction-jsh "bartuer-js" nil t)
