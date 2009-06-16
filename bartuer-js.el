@@ -6,6 +6,7 @@
     (flyspell-prog-mode))
   (flymake-mode nil)
   (moz-minor-mode t)
-  
+  (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
+  (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   )
 
