@@ -14,7 +14,7 @@
 
   (moz-minor-mode t)
   (yas/minor-mode-on)
-  (flymake-mode nil)
+  (flymake-mode t)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   )
