@@ -218,6 +218,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key [(f4)] 'f4)
 (defalias 'fr 'make-frame)
 
+(global-set-key "\M-7" 'find-dired)
 (global-set-key "\M-9" 'grep-find)
 (global-set-key [(f9)] 'grep-find)
 (global-set-key "\M-0" 'list-matching-lines)
