@@ -1,0 +1,11 @@
+#name : describe
+# --
+describe
+('${2:case}',
+ function () {
+   it
+   ('${3:should success}',
+    function () {
+      expect(true).to(be, true)
+    })
+ })

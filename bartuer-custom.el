@@ -65,7 +65,7 @@
  '(isearch-resume-in-command-history t)
  '(js2-allow-member-expr-as-function-name t)
  '(js2-allow-rhino-new-expr-initializer t)
- '(js2-basic-offset 4)
+ '(js2-basic-offset 2)
  '(js2-highlight-level 3)
  '(kill-read-only-ok t)
  '(line-number-mode t)
