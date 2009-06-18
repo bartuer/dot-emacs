@@ -1,3 +1,10 @@
+(defun autotest ()
+  (interactive)
+  (cd "..")
+  (term "~/bin/jspec_in_term")
+  (rename-buffer "jspec-auto-test")
+  )
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -9,4 +16,5 @@
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   )
+
 
