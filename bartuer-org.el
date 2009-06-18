@@ -13,6 +13,12 @@
   (global-set-key "\C-co" 'org-open-at-point-global)
   (turn-on-font-lock)
   (define-key org-mode-map "\C-j" 'org-meta-return)
+  (define-key org-mode-map "[" (lambda ()
+                                 (interactive)
+                                 (insert "[ ] ")))
+  (define-key org-mode-map "0" (lambda ()
+                                 (interactive)
+                                 (insert " [0/0]")))
   (define-key org-mode-map "<backtab>" 'org-shifttab)
   (define-key org-mode-map "\C-\M-c" 'bartuer-org-insert-child)
   ;; add a hook when saving also export to a html
