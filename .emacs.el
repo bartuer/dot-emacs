@@ -96,6 +96,7 @@ If give a negative ARG, will undo the last mark action, thus the
     (backward-up-list)
     (kill-sexp))))
 (global-set-key "\C-x\C-\M-k" 'kill-whole-sexp)
+(defalias 'k  'kill-backward-up-list)
 
 (defun kill-whole-sentence()
   (interactive)
@@ -410,9 +411,9 @@ If give a negative ARG, will undo the last mark action, thus the
                                   '(length pattern))
     ))
 
-(global-set-key "\C-z" 'anything)            ;if implement code sense minor mode, not frequently access
+
 (when (fboundp 'anything)
-  (defalias 'k 'anything))
+  (global-set-key "\C-z" 'anything))
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
@@ -648,6 +649,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
 (defun flymake-jslint-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
