@@ -1,6 +1,14 @@
-#contributor : Jimmy Wu <frozenthrone88@gmail.com>
 #name : <html>...</html>
 # --
 <html>
-  $0
+<head>
+  <title>${1:title} </title>
+  <script src="./${2:source}"></script>
+</head>
+<body id="main">
+    <h1>${3:head}</h1>
+    <p >${4:description}</p>
+</body>
 </html>
+
+

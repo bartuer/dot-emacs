@@ -1,0 +1,3 @@
+#name getElementsByTagName
+# --
+var ${1:items} = document.getElementsByTagName("${2:tag}");
