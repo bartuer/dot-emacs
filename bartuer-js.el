@@ -1,3 +1,5 @@
+(require 'moz nil t)
+
 (defun autotest ()
   (interactive)
   (cd "..")
