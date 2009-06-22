@@ -8,7 +8,7 @@ JSpec.describe(
     before_each(
       function () {
         $0  
-      })
+      });
 
     describe
     ('${2:case}',
@@ -16,8 +16,8 @@ JSpec.describe(
        it
        ('${3:should success}',
         function () {
-          expect(true).to(be, true)
-        })
-     })
+          expect(true).to(be, true);
+        });
+     });
 
-  })
+  });
