@@ -1,0 +1,3 @@
+#name: key value pair
+# --
+${2:name}: ${3:f} ,

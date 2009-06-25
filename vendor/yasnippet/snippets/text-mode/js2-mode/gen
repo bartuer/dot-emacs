@@ -1,0 +1,16 @@
+#name: getter setter generator
+# --
+
+for ( var s in ${1:properties} ) {
+  (function(ct){
+     var k = "";
+     k += s;
+
+    ct[ "get" + k ] = function() {
+        return $1[k];
+    };
+
+    ct[ "set" + k ] = function(val) {
+        $1[k] = val;
+    };
+})(this); }

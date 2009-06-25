@@ -1,0 +1,5 @@
+#name: object literal without object assign
+# --
+{
+  ${2:name}: ${3:value},
+};
