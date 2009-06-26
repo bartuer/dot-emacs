@@ -1,3 +1,4 @@
+(file-cache-add-directory "~/etc/el/js")
 (file-cache-add-directory "~/etc/el/vendor/yasnippet/snippets/text-mode/html-mode")
 (file-cache-add-directory "~/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode")
 (file-cache-add-directory "~/local/src/pro-javascript/")

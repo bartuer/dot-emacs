@@ -1,4 +1,5 @@
 (require 'moz nil t)
+(require 'bartuer-js-inf nil t)
 
 (defun autotest ()
   (interactive)
@@ -7,14 +8,14 @@
   (rename-buffer "jspec-auto-test")
   )
 
-(defun moz-send-current-line ()
+(defun send-current-line-jsh ()
   "send current line to mozrepl"
   (interactive)
   (beginning-of-line)
   (setq beg (point))
   (end-of-line)
   (setq end (point))
-  (moz-send-region beg end))
+  (send-region-jsh beg end))
     
 (defun bartuer-js-load ()
   "for javascript language
@@ -22,14 +23,14 @@
   (require 'flyspell nil t)
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
-
-  (moz-minor-mode t)
   (yas/minor-mode-on)
   (flymake-mode t)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
-  (define-key js2-mode-map "\C-\M-x" 'moz-send-defun)
-  (define-key js2-mode-map "\C-j" 'moz-send-current-line)
+  (define-key js2-mode-map "\C-c\C-j" 'connect-jsh)
+  (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
+  (define-key js2-mode-map "\C-c\C-c" 'send-buffer-jsh)
+  (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
+  (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
+  (define-key js2-mode-map "\C-j" 'send-current-line-jsh)
   )
-
-

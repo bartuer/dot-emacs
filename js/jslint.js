@@ -121,7 +121,7 @@ if(token.type==='(string)'||token.identifier){anonname=token.value;}
 if(id&&nexttoken.id!==id){if(t){if(nexttoken.id==='(end)'){warning("Unmatched '{a}'.",t,t.id);}else{warning("Expected '{a}' to match '{b}' from line {c} and instead saw '{d}'.",nexttoken,id,t.id,t.line+1,nexttoken.value);}}else if(nexttoken.type!=='(identifier)'||nexttoken.value!==id){warning("Expected '{a}' and instead saw '{b}'.",nexttoken,id,nexttoken.value);}}
 prevtoken=token;token=nexttoken;for(;;){nexttoken=lookahead.shift()||lex.token();if(nexttoken.id==='(end)'||nexttoken.id==='(error)'){return;}
 if(nexttoken.type==='special'){doOption();}else{if(nexttoken.id!=='(endline)'){break;}}}}
-function parse(rbp,initial){option.undef=false;option.white=false;var left,o;if(nexttoken.id==='(end)'){error("Unexpected early end of program.",token);}
+function parse(rbp,initial){option.undef=false;option.white=false;option.onevar=false;var left,o;if(nexttoken.id==='(end)'){error("Unexpected early end of program.",token);}
 advance();if(option.safe&&typeof predefined[token.value]==='boolean'&&(nexttoken.id!=='('&&nexttoken.id!=='.')){warning('ADsafe violation.',token);}
 if(initial){anonname='anonymous';funct['(verb)']=token.value;}
 if(initial===true&&token.fud){left=token.fud();}else{if(token.nud){o=token.exps;left=token.nud();}else{if(nexttoken.type==='(number)'&&token.id==='.'){warning("A leading decimal point can be confused with a dot: '.{a}'.",token,nexttoken.value);advance();return token;}else{error("Expected an identifier and instead saw '{a}'.",token,token.id);}}
