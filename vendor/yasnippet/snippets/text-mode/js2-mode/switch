@@ -1,0 +1,7 @@
+#name : switch
+# --
+switch (${1:exp}) {
+case$0
+default:
+  ${2:stat}
+}

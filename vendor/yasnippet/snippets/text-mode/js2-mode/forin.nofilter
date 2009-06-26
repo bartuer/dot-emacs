@@ -1,0 +1,5 @@
+#name : for in no filter
+# --
+for (${1:prop} in ${2:obj}) {
+  $0;
+}
