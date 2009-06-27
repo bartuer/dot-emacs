@@ -1,5 +1,6 @@
-#name: object literal without object assign
+#name: object literal without object assign new
 # --
 {
-  ${2:name}: ${3:value},
+  ${2:name}: ${3:l} ,
+  :$0
 };

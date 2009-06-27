@@ -1,0 +1,12 @@
+#name : call back register closure
+# --
+var ${1:add_handles} = function (${2:nodes}) {
+  var i;
+  for (i = 0; i < $2.length; i += 1) {
+    $2[i].${3:on}$0 = (function (i) {
+                         return function (e) {
+                           ;
+                         };
+                       })(i);
+  }
+};

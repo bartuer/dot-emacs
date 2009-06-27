@@ -1,0 +1,12 @@
+#name : singleton global hide private module closure
+# --
+var ${1:single_accesser} = function () {
+  var ${2:data} = ${3:lit}
+
+  return {
+    ${4:method}: function () {
+      $0;
+    },
+    :
+  }
+}();

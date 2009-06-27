@@ -1,0 +1,4 @@
+#name : apply
+# --
+${1:func}.apply(${2:context},${3:arg_Array});
+$0
