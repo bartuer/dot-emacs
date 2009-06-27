@@ -12,7 +12,7 @@
     )
   rhino-process)
 
-(defun mozrepl ()
+(defun MozRepl ()
   (setq mozrepel-jsh-process (inferior-moz-process)))
 
 (defun v8 ()
@@ -34,8 +34,10 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "rhino" "mozrepl" "squirrelfish" "spidermonkey" "v8") nil t)))
-    (setq js-process (apply (intern jsh) nil))))
+                                   (list  "rhino" "MozRepl" "squirrelfish" "spidermonkey" "v8") nil t)))
+    (setq js-process (apply (intern jsh) nil))
+    (pop-to-buffer (concat "*" jsh "*"))
+    ))
   
 (defun send-expression-jsh (expression)
   "prompt for a expression, then send it to jsh
