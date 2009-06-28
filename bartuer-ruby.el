@@ -7,6 +7,9 @@
                        (file-name-directory buffer-file-name))))
     (list "ruby" (list "-c" local-file))))
 
+(defun ruby-test-toggle ()
+  )
+
 (defun bartuer-ruby-assign ()
   "insert the =>"
   (interactive)
@@ -78,6 +81,8 @@
       (add-hook 'before-save-hook (lambda ()
                                     (bartuer-xmp (car rct-option-history))))) 
 
+  (define-key ruby-mode-map "\C-cj" 'ruby-test-toggle)
+  (define-key ruby-mode-map "\C-c\C-j" 'ruby-test-toggle)
   (define-key ruby-mode-map "\C-j" 'bartuer-xmp)
   (define-key ruby-mode-map "\C-hh" 'rct-ri)
   (define-key ruby-mode-map "\C-\M-h" 'ruby-mark-defun)
