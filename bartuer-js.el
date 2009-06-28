@@ -32,5 +32,5 @@
   (define-key js2-mode-map "\C-c\C-c" 'send-buffer-jsh)
   (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
-  (define-key js2-mode-map "\C-j" 'send-current-line-jsh)
+  (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
   )

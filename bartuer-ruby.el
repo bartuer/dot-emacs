@@ -87,6 +87,14 @@
   (define-key ruby-mode-map "\C-\M-e" 'ruby-end-of-block)
   (define-key ruby-mode-map "\C-m" 'reindent-then-newline-and-indent)
   (define-key ruby-mode-map [(f7)] 'ri-ruby-show-args)
+  ;; also see binding in inf-ruby.el
+  (define-key ruby-mode-map "\C-c\C-j" 'ruby-switch-to-inf)
+  (define-key ruby-mode-map "\C-c\C-s" 'inf-ruby)
+  (define-key ruby-mode-map "\C-\M-x" 'ruby-send-definition)
+  (define-key ruby-mode-map "\C-c\C-r" 'ruby-send-region)
+  (define-key ruby-mode-map "\C-c\C-l" 'ruby-send-last-sexp)
+  (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-last-sexp)
+  (define-key ruby-mode-map "\C-c\C-c" 'ruby-load-file)
 
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
   (define-key ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything)
