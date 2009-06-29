@@ -12,7 +12,7 @@
   )
 
 (defun send-current-line-jsh ()
-  "send current line to mozrepl"
+  "send current line to jsh"
   (interactive)
   (beginning-of-line)
   (setq beg (point))
@@ -28,8 +28,8 @@
     (flyspell-prog-mode))
   (yas/minor-mode-on)
   (flymake-mode t)
-  (define-key js2-mode-map "\C-cj" 'js2-test-toggle)
-  (define-key js2-mode-map "\C-c\C-j" 'js2-test-toggle)
+  (define-key js2-mode-map "\C-cj" 'js-test-toggle)
+  (define-key js2-mode-map "\C-c\C-j" 'js-test-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
