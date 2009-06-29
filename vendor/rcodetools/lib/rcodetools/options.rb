@@ -13,7 +13,7 @@ module OptionHandler
     on("--line=LINE", "Current line number.") do |n|
       options[:lineno] = n.to_i
     end
-    on("--column=COLUMN", "Current column number.") do |n|
+    on("--column=COLUMN", "Current column number in BYTE.") do |n|
       options[:column] = n.to_i
     end
     on("-t TEST", "--test=TEST",

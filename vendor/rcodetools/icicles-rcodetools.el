@@ -9,7 +9,7 @@
 
 (setq rct-complete-symbol-function 'rct-complete-symbol--icicles)
 (icicle-define-command rct-complete-symbol--icicles
-                       "Perform ruby method and class completion on the text around point with icicles.
+                         "Perform ruby method and class completion on the text around point with icicles.
 C-M-RET shows RI documentation on each candidate.
 See also `rct-interactive'."
 
@@ -29,9 +29,7 @@ See also `rct-interactive'."
                         pattern klass alist
                         (icicle-candidate-help-fn
                          (lambda (result)
-                           (with-output-to-temp-buffer "*help*"
-                             (princ
-                              (ri-query (cdr (assoc result alist)))))))) ;bindings
+                           (ri (cdr (assoc result alist)))))) ;bindings
                        (rct-exec-and-eval rct-complete-command-name "--completion-emacs-icicles"))
 
 (provide 'icicles-rcodetools)

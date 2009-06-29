@@ -26,8 +26,12 @@ If you use anything.el copy <tt>anything-rcodetools.el</tt> too.
 Then require it.
   (require 'anything-rcodetools)
 RI document on each candidate during completion.
-I think anything-rcodetools is more convenient than icicles-rcodetools.
 
+anything-show-completion.el shows selection (mehod) in buffer for completion.
+It is available in:
+  http://www.emacswiki.org/cgi-bin/wiki/download/anything-show-completion.el
+
+I think anything-rcodetools is more convenient than icicles-rcodetools.
 I'm addicted to anything!
   http://www.emacswiki.org/cgi-bin/wiki/Anything
 

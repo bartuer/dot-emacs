@@ -3,6 +3,10 @@
 #                         rubikitch <rubikitch@ruby-lang.org>
 # Use and distribution subject to the terms of the Ruby license.
 
+# This is needed regexps cannot match with invalid-encoding strings.
+# xmpfilter is unaware of script encoding.
+Encoding.default_external = "ASCII-8BIT" if RUBY_VERSION >= "1.9"
+
 ENV['HOME'] ||= "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}"
 require 'rcodetools/fork_config'
 require 'rcodetools/compat'
@@ -11,7 +15,7 @@ require 'tmpdir'
 module Rcodetools
 
 class XMPFilter
-  VERSION = "0.8.1"
+  VERSION = "0.8.5"
 
   MARKER = "!XMP#{Time.new.to_i}_#{Process.pid}_#{rand(1000000)}!"
   XMP_RE = Regexp.new("^" + Regexp.escape(MARKER) + '\[([0-9]+)\] (=>|~>|==>) (.*)')
@@ -125,6 +129,7 @@ class XMPFilter
   MULTI_LINE_RE = /^(.*)\n(( *)# ?=>.*(?:\n|\z))(?: *#    .*\n)*/
   def annotate(code)
     idx = 0
+    code = code.gsub(/ # !>.*/, '')
     newcode = code.gsub(SINGLE_LINE_RE){ prepare_line($1, idx += 1) }
     newcode.gsub!(MULTI_LINE_RE){ prepare_line($1, idx += 1, true)}
     File.open(@dump, "w"){|f| f.puts newcode} if @dump
@@ -176,7 +181,7 @@ class XMPFilter
   def annotated_multi_line(line, expression, indent, runtime_data, idx)
     pretty = (runtime_data.results[idx].map{|x| x[1]} || []).join(", ")
     first, *rest = pretty.to_a
-    rest.inject("#{expression}\n#{indent}# => #{first}") {|s, l| s << "#{indent}#    " << l }
+    rest.inject("#{expression}\n#{indent}# => #{first || "\n"}") {|s, l| s << "#{indent}#    " << l }
   end
   
   def prepare_line_annotation(expr, idx, multi_line=false)

@@ -378,4 +378,29 @@ class XMPCompletionEmacsIciclesFilter < XMPCompletionEmacsFilter
   end
 end
 
+class XMPCompletionEmacsAnythingFilter < XMPCompletionEmacsFilter
+  @candidates_with_description_flag = true
+
+  def completion_code(code, lineno, column=nil)
+    elisp = "(progn\n"
+    table = "(setq rct-method-completion-table `("
+    
+    begin
+      klass, cands = candidates_with_class(code, lineno, column)
+      cands.sort.each do |minfo|
+        meth, description = split_method_info(minfo)
+        table << format('("%s\\t[%s]" . ,(propertize "%s" \'desc "%s")) ',
+          meth, description, meth, description)
+      end
+      table << "))\n"
+    rescue Exception => err
+      return error_code(err)
+    end
+    elisp << table
+    elisp << %Q[(setq pattern "#{prefix}")\n]
+    elisp << %Q[(setq klass "#{klass}")\n]
+    elisp << ")"                # /progn
+  end
+end
+
 end

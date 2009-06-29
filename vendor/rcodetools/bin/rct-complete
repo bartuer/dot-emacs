@@ -22,6 +22,9 @@ opts = OptionParser.new do |opts|
   opts.on("--completion-emacs-icicles", "Generate completion code for Emacs/Icicles.") do
     klass = XMPCompletionEmacsIciclesFilter
   end
+  opts.on("--completion-emacs-anything", "Generate completion code for Emacs/Anything.") do
+    klass = XMPCompletionEmacsAnythingFilter
+  end
   opts.on("--completion-class-info", "List completion candidates with class.") do
     klass = XMPCompletionClassInfoFilter
   end
