@@ -99,7 +99,7 @@
   (define-key ruby-mode-map "\C-\M-x" 'ruby-send-definition)
   (define-key ruby-mode-map "\C-c\C-r" 'ruby-send-region)
   (define-key ruby-mode-map "\C-c\C-l" 'ruby-send-last-sexp)
-  (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-last-sexp)
+  (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-block)
   (define-key ruby-mode-map "\C-c\C-c" 'ruby-load-file)
 
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
