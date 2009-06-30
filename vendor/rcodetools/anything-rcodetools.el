@@ -111,38 +111,34 @@
     (persistent-action . anything-rct-ri)))
 
 (defvar rct-get-all-methods-command "PAGER=cat fri -l")
+(defun rct-get-all-methods ()
+  (interactive)
+  (setq rct-all-methods
+        (mapcar (lambda (fullname)
+                  (replace-regexp-in-string "^.+[:#.]\\([^:#.]+\\)$"
+                                            "\\1\t[\\&]" fullname))
+                (split-string (shell-command-to-string rct-get-all-methods-command) "\n"))))
+
+(defvar rct-all-methods (rct-get-all-methods))
 (defvar anything-c-source-complete-ruby-all
   '((name . "Ruby Method Completion (ALL)")
-    (init
+    (candidates
      . (lambda ()
-         (unless (anything-candidate-buffer)
-           (with-current-buffer (anything-candidate-buffer 'global)
-             (call-process-shell-command rct-get-all-methods-command nil t)
-             (goto-char 1)
-             (while (re-search-forward "^.+[:#.]\\([^:#.]+\\)$" nil t)
-               (replace-match "\\1\t[\\&]"))))))
-    (candidates-in-buffer
-     . (lambda ()
-         (let ((anything-pattern (format "^%s.*%s" (regexp-quote pattern) anything-pattern)))
-           (anything-candidates-in-buffer))))
-    (display-to-real
-     . (lambda (line)
-         (if (string-match "\t\\[\\(.+\\)\\]$" line)
-             (propertize (substring line 0 (match-beginning 0))
-                         'desc (match-string 1 line))
-           line)))
+        (let ((case-fold-search nil)
+              (re (format "[:#.]%s" (with-current-buffer anything-current-buffer
+                                   (symbol-at-point)))))
+          (remove-if-not
+           (lambda (meth) (string-match re meth))
+           rct-all-methods))))
     (action
      ("Completion" . anything-rct-complete)
      ("RI" . anything-rct-ri))
     (persistent-action . anything-rct-ri)))
 
-
 (defun rct-complete-symbol--anything ()
   (interactive)
-  (let ((anything-execute-action-at-once-if-one t)
-        anything-samewindow)
-    (anything '(anything-c-source-complete-ruby
-                anything-c-source-complete-ruby-all))))
+  (let ((anything-sources (list anything-c-source-complete-ruby anything-c-source-complete-ruby-all)))
+    (anything)))
 
 (provide 'anything-rcodetools)
 
