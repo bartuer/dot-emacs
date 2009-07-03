@@ -1,3 +1,5 @@
+(file-cache-add-directory "~/etc/el/vendor/rcodetools/lib/rcodetools/")
+(file-cache-add-directory "~/etc/el/vendor/rcodetools/")
 (file-cache-add-directory "~/etc/el/js")
 (file-cache-add-directory "~/etc/el/vendor/yasnippet/snippets/text-mode/html-mode")
 (file-cache-add-directory "~/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode")
