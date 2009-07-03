@@ -346,11 +346,13 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'anything-etags)
 (require 'icicles nil t)
 (global-set-key [(f6)] 'icicle-complete-keys)
+(global-set-key "\M-'" 'advertised-undo)
 (defun bartuer-icicle-key-map()
   (when icicle-mode
     (let ((map minibuffer-local-completion-map))
       (define-key map [(f1)] 'icicle-completion-help) 
       (define-key map "\M-." 'anything-etags-select-from-here)
+      (define-key map "\M-'" 'advertised-undo)
       (define-key map "\M-o" 'icicle-erase-minibuffer-or-history-element)
       (define-key map "\M-v" 'icicle-switch-to-Completions-buf)
       (define-key map "\C-w" 'backward-kill-word)
