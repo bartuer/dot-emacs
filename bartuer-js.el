@@ -19,7 +19,25 @@
   (end-of-line)
   (setq end (point))
   (send-region-jsh beg end))
-    
+
+(defun bartuer-jxmp (&optional option)
+  "dump the jxmpfilter output apropose"
+  (interactive (jct-interactive))
+  (jxmp option)
+  (if (file-exists-p "/tmp/jct-emacs-backtrace")
+      (pop-to-buffer 
+       (ruby-compilation-do "jct-compilation"
+                            (cons "cat" (list "/tmp/jct-emacs-backtrace")))))
+  (if (file-exists-p "/tmp/jct-emacs-message")
+      (with-current-buffer
+          (get-buffer-create "jct-result")
+        (if (buffer-size)
+            (erase-buffer))
+        (with-output-to-string (call-process "cat" nil t nil "/tmp/jct-emacs-message"))    
+        (ansi-color-apply-on-region (point-min) (point-max))
+        (goto-char (point-min))
+        t)))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -38,4 +56,5 @@
   (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
+  (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   )
