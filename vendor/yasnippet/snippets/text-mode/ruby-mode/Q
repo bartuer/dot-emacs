@@ -1,0 +1,3 @@
+#name : double quote
+# --
+%Q!${1:string}!
