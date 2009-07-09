@@ -57,4 +57,5 @@
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
+  (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
