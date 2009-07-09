@@ -69,13 +69,85 @@
          ("Completion" . yasnippet-complete-objc-message))
         ))
 
-
 (defun anything-etags-complete-objc-message ()
   "using anything framework search iphone cocoa etags, select one signature feed to yasnippet "
   (interactive)
   (let ((anything-sources (list anything-c-source-complete-etags-objc)))
     (anything)))
 
+(defvar anything-js-parameter-define-re "\\([a-zA-Z0-9_-]+\\)"
+  "name")
+
+(setq js-message-length 0)
+
+(defun js-message-length ()
+  js-message-length)
+
+(defun yasnippet-complete-etags-js (msg)
+  "constructure an snippet according to the js signature string"
+  (flymake-mode nil)
+  (setq js-message-length (length msg))
+  (setq para-fun '(lambda (para)
+                    (setq count (1+ count))
+                    (format "${%d:%s}" count para)))
+  (setq signature-template ((lambda (signature)
+                              (let ((count 0))
+                                (replace-regexp-in-string
+                                 anything-js-parameter-define-re
+                                 para-fun
+                                 signature))
+                              ) msg))
+  (insert "anythingetagsjs")
+  (yas/define 'js2-mode
+              "anythingetagsjs"
+              signature-template)
+  (message (format "js-complete:%s" msg))
+  (yas/expand))
+
+
+(defvar anything-js-message-re "\\(\\(.*\\)\177\\(.*\\)\001.*$\\)"
+  "1:occurence\177 2:message\001")
+
+(defun anything-js-etags-parser (candidate)
+  "parse the etags candidate, return (lable . signature)"
+  (when (string-match anything-js-message-re candidate)
+    (let* ((lable
+             (match-string 3 candidate))
+           (signature
+            ;; cut last part of label
+            (when (string-match "\\(^.*\\.\\(.*\\)\\)" lable)
+                (match-string 2 lable))))
+      (cons lable signature)))
+  )
+
+
+(setq anything-yasnippet-completion-table nil)
+
+(setq anything-c-source-complete-etags-js 
+      '((name . "Etags Method Completion")
+        (candidates 
+         .
+         (lambda () anything-yasnippet-completion-table)) 
+        (init
+         . 
+         (lambda ()
+           (condition-case x
+               (setq anything-yasnippet-completion-table (mapcar 'anything-js-etags-parser
+                                                             (split-string (shell-command-to-string "cat ~/etc/el/js/TAGS|grep ^[a-zA-Z0-9_].*") "\n")))
+             (error (setq anything-yasnippet-completion-table nil))
+             )
+           )
+         )
+        (action
+         ("Completion" . yasnippet-complete-etags-js))
+        ))
+
+(defun anything-complete-js ()
+  "complete js methods and properties
+from static imenu->etags index and dynamically generated properties via introspection"
+  (interactive)
+  (let ((anything-sources (list anything-c-source-complete-etags-js)))
+    (anything)))
 
 (defun yasnippet-complete-syntax-expand (msg)
   "constructure an snippet according to the syntax signature string"

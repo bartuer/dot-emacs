@@ -409,6 +409,12 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (when (require 'anything-show-completion nil t)
   (progn
+    (use-anything-show-completion 'anything-complete-js
+                                  '(js-message-length))
+    ))
+
+(when (require 'anything-show-completion nil t)
+  (progn
     (use-anything-show-completion 'rct-complete-symbol--anything
                                   '(length pattern))
     ))
