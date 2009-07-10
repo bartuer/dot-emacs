@@ -1,0 +1,55 @@
+#! /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+require 'jcodetools/options'
+require 'jcodetools/xmpfilter'
+
+include Jcodetools
+options = DEFAULT_OPTIONS
+rails_settings = false
+klass = XMPFilter
+
+opts = OptionParser.new do |opts|
+  opts.extend OptionHandler
+  opts.set_banner
+
+  opts.separator ""
+  opts.separator "Modes:"
+  opts.on("-a", "--annotations", "Annotate code (default)") do
+    klass = XMPFilter
+  end
+  opts.on("-s", "--spec", "Complete Spec expectations.") do
+    require 'jcodetools/xmptestunitfilter'
+    klass = XMPJSpecFilter
+  end
+  opts.on("-c", "--completion", "Complete symbol.") do
+    require 'jcodetools/xmpcompletefilter'
+    klass = XMPCompleteFilter
+  end
+  opts.on("-m", "--markers", "Add # => markers.") do
+    klass = XMPAddMarkers
+  end
+
+  opts.handle_interpreter options
+
+  opts.separator ""
+  opts.separator "Specific options:"
+  opts.on("-l N", "--min-line-length N", Integer, "Align markers to N spaces.") do |min_codeline_size|
+    options[:min_codeline_size] = min_codeline_size
+  end
+  opts.on("--[no-]warnings", "Whether to add warnings (# !>).", 
+          "(default: enabled)") {|warnings_p| options[:warnings] = warnings_p }
+  opts.on("-q", "--quiet", "Supress standard output.") do
+    options[:output_stdout] = false
+  end
+
+  opts.handle_position options
+  opts.handle_misc options
+end
+
+set_extra_opts options
+opts.parse!(ARGV)
+
+targetcode = ARGF.read
+Dir.chdir options[:wd] if options[:wd]
+
+# Do the job. dispatched by klass.
+puts klass.run(targetcode, options)

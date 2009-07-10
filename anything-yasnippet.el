@@ -83,7 +83,7 @@
 (defun js-message-length ()
   js-message-length)
 
-(defun yasnippet-complete-etags-js (msg)
+(defun yasnippet-complete-js (msg)
   "constructure an snippet according to the js signature string"
   (flymake-mode nil)
   (setq js-message-length (length msg))
@@ -139,14 +139,56 @@
            )
          )
         (action
-         ("Completion" . yasnippet-complete-etags-js))
+         ("Completion" . yasnippet-complete-js))
+        ))
+
+(defvar anything-js-introspect-re "\\(\\(.*\\)|\\(.*\\)\\)"
+  "1:label | 2:property ")
+
+(defun anything-js-introspect-parser (candidate)
+  "parse the introspect candidate, return (lable . property)"
+  (when (string-match anything-js-introspect-re candidate)
+    (let* ((lable
+             (match-string 2 candidate))
+           (property
+            (match-string 3 candidate))
+           )
+      (cons lable property)))
+  )
+
+(setq anything-yasnippet-introsepct-table nil)
+
+(setq anything-c-source-complete-introspect-js 
+      '((name . "Introspect Completion")
+        (candidates 
+         .
+         (lambda () anything-yasnippet-introspect-table)) 
+        (init
+         . 
+         (lambda ()
+           (condition-case x
+               (setq anything-yasnippet-introspect-table (mapcar
+                                                          'anything-js-introspect-parser
+                                                          (split-string
+                                                          (shell-command-to-string
+                                                           (format "jxmpfilter -c --line %d %s"
+                                                                   (jct-current-line) (buffer-file-name))) "__JCT_NEWLINE__")
+                                                          )) 
+             (error (setq anything-yasnippet-introspect-table nil))
+             )
+           )
+         )
+        (action
+         ("Completion" . yasnippet-complete-js))
         ))
 
 (defun anything-complete-js ()
   "complete js methods and properties
 from static imenu->etags index and dynamically generated properties via introspection"
   (interactive)
-  (let ((anything-sources (list anything-c-source-complete-etags-js)))
+  (let ((anything-sources (list anything-c-source-complete-introspect-js
+                                anything-c-source-complete-etags-js
+                                )))
     (anything)))
 
 (defun yasnippet-complete-syntax-expand (msg)
