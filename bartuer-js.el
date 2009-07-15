@@ -41,6 +41,8 @@
 (defun bartuer-js-load ()
   "for javascript language
 "
+  (unless (fboundp 'jxmp)
+    (load "~/etc/el/jcodetools/jcodetools.el"))
   (require 'flyspell nil t)
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
