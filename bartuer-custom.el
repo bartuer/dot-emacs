@@ -104,6 +104,8 @@
  '(erb-face ((((class color) (min-colors 8)) nil)))
  '(flymake-errline ((((class color)) (:foreground "red"))))
  '(flymake-warnline ((t (:foreground "pink"))))
+ '(flyspell-duplicate-face ((t (:foreground "Gold3" :weight bold))) t)
+ '(flyspell-incorrect-face ((t (:foreground "OrangeRed" :weight bold))) t)
  '(font-lock-comment-face ((((class color) (min-colors 8) (background dark)) (:foreground "green"))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
  '(icicle-complete-input ((((background dark)) (:foreground "green"))))
