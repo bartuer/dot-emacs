@@ -122,7 +122,7 @@
  '(org-drawer ((t (:foreground "cyan" :weight bold))))
  '(org-level-1 ((t (:foreground "cyan"))))
  '(org-level-7 ((t (:foreground "cyan"))))
- '(org-link ((((class color) (background dark)) (:inverse-video t :underline t))))
+ '(org-link ((((class color) (background dark)) (:underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "green"))))
  '(yas/field-highlight-face ((t (:background "blue"))))
