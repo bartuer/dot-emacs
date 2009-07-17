@@ -58,6 +58,14 @@
         (goto-char (point-min))
         t)))
 
+(defun rinari-ido ()
+  "jump to rinari-command"
+  (interactive)
+  (let* ((rinari-command (ido-completing-read "rinari:" 
+                                   (list  "find-controller" "find-environment" "find-file-in-project" "find-helper" "find-migration" "find-javascript" "find-plugin" "find-model" "find-configuration" "find-log" "find-public" "find-script" "find-test" "find-view" "find-worker" "find-fixture" "find-stylesheet" "find-by-context" "find-by-context" "console" "cap" "insert-erb-skeleton" "rgrep" "sql" "rake" "script" "test" "web-server" "extract-partial") nil t)))
+    (apply (intern (concat "rinari-" rinari-command)) nil))
+    )
+
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
 
@@ -83,6 +91,7 @@
       (add-hook 'before-save-hook (lambda ()
                                     (bartuer-xmp (car rct-option-history))))) 
 
+  (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)
   (define-key ruby-mode-map "\C-cj" 'ruby-test-toggle)
   (define-key ruby-mode-map "\C-c\C-j" 'ruby-test-toggle)
   (define-key ruby-mode-map "\C-j" 'bartuer-xmp)
