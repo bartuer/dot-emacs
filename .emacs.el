@@ -162,6 +162,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key [(f5)] 'compile)
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
+(global-set-key "\M-5" 'comint-previous-matching-input)
 
 (add-hook 'dired-load-hook (lambda () (load "dired-x")))
 (global-set-key "\M-8" 'find-file)

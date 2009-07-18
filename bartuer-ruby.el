@@ -58,13 +58,19 @@
         (goto-char (point-min))
         t)))
 
+
 (defun rinari-ido ()
   "jump to rinari-command"
   (interactive)
   (let* ((rinari-command (ido-completing-read "rinari:" 
-                                   (list  "find-controller" "find-environment" "find-file-in-project" "find-helper" "find-migration" "find-javascript" "find-plugin" "find-model" "find-configuration" "find-log" "find-public" "find-script" "find-test" "find-view" "find-worker" "find-fixture" "find-stylesheet" "find-by-context" "console" "cap" "insert-erb-skeleton" "rgrep" "sql" "rake" "script" "test" "web-server" "extract-partial") nil t)))
-    (apply (intern (concat "rinari-" rinari-command)) nil))
-    )
+                                   (list  "find-controller" "find-environment" "find-file-in-project"
+                                          "find-helper" "find-migration" "find-javascript" "find-plugin"
+                                          "find-model" "find-configuration" "find-log"
+                                          "find-public" "find-script" "find-test" "find-view"
+                                          "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
+                                          "console" "cap" "insert-erb-skeleton" "rgrep"
+                                          "sql" "rake" "script" "test" "web-server" "extract-partial" ) nil t)))
+    (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
