@@ -1,0 +1,3 @@
+#name: class method
+# --
+${1:class}.methods(true)

@@ -1,0 +1,3 @@
+#name : symbol
+# --
+Symbol.all_symbols.map{|s| ":" + s.id2name}
