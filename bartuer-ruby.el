@@ -80,7 +80,6 @@
   (visit-tags-table "~/local/src/rails/TAGS.rtags")
 
   ;; toggle these modes
-  (setq icicle-candidate-help-fn 'bartuer-ruby-ri)
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-prog-mode)

@@ -491,6 +491,10 @@ If give a negative ARG, will undo the last mark action, thus the
                                         ; need check fastri-server and
                                         ; start it?
 
+(defadvice ri-ruby-read-keyw (before icicle-ri-help activate)
+  "do right thing for icicle-candidate-help-fn ."
+  (setq icicle-candidate-help-fn 'bartuer-ruby-ri))
+
 (autoload 'css-mode "css-mode-simple.el"
   "mode for css file" t nil)
 (require 'css-mode nil t)
