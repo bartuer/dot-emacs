@@ -459,6 +459,13 @@ If give a negative ARG, will undo the last mark action, thus the
                (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
 
 (require 'rinari nil t)
+(defadvice rinari-cap (before icicle-cap-help activate)
+  "do right thing for icicle-candidate-help-fn ."
+  (setq icicle-candidate-help-fn (lambda  (entry)
+                                   "return the cap documents of entry"
+                                   (let ((item (widget-princ-to-string entry)))
+                                     (with-output-to-temp-buffer (format "cap -e %s" item)
+                                       (princ (shell-command-to-string (concat "cap -e " item))))))))
 
 (require 'flymake nil t)
 (require 'rcodetools nil t)
