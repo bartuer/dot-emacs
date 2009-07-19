@@ -514,7 +514,7 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq mumamo-chunk-coloring 'submode-colored)
 ;; (add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
-(add-to-list 'auto-mode-alist '("\\.log" . auto-revert-mode))
+(add-to-list 'auto-mode-alist '("\\log$" . auto-revert-mode))
 (add-to-list 'auto-mode-alist '("cheat-sheet" . follow-mode))
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
   "list bugs will be fixed,or wishes will be done in bartuer's
