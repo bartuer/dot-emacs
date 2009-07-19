@@ -467,6 +467,7 @@ If give a negative ARG, will undo the last mark action, thus the
                                      (with-output-to-temp-buffer (format "cap -e %s" item)
                                        (princ (shell-command-to-string (concat "cap -e " item))))))))
 
+(require 'bartuer-gem nil t)
 (require 'flymake nil t)
 (require 'rcodetools nil t)
 (require 'anything-rcodetools)
