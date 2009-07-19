@@ -458,6 +458,7 @@ If give a negative ARG, will undo the last mark action, thus the
                (interactive)
                (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
 
+
 (require 'rinari nil t)
 (defadvice rinari-cap (before icicle-cap-help activate)
   "do right thing for icicle-candidate-help-fn ."
@@ -467,7 +468,13 @@ If give a negative ARG, will undo the last mark action, thus the
                                      (with-output-to-temp-buffer (format "cap -e %s" item)
                                        (princ (shell-command-to-string (concat "cap -e " item))))))))
 
-(require 'bartuer-gem nil t)
+(require 'bartuer-gem nil t)            ;for gem and mongrel
+
+(require 'apache-mode nil t)
+(add-to-list 'auto-mode-alis '("httpd.conf" . apache-mode))
+
+(require 'bartuer-ruby nil t)
+
 (require 'flymake nil t)
 (require 'rcodetools nil t)
 (require 'anything-rcodetools)

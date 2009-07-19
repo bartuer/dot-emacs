@@ -58,6 +58,18 @@
         (goto-char (point-min))
         t)))
 
+(defun rails-logs ()
+  (interactive)
+  (find-file "~/Sites/baza/current/log/production.log")
+  (find-file "~/Sites/baza/current/log/mongrel.log")
+  (find-file "/private/var/log/apache2/error_log")
+  (find-file "/private/var/log/apache2/access_log")
+  (find-file "~/local/src/baza/log/development.log")
+  (pop-to-buffer "*Ibuffer*")
+  (ibuffer-update nil)
+  (ibuffer-jump-to-filter-group "log"))
+(defalias 'rinari-rails-logs 'rails-logs)
+
 (require 'bartuer-gem)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
@@ -73,7 +85,7 @@
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
                                           "console" "cap" "insert-erb-skeleton" "rgrep"
                                           "sql" "rake" "script" "test" "web-server" "extract-partial"
-                                          "bartuer-gem" "bartuer-mongrel") nil t)))
+                                          "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 (defun bartuer-ruby-load ()
@@ -128,3 +140,4 @@
   (define-key inf-ruby-mode-map [(f7)] 'ri-ruby-show-args)
   (define-key rhtml-mode-map "\M-=" 'bartuer-ruby-assign))
 
+(provide 'bartuer-ruby)
