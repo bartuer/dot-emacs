@@ -471,7 +471,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'bartuer-gem nil t)            ;for gem and mongrel
 
 (require 'apache-mode nil t)
-(add-to-list 'auto-mode-alis '("httpd.conf" . apache-mode))
+(add-to-list 'auto-mode-alist '("httpd.conf" . apache-mode))
 
 (require 'bartuer-ruby nil t)
 
