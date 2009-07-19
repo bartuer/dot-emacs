@@ -58,6 +58,9 @@
         (goto-char (point-min))
         t)))
 
+(require 'bartuer-gem)
+(defalias 'rinari-bartuer-gem 'bartuer-gem)
+(defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 
 (defun rinari-ido ()
   "jump to rinari-command"
@@ -69,7 +72,8 @@
                                           "find-public" "find-script" "find-test" "find-view"
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
                                           "console" "cap" "insert-erb-skeleton" "rgrep"
-                                          "sql" "rake" "script" "test" "web-server" "extract-partial" ) nil t)))
+                                          "sql" "rake" "script" "test" "web-server" "extract-partial"
+                                          "bartuer-gem" "bartuer-mongrel") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 (defun bartuer-ruby-load ()
