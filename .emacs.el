@@ -541,6 +541,10 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq mumamo-chunk-coloring 'submode-colored)
 ;; (add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
+(defadvice auto-revert-mode (before ansi-color activate)
+  "also show ansi color in log ."
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
 (add-to-list 'auto-mode-alist '("\\log$" . auto-revert-mode))
 (add-to-list 'auto-mode-alist '("cheat-sheet" . follow-mode))
 (autoload 'bartuer-general-todo-list "bartuer-todo-list.el"
