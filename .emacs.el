@@ -374,6 +374,14 @@ If give a negative ARG, will undo the last mark action, thus the
   (defalias 'i 'icy-mode)
   (icy-mode))
 
+(defadvice execute-extended-command (before icicle-m-x-help activate)
+  "do right thing for icicle-candidate-help-fn ."
+  (setq icicle-candidate-help-fn nil))
+
+(defadvice icicle-execute-extended-command-1 (before icicle-m-x-help activate)
+  "do right thing for icicle-candidate-help-fn ."
+  (setq icicle-candidate-help-fn nil))
+
 (require 'icomplete nil t)
 (when (fboundp 'icomplete-mode)
   (setq-default icomplete-mode t)
