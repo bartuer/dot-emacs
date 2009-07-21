@@ -167,7 +167,8 @@ directory of the rails application."
   (interactive)
   (let* ((root (rinari-root))
 	 (script (or script
-		     (completing-read "Script: " (directory-files (concat root "script") nil "^[^.]"))))
+		     (completing-read "Script: "
+                                      (cdr (split-string (concat "\n" (shell-command-to-string (concat "find " root "script -type f"))) (concat "\n" root "script/"))))))
 	 (ruby-compilation-error-regexp-alist ;; for jumping to newly created files
 	  (if (equal script "generate")
 	      '(("^ +\\(exists\\|create\\) +\\([^[:space:]]+\\.rb\\)" 2 3))

@@ -482,7 +482,12 @@ If give a negative ARG, will undo the last mark action, thus the
                                    "return the script documents of entry"
                                    (let ((item (widget-princ-to-string entry)))
                                      (with-output-to-temp-buffer (format "%s help" item)
-                                       (princ (shell-command-to-string (concat  "script/" item " -h"))))))))
+                                       (princ (shell-command-to-string (concat  (rinari-root) "script/"
+                                                                                item ((lambda()
+                                                                                        (unless (or
+                                                                                                 (string-equal "performance/profiler" item)
+                                                                                                 (string-equal "performance/benchmarker" item))
+                                                                                          " -h")))))))))))
 
 (defadvice rinari-rake (before icicle-rake-help activate)
   "do right thing for icicle-candidate-help-fn ."
