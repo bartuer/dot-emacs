@@ -61,18 +61,29 @@
 (defun rails-logs ()
   (interactive)
   (find-file "~/Sites/baza/current/log/production.log")
-  (find-file "~/Sites/baza/current/log/mongrel.log")
   (find-file "/private/var/log/apache2/error_log")
   (find-file "/private/var/log/apache2/access_log")
   (find-file "~/local/src/baza/log/development.log")
+  (find-file "~/local/src/baza/log/mongrel.log")
   (pop-to-buffer "*Ibuffer*")
   (ibuffer-update nil)
   (ibuffer-jump-to-filter-group "log"))
 (defalias 'rinari-rails-logs 'rails-logs)
 
+(defun bartuer-dev-server ()
+  "start up mongrel_rails server"
+  (interactive)
+  (shell-command (concat "mongrel_rails start -C "
+                         (rinari-root) "config/mongrel_rails.rb"))
+  (find-file "~/local/src/baza/log/mongrel.log")
+  (message (format "dev-server pid:%s"
+                   (shell-command-to-string
+                    (concat "cat " (rinari-root) "log/mongrel.pid")))))
+
 (require 'bartuer-gem)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
+(defalias 'rinari-dev-server 'bartuer-dev-server)
 
 (defun rinari-ido ()
   "jump to rinari-command"
@@ -84,8 +95,8 @@
                                           "find-public" "find-script" "find-test" "find-view"
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
                                           "console" "cap" "insert-erb-skeleton" "rgrep"
-                                          "sql" "rake" "script" "test" "web-server" "extract-partial"
-                                          "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
+                                          "sql" "rake" "script" "test" "dev-server" "web-server"
+                                          "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 (defun bartuer-ruby-load ()
@@ -108,9 +119,6 @@
   ;; REMOVE test loader
   ;; REMOVE ruby binary
   ;; normally it is the include path
-  (if (fboundp 'bartuer-xmp)
-      (add-hook 'before-save-hook (lambda ()
-                                    (bartuer-xmp (car rct-option-history))))) 
 
   (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)
   (define-key ruby-mode-map "\C-cj" 'ruby-test-toggle)
