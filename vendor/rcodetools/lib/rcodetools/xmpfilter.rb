@@ -21,7 +21,7 @@ class XMPFilter
   XMP_RE = Regexp.new("^" + Regexp.escape(MARKER) + '\[([0-9]+)\] (=>|~>|==>) (.*)')
   VAR = "_xmp_#{Time.new.to_i}_#{Process.pid}_#{rand(1000000)}"
   WARNING_RE = /.*:([0-9]+): warning: (.*)/
-
+  ERROR_RE = /Error:|Failure:|Errno:|\([a-zA-Z]*Error\)/
   RuntimeData = Struct.new(:results, :exceptions, :bindings)
 
   INITIALIZE_OPTS = {:interpreter => "ruby", :options => [], :libs => [],
@@ -54,6 +54,7 @@ class XMPFilter
     options = INITIALIZE_OPTS.merge opts
     @interpreter_info = INTERPRETER_RUBY
     @interpreter = options[:interpreter]
+    @current_file_name = options[:current_file_name]
     @options = options[:options]
     @libs = options[:libs]
     @evals = options[:evals] || []
@@ -166,10 +167,12 @@ class XMPFilter
     f = File.open(rct_emacs_tmp, "w")
     has_backtrace = false
 
-    if @output_stdout and (s = stdout.read) != ""
-      has_backtrace = true  if  /Error:|Failure:/ =~ s 
-      f << s.inject(""){|s,line| s + "#{line}".chomp + "\n" }
+    o = output.join.gsub!(/-:/, @current_file_name+':')
+    if ERROR_RE =~ o
+      has_backtrace = true    
+      f << o
     end
+
     has_backtrace ? File.rename(rct_emacs_tmp, rct_emacs_backtrace) : File.rename(rct_emacs_tmp, rct_emacs_message)
     ret
   end

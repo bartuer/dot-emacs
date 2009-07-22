@@ -44,7 +44,7 @@
 (defun bartuer-xmp (&optional option)
   "dump the xmpfilter output apropose"
   (interactive (rct-interactive))
-  (xmp option)
+  (xmp (concat option " --current_file_name=" (buffer-file-name)))
   (if (file-exists-p "/tmp/rct-emacs-backtrace")
       (pop-to-buffer 
        (ruby-compilation-do "rct-compilation"

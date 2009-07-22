@@ -60,6 +60,9 @@ module OptionHandler
   def handle_misc(options)
     separator ""
     separator "Misc options:"
+    on("--current_file_name=FILENAME", "Current file name.") do |f|
+      options[:current_file_name] = f
+    end
     on("--cd DIR", "Change working directory to DIR.") do |dir|
       options[:wd] = dir
     end
@@ -114,6 +117,7 @@ end
 
 DEFAULT_OPTIONS = {
   :interpreter       => "ruby",
+  :current_file_name  => "",
   :options => ["hoge"],
   :min_codeline_size => 50,
   :width             => 79,

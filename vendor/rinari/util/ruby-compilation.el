@@ -55,7 +55,7 @@
 (require 'which-func)
 
 (defvar ruby-compilation-error-regexp
-  "^\\([[:space:]]*\\|.*\\[\\|[^\*].*at \\)\\[?\\([^[:space:]]*\\):\\([[:digit:]]+\\)[]:)\n]?"
+  "^\\([[:space:]]*\\|.*\\[\\|[^\*].*at \\|[[:space:]]*from \\)\\([^[:space:]]*\\):\\([[:digit:]]+\\):?"
   "regular expression to match errors in ruby process output")
 
 (defvar ruby-compilation-error-regexp-alist
