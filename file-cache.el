@@ -43,6 +43,17 @@
 (file-cache-add-directory "~/local/src/baza/public/javascripts")
 (file-cache-add-directory "~/local/src/baza/public/stylesheets")
 (file-cache-add-directory "~/local/src/baza/script")
+(file-cache-add-directory "~/local/src/baza/script/process")
+(file-cache-add-directory "~/local/src/baza/script/performance")
+(file-cache-add-directory "~/local/src/silk")
+(file-cache-add-directory "~/local/src/silk/Classes")
+(file-cache-add-directory "~/local/src/silk/JSONParser")
+(file-cache-add-directory "~/local/src/silk/JSONParser/Extensions")
+(file-cache-add-directory "~/local/src/silk/JSONParser/JSON")
+(file-cache-add-directory "~/local/src/silk/script")
+(file-cache-add-directory "~/local/src/silk/tasks")
+(file-cache-add-directory "~/local/src/silk/test")
+(file-cache-add-directory "~/local/src/silk/test/fixture")
 
 
 
