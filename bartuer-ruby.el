@@ -75,7 +75,7 @@
   (interactive)
   (shell-command (concat "mongrel_rails start -C "
                          (rinari-root) "config/mongrel_rails.rb"))
-  (find-file "~/local/src/baza/log/mongrel.log")
+  (find-file (concat (rinari-root) "log/mongrel.log"))
   (message (format "dev-server pid:%s"
                    (shell-command-to-string
                     (concat "cat " (rinari-root) "log/mongrel.pid")))))
