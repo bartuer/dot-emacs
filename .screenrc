@@ -11,22 +11,22 @@ stuff "fastri-server &\012"
 
 screen -t "shell" 7
 
-screen -t "ec-1" 1
+screen -t "ec-1 main" 1
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-2" 2
+screen -t "ec-2 vice" 2
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-3" 3
+screen -t "ec-3 test" 3
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-4" 4
+screen -t "ec-4 cheat sheat" 4
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-5" 5
+screen -t "ec-5 log" 5
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "e" 0
+screen -t "ec-0 task" 0
 stuff "~/local/bin/emacs-23.0.60 -nw -fg yellow\012"
 
 
