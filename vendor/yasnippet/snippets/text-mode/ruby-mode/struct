@@ -1,0 +1,3 @@
+#name : struct
+# --
+Struct.new :${1:member1}, :${2:member2}
