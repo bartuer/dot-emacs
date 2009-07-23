@@ -80,10 +80,18 @@
                    (shell-command-to-string
                     (concat "cat " (rinari-root) "log/mongrel.pid")))))
 
+(defun rinari-rails-rct-fork ()
+  "start and shutdown rcodetool fork server"
+  (interactive )
+  (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers")))
+
 (require 'bartuer-gem)
+(require 'rcodetools)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
+(defalias 'rinar-kill-rct-fork 'rct-fork-kill)
+
 
 (defun rinari-ido ()
   "jump to rinari-command"
@@ -95,6 +103,7 @@
                                           "find-public" "find-script" "find-test" "find-view"
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
                                           "console" "cap" "insert-erb-skeleton" "rgrep"
+                                          "rct-fork-kill" "rails-rct-fork"
                                           "sql" "rake" "script" "test" "dev-server" "web-server"
                                           "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
