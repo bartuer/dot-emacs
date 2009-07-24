@@ -25,7 +25,14 @@
        (ri-ruby-process-get-lines "DISPLAY_INFO" item)))
     (with-current-buffer (format "ri %s" item)
       (copy-to-buffer "*current*" (point-min) (point-max)))
-    ))
+    (with-current-buffer "*current*"
+      (text-mode)
+      (goto-char (point-min))
+      (insert "=begin\n")
+      (search-forward "\n\n")
+      (insert "=end\n")
+      (ruby-mode)
+      )))
 
 ;; Imporve xml-filter: if some error occured, should throw a
 ;; compilation buffer include the error backtrace, not only dump it
