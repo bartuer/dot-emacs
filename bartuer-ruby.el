@@ -94,13 +94,21 @@
   (interactive )
   (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack")))
 
+(defun bartuer-debug-console ()
+  (interactive)
+  (unless (setq rails-debug-process (get-buffer-process "rails-debugger"))
+    (setq rails-debug-process (make-comint "rails-debugger"
+                                           (concat (rinari-root) "script/debugconsole"))
+                                                            rails-debug-process))
+  (pop-to-buffer "*rails-debugger*"))
+
 (require 'bartuer-gem)
 (require 'rcodetools)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
-
+(defalias 'rinari-debug-console 'bartuer-debug-console)
 
 (defun rinari-ido ()
   "jump to rinari-command"
@@ -111,7 +119,7 @@
                                           "find-model" "find-configuration" "find-log"
                                           "find-public" "find-script" "find-test" "find-view"
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
-                                          "console" "cap" "insert-erb-skeleton" "rgrep"
+                                          "console" "debug-console" "cap" "insert-erb-skeleton" "rgrep"
                                           "rct-fork-kill" "rails-rct-fork"
                                           "sql" "rake" "script" "test" "dev-server" "web-server"
                                           "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
