@@ -83,14 +83,14 @@
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
   (interactive )
-  (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers")))
+  (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack")))
 
 (require 'bartuer-gem)
 (require 'rcodetools)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
-(defalias 'rinar-kill-rct-fork 'rct-fork-kill)
+(defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 
 
 (defun rinari-ido ()
