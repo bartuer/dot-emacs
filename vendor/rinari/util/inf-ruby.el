@@ -177,7 +177,7 @@ hooks `inf-ruby-mode-hook' \(after the `comint-mode-hook' is
 run)."
 
   (interactive (list (if current-prefix-arg
-                         (completing-read "Ruby Implementation: "
+                         (ido-completing-read "Ruby Implementation: "
                                           (mapc #'car inf-ruby-implementations))
                        inf-ruby-default-implementation)))
   (setq impl (or impl "ruby"))
