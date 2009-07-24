@@ -546,12 +546,12 @@ If give a negative ARG, will undo the last mark action, thus the
                                         ; need check fastri-server and
                                         ; start it?
 
-(defadvice ri-ruby-read-keyw (before icicle-ri-help activate)
+(defun icicle-ri-help ()
   "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri))
-(defadvice inf-ruby-completions (before icicle-ruby-inf-help activate)
-  "do right thing for icicle-candidate-help-fn ."
-  (setq icicle-candidate-help-fn 'bartuer-ruby-ri))
+(defadvice ri-ruby-read-keyw (before icicle-ri-help activate))
+(defadvice inf-ruby-completions (before icicle-ri-help activate))
+
 
 (autoload 'css-mode "css-mode-simple.el"
   "mode for css file" t nil)

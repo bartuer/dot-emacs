@@ -8,6 +8,7 @@
     (list "ruby" (list "-c" local-file))))
 
 (defun ruby-test-toggle ()
+  "toggle between test and implement files"
   (interactive)
   (ruby-toggle-buffer)
   )
@@ -18,7 +19,27 @@
   (insert " => "))
 
 (defun bartuer-ruby-ri (entry)
-  "return the documents of entry"
+  "return the ri documents of entry  
+
+Common problem for document reading is read it not hard but find
+the right one need time, so the above problem divided to :
+
+- how to filter proper ones among huge candidates?
+- how to go through a list of document as soon as possible?
+
+`icy-mode' and `icicle-help-on-next-apropos-candidate'
+resolve such problem very well. The trick is advice any place
+where a candidate list exist, see `ri-ruby-read-keyw'.
+
+Common problem for understand document is the other side of coin:
+to understand code you need read the document, but to understand
+the document you need try the sample code.
+
+`xmp',`ruby-send-region' such tools could save your time to move
+code in document to an interpreter, so why not make the document
+buffer behave like a source code buffer?  The trick is comment
+the document part and make the code part ready to be evaluated.
+"
   (let ((item (widget-princ-to-string entry)))
     (with-output-to-temp-buffer (format "ri %s" item) 
       (princ
@@ -33,25 +54,30 @@
       (ruby-mode)
       )))
 
-;; Imporve xml-filter: if some error occured, should throw a
-;; compilation buffer include the error backtrace, not only dump it
-;; at end of the file.
-;; 
-;; So, if there is no error, I do not need check the result at end
-;; of the file, in error case I switch to the compile/correct loop
-;; immediately.  See rinari's solution for the same problem.
-;; 
-;; Such solution can save screen space, do not need monit the end
-;; file in one frame anymore, and more, will create an useful tool
-;; to reading code, for I can generate a raise, and get the call
-;; stack there, go through them to understand the related codes. The
-;; idea is as same as reading code through debugger.
-;;
-;; And the successful test result will not mess up version control,
-;; meaningless to record that in VC.
-
 (defun bartuer-xmp (&optional option)
-  "dump the xmpfilter output apropose"
+  "link compilation to xmp
+
+Imporve xml-filter: if some error occured, should throw a
+compilation buffer include the error backtrace, not only dump it
+at end of the file.
+
+So, if there is no error, I do not need check the result at end
+of the file,
+
+In error case I switch to the compile/correct loop immediately.
+
+Such solution can save screen space, for do not need monit the
+end of file in one frame anymore.
+
+And more, will create an useful tool to reading code, for I can
+generate a raise, and get the call stack there, go through them
+to understand the related codes. The idea is as same as reading
+code through debugger.
+
+if in test buffer, will do test C-u C-j initialize the rct
+option rake -t test_... TEST=test_file then, REMOVE test loader
+REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
+ "
   (interactive (rct-interactive))
   (xmp (concat option " --current_file_name=" (buffer-file-name)))
   (if (file-exists-p "/tmp/rct-emacs-backtrace")
@@ -95,6 +121,7 @@
   (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack")))
 
 (defun bartuer-debug-console ()
+  "start a server with debug enabled"
   (interactive)
   (unless (setq rails-debug-process (get-buffer-process "rails-debugger"))
     (setq rails-debug-process (make-comint "rails-debugger"
@@ -111,7 +138,12 @@
 (defalias 'rinari-debug-console 'bartuer-debug-console)
 
 (defun rinari-ido ()
-  "jump to rinari-command"
+  "jump to rinari-command
+
+the basic idea is I do not need remember rinari bindings, they
+are hard to press and hard to remember, `ido-completing-read' do
+it perfectly.
+"
   (interactive)
   (let* ((rinari-command (ido-completing-read "rinari:" 
                                    (list  "find-controller" "find-environment" "find-file-in-project"
@@ -137,14 +169,6 @@
   (ruby-electric-mode)
   (flyspell-prog-mode)
   (flymake-mode)
-
-  ;; if in test buffer, will do test
-  ;; C-u C-j initialize the rct option
-  ;; rake -t test_... TEST=test_file
-  ;; then,
-  ;; REMOVE test loader
-  ;; REMOVE ruby binary
-  ;; normally it is the include path
 
   (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)
   (define-key ruby-mode-map "\C-cj" 'ruby-test-toggle)
