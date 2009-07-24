@@ -22,7 +22,10 @@
   (let ((item (widget-princ-to-string entry)))
     (with-output-to-temp-buffer (format "ri %s" item) 
       (princ
-       (ri-ruby-process-get-lines "DISPLAY_INFO" item)))))
+       (ri-ruby-process-get-lines "DISPLAY_INFO" item)))
+    (with-current-buffer (format "ri %s" item)
+      (copy-to-buffer "*current*" (point-min) (point-max)))
+    ))
 
 ;; Imporve xml-filter: if some error occured, should throw a
 ;; compilation buffer include the error backtrace, not only dump it

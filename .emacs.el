@@ -549,6 +549,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (defadvice ri-ruby-read-keyw (before icicle-ri-help activate)
   "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri))
+(defadvice inf-ruby-completions (before icicle-ruby-inf-help activate)
+  "do right thing for icicle-candidate-help-fn ."
+  (setq icicle-candidate-help-fn 'bartuer-ruby-ri))
 
 (autoload 'css-mode "css-mode-simple.el"
   "mode for css file" t nil)
