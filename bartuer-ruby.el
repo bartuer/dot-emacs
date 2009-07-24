@@ -26,7 +26,6 @@
     (with-current-buffer (format "ri %s" item)
       (copy-to-buffer "*current*" (point-min) (point-max)))
     (with-current-buffer "*current*"
-      (text-mode)
       (goto-char (point-min))
       (insert "=begin\n")
       (search-forward "\n\n")
