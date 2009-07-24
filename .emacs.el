@@ -7,7 +7,7 @@
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'set-goal-column 'disabled nil)
-(setq-default source-directory (expand-file-name "~/src/emacs/emacs/"))
+(setq-default source-directory (expand-file-name "~/local/src/emacs/"))
 (setq-default major-mode 'text-mode)
 
 (defalias 'n 'rename-buffer)
