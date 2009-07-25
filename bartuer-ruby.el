@@ -118,7 +118,8 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
   (interactive )
-  (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack")))
+  (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack"
+                    " -I" (rinari-root) "lib" " -I" (rinari-root) "test")))
 
 (defun bartuer-debug-console ()
   "start a server with debug enabled"
