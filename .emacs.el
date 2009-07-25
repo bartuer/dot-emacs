@@ -490,7 +490,9 @@ If give a negative ARG, will undo the last mark action, thus the
                        ((lambda ()
                           (unless (or
                                    (string-equal "performance/profiler" item)
-                                   (string-equal "performance/benchmarker" item))
+                                   (string-equal "performance/benchmarker" item)
+                                   (string-match "generate \w" item)
+                                   )
                             " -h")))
                        ((lambda ()
                           (when (string-equal "browserreload" item)
@@ -498,7 +500,9 @@ If give a negative ARG, will undo the last mark action, thus the
                             )))))))
             (with-current-buffer (format "%s help" item)
               (toggle-read-only -1)
-              (ansi-color-apply-on-region (point-min) (point-max)))))))
+              (ansi-color-apply-on-region (point-min) (point-max))
+              (copy-to-buffer "*current script help*" (point-min) (point-max)))))))
+
 
 (defadvice rinari-rake (before icicle-rake-help activate)
   "do right thing for icicle-candidate-help-fn ."

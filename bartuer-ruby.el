@@ -121,6 +121,16 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack"
                     " -I" (rinari-root) "lib" " -I" (rinari-root) "test")))
 
+(setq rinari-script-list
+      (list "about" "browserreload" "console" "dbconsole" "debugconsole"
+       "destroy" "generate" "performance/benchmarker" "performance/profiler"
+       "plugin" "process/inspector" "process/reaper" "process/spawner" "runner" "server" "spin"
+       "generate controller" "generate helper" "generate integration_test" "generate mailer"
+       "generate metal" "generate migration" "generate model" "generate observer"
+       "generate performance_test" "generate plugin" "generate resource"
+       "generate scaffold" "generate session_migration"
+       ))
+
 (defun bartuer-debug-console ()
   "start a server with debug enabled"
   (interactive)

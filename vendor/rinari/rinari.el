@@ -168,12 +168,13 @@ directory of the rails application."
   (let* ((root (rinari-root))
 	 (script (or script
 		     (completing-read "Script: "
-                                      (cdr (split-string (concat "\n" (shell-command-to-string (concat "find " root "script -type f"))) (concat "\n" root "script/"))))))
+                                      rinari-script-list)))
 	 (ruby-compilation-error-regexp-alist ;; for jumping to newly created files
 	  (if (equal script "generate")
 	      '(("^ +\\(exists\\|create\\) +\\([^[:space:]]+\\.rb\\)" 2 3))
 	    ruby-compilation-error-regexp-alist))
 	 (script (concat "script/" script " ")))
+         (pop-to-buffer "*current script help*")
     (ruby-compilation-run (concat root script (read-from-minibuffer script)))))
 
 (defun rinari-test (&optional edit-cmd-args)
