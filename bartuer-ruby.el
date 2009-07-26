@@ -41,10 +41,8 @@ buffer behave like a source code buffer?  The trick is comment
 the document part and make the code part ready to be evaluated.
 "
   (let ((item (widget-princ-to-string entry)))
-    (with-output-to-temp-buffer (format "ri %s" item) 
-      (princ
-       (ri-ruby-process-get-lines "DISPLAY_INFO" item)))
-    (with-current-buffer (format "ri %s" item)
+    (ri item)
+    (with-current-buffer (format "ri `%s'" item)
       (copy-to-buffer "*current*" (point-min) (point-max)))
     (with-current-buffer "*current*"
       (goto-char (point-min))
@@ -52,7 +50,8 @@ the document part and make the code part ready to be evaluated.
       (search-forward "\n\n")
       (insert "=end\n")
       (ruby-mode)
-      )))
+      )
+    ))
 
 (defun bartuer-xmp (&optional option)
   "link compilation to xmp
