@@ -1,4 +1,3 @@
-# -*- mode: rhtml; require-final-newline: nil; backup-inhibited: t -*-
 #name: obj.each do |item| ... end
 # --
 <% ${1:obj}.each do |${2:item}| -%>

@@ -1,4 +1,3 @@
-# -*- mode: rhtml; require-final-newline: nil; backup-inhibited: t -*-
 #name: <td></td>
 # --
 <td>$0</td>

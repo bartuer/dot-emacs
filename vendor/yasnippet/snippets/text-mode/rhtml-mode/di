@@ -1,4 +1,3 @@
-# -*- mode: rhtml; require-final-newline: nil; backup-inhibited: t -*-
 #name: div id ... 
 # --
 <div id="${1:id}" >
