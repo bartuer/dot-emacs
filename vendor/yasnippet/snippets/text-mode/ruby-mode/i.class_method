@@ -1,0 +1,3 @@
+#name: inspect class method Camal::method
+# --
+${1:class}.methods(true)

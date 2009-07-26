@@ -1,0 +1,3 @@
+#name: inspect  instance method obj.method
+# --
+${1:class}.methods(false)
