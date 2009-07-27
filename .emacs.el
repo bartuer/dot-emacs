@@ -9,7 +9,7 @@
 (put 'set-goal-column 'disabled nil)
 (setq-default source-directory (expand-file-name "~/local/src/emacs/"))
 (setq-default major-mode 'text-mode)
-
+(defalias 'c 'describe-char)
 (defalias 'n 'rename-buffer)
 (defalias 'r (lambda ()
                (interactive)

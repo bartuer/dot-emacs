@@ -1,0 +1,6 @@
+#name: rails yas
+# --
+#name: ${1:api} rails 
+# (ri "$1")
+# (yas/tap) $1, $0
+# --

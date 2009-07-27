@@ -256,4 +256,72 @@ from static imenu->etags index and dynamically generated properties via introspe
   (let ((anything-sources (list anything-c-source-complete-syntax)))
     (anything)))
 
+
+(defun yas/p (k &optional v)
+  "define parameter expand when expand function
+
+K is key parameter's key
+V is key parameter's value
+"
+  (if v
+      (yas/define major-mode k
+              (format "%s => ${1:%s}" k v))
+    (yas/define major-mode k k))
+  k
+  )
+
+(setq yas-parameter-define-re "\\([a-z_]*\\), \\([a-zA-Z0-9_':-]*\\) \\([a-zA-Z0-9_':-]*\\)")
+
+
+(defun yas/c (l)
+  "compile the list into a yas template use `yas/p'
+
+L is a string list, first element is function name, each key
+value or key nil follow it"
+  (setq para-fun '(lambda (para)
+                    (string-match yas-parameter-define-re para)
+                    (setq key-yas (match-string 2 para))
+                    (setq val-yas (match-string 3 para))
+                    (setq count (1+ count))
+                    (if (> count 1)
+                        (format ", ${%d:`(yas/p \"%s\" \"%s\")`}"
+                                count
+                                key-yas 
+                                val-yas)
+                      (format " ${%d:`(yas/p \"%s\" \"%s\")`}$0"
+                              count
+                              key-yas 
+                              val-yas))
+                    ))
+  (setq signature-template ((lambda (signature)
+                              (let ((count 0))
+                                (replace-regexp-in-string 
+                                 yas-parameter-define-re
+                                 para-fun
+                                 signature
+                                 ))
+                              ) l))
+  (string-match yas-parameter-define-re l)
+  (insert (concat (match-string 1 l) signature-template))
+  )
+
+(defun yas/tap ()
+  "thing-at-point yas/c => yas template"
+  (interactive)
+  (set-mark (point))
+  (beginning-of-line)
+  (setq beg (point))
+  (search-forward ") ")
+  (setq cur (point))
+  (setq yas-line (substring (thing-at-point 'line) (- cur beg)))
+  (search-forward "# --")
+  (forward-line)
+  (beginning-of-line)
+  (setq beg (point))
+  (end-of-line)
+  (setq end (point))
+  (kill-region beg end)
+  (yas/c yas-line)
+  (set-mark-command -1))
+
 (provide 'anything-yasnippet)
