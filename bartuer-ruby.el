@@ -167,12 +167,32 @@ it perfectly.
                                           "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
+
+(defun anything-ruby-browser ()
+  "let `anything-etags-select' do the right job
+
+it is suitable to browse OO hierarchy"
+  (interactive )
+  (setq anything-etags-enable-tag-file-dir-cache t)
+  (unless anything-etags-cache-tag-file-dir
+    (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
+                                                               (list "~/local/src/rails/actionpack"
+                                                                     "~/local/src/rails/activemodel"
+                                                                     "~/local/src/rails/activerecord"
+                                                                     "~/local/src/rails/railties"
+                                                                     "~/local/src/rails/actionmailer"
+                                                                     "~/local/src/rails/activesupport"))))
+  (anything-etags-select))
+  
+  
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
 
   ;; pre load to speed up
   (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
   (visit-tags-table "~/local/src/rails/TAGS.rtags")
+
+  (setq anything-etags-cache-tag-file-dir "~/local/src/rails/")
 
   ;; toggle these modes
   (yas/minor-mode-auto-on)
@@ -198,7 +218,9 @@ it perfectly.
   (define-key ruby-mode-map "\C-c\C-r" 'ruby-send-region)
   (define-key ruby-mode-map "\C-c\C-l" 'ruby-send-last-sexp)
   (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-block)
-  (define-key ruby-mode-map "\C-c\C-c" 'ruby-load-file)
+  (define-key ruby-mode-map "\C-c\C-o" 'ruby-load-file)
+  (define-key ruby-mode-map "\C-c\C-c" 'anything-ruby-browser)
+  (define-key anything-isearch-map "\C-c\C-c" 'anything-ruby-browser)
 
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC
   (define-key ruby-mode-map "\C-\M-i" 'rct-complete-symbol--anything)
