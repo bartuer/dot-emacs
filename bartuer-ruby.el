@@ -130,6 +130,56 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
        "generate scaffold" "generate session_migration"
        ))
 
+(setq anything-c-source-qri 
+      '((name . "All Ruby Classes and Methods")
+        (candidates 
+         .
+         (lambda () anything-c-source-qri-list)) 
+        (init
+         . 
+         (lambda ()
+           (condition-case x
+               (setq anything-c-source-qri-list (split-string
+                                                          (shell-command-to-string
+                                                           "qri --classes;qri --methods"
+                                                          )))
+             (error (setq anything-c-source-qri-methods-list nil))
+             ))
+           )
+        (action
+         ("ri" . bartuer-ruby-ri))
+        ))
+
+(defun anything-qri ()
+  "
+show all ruby methods, filter and and invoke ri on candidate
+"
+  (interactive)
+  (let ((anything-sources (list anything-c-source-qri)))
+    (anything)))
+
+(defun full-qri (query)
+  "query all ri's fulltext"
+  (interactive "s")
+  (get-buffer-create "qri")
+  (with-current-buffer "qri"
+    (insert (shell-command-to-string (concat "qri -S " query)))
+    (goto-char (point-min))
+    (occur "^Found in")
+    )
+  (pop-to-buffer "qri")
+  (display-buffer "*Occur*")
+  )
+
+(defun rinari-qri ()
+  "query fast ri server"
+  (interactive)
+  (let ((rinari-qri-command (ido-completing-read "qri:" 
+                     (list  "anything-qri"
+                            "full-qri"))))
+    (apply (intern rinari-qri-command) nil)
+   ))
+
 (defun bartuer-debug-console ()
   "start a server with debug enabled"
   (interactive)
@@ -164,7 +214,7 @@ it perfectly.
                                           "console" "debug-console" "cap" "insert-erb-skeleton" "rgrep"
                                           "rct-fork-kill" "rails-rct-fork"
                                           "sql" "rake" "script" "test" "dev-server" "web-server"
-                                          "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs") nil t)))
+                                          "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs" "qri") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 
