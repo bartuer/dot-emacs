@@ -141,7 +141,9 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
            (condition-case x
                (setq anything-c-source-qri-list (split-string
                                                           (shell-command-to-string
-                                                           "qri --classes;qri --methods"
+                                                           (concat
+                                                           "qri --classes --methods|grep "
+                                                           anything-qri-query)
                                                           )))
              (error (setq anything-c-source-qri-methods-list nil))
              ))
@@ -150,17 +152,19 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
          ("ri" . bartuer-ruby-ri))
         ))
 
-(defun anything-qri ()
+(defun anything-qri (query)
   "
 show all ruby methods, filter and and invoke ri on candidate
 "
-  (interactive)
+  (interactive (list
+                (read-string "qri --classes --methods: " )))
+  (setq anything-qri-query query)
   (let ((anything-sources (list anything-c-source-qri)))
     (anything)))
 
 (defun full-qri (query)
   "query all ri's fulltext"
-  (interactive "s")
+  (interactive (list (read-string "qri -S : ")))
   (get-buffer-create "qri")
   (with-current-buffer "qri"
     (insert (shell-command-to-string (concat "qri -S " query)))
@@ -175,9 +179,11 @@ show all ruby methods, filter and and invoke ri on candidate
   "query fast ri server"
   (interactive)
   (let ((rinari-qri-command (ido-completing-read "qri:" 
-                     (list  "anything-qri"
-                            "full-qri"))))
-    (apply (intern rinari-qri-command) nil)
+                     (list  "anything"
+                            "full"))))
+    (if (string-equal rinari-qri-command "full")
+                   (call-interactively 'full-qri)
+      (call-interactively 'anything-qri))
    ))
 
 (defun bartuer-debug-console ()
