@@ -1,4 +1,4 @@
-#name: rails yas
+#name: rails
 # --
 #name: ${1:api} rails 
 # (ri "$1")
