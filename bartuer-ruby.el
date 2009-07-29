@@ -51,9 +51,9 @@ the document part and make the code part ready to be evaluated.
       (copy-to-buffer "*current*" (point-min) (point-max)))
     (with-current-buffer "*current*"
       (goto-char (point-min))
+      (insert "=begin\n")
       (insert-source-link entry)
       (insert "\n")
-      (insert "=begin\n")
       )
     ))
 
@@ -282,12 +282,14 @@ it perfectly.
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 
-(defun anything-ruby-browser ()
+(defun anything-ruby-browser (reset)
   "let `anything-etags-select' do the right job
 
 it is suitable to browse OO hierarchy"
-  (interactive )
+  (interactive "P")
   (setq anything-etags-enable-tag-file-dir-cache t)
+  (if reset
+      (setq anything-etags-cache-tag-file-dir nil))
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
                                                                (list "~/local/src/rails/actionpack"
