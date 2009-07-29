@@ -46,6 +46,8 @@ the document part and make the code part ready to be evaluated.
       (copy-to-buffer "*current*" (point-min) (point-max)))
     (with-current-buffer "*current*"
       (goto-char (point-min))
+      (insert-source-link entry)
+      (insert "\n")
       (insert "=begin\n")
       (search-forward "\n\n")
       (insert "=end\n")
@@ -130,6 +132,55 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
        "generate scaffold" "generate session_migration"
        ))
 
+(defun insert-source-link (string)
+  (setq follow-etags-original (current-buffer))
+  (with-current-buffer "TAGS.rtags"
+    (goto-char (point-min))
+    (when (re-search-forward string nil t)
+      (beginning-of-line)
+      (setq follow-etags-goto-func goto-tag-location-function)
+      (setq follow-etags-tag-info (save-excursion (funcall snarf-tag-function)))
+      (setq tag (if (eq t (car follow-etags-tag-info))
+                    nil
+                  (car follow-etags-tag-info)))
+      (setq follow-etags-file-path (save-excursion (if tag (file-of-tag)
+                                                     (save-excursion (forward-line 1)
+                                                                     (file-of-tag)))))
+
+      (setq full-file-name-string (if tag (file-of-tag t)
+                         (save-excursion (forward-line 1)
+                                         (file-of-tag t))))
+      (setq file-label (substring full-file-name-string
+                                  (length (file-name-directory full-file-name-string))))
+      ))
+  (setq pt (point))
+  (if tag
+      (progn
+        (insert (format "%s : " file-label))
+        (insert tag)
+        (make-text-button pt (point)
+                          'tag-info follow-etags-tag-info
+                          'file-path follow-etags-file-path
+                          'goto-func follow-etags-goto-func
+                          'action (lambda (button)
+                                    (let ((tag-info (button-get button 'tag-info))
+                                          (goto-func (button-get button 'goto-func)))
+                                      (tag-find-file-of-tag (button-get button 'file-path))
+                                      (widen)
+                                      (funcall goto-func tag-info)))
+                          'face 'speedbar-button-face
+                          'type 'button))
+    (insert (format "- %s" file-label))
+    (make-text-button pt (point)
+                      'file-path follow-etags-file-path
+                      'action (lambda (button)
+                                (tag-find-file-of-tag (button-get button 'file-path))
+                                (goto-char (point-min)))
+                      'face 'speedbar-button-face
+                      'type 'button)
+    ))
+
+
 (setq anything-c-source-qri 
       '((name . "All Ruby Classes and Methods")
         (candidates 
@@ -149,8 +200,9 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
              ))
            )
         (action
-         ("ri" . bartuer-ruby-ri))
-        ))
+         ("ri" . bartuer-ruby-ri)
+         ("location" . tags-apropos)
+        )))
 
 (defun anything-qri (query)
   "
@@ -254,7 +306,8 @@ it is suitable to browse OO hierarchy"
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-prog-mode)
-  (flymake-mode)
+  (unless buffer-name "*current*"
+          (flymake-mode))
 
   (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)
   (define-key ruby-mode-map "\C-cj" 'ruby-test-toggle)

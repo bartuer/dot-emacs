@@ -59,7 +59,7 @@
  '(icicle-apropos-cycle-next-keys (quote ([next])))
  '(ido-create-new-buffer (quote always))
  '(ido-enable-flex-matching t)
- '(ido-max-prospects 36)                ; type space can also show all candidate
+ '(ido-max-prospects 36)
  '(ido-max-window-height 4)
  '(indent-tabs-mode nil)
  '(isearch-resume-in-command-history t)
@@ -126,6 +126,7 @@
  '(org-level-7 ((t (:foreground "cyan"))))
  '(org-link ((((class color) (background dark)) (:underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
+ '(speedbar-button-face ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "green"))))
  '(yas/field-highlight-face ((t (:background "blue"))))
  '(yas/mirror-highlight-face ((t (:background "blue")))))
