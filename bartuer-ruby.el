@@ -54,8 +54,6 @@ the document part and make the code part ready to be evaluated.
       (insert-source-link entry)
       (insert "\n")
       (insert "=begin\n")
-      (search-forward "\n\n")
-      (insert "=end\n")
       )
     ))
 
