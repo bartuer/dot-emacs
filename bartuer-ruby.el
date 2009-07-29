@@ -18,6 +18,11 @@
   (interactive)
   (insert " => "))
 
+(defun bartuer-ruby-ri-current (entry)
+  "after query ri, jump to *current* buffer immediatly"
+  (bartuer-ruby-ri entry)
+  (pop-to-buffer "*current*"))
+
 (defun bartuer-ruby-ri (entry)
   "return the ri documents of entry  
 
@@ -51,7 +56,6 @@ the document part and make the code part ready to be evaluated.
       (insert "=begin\n")
       (search-forward "\n\n")
       (insert "=end\n")
-      (ruby-mode)
       )
     ))
 
@@ -200,7 +204,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
              ))
            )
         (action
-         ("ri" . bartuer-ruby-ri)
+         ("ri" . bartuer-ruby-ri-current)
          ("location" . tags-apropos)
         )))
 
@@ -254,6 +258,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-dev-server 'bartuer-dev-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 (defalias 'rinari-debug-console 'bartuer-debug-console)
+(defalias 'q 'rinari-qri)
 
 (defun rinari-ido ()
   "jump to rinari-command
@@ -306,7 +311,7 @@ it is suitable to browse OO hierarchy"
   (yas/minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-prog-mode)
-  (unless buffer-name "*current*"
+  (unless (string-equal (buffer-name) "*current*")
           (flymake-mode))
 
   (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)
@@ -329,6 +334,7 @@ it is suitable to browse OO hierarchy"
   (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-block)
   (define-key ruby-mode-map "\C-c\C-o" 'ruby-load-file)
   (define-key ruby-mode-map "\C-c\C-c" 'anything-ruby-browser)
+  (define-key inf-ruby-mode-map "\C-c\C-c" 'anything-ruby-browser)
   (define-key anything-isearch-map "\C-c\C-c" 'anything-ruby-browser)
 
   ; only set to ruby-mode, no idea about inf-ruby-mode , for it is not TDC

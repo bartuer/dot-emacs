@@ -228,7 +228,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-\M-r" 'isearch-backward)
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
-(defalias 'q 'query-replace-regexp)
 
 (global-set-key [(f7)] 'man-follow)
 (global-set-key [(f8)] 'info-lookup-symbol)
