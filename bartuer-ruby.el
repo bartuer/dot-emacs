@@ -44,6 +44,11 @@ the document you need try the sample code.
 code in document to an interpreter, so why not make the document
 buffer behave like a source code buffer?  The trick is comment
 the document part and make the code part ready to be evaluated.
+
+finally, it is easy access document from source code for document
+is generated from source code, but if I want to access source
+code from document, there is no direct way like docstring in
+lisp, really need add one.
 "
   (let ((item (widget-princ-to-string entry)))
     (ri item)
