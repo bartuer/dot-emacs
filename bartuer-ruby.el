@@ -23,6 +23,8 @@
   (bartuer-ruby-ri entry)
   (pop-to-buffer "*current*"))
 
+(defalias 'rdoc 'bartuer-ruby-ri-current)
+
 (defun bartuer-ruby-ri (entry)
   "return the ri documents of entry  
 
@@ -142,7 +144,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
 (defun insert-source-link (string)
   (with-current-buffer "TAGS.rtags"
     (goto-char (point-min))
-    (if (re-search-forward string nil t)
+    (if (re-search-forward (concat string "\\b") nil t)
         (progn
           (setq source-link-hit t)
           (beginning-of-line)
