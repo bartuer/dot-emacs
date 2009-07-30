@@ -11,12 +11,17 @@
 (setq-default major-mode 'text-mode)
 (defalias 'c 'describe-char)
 (defalias 'n 'rename-buffer)
+
+(defun link (file point)
+  (interactive)
+  (find-file file)
+  (goto-char point))
+
 (defalias 'll (lambda ()
                 (interactive)
-                (kill-new (format "((lambda () (find-file \"%s\")(goto-char %d)))"
+                (kill-new (format "(link \"%s\" %d)"
                                   (buffer-file-name)
-                                  (point)))
-                ))
+                                  (point)))))
 (defalias 'r (lambda ()
                (interactive)
                (revert-buffer t t)))
