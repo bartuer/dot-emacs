@@ -351,6 +351,9 @@ it is suitable to browse OO hierarchy"
   (define-key ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map [(f7)] 'ri-ruby-show-args)
-  (define-key rhtml-mode-map "\M-=" 'bartuer-ruby-assign))
+  (define-key rhtml-mode-map "\M-=" 'bartuer-ruby-assign)
+  (define-key ruby-mode-map "\C-x\C-e" 'eval-last-sexp)
+  (define-key rhtml-mode-map "\C-x\C-e" 'eval-last-sexp)
+  )
 
 (provide 'bartuer-ruby)

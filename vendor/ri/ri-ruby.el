@@ -260,7 +260,8 @@ printf
 	  ((null class))
 	  (t (setq method (concat class "::" keyw))
 	     (setq info (ri-ruby-process-get-lines "DISPLAY_INFO" method))
-	     (if info (ri-ruby-show-info method info))))))
+	     (if info (ri-ruby-show-info method info)))))
+  nil)
 
 (cond ((fboundp 'with-displaying-help-buffer) ; for XEmacs
        (defun ri-ruby-show-info (method info) 
