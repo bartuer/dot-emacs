@@ -270,7 +270,7 @@ V is key parameter's value
   k
   )
 
-(setq yas-parameter-define-re "\\([a-z_]*\\), \\([a-zA-Z0-9_':-]*\\) \\([a-zA-Z0-9_':-]*\\)")
+(setq yas-parameter-define-re "\\([a-z_]*\\), \\([a-zA-Z0-9_':-]*\\) \\([a-zA-Z0-9_':-=>{} ]*\\)")
 
 (defun yas/c (l)
   "compile the list into a yas template use `yas/p'
@@ -317,7 +317,7 @@ value or key nil follow it"
   (forward-line)
   (beginning-of-line)
   (setq beg (point))
-  (end-of-line)
+  (end-of-buffer)
   (setq end (point))
   (kill-region beg end)
   (yas/c yas-line)
