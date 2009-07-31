@@ -1,0 +1,5 @@
+#name: map route url rails 
+# (ri "ActionController::Routing")
+# (yas/tap) map.${4:connect} 'pattern', :controller 'class', :action 'method', :requirements 'block'
+# --
+map.${4:connect} 'pattern', ${1:`(yas/p ":controller" "'class'")`}$0, ${2:`(yas/p ":action" "'method'")`}, ${3:`(yas/p ":requirements" "'block'")`}

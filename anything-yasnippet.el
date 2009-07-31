@@ -272,7 +272,6 @@ V is key parameter's value
 
 (setq yas-parameter-define-re "\\([a-z_]*\\), \\([a-zA-Z0-9_':-]*\\) \\([a-zA-Z0-9_':-]*\\)")
 
-
 (defun yas/c (l)
   "compile the list into a yas template use `yas/p'
 
@@ -288,7 +287,7 @@ value or key nil follow it"
                                 count
                                 key-yas 
                                 val-yas)
-                      (format " ${%d:`(yas/p \"%s\" \"%s\")`}$0"
+                      (format ", ${%d:`(yas/p \"%s\" \"%s\")`}$0"
                               count
                               key-yas 
                               val-yas))
