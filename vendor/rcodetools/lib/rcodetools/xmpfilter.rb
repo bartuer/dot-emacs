@@ -173,7 +173,7 @@ class XMPFilter
       f << s.inject(""){|s,line| s + "#{line}".chomp + "\n" }
     end
 
-    o = output.join.gsub(/-:/, @current_file_name+':').gsub(/xmpfilter.*rb:/, File.basename(@current_file_name)+':')
+    o = output.join.gsub(/-:/, @current_file_name+':').gsub(/xmpfilter.*?rb:/, File.basename(@current_file_name)+':')
     if ERROR_RE =~ o
       has_backtrace = true    
       f << o
