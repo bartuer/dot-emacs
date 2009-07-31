@@ -21,7 +21,7 @@ class XMPFilter
   XMP_RE = Regexp.new("^" + Regexp.escape(MARKER) + '\[([0-9]+)\] (=>|~>|==>) (.*)')
   VAR = "_xmp_#{Time.new.to_i}_#{Process.pid}_#{rand(1000000)}"
   WARNING_RE = /.*:([0-9]+): warning: (.*)/
-  ERROR_RE = /Error:|Failure:|Errno:|\([a-zA-Z]*Error\)|\(MissingSourceFile\)/
+  ERROR_RE = /Error:|Failure:|Errno:|\([\w:]*Error\)|\(MissingSourceFile\)/
   RuntimeData = Struct.new(:results, :exceptions, :bindings)
 
   INITIALIZE_OPTS = {:interpreter => "ruby", :options => [], :libs => [],
