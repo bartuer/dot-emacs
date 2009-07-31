@@ -283,7 +283,7 @@ it perfectly.
                                           "find-public" "find-script" "find-test" "find-view"
                                           "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
                                           "console" "debug-console" "cap" "insert-erb-skeleton" "rgrep"
-                                          "rct-fork-kill" "rails-rct-fork"
+                                          "rails-rct-fork" "rct-fork-kill" 
                                           "sql" "rake" "script" "test" "dev-server" "web-server"
                                           "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs" "qri") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
