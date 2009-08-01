@@ -49,7 +49,6 @@
 (defvar inf-ruby-mode-map
   (let ((map (copy-keymap comint-mode-map)))
     (define-key map (kbd "C-c C-l") 'inf-ruby-load-file)
-    (define-key map (kbd "C-x C-e") 'ruby-send-last-sexp)
     (define-key map (kbd "TAB") 'inf-ruby-complete-or-tab)
     map)
   "*Mode map for inf-ruby-mode")
@@ -82,7 +81,6 @@ next one.")
 (defun inf-ruby-keys ()
   "Set local key defs to invoke inf-ruby from ruby-mode."
   (define-key ruby-mode-map "\M-\C-x" 'ruby-send-definition)
-  (define-key ruby-mode-map "\C-x\C-e" 'ruby-send-last-sexp)
   (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-block)
   (define-key ruby-mode-map "\C-c\M-b" 'ruby-send-block-and-go)
   (define-key ruby-mode-map "\C-c\C-x" 'ruby-send-definition)
