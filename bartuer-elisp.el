@@ -2,7 +2,7 @@
   "added when edit elisp file"
   (interactive)
   (turn-on-eldoc-mode)
-  (fly-prog-mode)
+  (flyspell-prog-mode)
   (define-key emacs-lisp-mode-map "\C-c\C-i" (lambda ()
                                                (interactive)
                                                (insert "(interactive)")))
