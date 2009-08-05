@@ -230,7 +230,7 @@ exec-to-string command, but it works and seems fast"
     (let ((moving (= (point) (process-mark proc))))
       (save-excursion
 	(goto-char (process-mark proc))
-	(insert (ansi-color-filter-apply string))
+	(insert (ansi-color-filter-apply (replace-regexp-in-string "" "" string)))
 	(set-marker (process-mark proc) (point)))
       (if moving (goto-char (process-mark proc))))))
 
