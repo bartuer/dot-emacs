@@ -1,6 +1,5 @@
 #name : setup
 # --
 def setup
-  super
   $0
 end
