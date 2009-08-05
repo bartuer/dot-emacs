@@ -42,9 +42,19 @@ class RubyToggleFile
 
   RAILS_MVC2TESTNAME = { 'models' => 'unit', 'controllers' => 'functional' }
   RAILS_TESTNAME2MVC = RAILS_MVC2TESTNAME.invert
+
+  ACTIONPACK_IMP2TEST = { 'action_controller' => 'controller'}
+  ACTIONPACK_TEST2IMP = ACTIONPACK_IMP2TEST.invert
+  
   def test_file_00_rails(implementation, basedir, dir, node) # rails
     if m = %r!app/(models|controllers)/(.+)\.rb$!.match(implementation)
       "%stest/%s/%s_test.rb" % [ m.pre_match, RAILS_MVC2TESTNAME[m[1]], m[2] ]
+    end
+  end
+
+  def test_file_01_actionpack(implementation, basedir, dir, node) # actionpack
+    if m = %r!lib/(action_controller)/(.+)\.rb$!.match(implementation)
+      "%stest/%s/%s_test.rb" % [ m.pre_match, ACTIONPACK_IMP2TEST[m[1]], m[2] ]
     end
   end
 
@@ -78,6 +88,12 @@ class RubyToggleFile
     end
   end
 
+  def implementation_file_01_actionpack(test, basedir, dir, node)
+    if m = %r!test/(controller)/(.+)_test.rb$!.match(test)
+      "%sapp/%s/%s.rb" % [ m.pre_match, ACTIONPACK_TEST2IMP[m[1]], m[2] ]
+    end
+  end
+  
   def implementation_file_10_no_match(test, basename, dir, node)
     if dir == nil and node == nil and test =~ %r!/test_(.+)\.rb$!
       test.sub("/test_", "/")
