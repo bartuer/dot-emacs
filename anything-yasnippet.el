@@ -197,6 +197,11 @@ from static imenu->etags index and dynamically generated properties via introspe
   (insert msg)
   (yas/expand))
 
+(defun yasnippet-edit-syntax-expand (msg)
+  "jump to the yas define"
+  (find-file (concat current-mode-snippet-directory "/" msg))
+  )
+
 (setq anything-yasnippet-completion-table nil)
 
 (setq snippet-dot-re "\\(^.*\\)\\.\\(.*$\\)")
@@ -247,8 +252,9 @@ from static imenu->etags index and dynamically generated properties via introspe
            )
          )
         (action
-         ("Completion" . yasnippet-complete-syntax-expand))
-        ))
+         ("Completion" . yasnippet-complete-syntax-expand)
+         ("Edit" . yasnippet-edit-syntax-expand)
+        )))
 
 (defun anything-complete-syntax-expand ()
   "finish using current mode's syntax snippet "
