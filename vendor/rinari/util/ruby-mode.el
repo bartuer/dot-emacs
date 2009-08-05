@@ -1,6 +1,4 @@
-;;; ruby-mode.el --- Major mode for editing Ruby files
-
-;; Copyright (C) 1994-2008 Yukihiro Matsumoto, Nobuyoshi Nakada
+;;; ruby-mode.el --- Major mode for editing Ruby files;; Copyright (C) 1994-2008 Yukihiro Matsumoto, Nobuyoshi Nakada
 
 ;; Authors: Yukihiro Matsumoto, Nobuyoshi Nakada
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/RubyMode
@@ -238,7 +236,7 @@ Also ignores spaces after parenthesis when 'space."
   (let ((index-alist '()) (case-fold-search nil)
         name next pos decl sing)
     (goto-char beg)
-    (while (re-search-forward "^\\s *\\(\\(class\\s +\\|\\(class\\s *<<\\s *\\)\\|module\\s +\\)\\([^\(<\n ]+\\)\\|\\(def\\|alias\\)\\s +\\([^\(\n ]+\\)\\)" end t)
+    (while (re-search-forward "^\\s *\\(\\(class\\s +\\|\\(class\\s *<<\\s *\\)\\|module\\s +\\)\\([^\(<\n ]+\\)\\|\\(def\\|alias\\|test\\)\\s +\\([^\(<\n]+\\)\\)" end t)
       (setq sing (match-beginning 3))
       (setq decl (match-string 5))
       (setq next (match-end 0))
@@ -257,6 +255,16 @@ Also ignores spaces after parenthesis when 'space."
                   (t (concat prefix name)))))
         (push (cons name pos) index-alist)
         (ruby-accurate-end-of-block end))
+       ((string= "test" decl)
+        (if prefix
+            (setq name
+                  (cond
+                   ((string-match "^self\." name)
+                    (concat (substring prefix 0 -1) (substring name 4)))
+                  (t (concat prefix name)))))
+        (push (cons name pos) index-alist)
+        (ruby-accurate-end-of-block end)
+        )
        (t
         (if (string= "self" name)
             (if prefix (setq name (substring prefix 0 -1)))
