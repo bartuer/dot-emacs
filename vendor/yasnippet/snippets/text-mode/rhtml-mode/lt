@@ -1,3 +1,4 @@
 #name: link_to
+# (rdoc "ActionView::Helpers::UrlHelper#link_to")
 # --
-<%= link_to ${1:text}, ${2:url}, ${3:options} %>$0
+<%= link_to ${1:text}, ${2:model}_url(@$2) ${3:, lt_opt}$0 %>
