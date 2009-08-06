@@ -1,4 +1,4 @@
-#! /usr/local/bin/ruby18
+#! /usr/bin/env ruby 
 # Copyright (c) 2006-2007 rubikitch <rubikitch@ruby-lang.org>
 #
 # Use and distribution subject to the terms of the Ruby license.
