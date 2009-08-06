@@ -306,7 +306,55 @@ it is suitable to browse OO hierarchy"
                                                                      "~/local/src/rails/actionmailer"
                                                                      "~/local/src/rails/activesupport"))))
   (anything-etags-select))
-  
+
+
+(defun not-region-p ()
+  "is there a region actived?"
+  (if (region-active-p)
+      (progn
+        (setq rct-comment-beg (region-beginning))
+        (setq rct-comment-end (region-end))
+        nil)
+    t))
+
+(defun comment-block-dwim (beg end)
+  "add/remove =begin/=end depend on region beg and end
+
+=begin
+the block line one
+the block line two
+the block line three
+=end
+
+"
+  (if (and (progn
+             (goto-char beg)
+             (search-forward "=begin" end t))
+           (progn
+             (goto-char beg)
+             (search-forward "=end" end t))
+           )
+      (progn
+        (goto-char end)
+        (search-backward "=end" beg t)
+        (kill-line)
+        (goto-char beg)
+        (search-forward "=begin" end t)
+        (beginning-of-line)
+        (kill-line))
+    (goto-char beg)
+    (insert "=begin ")
+    (goto-char end)
+    (forward-line)
+    (insert "=end")
+    (goto-char beg)
+  ))
+
+(defun ruby-block-comment ()
+  "insert/remove =begin/=end style comments"
+  (interactive)
+  (unless (not-region-p)
+    (comment-block-dwim rct-comment-beg rct-comment-end)))
   
 (defun bartuer-ruby-load ()
   "mode hooks for ruby"
@@ -344,6 +392,7 @@ it is suitable to browse OO hierarchy"
   (define-key ruby-mode-map "\C-c\C-b" 'ruby-send-block)
   (define-key ruby-mode-map "\C-c\C-o" 'ruby-load-file)
   (define-key ruby-mode-map "\C-c\C-c" 'anything-ruby-browser)
+  (define-key ruby-mode-map "\C-c\M-;" 'ruby-block-comment)
   (define-key inf-ruby-mode-map "\C-c\C-c" 'anything-ruby-browser)
   (define-key anything-isearch-map "\C-c\C-c" 'anything-ruby-browser)
 

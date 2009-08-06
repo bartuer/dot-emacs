@@ -20,13 +20,40 @@
   "If non-nil, output debug message into *Messages*.")
 ;; (setq rct-debug t)
 
+(defun has-rct-in-region-p (beg end)
+  "search # => in region beg end
+"
+  (goto-char beg)
+  (if (search-forward "# =>" end t)
+      t
+    nil)
+)
+
+(defun rct-dwim ()
+  "if there is # =>, remove it, otherwise insert it
+
+2 + 3 # =>
+docstring as fixture, try above line.
+"
+  (setq current-pos (point))
+  (setq beg (progn (beginning-of-line) (point)))
+  (setq end (progn (end-of-line) (point)))
+  (if (has-rct-in-region-p beg end)
+      (progn
+        (goto-char beg)
+        (search-forward "#")
+        (kill-line))
+    (goto-char current-pos)
+    (insert " =>"))
+  )
+
+
 (defadvice comment-dwim (around rct-hack activate)
   "If comment-dwim is successively called, add => mark."
   (if (and (eq major-mode 'ruby-mode)
            (eq last-command 'comment-dwim)
-           ;; TODO =>check
            )
-      (insert "=>")
+      (rct-dwim)
     ad-do-it))
 ;; To remove this advice.
 ;; (progn (ad-disable-advice 'comment-dwim 'around 'rct-hack) (ad-update 'comment-dwim)) 
