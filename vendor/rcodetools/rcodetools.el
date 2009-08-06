@@ -24,7 +24,7 @@
   "search # => in region beg end
 "
   (goto-char beg)
-  (if (search-forward "# =>" end t)
+  (if (search-forward-regexp "# *=>" end t)
       t
     nil)
 )
@@ -44,7 +44,7 @@ docstring as fixture, try above line.
         (search-forward "#")
         (kill-line))
     (goto-char current-pos)
-    (insert " =>"))
+    (insert "=>"))
   )
 
 
