@@ -1,0 +1,3 @@
+# name : rails controller get post put delete head http method
+# --
+method$0 :${1:action}, :${2:params}, :${3:session}, :${4:flash}
