@@ -90,7 +90,7 @@ class RubyToggleFile
 
   def implementation_file_01_actionpack(test, basedir, dir, node)
     if m = %r!test/(controller)/(.+)_test.rb$!.match(test)
-      "%sapp/%s/%s.rb" % [ m.pre_match, ACTIONPACK_TEST2IMP[m[1]], m[2] ]
+      "%slib/%s/%s.rb" % [ m.pre_match, ACTIONPACK_TEST2IMP[m[1]], m[2] ]
     end
   end
   
