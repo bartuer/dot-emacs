@@ -43,7 +43,7 @@ class RubyToggleFile
   RAILS_MVC2TESTNAME = { 'models' => 'unit', 'controllers' => 'functional' }
   RAILS_TESTNAME2MVC = RAILS_MVC2TESTNAME.invert
 
-  ACTIONPACK_IMP2TEST = { 'action_controller' => 'controller'}
+  ACTIONPACK_IMP2TEST = { 'action_controller' => 'controller', 'action_controller/vendor/html-scanner/html' => 'controller/html-scanner'}
   ACTIONPACK_TEST2IMP = ACTIONPACK_IMP2TEST.invert
   
   def test_file_00_rails(implementation, basedir, dir, node) # rails
@@ -53,7 +53,7 @@ class RubyToggleFile
   end
 
   def test_file_01_actionpack(implementation, basedir, dir, node) # actionpack
-    if m = %r!lib/(action_controller)/(.+)\.rb$!.match(implementation)
+    if m = %r!lib/(action_controller/vendor/html-scanner/html|action_controller)/(.+)\.rb$!.match(implementation)
       "%stest/%s/%s_test.rb" % [ m.pre_match, ACTIONPACK_IMP2TEST[m[1]], m[2] ]
     end
   end
@@ -89,7 +89,7 @@ class RubyToggleFile
   end
 
   def implementation_file_01_actionpack(test, basedir, dir, node)
-    if m = %r!test/(controller)/(.+)_test.rb$!.match(test)
+    if m = %r!test/(controller/html-scanner|controller)/(.+)_test.rb$!.match(test)
       "%slib/%s/%s.rb" % [ m.pre_match, ACTIONPACK_TEST2IMP[m[1]], m[2] ]
     end
   end
