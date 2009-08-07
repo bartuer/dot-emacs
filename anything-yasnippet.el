@@ -329,4 +329,14 @@ value or key nil follow it"
   (yas/c yas-line)
   (set-mark-command -1))
 
+(defun yas-ruby-current-class-name ()
+  (goto-char (point-min))
+  (search-forward-regexp "^class ")
+  (beginning-of-line)
+  (setq beg (point))
+  (end-of-line)
+  (setq end (point))
+  (string-match "class \\([a-zA-Z]* \\).*$" (buffer-substring beg end))
+  (match-string-no-properties 1))
+
 (provide 'anything-yasnippet)
