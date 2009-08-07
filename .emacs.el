@@ -735,7 +735,7 @@ If give a negative ARG, will undo the last mark action, thus the
              '("\\.gdb$" . gdb-script-mode))
 
 (autoload 'bartuer-read-mark "bartuer-mark.el" "for record note" t)
-(define-key view-mode-map "\C-j" 'bartuer-read-mark)
+(define-key view-mode-map "j" 'bartuer-read-mark)
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
