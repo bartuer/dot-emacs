@@ -246,6 +246,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
 
 (require 'dict nil t)
+(define-key view-mode-map "k" 'google-define)
 (defun mydict (word)
   "Lookup a WORD in the dictionary."
   (interactive (list (dict-default-dict-entry)))
