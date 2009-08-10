@@ -194,12 +194,12 @@ from static imenu->etags index and dynamically generated properties via introspe
 (defun yasnippet-complete-syntax-expand (msg)
   "constructure an snippet according to the syntax signature string"
   (flymake-mode nil)
-  (insert msg)
+  (insert (car msg))
   (yas/expand))
 
 (defun yasnippet-edit-syntax-expand (msg)
   "jump to the yas define"
-  (find-file (concat current-mode-snippet-directory "/" msg))
+  (find-file (concat current-mode-snippet-directory "/" (cdr msg)))
   )
 
 (setq anything-yasnippet-completion-table nil)
@@ -232,7 +232,7 @@ from static imenu->etags index and dynamically generated properties via introspe
                           filename
                         ))
                     ))
-              (push (cons lable stub)
+              (push (cons lable (cons stub (file-name-nondirectory file)))
                     syntax-expand-list))))))
                     syntax-expand-list
     ))
