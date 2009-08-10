@@ -1,0 +1,10 @@
+# name: back redirect_to controller api rails
+# (rdoc "ActionController::Base#redirect_to")
+# it is the shortcut for redirect_to(request.env["HTTP_REFERER"])
+# --
+begin
+  redirect_to :back
+rescue  RedirectBackError => ex
+  $0        
+end
+
