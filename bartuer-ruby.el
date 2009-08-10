@@ -342,11 +342,10 @@ the block line three
         (search-forward "=begin" end t)
         (beginning-of-line)
         (kill-line))
+    (goto-char end)
+    (insert "=end")
     (goto-char beg)
     (insert "=begin ")
-    (goto-char end)
-    (forward-line)
-    (insert "=end")
     (goto-char beg)
   ))
 
