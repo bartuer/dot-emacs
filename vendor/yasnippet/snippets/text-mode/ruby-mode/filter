@@ -1,0 +1,8 @@
+# name : filter controller api rails
+# (rdoc "ActionController::Filters::ClassMethods")
+# (link "/Users/bartuer/local/src/rails/actionpack/lib/action_controller/filters.rb" 17701)
+# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/filters_test.rb" 1)
+# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/filters_test.rb" 6273)
+# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/filters_test.rb" 7241)
+# --
+${1:before after around prepend_before prepend_after skip_before skip_after skip}_filter ${4:filterb} :${2:method} ${3:ClassFilter},$0 :except => a, :only => a 
