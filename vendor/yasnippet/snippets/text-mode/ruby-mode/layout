@@ -1,5 +1,0 @@
-# name : rails controller api layout template view
-# (rdoc "ActionController::Layout::ClassMethods")
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/layout_test.rb" 2682)
-# --
-layout ${1:template_name}, ${2:h}

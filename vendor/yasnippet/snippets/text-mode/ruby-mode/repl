@@ -1,4 +1,4 @@
-# name : rails controller test repl
+# name : repl test controller rails 
 # --
 require 'test_helper'
 class ${1:name}Test < ActionController::TestCase

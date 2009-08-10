@@ -1,4 +1,4 @@
-#name: map route resource url rails 
+#name: resource map route url controller configure api rails 
 # (rdoc "ActionController::Resources#resources")
 # (yas/tap) map.resources( :${16:models}, :collection actionh, :member actionh, :new actionh, :has_many modela, :has_one :model, :requirements { :month => regex }, 'remove_as_hold' :as => 'uriname', :path_names {:method => 'uriname'}, :path_prefix pattern, :shallow true, :conditions actionh, :only actiona, :except actiona, :none actiona, 'remove_all_hold' :all => actiona)
 # --

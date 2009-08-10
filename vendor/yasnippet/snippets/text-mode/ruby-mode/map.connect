@@ -1,4 +1,4 @@
-#name: map route url rails 
+#name: connect map route url controller configure api rails 
 # (ri "ActionController::Routing")
 # (yas/tap) map.${6:connect}('/pattern', :conditions {:method => :get}, :controller 'class', :action 'method', :requirements { :month => regex }, :defaults { :id => nil }) 
 # --

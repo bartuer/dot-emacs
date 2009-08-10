@@ -1,4 +1,4 @@
-# name : rails controller pattern around filter
+# name : around filter controller api rails 
 # --
 around_filter :with_${1:name}
 

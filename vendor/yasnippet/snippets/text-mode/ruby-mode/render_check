@@ -1,0 +1,7 @@
+# name : check render controller debug rails
+# --
+@response.template.view_paths
+@response.template.template_format
+@controller.active_layout.filename
+
+@response.template

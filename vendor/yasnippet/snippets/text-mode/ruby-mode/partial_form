@@ -1,0 +1,4 @@
+# name : form builder partial controller parameter rails
+# (rdoc "ActionView::Partials")
+# --
+ActionView::Helpers::FormBuilder.new(:post, nil, @template, {}, Proc.new {})

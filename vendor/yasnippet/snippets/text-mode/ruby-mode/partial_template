@@ -1,0 +1,4 @@
+# name : template true partial controller parameter rails
+# (rdoc "ActionView::Partials")
+# --
+"${1:template}" "${2:other}/${3:template}" ${4:true}
