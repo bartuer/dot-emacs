@@ -1,4 +1,5 @@
 # name : session store controller configure rails
+# (link "/Users/bartuer/local/src/baza/config/initializers/session_store.rb" 318)
 # (link "/Users/bartuer/local/src/baza/config/environment.rb" 1779)
 # (rdoc "ActionController::SessionManagement::ClassMethods#session_store=")
 # (rdoc "ActionController::Session::CookieStore")
