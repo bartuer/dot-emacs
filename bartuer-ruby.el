@@ -64,6 +64,22 @@ lisp, really need add one.
       )
     ))
 
+(defun actionpack-rct-option ()
+  "-I/Users/bartuer/local/src/rails/actionpack/test -I/Users/bartuer/local/src/rails/actionpack/lib")
+
+(defun activerecord-rct-option ()
+  "-I/Users/bartuer/local/src/rails/activerecord/lib -I/Users/bartuer/local/src/rails/activerecord/test -I/Users/bartuer/local/src/rails/activerecord/test/connections/native_sqlite3")
+
+(defun ido-rct-option ()
+  "select rct options from candidate"
+  (list
+   (let ((option (or rct-option-local "")))
+     (if current-prefix-arg
+         (let ((compact-rct-option (ido-completing-read "(describe-variable 'rct-option-local)"
+                                               (list "actionpack" "activerecord"))))(actionpack-rct-option)
+           (setq rct-option-local (apply (intern (concat compact-rct-option "-rct-option")) nil)))
+       option))))
+
 (defun bartuer-xmp (&optional option)
   "link compilation to xmp
 
@@ -88,7 +104,7 @@ if in test buffer, will do test C-u C-j initialize the rct
 option rake -t test_... TEST=test_file then, REMOVE test loader
 REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
  "
-  (interactive (rct-interactive))
+  (interactive (ido-rct-option))
   (xmp (concat option " --current_file_name=" (buffer-file-name)))
   (if (file-exists-p "/tmp/rct-emacs-backtrace")
       (pop-to-buffer 
