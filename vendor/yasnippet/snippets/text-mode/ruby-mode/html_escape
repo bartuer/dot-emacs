@@ -1,0 +1,3 @@
+# name : html escaper view api rails
+# --
+h(${1:content})
