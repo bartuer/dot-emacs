@@ -1,0 +1,9 @@
+# name : session store controller configure rails
+# (link "/Users/bartuer/local/src/baza/config/environment.rb" 1779)
+# (rdoc "ActionController::SessionManagement::ClassMethods#session_store=")
+# (rdoc "ActionController::Session::CookieStore")
+# (rdoc "ActionController::Session::MemCacheStore")
+# (link "/Users/bartuer/local/src/rails/activerecord/lib/active_record/session_store.rb" 2193)
+# http://api.rubyonrails.org/classes/ActiveRecord/SessionStore.html
+# --
+config.action_controller.session_store = :active_record_store :cookie_store :mem_cache_store
