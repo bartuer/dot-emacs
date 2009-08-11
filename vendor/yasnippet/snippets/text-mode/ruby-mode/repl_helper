@@ -1,0 +1,23 @@
+# name : repl test helper view template rails 
+# --
+require 'abstract_unit'
+RequestMock = Struct.new("Request", :request_uri, :protocol, :host_with_port, :env)
+
+class ${1:name}Test < ActionView::TestCase
+  tests `(yas-ruby-current-class-name)`
+
+  def setup
+      @controller = Class.new do
+      attr_accessor :url, :request
+      def url_for(options)
+        url
+      end
+    end
+    @controller = @controller.new
+    @controller.url = "http://www.example.com"
+  end
+
+  def test_${2:what}
+
+  end
+end

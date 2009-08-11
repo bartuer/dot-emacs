@@ -1,3 +1,6 @@
+(file-cache-add-directory "~/local/src/rails/actionpack/lib/action_view")
+(file-cache-add-directory "~/local/src/rails/actionpack/lib/action_view/helpers")
+(file-cache-add-directory "~/local/src/rails/actionpack/test/template")
 (file-cache-add-directory "~/local/src/rails/actionpack/test/fixtures")
 (file-cache-add-directory "~/local/src/rails/actionpack/test/fixtures/test")
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/lib/rcodetools/")
