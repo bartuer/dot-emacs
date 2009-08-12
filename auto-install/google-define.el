@@ -181,9 +181,10 @@ If we have a current region use it's value as the default."
         (data-buffer
          (google-define-get-command "www.google.com"
                           (concat
-                           "/search?num=100&hl=en&q=define%3A%22"
+                           "/search?num=100&hl=en&defl=all&q=define%3A%22"
                            (replace-regexp-in-string " +" "\+" search-word)
-                 "%22&btnG=Search"))))
+                 "%22&btnG=Search")))
+        )
     (google-define-parse-buffer search-word data-buffer)
     (kill-buffer data-buffer)))
 
