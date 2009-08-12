@@ -21,7 +21,8 @@
 (defun bartuer-ruby-ri-current (entry)
   "after query ri, jump to *current* buffer immediatly"
   (bartuer-ruby-ri entry)
-  (pop-to-buffer "*current*"))
+  (goto-line 2 "*current*")
+  )
 
 (defalias 'rdoc 'bartuer-ruby-ri-current)
 
