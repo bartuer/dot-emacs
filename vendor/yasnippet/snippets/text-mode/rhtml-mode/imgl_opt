@@ -1,0 +1,5 @@
+# name : option image_tag linker view api rails
+# (rdoc "ActionView::Helpers::AssetTagHelper#image_tag")
+# (yas/tap) remove_me, :alt 'icon', :size '30x45', :mouseover image_path
+# --
+${1:`(yas/p ":alt" "'icon'")`}$0, ${2:`(yas/p ":size" "'30x45'")`}, ${3:`(yas/p ":mouseover" "image_path")`}

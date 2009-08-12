@@ -1,0 +1,4 @@
+# name : img image_tag linker view api rails
+# (rdoc "ActionView::Helpers::AssetTagHelper#image_tag")
+# --
+<%= image_tag "${1:source.js}", imgl_opt$0 %>

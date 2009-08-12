@@ -1,0 +1,8 @@
+# name : benchmark view debug rails
+# (rdoc "ActionView::Helpers::BenchmarkHelper#benchmark")
+# --
+<% benchmark "${1:title}" do %>
+  $0
+<% end %>
+
+
