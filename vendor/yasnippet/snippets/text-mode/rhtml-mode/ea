@@ -1,5 +1,1 @@
-# name: obj.each do |item| ... end
-# --
-<% ${1:obj}.each do |${2:item}| -%>
-  $0
-<% end -%>
+/Users/bartuer/etc/el/vendor/yasnippet/snippets/text-mode/rhtml-mode/each
