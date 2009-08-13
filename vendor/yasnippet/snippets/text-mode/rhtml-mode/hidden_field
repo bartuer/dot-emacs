@@ -1,0 +1,4 @@
+#name: hidden_field view api rails 
+# (rdoc "ActionView::Helpers::FormHelper#hidden_field")
+# --
+hidden_field :${1:obj}, :${2:method}$0, fopt

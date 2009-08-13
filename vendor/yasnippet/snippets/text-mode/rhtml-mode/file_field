@@ -1,0 +1,4 @@
+#name: file_field view api rails 
+# (rdoc "ActionView::Helpers::FormHelper#file_field")
+# --
+file_field :${1:obj}, :${2:method}$0, fopt

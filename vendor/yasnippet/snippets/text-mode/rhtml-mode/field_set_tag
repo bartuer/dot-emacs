@@ -1,0 +1,6 @@
+#name: field_set_tag view api rails 
+# (rdoc "ActionView::Helpers::FormTagHelper#field_set_tag")
+# --
+<% field_set_tag '${1:what}'$0, fopt do %>
+  $0
+<% end %>

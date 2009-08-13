@@ -1,6 +1,6 @@
-#name: rails
+# name: rails
 # --
-#name: ${1:api} rails 
-# (ri "$1")
+# name: ${1:`(file-name-nondirectory (buffer-file-name))`} view api rails 
+# (rdoc "$1")
 # (yas/tap) $1, $0
 # --
