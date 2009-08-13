@@ -1512,10 +1512,14 @@ in log buffer."
 	(when remote
 	  (magit-insert-unpushed-commits remote branch))))))
 
-(defun magit-status (dir)
-  (interactive (list (magit-read-top-dir)))
+(defvar magit-last-top-dir nil)
+(defun magit-status (magit-need-read-dir)
+  (interactive "P")
+  (if (or (eq magit-last-top-dir nil)
+          magit-need-read-dir)
+        (setq magit-last-top-dir (magit-read-top-dir)))
   (save-some-buffers)
-  (let* ((topdir (magit-get-top-dir dir))
+  (let* ((topdir (magit-get-top-dir magit-last-top-dir))
 	 (buf (or (magit-find-buffer 'status topdir)
 		  (switch-to-buffer
 		   (generate-new-buffer
