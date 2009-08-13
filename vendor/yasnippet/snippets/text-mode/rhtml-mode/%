@@ -1,3 +1,3 @@
-#name: <% ... -%>
+# name: <% ... -%> tag view former rails 
 # --
 <% $0 -%>

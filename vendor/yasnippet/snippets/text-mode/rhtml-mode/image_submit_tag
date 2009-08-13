@@ -1,4 +1,4 @@
-# name: image_submit_tag view api rails 
-# (rdoc "ActionView::Helpers::FormTagHelper#image_submit_tag")
+# name: image_submit_tag former view api rails 
+# (rdoc "ActionFormer View::Helpers::FormTagHelper#image_submit_tag")
 # --
-image_submit_tag ${1:source}$0, fopt 
+<%= image_submit_tag ${1:source}$0, fopt %>

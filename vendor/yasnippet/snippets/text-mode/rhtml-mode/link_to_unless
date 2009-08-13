@@ -1,4 +1,4 @@
-#name: link_to linker view api rails
+# name: link_to linker view api rails
 # (rdoc "ActionView::Helpers::UrlHelper#link_to_unless")
 # --
 <%= link_to_unless ${1:@current_user.nil?} lt$0 %>

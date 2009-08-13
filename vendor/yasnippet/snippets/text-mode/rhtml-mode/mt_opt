@@ -1,4 +1,4 @@
-#name: options mail_to linker view api rails
+# name: options mail_to linker view api rails
 # (rdoc "ActionView::Helpers::UrlHelper#mail_to")
 # (yas/tap) remove, :subject 'subject', :body 'content', :cc 'address', :bcc 'address'
 # --

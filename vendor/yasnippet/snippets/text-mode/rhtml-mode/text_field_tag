@@ -1,4 +1,4 @@
-#name: text_field_tag view api rails 
-# (rdoc "ActionView::Helpers::FormTagHelper#text_field_tag")
+# name: text_field_tag former view api rails 
+# (rdoc "ActionFormer View::Helpers::FormTagHelper#text_field_tag")
 # --
 text_field_tag "${1:name_obj_method}", "${2:value_obj[method]}"$0, fopt
