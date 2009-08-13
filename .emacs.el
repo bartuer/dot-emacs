@@ -247,7 +247,6 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'dict nil t)
 (require 'google-define nil t)
-(define-key view-mode-map "k" 'google-define)
 (defun mydict (word)
   "Lookup a WORD in the dictionary."
   (interactive (list (dict-default-dict-entry)))
@@ -738,6 +737,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-read-mark "bartuer-mark.el" "for record note" t)
 (define-key view-mode-map "j" 'bartuer-read-mark)
+(define-key view-mode-map "k" 'google-define)
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
