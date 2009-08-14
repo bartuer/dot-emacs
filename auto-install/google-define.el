@@ -40,6 +40,8 @@
 ;;;; will not make previous searches disappear.
 ;;;;
 ;;;; 2009-05-24 Added support for Aquamacs
+;;;;
+;;;; 2009-08-12 Bartuer sent in a patch for multiple language output.
 
 (require 'font-lock)
 
@@ -148,22 +150,35 @@
 google, and print in a temp-buffer"
  (let ((count 0)
        (header (concat "Definitions for " search-word))
-       (temp-buffer-show-hook #'google-define-font-lock))
+       (temp-buffer-show-hook #'google-define-font-lock)
+       (continue t))
    (with-output-to-temp-buffer 
        (concat "*Definitions: " search-word "*")
      (princ (concat header "\n\n"))
      (set-buffer data-buffer)
      (goto-char (point-min))
-     (while (search-forward-regexp "<li>\\([^<]+\\)" nil t)
-       (setq count (+ 1 count))
-       (let ((definition 
+     (search-forward-regexp "<div id=prs>" nil t) ;;Move to the div containing the definitions
+     (search-forward-regexp "<b>[^<]+" nil t) ;;Skip the "Web"
+     (search-forward-regexp "<b>[^<]+" nil t) ;;Skip the bold definitions title
+     (while (and (search-forward-regexp "\\(<[^>]+>\\)\\([^<]+\\)" nil t) continue)
+       (let ((tag (match-string 1))
+             (definition 
                (replace-regexp-in-string "\\(\n\\|\r\\|\t\\)" "" 
-                                         (match-string 1))))
+                                         (match-string 2))))
          (princ
           (with-temp-buffer
             (setf fill-prefix "     ")
             (save-excursion
-              (insert (format "%3d. %s\n\n" count definition)))
+              ;;(insert (format "%s\n" tag))
+              (cond
+               ((string-equal tag "<b>")
+                (setq count 0)
+                (insert (format "%s\n\n" definition)))
+               ((string-equal tag "<li>")
+                (setq count (+ 1 count))
+                (insert (format "%3d. %s\n\n" count definition)))
+               ((string-equal tag "<p>")
+                (setq continue nil))))
             (fill-paragraph nil)
             (google-define-replace-html)
             (google-define-replace-unicode)
@@ -190,6 +205,7 @@ If we have a current region use it's value as the default."
 (defconst google-define-font-lock-keywords
   (list
    (list "^Definitions.for.+$" '(0 font-lock-function-name-face))
+   (list "^[A-Z].+$" '(0 font-lock-variable-name-face))
    (list "^\\s-+.+$" '(0 font-lock-string-face))))
 
 (defun google-define-font-lock ()
