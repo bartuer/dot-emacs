@@ -1,4 +1,5 @@
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/bin")
+(file-cache-add-directory "~/etc/el/vendor/rcodetools/lib")
 (file-cache-add-directory "~/local/src/rails/actionpack/lib/action_view")
 (file-cache-add-directory "~/local/src/rails/actionpack/lib/action_view/helpers")
 (file-cache-add-directory "~/local/src/rails/actionpack/test/template")

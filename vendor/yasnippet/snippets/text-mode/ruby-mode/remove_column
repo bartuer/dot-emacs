@@ -1,8 +1,6 @@
-# name: rails
-# --
-# name: ${1:`(file-name-nondirectory (buffer-file-name))`} type migration model parameter rails 
+# name: remove_column migration model api rails 
 # (rdoc "ActiveRecord::Migration")
 # (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
 # (link "/Users/bartuer/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
 # --
-$1 :name, typeopt
+remove_column :${1:table_name}, :${2:column_name}

@@ -1,3 +1,0 @@
-#name : migrate rename column
-# --
-rename_column :${1:table_name}, :${2:old_name}, :${3:new_name}
