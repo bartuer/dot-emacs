@@ -45,6 +45,9 @@ class RubyToggleFile
 
   ACTIONPACK_IMP2TEST = { 'action_controller' => 'controller', 'action_controller/vendor/html-scanner/html' => 'controller/html-scanner', 'action_view/helpers' => 'template'}
   ACTIONPACK_TEST2IMP = ACTIONPACK_IMP2TEST.invert
+
+  ACTIVERECORD_IMP2TEST = { 'active_record' => 'cases'}
+  ACTIVERECORD_TEST2IMP = ACTIVERECORD_IMP2TEST.invert
   
   def test_file_00_rails(implementation, basedir, dir, node) # rails
     if m = %r!app/(models|controllers)/(.+)\.rb$!.match(implementation)
@@ -58,6 +61,13 @@ class RubyToggleFile
     end
   end
 
+  def test_file_02_activerecord(implementation, basedir, dir, node) # activerecord
+    if m = %r!lib/(active_record)/(.+)\.rb$!.match(implementation)
+      "%stest/%s/%s_test.rb" % [ m.pre_match, ACTIVERECORD_IMP2TEST[m[1]], m[2] ]
+    end
+    
+  end
+  
   def test_file_05_rails_lib(implementation, basedir, dir, node)
     if basedir and File.directory?( File.join(basedir, "app") )
       "#{basedir}test/unit/test_#{node}.rb"
@@ -93,7 +103,13 @@ class RubyToggleFile
       "%slib/%s/%s.rb" % [ m.pre_match, ACTIONPACK_TEST2IMP[m[1]], m[2] ]
     end
   end
-  
+
+  def implementation_file_02_activerecord(test, basedir, dir, node)
+    if m = %r!test/(cases)/(.+)_test.rb$!.match(test)
+      "%slib/%s/%s.rb" % [ m.pre_match, ACTIVERECORD_TEST2IMP[m[1]], m[2] ]
+    end
+  end
+
   def implementation_file_10_no_match(test, basename, dir, node)
     if dir == nil and node == nil and test =~ %r!/test_(.+)\.rb$!
       test.sub("/test_", "/")
