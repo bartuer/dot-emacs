@@ -68,6 +68,7 @@ lisp, really need add one.
 (defun actionpack-rct-option ()
   "-I/Users/bartuer/local/src/rails/actionpack/test -I/Users/bartuer/local/src/rails/actionpack/lib")
 
+;; (link "~/local/src/rails/activerecord/xmp-option" 1)
 (defun activerecord-rct-option ()
   "-I/Users/bartuer/local/src/rails/activerecord/lib -I/Users/bartuer/local/src/rails/activerecord/test -I/Users/bartuer/local/src/rails/activerecord/test/connections/native_sqlite3")
 
