@@ -1,0 +1,6 @@
+# name: finder select crud model controller parameter rails 
+# (rdoc "ActiveRecord::Base::find")
+# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
+# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder" 137)
+# --
+select => '${1:column1, column2}' '${2:DISTINCT authors.*}'
