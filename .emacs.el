@@ -245,19 +245,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'm 'flymake-mode)
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
 
-(require 'dict nil t)
+
 (require 'google-define nil t)
-(defun mydict (word)
-  "Lookup a WORD in the dictionary."
-  (interactive (list (dict-default-dict-entry)))
-  (if (string= word "")
-      (error "No dict args given"))
-  (dict-get-answer word))
-(when (fboundp 'dict-get-answer)
-  (global-set-key "\C-\M-m" 'mydict)
-  (add-hook 'view-mode-hook
-            (lambda ()
-              (define-key view-mode-map "\M-j" 'mydict))))
 
 (if (fboundp 'server-start)
     (server-start))
@@ -473,13 +462,13 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'yas/after-exit-snippet-hook (lambda ()
                                             (flymake-mode t)))
 
-(defalias 'y (lambda ()
-               (interactive)
-               (setq yas/use-menu nil)
-               (remhash major-mode yas/snippet-tables)
-               (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
-                (prin1-to-string major-mode)))
-               ))
+;; (defalias 'y (lambda ()
+;;                (interactive)
+;;                (setq yas/use-menu nil)
+;;                (remhash major-mode yas/snippet-tables)
+;;                (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
+;;                                              (prin1-to-string major-mode)))
+;;                ))
 
 
 (require 'rinari nil t)
