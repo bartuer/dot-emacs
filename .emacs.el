@@ -462,13 +462,15 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'yas/after-exit-snippet-hook (lambda ()
                                             (flymake-mode t)))
 
-;; (defalias 'y (lambda ()
-;;                (interactive)
-;;                (setq yas/use-menu nil)
-;;                (remhash major-mode yas/snippet-tables)
-;;                (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
-;;                                              (prin1-to-string major-mode)))
-;;                ))
+(defalias 'y (lambda ()
+               (interactive)
+               (setq yas/use-menu nil)
+               (remhash major-mode yas/snippet-tables)
+               (if (eq major-mode 'text-mode)
+                   (yas/reload-all)
+                 (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
+                                               (prin1-to-string major-mode))))
+               ))
 
 
 (require 'rinari nil t)

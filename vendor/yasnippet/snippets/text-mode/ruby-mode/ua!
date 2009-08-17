@@ -1,0 +1,5 @@
+# name: save! v[+] c[.] b[-] e[+] crUd model controller api rails 
+# (rdoc "ActiveRecord::Base.update_attributes!")
+# (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
+# --
+${1:instance}.update_attributes!(params[:$0])

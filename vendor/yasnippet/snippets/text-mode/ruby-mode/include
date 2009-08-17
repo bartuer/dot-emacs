@@ -1,5 +1,5 @@
 # name: finder include crud model controller parameter rails 
-# (rdoc "ActiveRecord::Base::find")
+# (rdoc "ActiveRecord::Base.find")
 # (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
 # (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder" 137)
 # --
