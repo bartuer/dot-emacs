@@ -20,7 +20,8 @@
 (defalias 'll (lambda ()
                 (interactive)
                 (kill-new (format "(link \"%s\" %d)"
-                                  (buffer-file-name)
+                                  (replace-regexp-in-string
+                                   (shell-command-to-string "printf $HOME")  "~"  (buffer-file-name))
                                   (point)))))
 (defalias 'r (lambda ()
                (interactive)
