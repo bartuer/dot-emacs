@@ -1,0 +1,5 @@
+# name: associations model parameter rails 
+# (rdoc "")
+# (link "/Users/bartuer/local/src/rails/activerecord/test/models/associations" 137)
+# --
+:${1:association}

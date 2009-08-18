@@ -11,7 +11,7 @@ find(:all :first :last$0,
      :having => sql,
      :limit => ${1:number},
      :offset => ${2:number},
-     :order => '${3:column} DESC ASC',
+     :order => '${3:column} DESC',
      :group => '${4:column}',
      :readonly => true
      )

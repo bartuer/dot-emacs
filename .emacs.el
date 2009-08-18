@@ -247,7 +247,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (require 'google-define nil t)
-
+(defalias 'gd 'google-define)
 (if (fboundp 'server-start)
     (server-start))
 (if (fboundp 'show-paren-mode)

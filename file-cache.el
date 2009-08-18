@@ -1,3 +1,4 @@
+(file-cache-add-directory "~/local/src/rails3-tut-code/e1/ar")
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/bin")
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/lib")
 (file-cache-add-directory "~/local/src/rails/actionpack/lib/action_view")

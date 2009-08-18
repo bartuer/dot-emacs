@@ -1,0 +1,4 @@
+# name: has_one and belongs_to dependent associations model parameters rails 
+# (rdoc "ActiveRecord::Associations::ClassMethods#belongs_to")
+# --
+:dependent => ${1::delete} ${2::destroy}
