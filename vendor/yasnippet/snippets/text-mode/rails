@@ -1,7 +1,10 @@
 # name: rails
 # --
-# name: ${1:`(file-name-nondirectory (buffer-file-name))`} associations model api rails 
-# (rdoc "")
-# (link "~/local/src/rails/activerecord/test/models/associations" 137)
+# name: ${1:`(file-name-nondirectory (buffer-file-name))`} validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#$1")
 # --
-:$1
+$1(:{1:name},
+:on => :create :update :save,
+:allow_nil => false,
+:if => Proc.new { |o| {2:condition}},
+:message => '')

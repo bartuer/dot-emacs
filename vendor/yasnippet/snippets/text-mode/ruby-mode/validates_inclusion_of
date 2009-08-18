@@ -1,0 +1,10 @@
+# name: validates_inclusion_of validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_inclusion_of")
+# --
+validates_inclusion_of(:${1:name},
+                       :on => :create :update :save,
+                       :in => a,
+                       :allow_nil => false,
+                       :if => Proc.new { |o| ${2:condition}},
+                       :allow_blank => false,
+                       :message => '')

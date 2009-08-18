@@ -1,0 +1,8 @@
+# name: validates_associated validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_associated")
+# --
+validates_associated(:${1:association},
+                     :on => :create :update :save,
+                     :allow_nil => false,
+                     :if => Proc.new { |o| ${2:condition}},
+                     :message => '')

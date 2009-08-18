@@ -1,0 +1,17 @@
+# name: validates_length_of validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_length_of")
+# --
+validates_length_of(:${1:name},
+                    :on => :create :update :save,
+                    :minimum => 0,
+                    :maximum => 0,
+                    :is => 0,
+                    :within => 1..10,
+                    :too_long => '',
+                    :too_short => '',
+                    :wrong_length => '',
+                    :tokenizer => lambda {|str| str.scan(/\w+\)},
+                    :allow_nil => false,
+                    :allow_blank => flase,
+                    :if => Proc.new { |o| ${2:condition}},
+                    :message => '')

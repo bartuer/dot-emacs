@@ -1,0 +1,6 @@
+# name: validates_each validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_each")
+# --
+validates_each :${1:name1}, :${2:name2}, ${3:`(yas/p ":on" ":create :update :save")`}, ${4:`(yas/p ":allow_nil" "true")`}, ${5:`(yas/p ":allow_blank" "true")`}, :if => Proc.new { |o| condition}, do |record, attr, value|
+  $0
+end

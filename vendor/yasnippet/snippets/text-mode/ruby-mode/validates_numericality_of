@@ -1,0 +1,16 @@
+# name: validates_numericality_of validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_numericality_of")
+# --
+validates_numericality_of(:${1:name},
+                          :on => :create :update :save,
+                          :only_integer => true,
+                          :greater_than => 0,
+                          :greater_than_or_equal_to => 0,
+                          :equal_to => 0,
+                          :less_than => 0,
+                          :less_than_or_equal_to => 0,
+                          :odd => true,
+                          :even => false,
+                          :if => Proc.new { |o| ${2:condition}},
+                          :allow_nil => false,
+                          :message => '')

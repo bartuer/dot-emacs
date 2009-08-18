@@ -1,0 +1,8 @@
+# name: validates_acceptance_of validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_acceptance_of")
+# --
+validates_acceptance_of(:${1:name},
+                        :on => :create :update :save,
+                        :allow_nil => false,
+                        :if => proc { |o| ${2:condition}},
+                        :message => '')
