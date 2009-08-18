@@ -1,7 +1,7 @@
 # name: find crud model controller api rails 
 # (rdoc "ActiveRecord::Base::find")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder" 137)
+# (link "~/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
+# (link "~/local/src/rails/activerecord/test/cases/finder" 137)
 # --
 find(:all :first :last$0,
      :include,

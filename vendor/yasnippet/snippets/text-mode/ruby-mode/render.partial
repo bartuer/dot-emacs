@@ -1,7 +1,7 @@
 # name : partial render controller api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 15169)
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 41290)
-# (link "/Users/bartuer/local/src/rails/actionpack/lib/action_view/partials.rb" 8361)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 15169)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 41290)
+# (link "~/local/src/rails/actionpack/lib/action_view/partials.rb" 8361)
 # (rdoc "ActionView::Partials")
 # (yas/tap) render, :partial partial_template partial_form, :collection a, :as symbol, :locals h, :object obj, :layout 'template_name' true
 # --

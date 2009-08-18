@@ -1,7 +1,7 @@
 # name: has_many associations model api rails 
 # (rdoc "ActiveRecord::Associations::ClassMethods#has_many")
 # (rdoc "ActiveRecord::Associations::ClassMethods")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/models/associations" 137)
+# (link "~/local/src/rails/activerecord/test/models/associations" 137)
 # --
 has_many(asso$0,
         :class_name => '${1:Class}',

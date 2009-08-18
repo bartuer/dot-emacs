@@ -1,5 +1,5 @@
 # name : verify controller api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/verification_test.rb" 4032)
+# (link "~/local/src/rails/actionpack/test/controller/verification_test.rb" 4032)
 # (rdoc "ActionController::Verification::ClassMethods#verify")
 # (yas/tap) verify, :params 'p', :session 'n', :flash 'f', :add_flash h, add_headers h, :only :, except :
 # --

@@ -1,5 +1,5 @@
 # name : redirect_to controller api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/redirect_test.rb" 1802)
+# (link "~/local/src/rails/actionpack/test/controller/redirect_test.rb" 1802)
 # (rdoc "ActionController::Base#redirect_to")
 # @controller.redirect_to_url	
 # --

@@ -1,6 +1,6 @@
 # name: extention do associations model parameter rails 
 # (rdoc "ActiveRecord::Associations::ClassMethods#has_and_belongs_to_many")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/models/associations" 137)
+# (link "~/local/src/rails/activerecord/test/models/associations" 137)
 # --
 do
   def ${1:method}

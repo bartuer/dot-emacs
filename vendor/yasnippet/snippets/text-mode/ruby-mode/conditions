@@ -1,6 +1,6 @@
 # name: finder conditions crud model controller parameter rails 
 # (rdoc "ActiveRecord::Base::find")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/finder" 137)
+# (link "~/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
+# (link "~/local/src/rails/activerecord/test/cases/finder" 137)
 # --
 conditions => h ${1:"comment.id is not null"} ${2:['name like ?', params[:name] + '%']} ${3:['id in (?)', [p1, p2]]}

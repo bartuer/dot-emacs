@@ -1,6 +1,6 @@
 # name : around object filter controller rails
 # (rdoc "ActionController::Filters::ClassMethods")
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/filters_test.rb" 6403)
+# (link "~/local/src/rails/actionpack/test/controller/filters_test.rb" 6403)
 # --
 class ${1:Authorizer}
 

@@ -1,9 +1,9 @@
 # name: belongs_to associations model api rails 
 # (rdoc "ActiveRecord::Associations::ClassMethods#belongs_to")
 # (rdoc "ActiveRecord::Associations::ClassMethods")
-# (link "/Users/bartuer/local/src/rails3-tut-code/e1/ar/counters.rb" 1064)
-# (link "/Users/bartuer/local/src/rails3-tut-code/e1/ar/polymorphic.rb" 1145)
-# (link "/Users/bartuer/local/src/rails/activerecord/test/models/associations" 137)
+# (link "~/local/src/rails3-tut-code/e1/ar/counters.rb" 1064)
+# (link "~/local/src/rails3-tut-code/e1/ar/polymorphic.rb" 1145)
+# (link "~/local/src/rails/activerecord/test/models/associations" 137)
 # --
 belongs_to(asso$0,
            :class_name => '${1:Class}',

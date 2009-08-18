@@ -1,6 +1,6 @@
 # name: decimal type migration model parameter rails 
 # (rdoc "ActiveRecord::Migration")
 # (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
+# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
 # --
 :decimal$0$0, typeopt, :precision => ${1:8}, :scale => ${2:2}

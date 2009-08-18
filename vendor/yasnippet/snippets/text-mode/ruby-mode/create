@@ -1,8 +1,8 @@
 # name: create v[+] c[.] b[-] e[-] Crud model controller api rails
 # (rdoc "ActiveRecord::Base.create")
-# (link "/Users/bartuer/local/src/rails/activerecord/lib/active_record/validations.rb" 52445) create!
-# (link "/Users/bartuer/local/src/rails/activerecord/lib/active_record/base.rb" 37187) create
-# (link "/Users/bartuer/local/src/rails/activerecord/lib/active_record/base.rb" 128144) low-level create
+# (link "~/local/src/rails/activerecord/lib/active_record/validations.rb" 52445) create!
+# (link "~/local/src/rails/activerecord/lib/active_record/base.rb" 37187) create
+# (link "~/local/src/rails/activerecord/lib/active_record/base.rb" 128144) low-level create
 # (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
 # --
 ${1:instance} = ${2:Class}.create(:$0)

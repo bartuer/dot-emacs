@@ -1,7 +1,7 @@
 # name : xml partial render controller api rails
 # render :xml not really generate the xml, it only set the response head content_type to application/xml
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 13355)
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 38810)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 13355)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 38810)
 # (rdoc "ActionController::Base#render")
 # (yas/tap) render, :xml h a, :locals h, :object obj, location 'url', :status 201
 # --

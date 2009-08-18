@@ -1,5 +1,5 @@
 # name : get cookie value controller api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/cookie_test.rb" 2761)
+# (link "~/local/src/rails/actionpack/test/controller/cookie_test.rb" 2761)
 # (rdoc "ActionController::Cookies")
 # --
 $0cookies[:${1:key}]

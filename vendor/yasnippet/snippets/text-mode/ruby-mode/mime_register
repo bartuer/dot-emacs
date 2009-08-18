@@ -1,6 +1,6 @@
 # name :  register mime content_type accept configure api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/lib/action_controller/mime_types.rb" 261)
-# (link "/Users/bartuer/local/src/baza/config/environment.rb" 1)
+# (link "~/local/src/rails/actionpack/lib/action_controller/mime_types.rb" 261)
+# (link "~/local/src/baza/config/environment.rb" 1)
 # (rdoc "ActionController::MimeResponds::InstanceMethods#respond_to")
 # --
 Mime::Type.register "${1:text/html}", :${2:iphone}

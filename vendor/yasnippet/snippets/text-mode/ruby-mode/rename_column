@@ -1,6 +1,6 @@
 # name: rename_column  migration model api rails 
 # (rdoc "ActiveRecord::Migration")
 # (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
-# (link "/Users/bartuer/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
+# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
 # --
 rename_column "${1:table_name}", "${2:old_column_name}", "${3:new_name}"

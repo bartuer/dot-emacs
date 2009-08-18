@@ -1,8 +1,8 @@
 # name : update partial render controller api rails
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 5785)
-# (link "/Users/bartuer/local/src/rails/actionpack/test/controller/render_test.rb" 24654)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 5785)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 24654)
 # (rdoc "ActionView::Helpers::ScriptaculousHelper")
-# (link "/Users/bartuer/local/src/rails/actionpack/lib/action_view/helpers/scriptaculous_helper.rb" 2044)
+# (link "~/local/src/rails/actionpack/lib/action_view/helpers/scriptaculous_helper.rb" 2044)
 # (rdoc "ActionController::Base#render")
 # --
 render :update $0 do |page|
