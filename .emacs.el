@@ -14,7 +14,7 @@
 
 (defun link (file point)
   (interactive)
-  (find-file file)
+  (find-file-other-window file)
   (goto-char point))
 
 (defalias 'll (lambda ()
