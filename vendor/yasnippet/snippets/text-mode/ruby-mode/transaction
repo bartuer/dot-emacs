@@ -4,6 +4,6 @@
 # (link "~/local/src/rails/actionpack/lib/action_controller/translation.rb" 1)
 # (shell-command "cd ~/local/src/rails;git-diff 905860765 905860765~")
 # --
-${1:Model}.transaction do
+${1:Model}.transaction(${2:para1},${3:para2}) do
   $0
 end
