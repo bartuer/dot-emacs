@@ -1,0 +1,5 @@
+# name: destroy callback model api rails 
+# (rdoc "ActiveRecord::Callbacks")
+# (link "~/scripts/cheat-sheet" 8626)
+# --
+${1:before}_destroy :${2:method} callbackdo

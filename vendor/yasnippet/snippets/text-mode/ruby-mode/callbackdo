@@ -1,0 +1,7 @@
+# name: callbackdo callback model parameter rails 
+# (rdoc "ActiveRecord::Callbacks")
+# (link "~/scripts/cheat-sheet" 8626)
+# --
+do |${1:object}|
+  $0
+end

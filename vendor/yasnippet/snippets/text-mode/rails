@@ -1,10 +1,7 @@
 # name: rails
 # --
-# name: ${1:`(file-name-nondirectory (buffer-file-name))`} validate model api rails 
-# (rdoc "ActiveRecord::Validations::ClassMethods#$1")
+# name: ${1:`(file-name-nondirectory (buffer-file-name))`} callback model rails 
+# (rdoc "ActiveRecord::Callbacks")
+# (link "~/scripts/cheat-sheet" 8626)
 # --
-$1(:{1:name},
-:on => :create :update :save,
-:allow_nil => false,
-:if => Proc.new { |o| {2:condition}},
-:message => '')
+{1:before}_$1 :{2:method} callbackdo
