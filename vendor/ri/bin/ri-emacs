@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#! /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 ## drop-in replacement for the ri-emacs helper script for use 
 #  with ri-ruby.el, using the FastRI service via DRb
 #

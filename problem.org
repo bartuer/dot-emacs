@@ -1,0 +1,28 @@
+   MACBOOK PRO PROBLEMS (I do not know why, but install iphone SDK,
+   all things resolved) <2009-08-20 Thu>
+* screen could not handle unicode again [5/5] 
+  - [X] term screen.xterm-new do not work
+  - [X] problem caused by that file, should compare with elder machine
+  - [X] if use that config, emacs could not start up
+  - [X] should split screen and emacs startup ?
+  - [X] if there is no screen, could not hide star mark in org
+* ri do not work, can not find fastri/util [7/7]
+  - [X] ruby setup.rb in fastri package
+  - [X] how to update all sixty packages?
+  - [X] maybe all ruby lib under system directory could not be
+    migrated successfully
+  - [X] copy all files under /System/Library/Frameworks/Ruby.framework
+  - [X] install new version gem
+  - [X] I should use gem install to install them under ~/.gem not the
+    system, it is my fault
+  - [X] gem update, 18 success but many failed for need compile environment
+* xcode problems [5/5]
+  - [X] if library under /System could not be migration, then need
+    reinstall xcode
+  - [X] indeed there is no xcode already
+  - [X] it block me install new versoin of screen, and all ports and
+    some gems depend on extension wrote in c
+  - [X] the problem is: should upgrade to 3.0 ? 
+        try copy files first
+  - [X] could I copy the /Developer directory resolve it?
+        NOT

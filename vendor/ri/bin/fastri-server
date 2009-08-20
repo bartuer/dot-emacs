@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#! /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
 # fastri-server: serve RI documentation over DRb 
 # Copyright (C) 2006  Mauricio Fernandez <mfp@acm.org>
 
