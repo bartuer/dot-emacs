@@ -7098,7 +7098,8 @@ optional argument IN-EMACS is non-nil, Emacs will visit the file."
 
   (cond
    ((and (stringp (ffap-file-at-point))
-         (not (string-match-p "^http:.*" (ffap-string-at-point))))
+         (not (string-match-p "^http:.*" (ffap-string-at-point)))
+         (not (string-match-p "^https:.*" (ffap-string-at-point))))
     (browse-url
      (file-name-directory
       (expand-file-name
