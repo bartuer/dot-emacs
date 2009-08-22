@@ -540,7 +540,7 @@ which doesn't seem particularly useful, but Rhino permits it."
 (defvar js2-DOT 107)           ; member operator (.)
 (defvar js2-FUNCTION 108)      ; function keyword
 (defvar js2-EXPORT 109)        ; export keyword
-(defvar js2-IMPORT 110)        ; import keyword
+(defvar js2-IMPORTJS 110)        ; import keyword
 (defvar js2-IF 111)            ; if keyword
 (defvar js2-ELSE 112)          ; else keyword
 (defvar js2-SWITCH 113)        ; switch keyword
@@ -1749,7 +1749,7 @@ into temp buffers."
     debugger default delete do
     else enum
     false finally for function
-    if in instanceof import
+    if in instanceof importjs
     let
     new null
     return
@@ -1769,7 +1769,7 @@ into temp buffers."
                js2-DEBUGGER js2-DEFAULT js2-DELPROP js2-DO
                js2-ELSE
                js2-FALSE js2-FINALLY js2-FOR js2-FUNCTION
-               js2-IF js2-IN js2-INSTANCEOF js2-IMPORT
+               js2-IF js2-IN js2-INSTANCEOF js2-IMPORTJS
                js2-LET
                js2-NEW js2-NULL
                js2-RETURN
@@ -5934,7 +5934,7 @@ You should use `js2-print-tree' instead of this function."
                       js2-IF
                       js2-IFEQ
                       js2-IFNE
-                      js2-IMPORT
+                      js2-IMPORTJS
                       js2-INC
                       js2-JSR
                       js2-LABEL
