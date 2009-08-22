@@ -48,6 +48,8 @@
     (flyspell-prog-mode))
   (yas/minor-mode-on)
   (flymake-mode t)
+  (setq js2-mode-show-overlay t)
+  (defalias  'w 'js2-mode-show-node)
   (define-key js2-mode-map "\C-cj" 'js-test-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-test-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
