@@ -565,7 +565,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)) 
 
 
-(autoload 'css-mode "css-mode-simple.el"
+(autoload 'css-mode "css-mode.el"
   "mode for css file" t nil)
 (require 'css-mode nil t)
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
