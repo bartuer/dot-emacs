@@ -321,7 +321,8 @@
   (newline-and-indent)
   (previous-line)
   (insert ":")                          ;here yas kicked in
-  (css-mode-indent-line)
+  (backward-char)
+  (css-indent-line)
   (forward-char)
   )
 
