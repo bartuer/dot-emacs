@@ -41,9 +41,9 @@
 
 (defun css-extract-keyword-list (res)
   (with-temp-buffer
-    (url-insert-file-contents "http://www.w3.org/TR/REC-CSS2/css2.txt")
+    (url-insert-file-contents "http://www.w3.org/TR/CSS2/css2.txt")
     (goto-char (point-max))
-    (search-backward "Appendix H. Index")
+    (search-backward "Appendix I. Index")
     (forward-line)
     (delete-region (point-min) (point))
     (let ((result nil)
@@ -217,7 +217,7 @@
 (defface css-selector '((t :inherit font-lock-function-name-face))
   "Face to use for selectors."
   :group 'css)
-(defface css-property '((t :inherit font-lock-variable-name-face))
+(defface css-property '((t :inherit font-lock-keyword-face))
   "Face to use for properties."
   :group 'css)
 
@@ -257,10 +257,42 @@
 (defvar css-font-lock-defaults
   '(css-font-lock-keywords nil t))
 
+(setq css-selector-re (concat "^\\([ \t]*[^@:{\n][^:{\n]+\\(?::" (regexp-opt css-pseudo-ids t)
+              "\\(?:([^)]+)\\)?[^:{\n]*\\)*\\)\\(?:\n[ \t]*\\)*{"))
+
+(defun css-imenu-create-index ()
+  "create imenu index for css"
+  (interactive)
+  (let ((index-alist '()) (case-fold-search nil)
+        name pos)
+    (goto-char (point-min))
+    (while (re-search-forward css-selector-re (point-max) t)
+      (setq name (match-string 1))
+      (setq pos (match-beginning 0))
+      (push (cons name pos) index-alist))
+    (nreverse index-alist)))
+
+(defun css-mode-electric-insert-close-brace ()
+  "Insert a closing brace }."
+  (interactive)
+  (insert "{}")
+  (backward-char)
+  (newline-and-indent)
+  (newline-and-indent)
+  (previous-line)
+  (insert ":")                          ;here yas kicked in
+  (css-mode-indent-line)
+  (forward-char)
+  )
+
 ;;;###autoload (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 ;;;###autoload
 (define-derived-mode css-mode fundamental-mode "CSS"
   "Major mode to edit Cascading Style Sheets."
+  (setq css-mode-map (make-sparse-keymap))
+  (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
+  (set (make-local-variable 'imenu-create-index-function)
+       'css-imenu-create-index)
   (set (make-local-variable 'font-lock-defaults) css-font-lock-defaults)
   (set (make-local-variable 'comment-start) "/*")
   (set (make-local-variable 'comment-start-skip) "/\\*+[ \t]*")
@@ -277,6 +309,8 @@
       (dolist (c css-electric-keys)
         (aset fc c 'indent-according-to-mode))
       (set (make-local-variable 'auto-fill-chars) fc))))
+
+ 
 
 (defvar comment-continue)
 

@@ -99,6 +99,7 @@
   ;; If there is more than one, they won't work right.
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
+ '(css-property ((t (:inherit font-lock-keyword-face))))
  '(cursor ((t (:foreground "white"))))
  '(custom-comment-tag ((((class color) (background light)) (:foreground "cyan"))))
  '(erb-face ((((class color) (min-colors 8)) nil)))

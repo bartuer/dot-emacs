@@ -1,0 +1,4 @@
+# name : key value pair
+# --
+${1:k} : ${2:v};
+:$0
