@@ -133,7 +133,7 @@
          (lambda ()
            (condition-case x
                (setq anything-yasnippet-completion-table (mapcar 'anything-js-etags-parser
-                                                             (split-string (shell-command-to-string "cat ~/etc/el/js/TAGS|grep ^[a-zA-Z0-9_].* |sed 's+\.<definition-[0-9]*>++g'|uniq") "\n")))
+                                                             (split-string (shell-command-to-string "cat ~/etc/el/js/TAGS|grep [a-zA-Z0-9_].* |sed 's+\.<definition-[0-9]*>++g'|uniq") "\n")))
              (error (setq anything-yasnippet-completion-table nil))
              )
            )
@@ -167,7 +167,8 @@
          . 
          (lambda ()
            (condition-case x
-               (setq anything-yasnippet-introspect-table (mapcar
+               ;; should be depend on the mode, for inf-mozrepl-mode, should use it's own inspect function
+               (setq anything-yasnippet-introspect-table (mapcar 
                                                           'anything-js-introspect-parser
                                                           (split-string
                                                           (shell-command-to-string

@@ -1,0 +1,3 @@
+# name : getElementsByTagName
+# --
+document.getElementsByTagName("${1:tag}")

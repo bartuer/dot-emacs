@@ -1,0 +1,3 @@
+# name : getElementsByClassName
+# --
+document.getElementsByClassName("${1:class}")
