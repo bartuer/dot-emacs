@@ -1,4 +1,4 @@
 # name : speak
-# (css-extract-props-and-vals)
+# (css-find "speak")
 # --
 speak :$0 spell-out none normal ;

@@ -1,4 +1,4 @@
 # name : font-family
-# (css-extract-props-and-vals)
+# (css-find "font-family")
 # --
 font-family :$0 generic-family family-name generic-family family-name ;

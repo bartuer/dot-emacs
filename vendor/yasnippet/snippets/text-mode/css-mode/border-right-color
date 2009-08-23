@@ -1,4 +1,4 @@
 # name : border-right-color
-# (css-extract-props-and-vals)
+# (css-find "border-right-color")
 # --
 border-right-color :$0 transparent color ;

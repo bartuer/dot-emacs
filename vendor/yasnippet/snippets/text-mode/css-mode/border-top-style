@@ -1,4 +1,4 @@
 # name : border-top-style
-# (css-extract-props-and-vals)
+# (css-find "border-top-style")
 # --
 border-top-style :$0 border-style ;

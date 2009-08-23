@@ -1,4 +1,4 @@
 # name : list-style-position
-# (css-extract-props-and-vals)
+# (css-find "list-style-position")
 # --
 list-style-position :$0 outside inside ;

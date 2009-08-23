@@ -1,4 +1,4 @@
 # name : vertical-align
-# (css-extract-props-and-vals)
+# (css-find "vertical-align")
 # --
 vertical-align :$0 5 50% text-bottom bottom middle text-top top super sub baseline ;

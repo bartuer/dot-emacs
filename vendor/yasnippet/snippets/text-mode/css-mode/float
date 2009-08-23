@@ -1,4 +1,4 @@
 # name : float
-# (css-extract-props-and-vals)
+# (css-find "float")
 # --
 float :$0 none right left ;

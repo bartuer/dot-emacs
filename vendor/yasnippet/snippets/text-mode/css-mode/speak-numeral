@@ -1,4 +1,4 @@
 # name : speak-numeral
-# (css-extract-props-and-vals)
+# (css-find "speak-numeral")
 # --
 speak-numeral :$0 continuous digits ;

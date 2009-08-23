@@ -1,4 +1,4 @@
 # name : margin
-# (css-extract-props-and-vals)
+# (css-find "margin")
 # --
 margin :$0 margin-width ;

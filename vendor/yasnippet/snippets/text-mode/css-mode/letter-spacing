@@ -1,4 +1,4 @@
 # name : letter-spacing
-# (css-extract-props-and-vals)
+# (css-find "letter-spacing")
 # --
 letter-spacing :$0 5 normal ;

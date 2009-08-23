@@ -1,4 +1,4 @@
 # name : height
-# (css-extract-props-and-vals)
+# (css-find "height")
 # --
 height :$0 auto 50% 5 ;

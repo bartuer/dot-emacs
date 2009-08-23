@@ -1,4 +1,4 @@
 # name : richness
-# (css-extract-props-and-vals)
+# (css-find "richness")
 # --
 richness :$0 5 ;

@@ -1,4 +1,4 @@
 # name : elevation
-# (css-extract-props-and-vals)
+# (css-find "elevation")
 # --
 elevation :$0 lower higher above level below angle ;

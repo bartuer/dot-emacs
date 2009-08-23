@@ -1,4 +1,4 @@
 # name : padding-right
-# (css-extract-props-and-vals)
+# (css-find "padding-right")
 # --
 padding-right :$0 padding-width ;

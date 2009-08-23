@@ -1,4 +1,4 @@
 # name : page-break-before
-# (css-extract-props-and-vals)
+# (css-find "page-break-before")
 # --
 page-break-before :$0 right left avoid always auto ;

@@ -1,4 +1,4 @@
 # name : position
-# (css-extract-props-and-vals)
+# (css-find "position")
 # --
 position :$0 fixed absolute relative static ;

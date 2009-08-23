@@ -1,4 +1,4 @@
 # name : z-index
-# (css-extract-props-and-vals)
+# (css-find "z-index")
 # --
 z-index :$0 5 auto ;

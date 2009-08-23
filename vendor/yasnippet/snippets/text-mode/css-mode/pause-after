@@ -1,4 +1,4 @@
 # name : pause-after
-# (css-extract-props-and-vals)
+# (css-find "pause-after")
 # --
 pause-after :$0 50% time ;

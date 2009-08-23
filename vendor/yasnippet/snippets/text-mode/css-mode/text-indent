@@ -1,4 +1,4 @@
 # name : text-indent
-# (css-extract-props-and-vals)
+# (css-find "text-indent")
 # --
 text-indent :$0 50% 5 ;

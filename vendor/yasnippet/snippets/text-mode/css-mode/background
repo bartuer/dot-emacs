@@ -1,4 +1,4 @@
 # name : background
-# (css-extract-props-and-vals)
+# (css-find "background")
 # --
 background :$0 bottom center top right left 5 50% fixed scroll no-repeat repeat-y repeat-x repeat none uri transparent color ;

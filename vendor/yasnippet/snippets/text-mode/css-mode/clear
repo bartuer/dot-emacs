@@ -1,4 +1,4 @@
 # name : clear
-# (css-extract-props-and-vals)
+# (css-find "clear")
 # --
 clear :$0 both right left none ;

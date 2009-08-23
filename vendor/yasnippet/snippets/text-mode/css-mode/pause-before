@@ -1,4 +1,4 @@
 # name : pause-before
-# (css-extract-props-and-vals)
+# (css-find "pause-before")
 # --
 pause-before :$0 50% time ;

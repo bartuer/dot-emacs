@@ -1,4 +1,4 @@
 # name : overflow
-# (css-extract-props-and-vals)
+# (css-find "overflow")
 # --
 overflow :$0 auto scroll hidden visible ;

@@ -1,4 +1,4 @@
 # name : border-spacing
-# (css-extract-props-and-vals)
+# (css-find "border-spacing")
 # --
 border-spacing :$0 5 5 ;

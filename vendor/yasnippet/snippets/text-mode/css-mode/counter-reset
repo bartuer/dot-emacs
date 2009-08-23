@@ -1,4 +1,4 @@
 # name : counter-reset
-# (css-extract-props-and-vals)
+# (css-find "counter-reset")
 # --
 counter-reset :$0 none 5 identifier ;

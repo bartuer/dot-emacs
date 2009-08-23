@@ -1,4 +1,4 @@
 # name : widows
-# (css-extract-props-and-vals)
+# (css-find "widows")
 # --
 widows :$0 5 ;

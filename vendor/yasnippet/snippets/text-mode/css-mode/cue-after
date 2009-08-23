@@ -1,4 +1,4 @@
 # name : cue-after
-# (css-extract-props-and-vals)
+# (css-find "cue-after")
 # --
 cue-after :$0 none uri ;

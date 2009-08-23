@@ -1,4 +1,4 @@
 # name : background-attachment
-# (css-extract-props-and-vals)
+# (css-find "background-attachment")
 # --
 background-attachment :$0 fixed scroll ;

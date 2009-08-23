@@ -1,4 +1,4 @@
 # name : border-right-style
-# (css-extract-props-and-vals)
+# (css-find "border-right-style")
 # --
 border-right-style :$0 border-style ;

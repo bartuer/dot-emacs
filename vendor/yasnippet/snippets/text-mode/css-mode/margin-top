@@ -1,4 +1,4 @@
 # name : margin-top
-# (css-extract-props-and-vals)
+# (css-find "margin-top")
 # --
 margin-top :$0 margin-width ;

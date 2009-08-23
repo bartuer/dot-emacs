@@ -1,4 +1,4 @@
 # name : padding-bottom
-# (css-extract-props-and-vals)
+# (css-find "padding-bottom")
 # --
 padding-bottom :$0 padding-width ;

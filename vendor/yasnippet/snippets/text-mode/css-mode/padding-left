@@ -1,4 +1,4 @@
 # name : padding-left
-# (css-extract-props-and-vals)
+# (css-find "padding-left")
 # --
 padding-left :$0 padding-width ;

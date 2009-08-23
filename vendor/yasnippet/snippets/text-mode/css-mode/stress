@@ -1,4 +1,4 @@
 # name : stress
-# (css-extract-props-and-vals)
+# (css-find "stress")
 # --
 stress :$0 5 ;

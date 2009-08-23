@@ -122,6 +122,13 @@
 ;;    (property . "^ +\\* '\\([^ '\n]+\\)',")))
 
 
+(defun css-find (keyword)
+  "check what the property means"
+  (interactive)
+  (find-file "~/local/share/doc/css2.txt")
+  (with-current-buffer "css2.txt"
+  (list-matching-lines keyword 3)))
+
 (defun yas/css (l)
   (find-file (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/css-mode/" (car l)))
   (with-current-buffer (car l)
@@ -129,7 +136,7 @@
       (insert
        (concat
        "# name : " (car l) "\n"
-       "# (css-extract-props-and-vals)\n"
+       "# (css-find \"" (car l) "\")\n"
        "# --\n"
        (car l)
        " :$0 "

@@ -1,4 +1,4 @@
 # name : speak-header
-# (css-extract-props-and-vals)
+# (css-find "speak-header")
 # --
 speak-header :$0 always once ;

@@ -1,4 +1,4 @@
 # name : play-during
-# (css-extract-props-and-vals)
+# (css-find "play-during")
 # --
 play-during :$0 none auto repeat mix uri ;

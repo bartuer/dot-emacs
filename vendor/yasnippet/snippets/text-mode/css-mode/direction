@@ -1,4 +1,4 @@
 # name : direction
-# (css-extract-props-and-vals)
+# (css-find "direction")
 # --
 direction :$0 rtl ltr ;

@@ -1,4 +1,4 @@
 # name : border-top-width
-# (css-extract-props-and-vals)
+# (css-find "border-top-width")
 # --
 border-top-width :$0 border-width ;

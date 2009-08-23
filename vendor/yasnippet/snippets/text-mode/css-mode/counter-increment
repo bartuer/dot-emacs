@@ -1,4 +1,4 @@
 # name : counter-increment
-# (css-extract-props-and-vals)
+# (css-find "counter-increment")
 # --
 counter-increment :$0 none 5 identifier ;

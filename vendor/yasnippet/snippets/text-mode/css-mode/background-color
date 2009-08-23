@@ -1,4 +1,4 @@
 # name : background-color
-# (css-extract-props-and-vals)
+# (css-find "background-color")
 # --
 background-color :$0 transparent color ;
