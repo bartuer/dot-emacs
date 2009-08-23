@@ -7,4 +7,6 @@
   (define-key rhtml-mode-map "\C-\M-b" 'sgml-skip-tag-backward)
   (define-key rhtml-mode-map "\C-c\C-a" 'sgml-attributes)
   (define-key rhtml-mode-map "\C-c\C-t" 'sgml-tag)
-  (define-key rhtml-mode-map "\C-c\C-ct" 'sgml-close-tag))
+  (define-key rhtml-mode-map "\C-c\C-ct" 'sgml-close-tag)
+  (define-key rhtml-mode-map "\M--" 'rhtml-dashize)
+  )
