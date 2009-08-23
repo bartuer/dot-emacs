@@ -1,0 +1,4 @@
+# name : outline-color
+# (css-extract-props-and-vals)
+# --
+outline-color :$0 invert color ;

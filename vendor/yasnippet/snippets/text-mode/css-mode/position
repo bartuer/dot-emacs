@@ -1,0 +1,4 @@
+# name : position
+# (css-extract-props-and-vals)
+# --
+position :$0 fixed absolute relative static ;

@@ -1,0 +1,4 @@
+# name : border-collapse
+# (css-extract-props-and-vals)
+# --
+border-collapse :$0 separate collapse ;

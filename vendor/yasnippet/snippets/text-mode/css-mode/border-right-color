@@ -1,0 +1,4 @@
+# name : border-right-color
+# (css-extract-props-and-vals)
+# --
+border-right-color :$0 transparent color ;

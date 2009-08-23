@@ -1,0 +1,4 @@
+# name : caption-side
+# (css-extract-props-and-vals)
+# --
+caption-side :$0 bottom top ;

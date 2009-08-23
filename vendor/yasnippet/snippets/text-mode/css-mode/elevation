@@ -1,0 +1,4 @@
+# name : elevation
+# (css-extract-props-and-vals)
+# --
+elevation :$0 lower higher above level below angle ;

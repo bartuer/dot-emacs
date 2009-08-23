@@ -1,0 +1,4 @@
+# name : right
+# (css-extract-props-and-vals)
+# --
+right :$0 auto 50% 5 ;

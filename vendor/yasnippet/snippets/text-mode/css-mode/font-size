@@ -1,0 +1,4 @@
+# name : font-size
+# (css-extract-props-and-vals)
+# --
+font-size :$0 50% 5 relative-size 12px ;

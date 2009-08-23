@@ -1,0 +1,4 @@
+# name : text-transform
+# (css-extract-props-and-vals)
+# --
+text-transform :$0 none lowercase uppercase capitalize ;

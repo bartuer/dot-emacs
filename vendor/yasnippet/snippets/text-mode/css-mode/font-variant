@@ -1,0 +1,4 @@
+# name : font-variant
+# (css-extract-props-and-vals)
+# --
+font-variant :$0 small-caps normal ;

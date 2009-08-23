@@ -1,0 +1,4 @@
+# name : font-style
+# (css-extract-props-and-vals)
+# --
+font-style :$0 oblique italic normal ;

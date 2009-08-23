@@ -1,0 +1,4 @@
+# name : border-left-width
+# (css-extract-props-and-vals)
+# --
+border-left-width :$0 border-width ;

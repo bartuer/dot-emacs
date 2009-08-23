@@ -1,0 +1,4 @@
+# name : z-index
+# (css-extract-props-and-vals)
+# --
+z-index :$0 5 auto ;

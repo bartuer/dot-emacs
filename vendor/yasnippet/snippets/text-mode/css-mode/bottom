@@ -1,0 +1,4 @@
+# name : bottom
+# (css-extract-props-and-vals)
+# --
+bottom :$0 auto 50% 5 ;

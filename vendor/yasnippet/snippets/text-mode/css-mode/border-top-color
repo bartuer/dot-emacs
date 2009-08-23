@@ -1,0 +1,4 @@
+# name : border-top-color
+# (css-extract-props-and-vals)
+# --
+border-top-color :$0 transparent color ;

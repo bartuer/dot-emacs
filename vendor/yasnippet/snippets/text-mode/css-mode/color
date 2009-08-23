@@ -1,0 +1,4 @@
+# name : color
+# (css-extract-props-and-vals)
+# --
+color :$0 color ;

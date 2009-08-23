@@ -1,0 +1,4 @@
+# name : list-style
+# (css-extract-props-and-vals)
+# --
+list-style :$0 none uri outside inside upper-alpha lower-alpha georgian armenian upper-latin lower-latin lower-greek upper-roman lower-roman decimal-leading-zero decimal square circle disc ;

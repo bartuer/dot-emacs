@@ -1,0 +1,4 @@
+# name : counter-reset
+# (css-extract-props-and-vals)
+# --
+counter-reset :$0 none 5 identifier ;

@@ -1,0 +1,4 @@
+# name : outline-width
+# (css-extract-props-and-vals)
+# --
+outline-width :$0 border-width ;

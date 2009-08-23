@@ -1,0 +1,4 @@
+# name : voice-family
+# (css-extract-props-and-vals)
+# --
+voice-family :$0 generic-voice specific-voice generic-voice specific-voice ;

@@ -1,0 +1,4 @@
+# name : background-image
+# (css-extract-props-and-vals)
+# --
+background-image :$0 none uri ;

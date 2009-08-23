@@ -1,0 +1,4 @@
+# name : widows
+# (css-extract-props-and-vals)
+# --
+widows :$0 5 ;

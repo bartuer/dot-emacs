@@ -1,0 +1,4 @@
+# name : text-decoration
+# (css-extract-props-and-vals)
+# --
+text-decoration :$0 blink line-through overline underline none ;

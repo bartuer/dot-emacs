@@ -1,0 +1,4 @@
+# name : page-break-inside
+# (css-extract-props-and-vals)
+# --
+page-break-inside :$0 auto avoid ;

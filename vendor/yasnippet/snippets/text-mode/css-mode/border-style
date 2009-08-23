@@ -1,0 +1,4 @@
+# name : border-style
+# (css-extract-props-and-vals)
+# --
+border-style :$0 border-style ;

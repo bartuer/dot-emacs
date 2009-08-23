@@ -1,0 +1,4 @@
+# name : background-repeat
+# (css-extract-props-and-vals)
+# --
+background-repeat :$0 no-repeat repeat-y repeat-x repeat ;

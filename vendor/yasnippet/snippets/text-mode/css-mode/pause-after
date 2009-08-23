@@ -1,0 +1,4 @@
+# name : pause-after
+# (css-extract-props-and-vals)
+# --
+pause-after :$0 50% time ;

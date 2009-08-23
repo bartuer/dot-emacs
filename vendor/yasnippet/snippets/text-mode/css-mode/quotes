@@ -1,0 +1,4 @@
+# name : quotes
+# (css-extract-props-and-vals)
+# --
+quotes :$0 none string string ;

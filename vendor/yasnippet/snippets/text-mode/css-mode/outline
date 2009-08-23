@@ -1,0 +1,4 @@
+# name : outline
+# (css-extract-props-and-vals)
+# --
+outline :$0 border-width border-style invert color ;

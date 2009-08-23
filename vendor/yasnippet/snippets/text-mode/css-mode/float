@@ -1,0 +1,4 @@
+# name : float
+# (css-extract-props-and-vals)
+# --
+float :$0 none right left ;

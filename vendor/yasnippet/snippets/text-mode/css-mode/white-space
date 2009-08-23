@@ -1,0 +1,4 @@
+# name : white-space
+# (css-extract-props-and-vals)
+# --
+white-space :$0 pre-line pre-wrap nowrap pre normal ;

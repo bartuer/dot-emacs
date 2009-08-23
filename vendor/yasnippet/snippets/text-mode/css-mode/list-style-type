@@ -1,0 +1,4 @@
+# name : list-style-type
+# (css-extract-props-and-vals)
+# --
+list-style-type :$0 none upper-alpha lower-alpha georgian armenian upper-latin lower-latin lower-greek upper-roman lower-roman decimal-leading-zero decimal square circle disc ;

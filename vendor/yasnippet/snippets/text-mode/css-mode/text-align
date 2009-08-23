@@ -1,0 +1,4 @@
+# name : text-align
+# (css-extract-props-and-vals)
+# --
+text-align :$0 justify center right left ;

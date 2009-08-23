@@ -1,0 +1,4 @@
+# name : counter-increment
+# (css-extract-props-and-vals)
+# --
+counter-increment :$0 none 5 identifier ;

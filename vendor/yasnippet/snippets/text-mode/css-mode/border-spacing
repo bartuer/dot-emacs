@@ -1,0 +1,4 @@
+# name : border-spacing
+# (css-extract-props-and-vals)
+# --
+border-spacing :$0 5 5 ;

@@ -1,0 +1,4 @@
+# name : cue
+# (css-extract-props-and-vals)
+# --
+cue :$0 none uri ;

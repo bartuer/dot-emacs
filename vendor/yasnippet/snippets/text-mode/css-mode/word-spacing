@@ -1,0 +1,4 @@
+# name : word-spacing
+# (css-extract-props-and-vals)
+# --
+word-spacing :$0 5 normal ;

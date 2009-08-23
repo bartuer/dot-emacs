@@ -1,0 +1,4 @@
+# name : page-break-after
+# (css-extract-props-and-vals)
+# --
+page-break-after :$0 right left avoid always auto ;

@@ -1,0 +1,4 @@
+# name : clip
+# (css-extract-props-and-vals)
+# --
+clip :$0 auto shape ;

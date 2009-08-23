@@ -1,0 +1,4 @@
+# name : azimuth
+# (css-extract-props-and-vals)
+# --
+azimuth :$0 rightwards leftwards behind right-side far-right right center-right center center-left left far-left left-side angle ;

@@ -1,0 +1,4 @@
+# name : border
+# (css-extract-props-and-vals)
+# --
+border :$0 transparent color border-style border-width ;

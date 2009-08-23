@@ -1,0 +1,4 @@
+# name : unicode-bidi
+# (css-extract-props-and-vals)
+# --
+unicode-bidi :$0 bidi-override embed normal ;

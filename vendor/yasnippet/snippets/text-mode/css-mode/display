@@ -1,0 +1,4 @@
+# name : display
+# (css-extract-props-and-vals)
+# --
+display :$0 none table-caption table-cell table-column table-column-group table-row table-footer-group table-header-group table-row-group inline-table table inline-block run-in list-item block inline ;

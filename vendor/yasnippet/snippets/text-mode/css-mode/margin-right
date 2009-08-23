@@ -1,0 +1,4 @@
+# name : margin-right
+# (css-extract-props-and-vals)
+# --
+margin-right :$0 margin-width ;

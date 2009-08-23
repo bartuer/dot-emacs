@@ -1,0 +1,4 @@
+# name : outline-style
+# (css-extract-props-and-vals)
+# --
+outline-style :$0 border-style ;

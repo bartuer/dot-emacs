@@ -1,0 +1,4 @@
+# name : min-height
+# (css-extract-props-and-vals)
+# --
+min-height :$0 50% 5 ;

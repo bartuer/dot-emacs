@@ -1,0 +1,4 @@
+# name : empty-cells
+# (css-extract-props-and-vals)
+# --
+empty-cells :$0 hide show ;

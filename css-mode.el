@@ -79,7 +79,7 @@
       (cond
        ;; Reference to a type of value.
        ((setq name (match-string-no-properties 1 string))
-        (push (intern name) elems))
+        (push name elems))
        ;; Reference to another property's values.
        ((setq name (match-string-no-properties 2 string))
         (setq elems (delete-dups (append (cdr (assoc name env)) elems))))
@@ -120,6 +120,39 @@
 ;;    (descriptor . "^ +\\* '\\([^ '\n]+\\)' (descriptor)")
 ;;    (media . "^ +\\* '\\([^ '\n]+\\)' media group")
 ;;    (property . "^ +\\* '\\([^ '\n]+\\)',")))
+
+
+(defun yas/css (l)
+  (find-file (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/css-mode/" (car l)))
+  (with-current-buffer (car l)
+    (delete-region (point-min) (point-max))
+      (insert
+       (concat
+       "# name : " (car l) "\n"
+       "# (css-extract-props-and-vals)\n"
+       "# --\n"
+       (car l)
+       " :$0 "
+       (mapconcat (lambda (s)
+                    (cond 
+                     ((or
+                       (string= "counter" s)
+                       (string= "integer" s)
+                       (string= "length" s)
+                       (string= "number" s))
+                      "5")
+                     ((string= "percentage" s)
+                      "50%")
+                     ((string= "absolute-size" s)
+                      "12px")
+                     (t
+                      s)))
+                  (cdr l) " ")
+                  " ;"))
+      (save-buffer)))
+
+;; update all yas define like this
+;; (mapcar 'yas/css (css-extract-props-and-vals))
 
 (defconst css-pseudo-ids
   '("active" "after" "before" "first" "first-child" "first-letter" "first-line"

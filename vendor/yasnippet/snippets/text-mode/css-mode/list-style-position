@@ -1,0 +1,4 @@
+# name : list-style-position
+# (css-extract-props-and-vals)
+# --
+list-style-position :$0 outside inside ;

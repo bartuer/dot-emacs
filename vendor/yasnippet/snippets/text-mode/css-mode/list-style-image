@@ -1,0 +1,4 @@
+# name : list-style-image
+# (css-extract-props-and-vals)
+# --
+list-style-image :$0 none uri ;

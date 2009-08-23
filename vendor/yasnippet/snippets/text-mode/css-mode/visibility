@@ -1,0 +1,4 @@
+# name : visibility
+# (css-extract-props-and-vals)
+# --
+visibility :$0 collapse hidden visible ;

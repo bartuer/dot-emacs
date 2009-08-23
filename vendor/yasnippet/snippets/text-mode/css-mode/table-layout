@@ -1,0 +1,4 @@
+# name : table-layout
+# (css-extract-props-and-vals)
+# --
+table-layout :$0 fixed auto ;
