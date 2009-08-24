@@ -331,7 +331,6 @@
 (define-derived-mode css-mode fundamental-mode "CSS"
   "Major mode to edit Cascading Style Sheets."
   (setq css-mode-map (make-sparse-keymap))
-  (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
   (set (make-local-variable 'imenu-create-index-function)
        'css-imenu-create-index)
   (set (make-local-variable 'font-lock-defaults) css-font-lock-defaults)
