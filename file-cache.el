@@ -37,6 +37,7 @@
 (file-cache-add-directory "~/local/src/baza/app/views/store")
 (file-cache-add-directory "~/local/src/baza/app/views/users")
 (file-cache-add-directory "~/local/src/baza/app/views/store")
+(file-cache-add-directory "~/local/src/baza/app/views/iubi")
 (file-cache-add-directory "~/local/src/baza/config")
 (file-cache-add-directory "~/local/src/baza/config/environments")
 (file-cache-add-directory "~/local/src/baza/config/initializers")
