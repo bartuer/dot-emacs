@@ -475,6 +475,9 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (require 'rinari nil t)
+(add-hook 'rinari-minor-mode-hook (lambda ()
+                                    (define-key rinari-minor-mode-map "\M-r" 'rinari-ido)))
+
 (defadvice rinari-cap (before icicle-cap-help activate)
   "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn (lambda  (entry)
@@ -569,6 +572,9 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for css file" t nil)
 (require 'css-mode nil t)
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
+(add-hook 'css-mode-hook (lambda ()
+                           (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)))
+
 
 (autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
   "mode for yaml file" t nil)

@@ -145,7 +145,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
 
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
-  (interactive )
+  (interactive)
   (rct-fork (concat "-r " (rinari-root) "config/environment -r console_app -r console_with_helpers -r actionpack"
                     " -I" (rinari-root) "lib" " -I" (rinari-root) "test")))
 
@@ -277,6 +277,14 @@ show all ruby methods, filter and and invoke ri on candidate
                                                             rails-debug-process))
   (pop-to-buffer "*rails-debugger*"))
 
+(setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
+(defun rinari-browserreload ()
+  "start a monitor server to reload browser when file changed"
+  (interactive)
+  (ruby-compilation-run (concat (rinari-root) browserreload-location
+                                (read-from-minibuffer browserreload-location)))
+)
+
 (require 'bartuer-gem)
 (require 'rcodetools)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
@@ -295,15 +303,17 @@ it perfectly.
 "
   (interactive)
   (let* ((rinari-command (ido-completing-read "rinari:" 
-                                   (list  "find-controller" "find-environment" "find-file-in-project"
-                                          "find-helper" "find-migration" "find-javascript" "find-plugin"
-                                          "find-model" "find-configuration" "find-log"
-                                          "find-public" "find-script" "find-test" "find-view"
-                                          "find-worker" "find-fixture" "find-stylesheet" "find-by-context"
-                                          "console" "debug-console" "cap" "insert-erb-skeleton" "rgrep"
+                                   (list  "find-model" "find-migration" "find-controller" "find-view" "find-stylesheet"
+                                          "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
+                                          "script" "browserreload" "dev-server" "web-server" "test"
+                                          "console" "debug-console" 
+                                          "find-environment" "find-configuration" "find-file-in-project"
+                                          "find-helper"  "find-plugin" 
+                                          "find-log" "rails-logs"
+                                          "find-worker"  "find-by-context"
+                                          "cap" "insert-erb-skeleton" "rgrep" "sql" "rake"   
                                           "rails-rct-fork" "rct-fork-kill" 
-                                          "sql" "rake" "script" "test" "dev-server" "web-server"
-                                          "extract-partial" "bartuer-gem" "bartuer-mongrel" "rails-logs" "qri") nil t)))
+                                          "extract-partial" "bartuer-gem" "bartuer-mongrel"  "qri") nil t)))
     (apply (intern (concat "rinari-" rinari-command)) nil)))
 
 
