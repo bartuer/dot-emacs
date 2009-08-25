@@ -38,6 +38,20 @@
         (goto-char (point-min))
         t)))
 
+
+(defun anything-js-browser (reset)
+  "let `anything-etags-select' do the right job
+
+it is suitable to browse OO hierarchy"
+  (interactive "P")
+  (setq anything-etags-enable-tag-file-dir-cache t)
+  (if reset
+      (setq anything-etags-cache-tag-file-dir nil))
+  (unless anything-etags-cache-tag-file-dir
+    (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
+                                                               (list "~/etc/el/js"))))
+  (anything-etags-select))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -56,10 +70,11 @@
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
   (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
-  (define-key js2-mode-map "\C-c\C-c" 'send-buffer-jsh)
+  (define-key js2-mode-map "\C-c\C-b" 'send-buffer-jsh)
   (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
+  (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
