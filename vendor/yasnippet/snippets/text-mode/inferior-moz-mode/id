@@ -1,3 +1,1 @@
-# name : getElementById
-# --
-document.getElementById("${1:id}")
+/Users/bartuer/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode/id

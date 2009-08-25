@@ -1,3 +1,3 @@
 #name getElementById
 # --
-var ${1:doc} = document.getElementById("${2:id}");
+document.getElementById("${2:id}");

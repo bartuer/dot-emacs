@@ -1,7 +1,7 @@
 #name : if else
 # --
 if (${1:condition}) {
- $0;  
+  $0;  
 } else {
     
 }

@@ -1,3 +1,1 @@
-# name : getElementsByClassName
-# --
-document.getElementsByClassName("${1:class}")
+/Users/bartuer/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode/class
