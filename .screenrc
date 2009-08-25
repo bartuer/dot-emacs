@@ -1,5 +1,6 @@
 term screen.xterm-new
 escape ``
+# also need set terminal/shell encode as unicode:export LANG=en_US.UTF8
 encoding utf-8
 bindkey -t "\033[1;3A" stuff "\033\033OA"
 bindkey -t "\033[1;3B" stuff "\033\033OB"
