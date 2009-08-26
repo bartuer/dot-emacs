@@ -49,7 +49,8 @@ it is suitable to browse OO hierarchy"
       (setq anything-etags-cache-tag-file-dir nil))
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
-                                                               (list "~/etc/el/js"))))
+                                                               (list "~/local/src/baza/public/javascripts/Parts"
+                                                                     "~/etc/el/js"))))
   (anything-etags-select))
 
 (defun bartuer-js-load ()

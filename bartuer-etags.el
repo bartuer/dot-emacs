@@ -61,7 +61,7 @@ Also see `generate-etags'."
   (mapcar 'add-etags-search-head 
           (cdr (mapcan
                 'flat-alist
-                (imenu--make-index-alist)))))
+                (imenu--make-index-alist t)))))
 
 (defvar emacs-etags-file-name "/tmp/TAGS"
   "`generate-etags''s output
