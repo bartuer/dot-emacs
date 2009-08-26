@@ -47,7 +47,7 @@
                                     (t (indent-for-comment))))))
 
 
-(global-set-key "\C-l" (lambda ()
+(global-set-key "\C-z" (lambda ()
                          (interactive)
                          (recenter-top-bottom 0)))
                          
@@ -431,7 +431,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (when (fboundp 'anything)
-  (global-set-key "\C-z" 'anything))
+  (global-set-key "\C-l" 'anything))
 
 (require 'magit nil t)
 (global-set-key "\C-xg" 'magit-status)
