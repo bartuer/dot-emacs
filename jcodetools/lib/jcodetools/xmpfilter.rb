@@ -44,6 +44,7 @@ class XMPFilter
   def initialize(opts = {})
     options = INITIALIZE_OPTS.merge opts
     @interpreter_info = INTERPRETER_JSH
+    @current_file_name = options[:current_file_name]
     @interpreter = options[:interpreter]
     @options = options[:options]
     @evals = options[:evals] || []
@@ -120,7 +121,7 @@ class XMPFilter
       has_backtrace = true
       lineno, msg = ERROR_RE.match(line).captures
 
-      f << "-:" << lineno.to_i - 1 << ":" << msg << "\n"
+      f << @current_file_name << ":" << lineno.to_i - 1 << ":" << msg << "\n"
     }
 
     if (!has_backtrace) 
@@ -128,7 +129,7 @@ class XMPFilter
         f << line.gsub(/.*__JCTNEWLINE__.*$/, '') << "\n"
       }
     end
-      
+
     has_backtrace ? File.rename(jct_emacs_tmp, jct_emacs_backtrace) : File.rename(jct_emacs_tmp, jct_emacs_message)
     ret
   end

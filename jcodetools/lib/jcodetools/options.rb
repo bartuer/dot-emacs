@@ -41,6 +41,10 @@ module OptionHandler
   def handle_misc(options)
     separator ""
     separator "Misc options:"
+    on("--current_file_name=FILENAME", "Current file name.") do |f|
+     options[:current_file_name] = f
+    end
+
     on("-h", "--help", "Show this message") do
       puts self
       exit
@@ -73,6 +77,7 @@ end
 
 DEFAULT_OPTIONS = {
   :interpreter       => "rhino",
+  :current_file_name => "",
   :options => ["hoge"],
   :min_codeline_size => 50,
   :width             => 79,

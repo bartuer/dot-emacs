@@ -23,7 +23,7 @@
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
   (interactive (jct-interactive))
-  (jxmp option)
+  (jxmp (concat option " --current_file_name=" (expand-file-name (buffer-file-name))))
   (if (file-exists-p "/tmp/jct-emacs-backtrace")
       (pop-to-buffer 
        (ruby-compilation-do "jct-compilation"
@@ -51,6 +51,7 @@ it is suitable to browse OO hierarchy"
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
                                                                (list "~/local/src/baza/public/javascripts/Parts"
                                                                      "~/local/src/prototype/src"
+                                                                     "~/local/src/js-functional"
                                                                      ))))
   (anything-etags-select))
 

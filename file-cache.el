@@ -1,3 +1,6 @@
+(file-cache-add-directory "~/etc/el/jcodetools")
+(file-cache-add-directory "~/etc/el/jcodetools/bin")
+(file-cache-add-directory "~/etc/el/jcodetools/lib/jcodetools")
 (file-cache-add-directory "~/local/src/prototype/src")
 (file-cache-add-directory "~/local/src/prototype/src/ajax")
 (file-cache-add-directory "~/local/src/prototype/src/dom")
