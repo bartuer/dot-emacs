@@ -50,6 +50,8 @@ it is suitable to browse OO hierarchy"
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
                                                                (list "~/local/src/baza/public/javascripts/Parts"
+                                                                     "~/local/src/prototype/src"
+                                                                     "~/local/src/baza/public/javascripts"
                                                                      "~/etc/el/js"))))
   (anything-etags-select))
 
