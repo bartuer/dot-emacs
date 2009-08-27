@@ -54,13 +54,14 @@
       '((name . "Etags Method Completion")
         (candidates 
          .
-         (lambda () anything-yasnippet-completion-table)) ;to using completion show , must using a function
+         (lambda () anything-yasnippet-completion-table)) ;to show completion, must define a function
         (init
          . 
          (lambda ()
            (condition-case x
-               (setq anything-yasnippet-completion-table (mapcar 'anything-objc-etags-parser
-                                                             (split-string (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
+               (setq anything-yasnippet-completion-table
+                     (mapcar 'anything-objc-etags-parser
+                             (split-string (shell-command-to-string "cat ~/Documents/TAGS|grep ^[+-].*") "\n")))
              (error (setq anything-yasnippet-completion-table nil))
              )
            )
@@ -123,6 +124,12 @@
 
 (setq anything-yasnippet-completion-table nil)
 
+(defun current-etags-cache-dir ()
+  "return a place has TAGS"
+  (if (boundp 'anything-etags-cache-tag-file-dir)
+      anything-etags-cache-tag-file-dir
+    "~/local/src/prototype/src"))
+
 (setq anything-c-source-complete-etags-js 
       '((name . "Etags Method Completion")
         (candidates 
@@ -132,10 +139,13 @@
          . 
          (lambda ()
            (condition-case x
-               (setq anything-yasnippet-completion-table (mapcar 'anything-js-etags-parser
-                                                             (split-string (shell-command-to-string
-                                                                            (concat "cat " anything-etags-cache-tag-file-dir
-                                                                                    "/TAGS|grep [a-zA-Z0-9_].* |sed 's+\.<definition-[0-9]*>++g'|uniq")) "\n"))))
+               (setq anything-yasnippet-completion-table
+                     (mapcar 'anything-js-etags-parser
+                             (split-string (shell-command-to-string
+                                            (concat "cat "
+                                                    (current-etags-cache-dir)
+                                                    "/TAGS|grep [a-zA-Z0-9_].* |sed 's+\.<definition-[0-9]*>++g'|uniq"))
+                                           "\n")))
              (error (setq anything-yasnippet-completion-table nil))
              )
            )
@@ -170,13 +180,14 @@
          (lambda ()
            (condition-case x
                ;; should be depend on the mode, for inf-mozrepl-mode, should use it's own inspect function
-               (setq anything-yasnippet-introspect-table (mapcar 
-                                                          'anything-js-introspect-parser
-                                                          (split-string
-                                                          (shell-command-to-string
-                                                           (format "jxmpfilter -c --line %d %s"
-                                                                   (jct-current-line) (buffer-file-name))) "__JCT_NEWLINE__")
-                                                          )) 
+               (setq anything-yasnippet-introspect-table
+                     (mapcar 
+                      'anything-js-introspect-parser
+                      (split-string
+                       (shell-command-to-string
+                        (format "jxmpfilter -c --line %d %s"
+                                (jct-current-line) (buffer-file-name))) "__JCT_NEWLINE__")
+                                )) 
              (error (setq anything-yasnippet-introspect-table nil))
              )
            )
