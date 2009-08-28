@@ -22,13 +22,40 @@
   "If non-nil, output debug message into *Messages*.")
 ;; (setq jct-debug t)
 
+(defun has-jct-in-region-p (beg end)
+  "search //# => in region beg end
+"
+  (goto-char beg)
+  (if (search-forward-regexp "//# *=>" end t)
+      t
+    nil)
+)
+
+(defun jct-dwim ()
+  "if there is //# =>, remove it, otherwise insert it
+
+2 + 3 //
+docstring as fixture, try above line.
+"
+  (setq current-pos (point))
+  (setq beg (progn (beginning-of-line) (point)))
+  (setq end (progn (end-of-line) (point)))
+  (if (has-jct-in-region-p beg end)
+      (progn
+        (goto-char beg)
+        (search-forward "//")
+        (kill-line))
+    (goto-char current-pos)
+    (insert "#=>"))
+  )
+
 (defadvice comment-dwim (around jct-hack activate)
-  "If comment-dwim is successively called, add #=> mark."
+  "If comment-dwim is successively called, add //#=> mark."
   (if (and (eq major-mode 'js2-mode)
            (eq last-command 'comment-dwim)
            ;; TODO =>check
            )
-      (insert "#=>")
+      (jct-dwim)
     ad-do-it))
 ;; To remove this advice.
 ;; (progn (ad-disable-advice 'comment-dwim 'around 'jct-hack) (ad-update 'comment-dwim)) 
