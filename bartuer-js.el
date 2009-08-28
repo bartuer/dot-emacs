@@ -172,12 +172,14 @@ behavior."
          (js-find-prototype-test)
          ))
   )
-  
+
+(defalias 'js-find-autotest 'autotest)
+
 (defun js-toggle ()
   "js version `rinari-ido'"
   (interactive)
   (let* ((js-toggle-target (ido-completing-read "Jump to :" 
-                                                 (list  "file-in-project"
+                                                 (list  "file-in-project" "autotest"
                                                         "jspec" "jspec-fixture" "jsepcimp"
                                                         "prototype-fixture" "prototype-test" "prototype-testimp") nil t)))
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
