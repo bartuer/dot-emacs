@@ -6,15 +6,10 @@
 ;;; see rcodetool at http://rubyforge.org/projects/rcodetools
 
 
-(defvar jxmpfilter-command-name "ruby -S jxmpfilter --no-warnings  --fork "
+(defvar jxmpfilter-command-name "ruby -S jxmpfilter --no-warnings --fork"
   "The xmpfilter command name.")
-(defvar jct-doc-command-name "ruby -S jct-doc --fork "
-  "The jct-doc command name.")
 (defvar jct-complete-command-name "ruby -S jxmpfilter --completion --no-warnings --fork "
   "The jct-complete command name.")
-(defvar js-toggle-file-command-name "ruby -S js-toggle-file"
-  "The ruby-toggle-file command name.")
-(defvar jct-fork-command-name "ruby -S jct-fork")
 (defvar jct-option-history nil)                ;internal
 (defvar jct-option-local nil)     ;internal
 (make-variable-buffer-local 'jct-option-local)

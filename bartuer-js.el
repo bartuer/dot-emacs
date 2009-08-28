@@ -17,9 +17,32 @@
   (setq end (point))
   (send-region-jsh beg end))
 
+(defvar prototype-root "~/local/src/prototype/")
+
+(defun unit-test-js ()
+  "for unittest_js"
+  (interactive)
+  (setq unit-test-result
+        (shell-command-to-string
+               (concat "rake test TESTS="
+                       (replace-regexp-in-string
+                        "_test" ""
+                        (replace-regexp-in-string
+                         "\\.js" ""
+                         (file-name-nondirectory (buffer-file-name)))))))
+  (with-current-buffer
+      (get-buffer-create "jct-result")
+      (if (buffer-size)
+          (erase-buffer))
+      (insert unit-test-result))
+  )
+
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
   (interactive (jct-interactive))
+  (when (string-equal (js-project-root)
+                    (expand-file-name prototype-root))
+      (unit-test-js))
   (jxmp (concat option " --current_file_name=" (expand-file-name (buffer-file-name))))
   (if (file-exists-p "/tmp/jct-emacs-backtrace")
       (pop-to-buffer 
@@ -33,7 +56,8 @@
         (with-output-to-string (call-process "cat" nil t nil "/tmp/jct-emacs-message"))    
         (ansi-color-apply-on-region (point-min) (point-max))
         (goto-char (point-min))
-        t)))
+        t))
+  )
 
 
 (defun anything-js-browser (reset)
@@ -47,7 +71,7 @@ it is suitable to browse OO hierarchy"
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
                                                                (list "~/local/src/baza/public/javascripts/Parts"
-                                                                     "~/local/src/prototype/src"
+                                                                     prototype-root
                                                                      "~/local/src/js-functional"
                                                                      ))))
   (anything-etags-select))
@@ -55,9 +79,9 @@ it is suitable to browse OO hierarchy"
 (defun js-project-root ()
   "find current root for javascript project"
   (cond ((eq 0 (string-match
-                (expand-file-name "~/local/src/prototype")
+                (expand-file-name prototype-root)
                 (expand-file-name (buffer-file-name))))
-         (expand-file-name "~/local/src/prototype/"))
+         (expand-file-name prototype-root))
         ((or
           (eq 0 (string-match
                  "\\(.*\\)/spec/"
@@ -154,19 +178,19 @@ behavior."
          (js-find-jspec)
          )
         ((eq 0 (string-match
-                 (expand-file-name "~/local/src/prototype/test/unit/fixtures")
+                 (expand-file-name (concat prototype-root "test/unit/fixtures"))
                  (expand-file-name (buffer-file-name)))
              )
          (js-find-prototype-test)
          )
         ((eq 0 (string-match
-                 (expand-file-name "~/local/src/prototype/test/unit")
+                 (expand-file-name (concat prototype-root "test/unit"))
                  (expand-file-name (buffer-file-name)))
              )
          (js-find-prototype-testimp)
          )
         ((eq 0 (string-match
-                 (expand-file-name "~/local/src/prototype/src")
+                 (expand-file-name (concat prototype-root "src"))
                  (expand-file-name (buffer-file-name)))
              )
          (js-find-prototype-test)
