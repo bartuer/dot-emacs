@@ -1,8 +1,8 @@
 require 'test/unit'
 $: << ".." << "../lib"
-require "jcodetools/xmptestunitfilter"
+require "jcodetools/xmpjspecfilter"
 
-class TestXMPTestUnitFilter < Test::Unit::TestCase
+class TestXMPJSPECFilter < Test::Unit::TestCase
   include Jcodetools
 
   def setup

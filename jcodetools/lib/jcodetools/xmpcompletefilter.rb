@@ -2,7 +2,7 @@
 #                         rubikitch <rubikitch@ruby-lang.org>
 # Use and distribution subject to the terms of the Ruby license.
 require 'jcodetools/xmpfilter'
-require "jcodetools/xmptestunitfilter"
+require "jcodetools/xmpjspecfilter"
 
 module Jcodetools
 
