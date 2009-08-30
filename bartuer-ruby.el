@@ -390,7 +390,6 @@ the block line three
   (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
   (visit-tags-table "~/local/src/rails/TAGS.rtags")
 
-  (setq anything-etags-cache-tag-file-dir "~/local/src/rails/actionpack")
 
   ;; toggle these modes
   (yas/minor-mode-auto-on)
