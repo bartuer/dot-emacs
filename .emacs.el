@@ -801,6 +801,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'textile-minor-mode "textile-minor-mode.el" "for org mode" t)
 (require 'textile-minor-mode nil t)
 
+(autoload 'markdown-mode "markdown-mode.el"
+     "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text" . markdown-mode))
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
