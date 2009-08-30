@@ -54,7 +54,7 @@ module Jcodetools
     end
 
     def prepare_line(line, column)
-      expr = line.gsub(/^(\w*)\.$/, '\1')
+      expr = line.gsub(/(\w*)\.$/, '\1')
       @debuglog << "LINE: " << line << "\n"
       @debuglog << "EXPR: " << expr << "\n"
       if (expr)
