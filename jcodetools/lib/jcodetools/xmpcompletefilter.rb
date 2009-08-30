@@ -97,7 +97,7 @@ EOC
         if i+1 == lineno
           newcode.push(prepare_line(line.chomp, nil))
         else
-          newcode.push(line.gsub(/\/\/#=>.*$/,';'))
+          newcode.push(line.gsub(/\/\/.*$/,';'))
         end
       }
       stdout, stderr = execute_complete(newcode.join)
