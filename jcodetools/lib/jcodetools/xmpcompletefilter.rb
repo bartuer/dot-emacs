@@ -37,9 +37,9 @@ module Jcodetools
     def prepare_code(code)
       escaped_code = code.gsub(/(["])/) { JS_ESCAPE_MAP[$1] }
       wraped_code  = @use_spec?  Jcodetools::XMPJSpecFilter.jspec_wrap(escaped_code) : escaped_code
-      wraped_code.gsub!(/__JCT_NEWLINE__/, '\n')
+      wraped_code.gsub!(/__JCT_NEWLINE__/, '\n').gsub!(/__JCT_FUNC_PARAMETERS_RE__/, 'function *[a-zA-Z0-9_]*(\(.*\)) *\{')
       send_to_shell_code = Jcodetools::XMPFilter.oneline_ize(wraped_code).chomp
-      @debuglog << "SEND_TO_JSHELL: " << "\n"
+      @debuglog << "SEND_TO_JSHELL: " << "\n\n"
       @debuglog << send_to_shell_code
       send_to_shell_code
     end
@@ -64,12 +64,23 @@ module Jcodetools
   var members = [];
   var jct_k;
   for (jct_k in jct_target) {
-    if (jct_target[jct_k].constructor === Array) {
-      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '[]' + '|' + jct_k);
-    } else if (jct_target[jct_k].toString() === '[object Object]') {
-      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '{}' + '|' + jct_k);
-    } else if (typeof jct_target[jct_k] === 'function') {
-      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '|' + jct_k);
+    var o = jct_target[jct_k];
+    if (o === null) {
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + ':null' + '|' + jct_k);
+    } else if (o.constructor === Array) {
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '[' + o.length + ']' + '|' + jct_k);
+    } else if (o.toString() === '[object Object]') {
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '{ }' + '|' + jct_k);
+    } else if (typeof o === 'function') {
+      var a = o.toString().split('__JCT_NEWLINE__');
+      var sig = jct_k + a[1].replace(/__JCT_FUNC_PARAMETERS_RE__/g, '$1');
+      members.push('#{MARKER}[#{idx}] ~=> ' + sig + '|' + sig);
+    } else if (typeof o === 'string'){
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + ' str: ' + o +  '|' + jct_k);
+    } else if (typeof o === 'number'){
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + ' num: ' +  o +  '|' + jct_k);
+    } else if (typeof o === 'boolean'){
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + ' boolean: ' + o +  '|' + jct_k);
     } else {
       members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '|' + jct_k);
     }
@@ -92,8 +103,8 @@ EOC
       stdout, stderr = execute_complete(newcode.join)
       output = stdout.readlines
       runtime_data = extract_data(output)
+      debugger
       dat = runtime_data.results[1]
-      debugger;
       dat.join('__JCT_NEWLINE__')
     end
     
