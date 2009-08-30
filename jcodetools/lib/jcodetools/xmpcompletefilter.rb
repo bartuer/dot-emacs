@@ -11,7 +11,7 @@ module Jcodetools
   class XMPCompleteFilter < XMPFilter
     INTERPRETER_COMPLETE = Interpreter.new(["-w"], :execute_complete, nil)
 
-    # [[file:~/local/src/rails/actionpack/lib/action_view/helpers/javascript_helper.rb::javascript%20gsub%20r%20n%20n%20r%20JS_ESCAPE_MAP%201][escape]]
+    # (link "~/local/src/rails/actionpack/lib/action_view/helpers/javascript_helper.rb" 6585)
     JS_ESCAPE_MAP = {
         '\\'    => '\\\\',
         '</'    => '<\/',
