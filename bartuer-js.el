@@ -71,8 +71,9 @@ it is suitable to browse OO hierarchy"
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
                                                                (list "~/local/src/baza/public/javascripts/Parts"
-                                                                     prototype-root
+                                                                     (concat prototype-root "src")
                                                                      "~/local/src/js-functional"
+                                                                     "~/etc/el/js"
                                                                      ))))
   (anything-etags-select))
 
@@ -121,19 +122,19 @@ it is suitable to browse OO hierarchy"
     nil)
    (jspecimp
     (("spec/spec.\\1.js"                        . "lib/\\1.js")
-     ("spec/fixtures/\\1.js"                    . "lib/\\1.js")
+     ("spec/fixtures/\\1.html"                  . "lib/\\1.js")
      (t                                         . "lib/.*js"))
      nil)
    (jspec
     (("lib/\\1.js"                              . "spec/spec.\\1.js")
-     ("spec/fixtures/\\1.js"                    . "spec/spec.\\1.js")
+     ("spec/fixtures/\\1.html"                  . "spec/spec.\\1.js")
      (t                                         . "spec/spec.*"))
     t);here need a lambda generate a new test file
    (jspec-fixture
-    (("spec/spec.\\1.js"                        . "spec/fixtures/\\1.js")
-     ("lib/\\1.js"                              . "spec/fixtures/\\1.js")
+    (("spec/spec.\\1.js"                        . "spec/fixtures/\\1.html")
+     ("lib/\\1.js"                              . "spec/fixtures/\\1.html")
      (t                                         . "spec/fixtures/.*"))
-    nil)
+    t)
    (file-in-project ((t . ".*")) nil)
    ))
 
@@ -161,41 +162,42 @@ behavior."
 (defun js-smart-toggle ()
   "depend on current buffer, switch to the buffer most possible, DWIM"
   (interactive)
-  (cond ((eq 0 (string-match
+  (cond 
+         ((eq 0 (string-match
+                 "\\(.*\\)/spec/fixtures"
+                 (expand-file-name (buffer-file-name))))
+          (js-find-jspec)
+          )
+         ((eq 0 (string-match
                  "\\(.*\\)/spec/"
                  (expand-file-name (buffer-file-name))))
-         (js-find-jspecimp))
-        ((eq 0 (string-match
+          (js-find-jspecimp)
+          )
+         ((eq 0 (string-match
                  "\\(.*\\)/lib/"
                  (expand-file-name (buffer-file-name)))
-             )
-         (js-find-jspec)
-         )
-        ((eq 0 (string-match
-                 "\\(.*\\)/spec/fixtures"
-                 (expand-file-name (buffer-file-name)))
-             )
-         (js-find-jspec)
-         )
-        ((eq 0 (string-match
+              )
+          (js-find-jspec)
+          )
+         ((eq 0 (string-match
                  (expand-file-name (concat prototype-root "test/unit/fixtures"))
                  (expand-file-name (buffer-file-name)))
-             )
-         (js-find-prototype-test)
-         )
-        ((eq 0 (string-match
+              )
+          (js-find-prototype-test)
+          )
+         ((eq 0 (string-match
                  (expand-file-name (concat prototype-root "test/unit"))
                  (expand-file-name (buffer-file-name)))
-             )
-         (js-find-prototype-testimp)
-         )
-        ((eq 0 (string-match
+              )
+          (js-find-prototype-testimp)
+          )
+         ((eq 0 (string-match
                  (expand-file-name (concat prototype-root "src"))
                  (expand-file-name (buffer-file-name)))
-             )
-         (js-find-prototype-test)
-         ))
-  )
+              )
+          (js-find-prototype-test)
+          ))
+        )
 
 (defalias 'js-find-autotest 'autotest)
 
@@ -203,8 +205,8 @@ behavior."
   "js version `rinari-ido'"
   (interactive)
   (let* ((js-toggle-target (ido-completing-read "Jump to :" 
-                                                 (list  "file-in-project" "autotest"
-                                                        "jspec" "jspec-fixture" "jsepcimp"
+                                                 (list  "jspec-fixture" "file-in-project" "autotest"
+                                                        "jspec"  "jsepcimp"
                                                         "prototype-fixture" "prototype-test" "prototype-testimp") nil t)))
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
   )
