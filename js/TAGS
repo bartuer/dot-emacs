@@ -1,0 +1,99 @@
+
+/Users/bartuer/etc/el/js/env.js,6392
+		get userAgent(){window.navigator.userAgent()15,249
+	window.setTimeout = function(fn, time){window.setTimeout(fn, time)54,1108
+	window.setInterval = function(fn, time){window.setInterval(fn, time)62,1250
+	window.clearInterval = function(num){window.clearInterval(num)79,1552
+	window.addEventListener = function(type, fn){window.addEventListener(type, fn)90,1714
+	window.removeEventListener = function(type, fn){window.removeEventListener(type, fn)103,2036
+	window.dispatchEvent = function(event){window.dispatchEvent(event)118,2381
+	window.DOMDocument = function(file){window.DOMDocument(file)135,2736
+	window.DOMNodeList = function(list){window.DOMNodeList(list)230,4963
+	window.DOMNode = function(node){window.DOMNode(node)253,5432
+	window.DOMElement = function(elem){window.DOMElement(elem)295,6310
+	window.XMLHttpRequest = function(){window.XMLHttpRequest()563,13155
+		xhr.onreadystatechange = function(){xhr.onreadystatechange()25,570
+			run: function(){run()66,1370
+		createTextNode: function(text){DOMDocument.prototype.createTextNode(text)146,3030
+		createElement: function(name){DOMDocument.prototype.createElement(name)150,3194
+		getElementsByTagName: function(name){DOMDocument.prototype.getElementsByTagName(name)153,3306
+		getElementById: function(id){DOMDocument.prototype.getElementById(id)157,3431
+		get body(){DOMDocument.prototype.body()168,3682
+		get documentElement(){DOMDocument.prototype.documentElement()171,3749
+		get ownerDocument(){DOMDocument.prototype.ownerDocument()174,3833
+		get nodeName() {DOMDocument.prototype.nodeName()180,4012
+		importNode: function(node, deep){DOMDocument.prototype.importNode(node, deep)183,4067
+		toString: function(){DOMDocument.prototype.toString()186,4167
+		get innerHTML(){DOMDocument.prototype.innerHTML()190,4275
+		get defaultView(){DOMDocument.prototype.defaultView()194,4344
+		createEvent: function(){DOMDocument.prototype.createEvent()214,4744
+	function getDocument(node){getDocument(node)224,4859
+		toString: function(){DOMNodeList.prototype.toString()241,5188
+		get outerHTML(){DOMNodeList.prototype.outerHTML()245,5280
+		get nodeType(){DOMNode.prototype.nodeType()258,5503
+		get nodeValue(){DOMNode.prototype.nodeValue()261,5561
+		get nodeName() {DOMNode.prototype.nodeName()264,5621
+		cloneNode: function(deep){DOMNode.prototype.cloneNode(deep)267,5687
+		get ownerDocument(){DOMNode.prototype.ownerDocument()270,5763
+		get documentElement(){DOMNode.prototype.documentElement()273,5841
+		get parentNode() {DOMNode.prototype.parentNode()276,5920
+		get nextSibling() {DOMNode.prototype.nextSibling()279,5995
+		get previousSibling() {DOMNode.prototype.previousSibling()282,6072
+		toString: function(){DOMNode.prototype.toString()285,6163
+		get outerHTML(){DOMNode.prototype.outerHTML()288,6224
+			get opacity(){ return this._opacity; },style.opacity.<definition-1>298,6370
+			set opacity(val){ this._opacity = val + ""; }style.opacity.<definition-2>299,6413
+			function nav(nodes){nav(nodes)369,8165
+		get nodeName(){nodeName()313,6774
+		get tagName(){tagName()316,6835
+		toString: function(){toString()319,6897
+		get outerHTML(){outerHTML()322,6990
+		get attributes(){attributes()337,7335
+		get innerHTML(){innerHTML()346,7552
+		set innerHTML(html){innerHTML(html)349,7614
+		get textContent(){textContent()366,8111
+		set textContent(text){textContent(text)379,8428
+		get disabled() {disabled()391,8682
+		set disabled(val) { return this.setAttribute("disabled",val); },disabled(val)395,8785
+		get checked() {checked()397,8855
+		set checked(val) { return this.setAttribute("checked",val); },checked(val)401,8956
+		get selected() {selected()403,9024
+		set selected(val) { return this.setAttribute("selected",val); },selected(val)428,9609
+		get className() { return this.getAttribute("class") || ""; },className()430,9677
+		set className(val) {className(val)431,9741
+		get type() { return this.getAttribute("type") || ""; },type()436,9846
+		set type(val) { return this.setAttribute("type",val); },type(val)437,9904
+		get value() { return this.getAttribute("value") || ""; },value()439,9966
+		set value(val) { return this.setAttribute("value",val); },value(val)440,10026
+		get src() { return this.getAttribute("src") || ""; },src()442,10090
+		set src(val) { return this.setAttribute("src",val); },src(val)443,10146
+		get id() { return this.getAttribute("id") || ""; },id()445,10206
+		set id(val) { return this.setAttribute("id",val); },id(val)446,10260
+		getAttribute: function(name){getAttribute(name)448,10328
+		setAttribute: function(name,value){setAttribute(name, value)453,10465
+		removeAttribute: function(name){removeAttribute(name)456,10550
+		get childNodes(){childNodes()460,10616
+		get firstChild(){firstChild()463,10697
+		get lastChild(){lastChild()466,10771
+		appendChild: function(node){appendChild(node)469,10852
+		insertBefore: function(node,before){insertBefore(node, before)472,10928
+		removeChild: function(node){removeChild(node)475,11042
+		click: function(){click()485,11321
+		submit: function(){submit()490,11446
+		focus: function(){focus()495,11571
+		blur: function(){blur()500,11694
+		get elements(){elements()505,11814
+		get contentWindow(){contentWindow()508,11879
+		get contentDocument(){contentDocument()513,11995
+	function extend(a,b) {extend(a, b)528,12381
+	function makeNode(node){makeNode(node)548,12773
+				function handleResponse(){handleResponse()627,14973
+			function makeRequest(){makeRequest()584,13633
+		open: function(method, url, async, user, password){ XMLHttpRequest.prototype.open(method, url, async, user, password)569,13261
+		setRequestHeader: function(header, value){XMLHttpRequest.prototype.setRequestHeader(header, value)577,13477
+		getResponseHeader: function(header){ },XMLHttpRequest.prototype.getResponseHeader(header).<definition-1>580,13561
+		getResponseHeader: function(header){XMLHttpRequest.prototype.getResponseHeader(header).<definition-2>662,15944
+		send: function(data){XMLHttpRequest.prototype.send(data)581,13590
+		abort: function(){},XMLHttpRequest.prototype.abort()660,15873
+		onreadystatechange: function(){},XMLHttpRequest.prototype.onreadystatechange()661,15909
+		getAllResponseHeaders: function(header){XMLHttpRequest.prototype.getAllResponseHeaders(header)678,16365
