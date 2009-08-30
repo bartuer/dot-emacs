@@ -3,7 +3,7 @@
 # Use and distribution subject to the terms of the Ruby license.
 require 'jcodetools/xmpfilter'
 
-# [[file:~/local/src/jspec/lib/jspec.js::have_length_within%20actual%20length%20expected%200%20actual%20length%20last%20expected][matcher]]
+# (link "~/local/src/jspec/lib/jspec.js" 38452)
 
 module Jcodetools
 
@@ -11,7 +11,7 @@ module Jcodetools
 FLOAT_TOLERANCE = 0.0001
   class XMPJSpecFilter < XMPFilter
     INTERPRETER_JSPEC = Interpreter.new(["-w"], :execute_jspec, nil)
-    # [[file:~/local/src/rails/actionpack/lib/action_view/helpers/javascript_helper.rb::javascript%20gsub%20r%20n%20n%20r%20JS_ESCAPE_MAP%201][escape]]
+    # (link "~/local/src/rails/actionpack/lib/action_view/helpers/javascript_helper.rb" 6585)
     JS_ESCAPE_MAP = {
         '\\'    => '\\\\',
         '</'    => '<\/',

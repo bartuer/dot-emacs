@@ -64,9 +64,9 @@ class TestXMPCompleteFilter < Test::Unit::TestCase
   def test_completion_code
     xmp = XMPCompleteFilter.new(:use_spec => false)
     code = File.readlines(File.join(File.dirname(__FILE__), "data/attic/jspec_complete.js")).join
-    assert_equal "var test_obj = {\n  p: defun ,\n  place: cook,\n  a: [1,2,3] ,\n  d: {one:1,\n  two: '2'\n  },\n  b:false\n};\ntest_obj.\nfunction defun(name, len, from, to) {\n\n}\n\nfunction cook(chicken,pork,beef) {\n\n}\n\n", code
+
     result = xmp.completion_code(code,10)
-    assert_equal "p(name, len, from, to)|p(name, len, from, to)__JCT_NEWLINE__place(chicken, pork, beef)|place(chicken, pork, beef)__JCT_NEWLINE__a[]|a__JCT_NEWLINE__d{}|d__JCT_NEWLINE__b|b", result
+    assert_equal "p(name, len, from, to)|p(name, len, from, to)\\nplace(chicken, pork, beef)|place(chicken, pork, beef)\\na[]|a\\nd{}|d\\nb|b", result
   end
 end
 

@@ -3,6 +3,8 @@
 # Use and distribution subject to the terms of the Ruby license.
 require 'jcodetools/xmpfilter'
 require "jcodetools/xmpjspecfilter"
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
 
 module Jcodetools
 
@@ -23,6 +25,9 @@ module Jcodetools
       super
       @interpreter_info = INTERPRETER_COMPLETE
       @use_spec = opts[:use_spec]
+      jct_completion_debug = '/tmp/jct_completion_debug'
+      File.unlink jct_completion_debug if File.exist? jct_completion_debug
+      @debuglog = File.open(jct_completion_debug, "w")
     end
 
     def self.run(code, opts)
@@ -32,8 +37,11 @@ module Jcodetools
     def prepare_code(code)
       escaped_code = code.gsub(/(["])/) { JS_ESCAPE_MAP[$1] }
       wraped_code  = @use_spec?  Jcodetools::XMPJSpecFilter.jspec_wrap(escaped_code) : escaped_code
-      wraped_code.gsub!(/__JCT_NEWLINE__/, '\n').gsub!(/__JCT_FUNC_PARAMETERS_RE__/, '\n*function *[a-zA-Z0-9_]*(\(.*\)) *\{[.\n]*\}\n*')
-      Jcodetools::XMPFilter.oneline_ize(wraped_code).chomp
+      wraped_code.gsub!(/__JCT_NEWLINE__/, '\n')
+      send_to_shell_code = Jcodetools::XMPFilter.oneline_ize(wraped_code).chomp
+      @debuglog << "SEND_TO_JSHELL: " << "\n"
+      @debuglog << send_to_shell_code
+      send_to_shell_code
     end
     
     def execute_complete(code)
@@ -46,7 +54,9 @@ module Jcodetools
     end
 
     def prepare_line(line, column)
-      expr = line.gsub(/^(\w*)[.\[](.*)$/, '\1')
+      expr = line.gsub(/^(\w*)\.$/, '\1')
+      @debuglog << "LINE: " << line << "\n"
+      @debuglog << "EXPR: " << expr << "\n"
       if (expr)
         idx = 1
         Jcodetools::XMPFilter.oneline_ize(<<EOC).chomp
@@ -59,9 +69,7 @@ module Jcodetools
     } else if (jct_target[jct_k].toString() === '[object Object]') {
       members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '{}' + '|' + jct_k);
     } else if (typeof jct_target[jct_k] === 'function') {
-      var function_introspection = jct_target[jct_k].toString();
-      var sig = jct_k + function_introspection.replace(/__JCT_FUNC_PARAMETERS_RE__/gm, '$1');
-      members.push('#{MARKER}[#{idx}] ~=> ' + sig + '|' + sig);
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '|' + jct_k);
     } else {
       members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '|' + jct_k);
     }
@@ -78,13 +86,14 @@ EOC
         if i+1 == lineno
           newcode.push(prepare_line(line.chomp, nil))
         else
-          newcode.push(line)
+          newcode.push(line.gsub(/\/\/#=>.*$/,';'))
         end
       }
       stdout, stderr = execute_complete(newcode.join)
       output = stdout.readlines
       runtime_data = extract_data(output)
       dat = runtime_data.results[1]
+      debugger;
       dat.join('__JCT_NEWLINE__')
     end
     

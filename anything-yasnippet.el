@@ -170,6 +170,18 @@
 
 (setq anything-yasnippet-introsepct-table nil)
 
+
+(defun prepare-js-completion-line ()
+  (message "js completion line %d: see %s"
+           (jct-current-line)
+           "/tmp/jct_completion_debug")
+  (write-region (point-min) (point-max) "/tmp/jct_completion" nil 1 nil nil)
+  (split-string
+   (shell-command-to-string
+    (format "jxmpfilter -c --line %d /tmp/jct_completion"
+            (jct-current-line) )) "__JCT_NEWLINE__")
+  )
+
 (setq anything-c-source-complete-introspect-js 
       '((name . "Introspect Completion")
         (candidates 
@@ -183,11 +195,8 @@
                (setq anything-yasnippet-introspect-table
                      (mapcar 
                       'anything-js-introspect-parser
-                      (split-string
-                       (shell-command-to-string
-                        (format "jxmpfilter -c --line %d %s"
-                                (jct-current-line) (buffer-file-name))) "__JCT_NEWLINE__")
-                                )) 
+                      (prepare-js-completion-line)
+                                ))
              (error (setq anything-yasnippet-introspect-table nil))
              )
            )
