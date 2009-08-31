@@ -84,20 +84,41 @@
 (defun js-message-length ()
   js-message-length)
 
-(defun yasnippet-complete-js (msg)
-  "constructure an snippet according to the js signature string"
-  (flymake-mode nil)
-  (setq js-message-length (length msg))
+(defun yasnippet-func-complete (msg)
   (setq para-fun '(lambda (para)
                     (setq count (1+ count))
                     (format "${%d:%s}" count para)))
-  (setq signature-template ((lambda (signature)
+  ((lambda (signature)
                               (let ((count 0))
                                 (replace-regexp-in-string
                                  anything-js-parameter-define-re
                                  para-fun
                                  signature))
                               ) msg))
+
+(defun yasnippet-complete-js (msg)
+  "constructure an snippet according to the js signature string"
+  (flymake-mode nil)
+  (setq js-message-length (length msg))
+  (cond ((string-match "(" msg)
+         (setq signature-template
+               (yasnippet-func-complete msg)))
+        ((string-match "\\[" msg)
+         (setq signature-template
+               (replace-regexp-in-string
+                "[0-9]+"
+                '(lambda (num)
+                   (format "${1:%s}" num))
+                msg)))
+        ((string-match "{" msg)
+         (setq signature-template
+               (replace-regexp-in-string
+                "{}"
+                "."
+                msg )))
+        (t
+         (setq signature-template msg)))
+  
   (insert "anythingetagsjs")
   (yas/define 'js2-mode
               "anythingetagsjs"
@@ -196,7 +217,7 @@
                      (mapcar 
                       'anything-js-introspect-parser
                       (prepare-js-completion-line)
-                                ))
+                      ))
              (error (setq anything-yasnippet-introspect-table nil))
              )
            )

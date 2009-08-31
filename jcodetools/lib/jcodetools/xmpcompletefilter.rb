@@ -68,9 +68,9 @@ module Jcodetools
     if (o === null) {
       members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + ':null' + '|' + jct_k);
     } else if (o.constructor === Array) {
-      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '[' + o.length + ']' + '|' + jct_k);
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '[' + o.length + ']' + '|' + jct_k + '[' + (o.length - 1) + ']');
     } else if (o.toString() === '[object Object]') {
-      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '{ }' + '|' + jct_k);
+      members.push('#{MARKER}[#{idx}] ~=> ' + jct_k + '{ }' + '|' + jct_k + '{}');
     } else if (typeof o === 'function') {
       var a = o.toString().split('__JCT_NEWLINE__');
       var sig = jct_k + a[1].replace(/__JCT_FUNC_PARAMETERS_RE__/g, '$1');
