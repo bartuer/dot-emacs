@@ -92,7 +92,7 @@ docstring as fixture, try above line.
         (output-js (concat (make-temp-name "jxmptmp-out") ".js"))
         (coding-system-for-read buffer-file-coding-system))
     (write-region (point-min) (point-max) input-js nil 'nodisp)
-    (message (format "invoke debugger like this:\n%s copy.js\nset break and get annotated code, then invoke \nrhino -f code.js" command))
+;;;     (message (format "invoke debugger like this:\n%s copy.js\nset break and get annotated code, then invoke \nrhino -f code.js" command))
     (shell-command
      (jct-debuglog (format "%s %s > %s" command input-js output-js))
      t "*jct-error*")
