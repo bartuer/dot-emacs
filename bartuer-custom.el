@@ -114,6 +114,7 @@
  '(icicle-search-context-level-4 ((((background dark)) nil)))
  '(icicle-search-context-level-8 ((((background dark)) nil)))
  '(icicle-special-candidate ((((background dark)) nil)))
+ '(js2-jsdoc-html-tag-delimiter-face ((((class color) (min-colors 8) (background dark)) (:foreground "yellow"))))
  '(link ((((class color) (background light)) (:foreground "cyan" :underline t))))
  '(magit-item-highlight ((nil (:foreground "green"))))
  '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))

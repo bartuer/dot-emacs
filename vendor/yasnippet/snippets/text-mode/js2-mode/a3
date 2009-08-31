@@ -1,0 +1,13 @@
+# name : api 3 parameter
+# --
+/**
+ * The $1 method $0
+ * 
+ * @param $2
+ * @param $3
+ * @param $4
+ * @return 
+ */
+`(replace-regexp-in-string ".js" "" (file-name-nondirectory (buffer-file-name)))`.${1:func} = function (${2:arg1}, ${3:arg2}, ${4:arg3}) {
+  
+};
