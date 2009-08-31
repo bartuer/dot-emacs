@@ -11,6 +11,8 @@ ENV['HOME'] ||= "#{ENV['HOMEDRIVE']}#{ENV['HOMEPATH']}"
 require 'jcodetools/fork_config'
 require 'jcodetools/compat'
 require 'tmpdir'
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start
 
 module Jcodetools
 
@@ -27,6 +29,15 @@ class XMPFilter
 
   INITIALIZE_OPTS = {:interpreter => "rhino", :options => [], :warnings => true, 
                      :output_stdout  => true, :use_parentheses => false}
+
+  JS_ESCAPE_MAP = {
+    '\\'    => '\\\\',
+    '</'    => '<\/',
+    "\r\n"  => '\n',
+    "\n"    => '\n',
+    "\r"    => '\n',
+    '"'     => '\\"',
+    "'"     => "\\'" }
 
   def windows?
     /win|mingw/ =~ RUBY_PLATFORM && /darwin/ !~ RUBY_PLATFORM
@@ -60,7 +71,6 @@ class XMPFilter
     @postfix = ""
     @stdin_path = nil
     @width = options[:width]
-    
     @evals << %Q!load('/Users/bartuer/etc/el/js/env.js');!
   end
 
@@ -74,14 +84,18 @@ class XMPFilter
     end
     ret
   end
-  
-  SINGLE_LINE_RE = /^(?!(?:\s+|(?:\s*\/\/.+)?)\/\/# ?=>)(.*) \/\/# ?=>.*/
-  def annotate(code)
+
+  def prepare_code(code)
     idx = 0
     code = code.gsub(/\/\/# !>.*/, '')
-    newcode = code.gsub(SINGLE_LINE_RE){ prepare_line($1, idx += 1) }
+    send_to_shell_code = code.gsub(SINGLE_LINE_RE){ prepare_line($1, idx += 1) }
     File.open(@dump, "w"){|f| f.puts newcode} if @dump
-    stdout, stderr = execute(newcode)
+    send_to_shell_code
+  end
+
+  SINGLE_LINE_RE = /^(?!(?:\s+|(?:\s*\/\/.+)?)\/\/# ?=>)(.*) \/\/# ?=>.*/
+  def annotate(code)
+    stdout, stderr = execute(prepare_code(code))
 
     dump = stdout.readlines
     output = []
@@ -139,6 +153,7 @@ class XMPFilter
   end
   
   def prepare_line_annotation(expr, idx)
+    expr.gsub!(/'/, "\"");
     XMPFilter.oneline_ize(<<-EOF).chomp
 (function (context_obj){
    var uniqid;
