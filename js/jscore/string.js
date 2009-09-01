@@ -178,7 +178,7 @@ String.prototype.entityify = (function () {
 // (link "~/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode/module" 59)
 
 
-"<&>".entityify();              //#=>
+"<&>".entityify();              //#=> '&lt;&amp;&gt;'
 
 /**
  * The search method is like the indexOf method, except that it takes
@@ -317,7 +317,7 @@ string.fromCharCode = function (integer_for_char) {
 
 };
 
-String.fromCharCode(67, 97, 116); //#=>
+String.fromCharCode(67, 97, 116);        //#=> 'Cat'
 
 /**
  * The decodeURI method unescape a URI string or it's component.
