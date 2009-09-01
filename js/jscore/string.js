@@ -160,7 +160,7 @@ var result = "mother_in_law".replace('_', '-'); //#=> 'mother-in_law'
 var old_area_code = /\((\d{3})\)/g;
 var p = '(555)666-1212'.replace(old_area_code, '$1-'); //#=> '555-666-1212'
 
-String.ng.prototype.entityify = (function () {
+String.prototype.entityify = (function () {
   var charactor = {
         '<': '&lt;' ,
         '>': '&gt;' ,
@@ -178,7 +178,7 @@ String.ng.prototype.entityify = (function () {
 // (link "~/etc/el/vendor/yasnippet/snippets/text-mode/js2-mode/module" 59)
 
 
-"<&>".entityify();              //#=> '&lt;&amp;&gt;'
+"<&>".entityify();              //#=>
 
 /**
  * The search method is like the indexOf method, except that it takes
@@ -317,7 +317,7 @@ string.fromCharCode = function (integer_for_char) {
 
 };
 
-String.ng.fromCharCode(67, 97, 116); //#=> 'Cat'
+String.fromCharCode(67, 97, 116); //#=>
 
 /**
  * The decodeURI method unescape a URI string or it's component.
@@ -371,4 +371,4 @@ string.unescape = function (str) {
 
 };
 
-unescape('%C2%E1%u2020%u2030%u220F%u2122%CA%B1%E2%C2%u2260%F3%3F'); //
+unescape('%C2%E1%u2020%u2030%u220F%u2122%CA%B1%E2%C2%u2260%F3%3F'); //#=> '几个汉字?'
