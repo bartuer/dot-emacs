@@ -273,8 +273,8 @@ EOF
   def execute_popen(code)
     require 'open3'
     stdin, stdout, stderr = Open3::popen3(*interpreter_command)
-    @evals.each{|x| stdin.puts x } unless @evals.empty?
     stdin.puts code
+    @evals.each{|x| stdin.puts x } unless @evals.empty?
     stdin.close
     [stdout, stderr]
   end
