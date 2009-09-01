@@ -1,8 +1,8 @@
 var obj = {};
 
 /**
- * The hasOwnProperty method returns true if this conrains a
- * property.  The prototype chain is notexamined.  THis method is
+ * The hasOwnProperty method returns true if this contains a
+ * property.  The prototype chain is notexamined.  This method is
  * useless if the name is hasOwnProperty.
  *
  * @param name

@@ -26,7 +26,7 @@ a.concat(b, true);                     //#=> ['a', 'b', 'c', 'x', 'y', 'z', true
  * usually faster to put the pieces into an array and join them than
  * it is to concatenate the pieces with the + operator.
  *
- * @param separator   The default spearator is ','.  To join without
+ * @param separator   The default separator is ','.  To join without
  * separation, use an empty  string as the separator.
  * @return a string
  */
@@ -57,7 +57,7 @@ c = a.pop();                    //#=> undefined
 
 /**
  * The push method appends items to the end of an array.  Unlike the
- * concat method, ite modifies the array and appends array items
+ * concat method, it modifies the array and appends array items
  * whole.
  *
  * @param item
@@ -103,11 +103,11 @@ a.shift();                      //#=> 'x'
 a;                              //#=> ['y', 'z']
 
 /**
- * The slice method make a shalow copy of a portion of an array.  The
+ * The slice method make a shadow copy of a portion of an array.  The
  * first element copied will be array[start].  It will stop before
  * copying array[end].
  *
- * @param start If it greater than or eauql to array.length, teh
+ * @param start If it greater than or equal to array.length, the
  * result will be a new empty array
  * @param end The end parameter is optional, and the default is
  * array.length.
@@ -146,7 +146,7 @@ array.sort = function (comaparefn) {
 /* wrong sort:
  * JavaScript's default comparison function assumes that the elements
  * to be sorted are strings.  It isn't clever enough to test the type
- * of the elements before comaring them, so it converts the numbers to
+ * of the elements before comparing them, so it converts the numbers to
  * strings as it compares them, ensuring a shockingly incorrect result.
  *
  * Fortunately, you may replace the comparison function with your own.
@@ -177,7 +177,7 @@ m.sort(function (a, b) {
 m;                              //#=> [4, 8, 15, 16, 23, 42, 'a', 'aa', 'bb']
 
 /*
- * With a smarter comprison function, we can sort an array of objects.
+ * With a smarter comparison function, we can sort an array of objects.
  * To make things easier for the general case, we will write a
  * function that will make comparison functions.
  */
@@ -269,7 +269,7 @@ s;                              //#=> [{ first:'Curly', last:'Howard' }, { first
  * with items.  The most popular use of splice is to delete elements
  * from an array.  Do not confuse splice with slice.
  *
- * @param start postion whitin the array
+ * @param start position within the array
  * @param deleteCount number to be deleted start from the start parameter
  * @param item optional, these will be inserted at the position
  * @return a array containing the deleted elements
@@ -286,7 +286,7 @@ a;                              //#=> ['a', 'ache', 'bug', 'c']
 
 /**
  * The unshift method is like the push method except that it shoves
- * the items onto the front of this arrary insteaf of at the end.
+ * the items onto the front of this array instead of at the end.
  *
  * @param item
  * @return the array's new length.

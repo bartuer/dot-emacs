@@ -9,9 +9,9 @@ var regexp = {};
  * group 2, and so on.  If the match fails it returns null.
  *
  * If the regexp has a g flag, things are a little more complicated.
- * The searching begins not at the postion 0 of the string, but at
- * position regexp.lastIndex which is initally zero.  If the match is
- * successful, then regexp.lastIndex will be set to the postion of the
+ * The searching begins not at the position 0 of the string, but at
+ * position regexp.lastIndex which is initially zero.  If the match is
+ * successful, then regexp.lastIndex will be set to the position of the
  * first character after the match.  An unsuccessful match resets
  * regexp.lastIndex to 0.
  *

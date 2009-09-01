@@ -48,8 +48,8 @@ str.concat = function (string) {
 
 /**
  * The indexOf method searches for a searchString within a string.  If
- * it is found, it returns the postion of the first matched character;
- * otherwise, ite returns -1.  The optional postiion parameter causes
+ * it is found, it returns the position of the first matched character;
+ * otherwise, it returns -1.  The optional position parameter causes
  * the search to begin at some specified position in the string.
  *
  * @param searchString
@@ -182,9 +182,9 @@ String.prototype.entityify = (function () {
 
 /**
  * The search method is like the indexOf method, except that it takes
- * a regexp instead of a string.  It returns the postion of the first
+ * a regexp instead of a string.  It returns the position of the first
  * character of the first match, if there is one, or -1 if the search
- * fails.  The g flag is ignored.  There is no postion parameter.
+ * fails.  The g flag is ignored.  There is no position parameter.
  *
  * @param regexp
  * @return number, failed search return -1
@@ -202,8 +202,8 @@ text.search(/[\"\']/);           //#=> 18
  * to it.  The end parameter is optional, and its default value is
  * string.length.  If the end parameter is negative, then
  * string.length is added to it. The end parameter is one greater
- * than the postion of the last character.  To get n characters
- * starting at postion p, use string.slice(p, p + n).
+ * than the position of the last character.  To get n characters
+ * starting at position p, use string.slice(p, p + n).
  *
  * @param start
  * @param end
@@ -263,7 +263,7 @@ str.substring = function (start, end) {
  * The toLocaleLowerCase method produces a new string that is made by
  * converting this string to lowercase using the rules for the
  * locale.  This is primarily for the benefit of Turkish because in
- * that languagee 'I' converts to 1, not 'i'.
+ * that language 'I' converts to 1, not 'i'.
  *
  * @return string
  */
