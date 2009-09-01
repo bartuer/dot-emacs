@@ -44,7 +44,9 @@ module OptionHandler
     on("--current_file_name=FILENAME", "Current file name.") do |f|
      options[:current_file_name] = f
     end
-
+    on("--dump=FILENAME", "dump code") do |f|
+      options[:dump] = f
+    end
     on("-h", "--help", "Show this message") do
       puts self
       exit

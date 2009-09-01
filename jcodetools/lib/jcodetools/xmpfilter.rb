@@ -12,7 +12,12 @@ require 'jcodetools/fork_config'
 require 'jcodetools/compat'
 require 'tmpdir'
 require 'rubygems'
+
 require 'ruby-debug' ; Debugger.start
+# here is mini howto
+# (link "~/etc/el/jcodetools/jcodetools.el" 3274)
+# most crap place, check the input expression first
+# (link "~/etc/el/jcodetools/lib/jcodetools/xmpfilter.rb" 4835)
 
 module Jcodetools
 
@@ -89,7 +94,7 @@ class XMPFilter
     idx = 0
     code = code.gsub(/\/\/# !>.*/, '')
     send_to_shell_code = code.gsub(SINGLE_LINE_RE){ prepare_line($1, idx += 1) }
-    File.open(@dump, "w"){|f| f.puts newcode} if @dump
+    File.open(@dump, "w"){|f| f.puts send_to_shell_code} if @dump
     send_to_shell_code
   end
 
@@ -153,7 +158,7 @@ class XMPFilter
   end
   
   def prepare_line_annotation(expr, idx)
-    expr.gsub!(/'/, "\"");
+    expr = expr.gsub(/'/, "\"").gsub(/var /, "");
     XMPFilter.oneline_ize(<<-EOF).chomp
 (function (context_obj){
    var uniqid;
