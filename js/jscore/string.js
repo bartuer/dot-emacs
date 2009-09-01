@@ -1,4 +1,4 @@
-var str = {};
+var string = {};
 
 /**
  * The charAt method return the char at pos, if pos is less than zero
@@ -9,7 +9,7 @@ var str = {};
  * @param pos
  * @return char at position pos in string
  */
-str.charAt = function (pos) {
+string.charAt = function (pos) {
 
 };
 
@@ -26,7 +26,7 @@ var initial = name.charAt(0);   //#=> 'C'
  * @param pos
  * @return number
  */
-str.charCodeAt = function (pos) {
+string.charCodeAt = function (pos) {
 
 };
 
@@ -40,7 +40,7 @@ name.charCodeAt(0);             //#=> 67
  * @param string
  * @return new string
  */
-str.concat = function (string) {
+string.concat = function (string) {
 
 };
 
@@ -56,7 +56,7 @@ str.concat = function (string) {
  * @param position
  * @return number
  */
-str.indexOf = function (searchString, position) {
+string.indexOf = function (searchString, position) {
 
 };
 
@@ -73,7 +73,7 @@ text.indexOf('ss', 6);          //#=> -1
  * @param position
  * @return number
  */
-str.lastIndexOf = function (searchString, position) {
+string.lastIndexOf = function (searchString, position) {
 
 };
 
@@ -91,7 +91,7 @@ text.lastIndexOf('ss', 6);      //#=> 5
  * @param that
  * @return number, negative, zero, or nonnegative
  */
-str.localCompare = function (that) {
+string.localCompare = function (that) {
 
 };
 
@@ -113,7 +113,7 @@ m;                              //#=> ['a', 'A', 'aa', 'Aa', 'aaa', 'AAA']
  * @param regexp
  * @return array or
  */
-str.match = function (regexp) {
+string.match = function (regexp) {
 
 };
 
@@ -149,7 +149,7 @@ str.match = function (regexp) {
  * @param replaceValue  string or function
  * @return new string
  */
-str.replace = function (searchValue, replaceValue) {
+string.replace = function (searchValue, replaceValue) {
 
 };
 
@@ -160,7 +160,7 @@ var result = "mother_in_law".replace('_', '-'); //#=> 'mother-in_law'
 var old_area_code = /\((\d{3})\)/g;
 var p = '(555)666-1212'.replace(old_area_code, '$1-'); //#=> '555-666-1212'
 
-String.prototype.entityify = (function () {
+String.ng.prototype.entityify = (function () {
   var charactor = {
         '<': '&lt;' ,
         '>': '&gt;' ,
@@ -189,7 +189,7 @@ String.prototype.entityify = (function () {
  * @param regexp
  * @return number, failed search return -1
  */
-str.search = function (regexp) {
+string.search = function (regexp) {
 
 };
 
@@ -210,7 +210,7 @@ text.search(/[\"\']/);           //#=> 18
  * @return new string
  * @see substring and array.slice
  */
-str.slice = function (start, end) {
+string.slice = function (start, end) {
 
 };
 
@@ -229,7 +229,7 @@ text.slice(19, 32);             //#=> 'Any damn fool'
  * @param limit
  * @return array of strings
  */
-str.split = function (separator, limit) {
+string.split = function (separator, limit) {
 
 };
 
@@ -255,7 +255,7 @@ text.split(/\s*(,)\s*/);        //#=> ['last', ',', 'first', ',', 'middle']
  * @param end
  * @return new string
  */
-str.substring = function (start, end) {
+string.substring = function (start, end) {
 
 };
 
@@ -267,7 +267,7 @@ str.substring = function (start, end) {
  *
  * @return string
  */
-str.toLocaleLowerCase = function () {
+string.toLocaleLowerCase = function () {
 
 };
 
@@ -279,7 +279,7 @@ str.toLocaleLowerCase = function () {
  *
  * @return string
  */
-str.toLocaleUpperCase = function () {
+string.toLocaleUpperCase = function () {
 
 };
 
@@ -289,7 +289,7 @@ str.toLocaleUpperCase = function () {
  *
  * @return string
  */
-str.toLowerCase = function () {
+string.toLowerCase = function () {
 
 };
 
@@ -301,7 +301,7 @@ str.toLowerCase = function () {
  *
  * @return string
  */
-str.toUpperCase = function () {
+string.toUpperCase = function () {
 
 };
 
@@ -313,8 +313,62 @@ str.toUpperCase = function () {
  * @param char
  * @return string
  */
-str.fromCharCode = function (integer_for_char) {
+string.fromCharCode = function (integer_for_char) {
 
 };
 
-String.fromCharCode(67, 97, 116); //#=> 'Cat'
+String.ng.fromCharCode(67, 97, 116); //#=> 'Cat'
+
+/**
+ * The decodeURI method unescape a URI string or it's component.
+ * Indeed it is a Global function, not a String function.
+ * @param uri
+ * @return original URI
+ */
+string.decodeURI = function (uri) {
+
+};
+
+decodeURI("http://www.sample.com/hellow%20world"); //#=> 'http://www.sample.com/hellow world'
+// it also works for component
+decodeURI("hello%20world");                       //#=> 'hello world'
+
+/**
+ * The encodeURI method escape a URI string or it's component.
+ * Indeed it is a Global function, not a String function.
+ *
+ * @param uri
+ * @return encoded URI
+ */
+string.encodeURI = function (uri) {
+
+};
+
+encodeURI("http://www.example.com/please wait a moment/?"); //#=> 'http://www.example.com/please%20wait%20a%20moment/?'
+// it also works for component
+encodeURI("hi is it okay?");    //#=> 'hi%20is%20it%20okay?'
+
+/**
+ * Escape  a string, the encoded string will be suitable transfer on
+ * network.  Indeed it is a Global function, not a String function.
+ *
+ * @param str
+ * @return encoded string
+ */
+string.escape = function (str) {
+
+};
+escape("几个汉字?");       //#=> '%C2%E1%u2020%u2030%u220F%u2122%CA%B1%E2%C2%u2260%F3%3F'
+
+/**
+ * Unescape the escaped string.
+ * Indeed it is a Global function, not a String function.
+ *
+ * @param str
+ * @return original string
+ */
+string.unescape = function (str) {
+
+};
+
+unescape('%C2%E1%u2020%u2030%u220F%u2122%CA%B1%E2%C2%u2260%F3%3F'); //

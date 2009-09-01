@@ -1,0 +1,6 @@
+(defalias 'cc '(lambda()
+                 (interactive)
+                 (c-mode)
+                 (auto-fill-mode)
+                 (flyspell-prog-mode)))
+(defalias 'jj 'js2-mode)

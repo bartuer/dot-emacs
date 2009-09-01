@@ -71,3 +71,84 @@ String(2);                      //#=> '2'
 Math.PI.toString(8);            //#=> '3.1103755242102643'
 Math.PI.toString(2);            //#=> '11.001001000011111101101010100010001000010110100011'
 Math.PI.toString(16);           //#=> '3.243f6a8885a3'
+
+/**
+ * The isNaN method, but a string like number and boolean are
+ * considered NOT NaN.  Indeed it is a Global function, not a Number
+ * function.
+ *
+ * @return boolean
+ * @see NEGATIVE_INFINITY, POSTIVE_INFINITY, Infinity, MAX_VALUE
+ */
+number.isNaN = function () {
+
+};
+
+isNaN(0/0);                     //#=> true
+isNaN('hi');                    //#=> true
+isNaN(undefined);               //#=> true
+isNaN("3");                     //#=> false
+isNaN(true);                    //#=> false
+
+/**
+ * The isFinite method easy to confuse people, for it means not
+ * infinite.  Indeed it is a Global function, not a Number
+ * function.
+ *
+ * @return boolean
+ */
+number.isFinite = function () {
+
+};
+
+isFinite(Infinity);                 //#=> false
+isFinite(Number.NEGATIVE_INFINITY); //#=> false
+isFinite(Number.POSTIVE_INFINITY);  //#=> false
+isFinite(2);                        //#=> true
+Infinity;                           //#=> Infinity
+Number.NEGATIVE_INFINITY;           //#=> -Infinity
+Number.POSTIVE_INFINITY;            //#=> undefined
+Number.MAX_VALUE;                   //#=> 1.7976931348623157e+308
+
+/**
+ * The parseInt method parse a string to integrate, if the optional
+ * parameter radix is less than 2 or greater than 36, NaN will
+ * returned.  If only has str parameter, the radix is decide on the
+ * format of the string.
+ *
+ * @param str string
+ * @param radix optinal
+ * @return decimal integrate
+ * @see parseFloat
+ */
+number.parseInt = function (str, radix) {
+
+};
+
+parseInt("22", 36);             //#=> 74
+parseInt("22", 37);             //#=> NaN
+parseInt("10010110", 2);        //#=> 150
+parseInt("0xabc");              //#=> 2748
+parseInt("010");                //#=> 8
+parseInt("09");                 //#=> NaN
+parseInt("0xA88");              //#=> 2696
+
+/**
+ * The parseFloat method parse a string to Number, it parses and
+ * returns the first number that occurs in the string, then, parsing
+ * stop and the value is returned. Do not use it parse a non decimal
+ * integrate.
+ *
+ * @param str
+ * @return Number
+ * @see parseInt
+ */
+number.parseFloat = function (str) {
+
+};
+
+parseFloat("12.34yu78");                //#=> 12.34
+parseFloat("1.2e+23");                  //#=> 1.2e+23
+parseFloat("-20932093802938.30133820"); //#=> -20932093802938.3
+parseFloat("a88");                      //#=> NaN
+parseFloat("0xA88");                    //#=> 0

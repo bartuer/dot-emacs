@@ -49,3 +49,41 @@ x();                            //#=> 77
 data.name = 'Ford';
 data.value = data.name;
 x();                            //#=> 'Ford'
+
+/**
+ * Tee arguments[] array is defined only within a function body.
+ * Within the body of a function, arguments refers to the Arguments
+ * object for the function .  This object has numbered properties and
+ * serves as an array containing all arguments passed to the
+ * function.  The arguments identifier is essentially a local variable
+ * automatically declared and initialized within every function.  It
+ * is undefined in global scope.
+ *
+ * @return
+ */
+func.arguments = function () {
+
+};
+
+func.arguments.callee = function () {
+
+};
+
+func.arguments.length = function () {
+
+};
+
+function f(a, b, c) {
+  return arguments.length;
+}
+f(1,2,3);                       //#=> 3
+
+function factorial(x) {
+  if (x < 2) {
+    return 1;
+  } else {
+    return x * arguments.callee(x-1);
+  }
+
+}
+factorial(5);                   //#=> 120

@@ -1,4 +1,4 @@
-var obj = {};
+var object = {};
 
 /**
  * The hasOwnProperty method returns true if this contains a
@@ -8,7 +8,7 @@ var obj = {};
  * @param name
  * @return boolean
  */
-obj.hasOwnProperty = function (name) {
+object.hasOwnProperty = function (name) {
 
 };
 

@@ -1,0 +1,71 @@
+
+/Users/bartuer/etc/el/js/jscore/array.js,741
+array.concat = function (item) {array.concat(item)12,290
+array.join = function (separator) {array.join(separator)33,1005
+array.pop = function () {array.pop()47,1399
+array.push = function (item) {array.push(item)66,1814
+array.reverse = function () {array.reverse()81,2130
+array.shift = function () {array.shift()97,2487
+array.slice = function (start, end) {array.slice(start, end)119,3119
+array.sort = function (comaparefn) {array.sort(comaparefn)142,3788
+array.splice = function (start, deleteCount, item) {array.splice(start, deleteCount, item)278,8735
+array.unshift = function (item) {array.unshift(item)294,9157
+var by = function (name) {by(name)189,5410
+var by2 = function (name, minor) {by2(name, minor)239,7215
+
+/Users/bartuer/etc/el/js/jscore/date.js,0
+
+/Users/bartuer/etc/el/js/jscore/func.js,590
+func.apply = function (thisArg, argArray) {func.apply(thisArg, argArray)12,280
+func.arguments = function () {func.arguments()64,1835
+func.arguments.callee = function () {func.arguments.callee()68,1878
+func.arguments.length = function () {func.arguments.length()72,1921
+Function.prototype.bind = function (that) {Function.prototype.bind(that)22,502
+function f(a, b, c) {f(a, b, c).<definition-1>76,1940
+function f(a, b, c) {f(a, b, c).<definition-2>76,1940
+function factorial(x) {factorial(x).<definition-1>81,2032
+function factorial(x) {factorial(x).<definition-2>81,2032
+
+/Users/bartuer/etc/el/js/jscore/math.js,0
+
+/Users/bartuer/etc/el/js/jscore/number.js,587
+number.toExponential = function (fractionDigits) {number.toExponential(fractionDigits)11,293
+number.toFixed = function (fractionDigits) {number.toFixed(fractionDigits)29,868
+number.toPrecision = function (precision) {number.toPrecision(precision)47,1372
+number.toString = function (radix) {number.toString(radix)66,1908
+number.isNaN = function () {number.isNaN()83,2435
+number.isFinite = function () {number.isFinite()100,2856
+number.parseInt = function (str, radix) {number.parseInt(str, radix)124,3634
+number.parseFloat = function (str) {number.parseFloat(str)146,4254
+
+/Users/bartuer/etc/el/js/jscore/object.js,173
+object.hasOwnProperty = function (name) {object.hasOwnProperty(name)11,257
+    var F = function () {};F()22,539
+  Object.create = function (o) {Object.create(o)21,512
+
+/Users/bartuer/etc/el/js/jscore/regexp.js,124
+regexp.exec = function (string) {regexp.exec(string)27,1200
+regexp.test = function (string) {regexp.test(string)64,3790
+
+/Users/bartuer/etc/el/js/jscore/string.js,1597
+string.charAt = function (pos) {string.charAt(pos)12,334
+string.charCodeAt = function (pos) {string.charCodeAt(pos)29,772
+string.concat = function (string) {string.concat(string)43,1051
+string.indexOf = function (searchString, position) {string.indexOf(searchString, position)59,1507
+string.lastIndexOf = function (searchString, position) {string.lastIndexOf(searchString, position)76,1911
+string.localCompare = function (that) {string.localCompare(that)94,2476
+string.match = function (regexp) {string.match(regexp)116,3113
+string.replace = function (searchValue, replaceValue) {string.replace(searchValue, replaceValue)152,4658
+string.search = function (regexp) {string.search(regexp)192,5848
+string.slice = function (start, end) {string.slice(start, end)213,6528
+string.split = function (separator, limit) {string.split(separator, limit)232,7083
+string.substring = function (start, end) {string.substring(start, end)258,7902
+string.toLocaleLowerCase = function () {string.toLocaleLowerCase()270,8233
+string.toLocaleUpperCase = function () {string.toLocaleUpperCase()282,8556
+string.toLowerCase = function () {string.toLowerCase()292,8729
+string.toUpperCase = function () {string.toUpperCase()304,8947
+string.fromCharCode = function (integer_for_char) {string.fromCharCode(integer_for_char)316,9148
+string.decodeURI = function (uri) {string.decodeURI(uri)328,9421
+string.encodeURI = function (uri) {string.encodeURI(uri)343,9827
+string.escape = function (str) {string.escape(str)358,10266
+string.unescape = function (str) {string.unescape(str)370,10534

@@ -74,6 +74,7 @@ it is suitable to browse OO hierarchy"
                                                                      (concat prototype-root "src")
                                                                      "~/local/src/js-functional"
                                                                      "~/etc/el/js"
+                                                                     "~/etc/el/js/jscore"
                                                                      "~/local/src/mozilla-1.9.1/js/narcissus"
                                                                      ))))
   (anything-etags-select))
