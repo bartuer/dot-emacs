@@ -50,7 +50,7 @@ class TestXMPJSPECFilter < Test::Unit::TestCase
     code = code.gsub(/\/\/# !>.*/, '') 
     newcode = code.gsub(@@single_re){ xmp.prepare_line_annotation($1, idx += 1) }
     stdout, stderr = xmp.execute_jspec(newcode)
-    assert_equal "!__XMP__MARKR__![1] => boolean true version suites allSuites matchers stats options defaultContext formatters Assertion ProxyAssertion Suite Spec DSLs findSuite shareBehaviorsOf copySpecs argumentsToArray color defaultMatcherMessage normalizeMatcherMessage normalizeMatcherBody option hash last puts escape does expect strip callIterator extend each inject map any select addMatchers addMatcher describe contentsOf evalBody preprocess range whenFinished report run whenCurrentSpecIsFinished runSuite fail runSpec requires query error post reportToServer xhr hasXhr load exec currentSuite currentSpec\n", stdout.readlines[0].gsub!(/XMP[0-9]*_[0-9]*_[0-9]*/, "__XMP__MARKR__").gsub!(/__JCTNEWLINE__/," ")
+    assert_equal "!__XMP__MARKR__![1] => boolean true version cache suites modules allSuites matchers stubbed request stats options defaultContext formatters Assertion ProxyAssertion Suite Spec Module JSON DSLs haveStopped include hook evalHook hookImmutable findSuite shareBehaviorsOf copySpecs argumentsToArray color defaultMatcherMessage normalizeMatcherMessage normalizeMatcherBody option hash last puts escape does expect strip callIterator extend each inject destub stub map any select addMatchers addMatcher describe contentsOf paramsFor evalBody preprocess range report run runSuite fail pass runSpec requires query error post xhr hasXhr tryLoading load exec currentSuite currentSpec\n", stdout.readlines[0].gsub!(/XMP[0-9]*_[0-9]*_[0-9]*/, "__XMP__MARKR__").gsub!(/__JCTNEWLINE__/," ")
   end
 
   

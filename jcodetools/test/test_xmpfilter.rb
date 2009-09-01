@@ -130,7 +130,7 @@ class TestXMPFilter < Test::Unit::TestCase
     exception_output = stdout.readlines
     assert_equal "!__XMP__MARKER__![1] ~> ReferenceError: \"no_method_defined\" is not defined.__JCTNEWLINE__\n", exception_output.join.gsub(/XMP[0-9]*_[0-9]*_[0-9]*/, "__XMP__MARKER__")
     output = stderr.readlines
-    assert_equal ["Rhino 1.7 release 2 2009 06 09\n", "js> js> js: \"<stdin>\", line 3: exception from uncaught JavaScript throw: ReferenceError: \"no_method_defined\" is not defined.\n", "\n", "js> \n"], output
+    assert_equal ["Rhino 1.7 release 2 2009 06 09\n", "js> js: \"<stdin>\", line 2: exception from uncaught JavaScript throw: ReferenceError: \"no_method_defined\" is not defined.\n", "\n", "js> js> \n"], output
   end
   
   def test_annotate
