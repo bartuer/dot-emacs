@@ -20,5 +20,5 @@
 	path = vendor/ri
 	url = git://github.com/technomancy/ri.el.git
 [submodule "jcodetools"]
-        path = jcodetools
-        url = git://jcodetools.git
+	path = jcodetools
+	url = jcodetools
