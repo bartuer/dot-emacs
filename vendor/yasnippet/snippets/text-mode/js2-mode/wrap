@@ -1,0 +1,3 @@
+# name: wrap prototype dom tree
+# --
+wrap('${1:div}', {'class': '${2:attribute}'})
