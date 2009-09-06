@@ -45,9 +45,13 @@
       (unit-test-js))
   (jxmp (concat option " --current_file_name=" (expand-file-name (buffer-file-name))))
   (if (file-exists-p "/tmp/jct-emacs-backtrace")
-      (pop-to-buffer 
-       (ruby-compilation-do "jct-compilation"
-                            (cons "cat" (list "/tmp/jct-emacs-backtrace")))))
+      (progn (pop-to-buffer 
+              (ruby-compilation-do "jct-compilation"
+                            (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
+             (sleep-for 0.1)
+             (goto-char (point-min))
+             (compile-goto-error))
+             )
   (if (file-exists-p "/tmp/jct-emacs-message")
       (with-current-buffer
           (get-buffer-create "jct-result")
