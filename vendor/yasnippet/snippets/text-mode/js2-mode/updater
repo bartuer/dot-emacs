@@ -1,0 +1,10 @@
+# name: updater prototype ajax
+# 
+# (link "~/local/src/prototype/src/ajax/request.js" 2979)
+# --
+new Ajax.Updater(${1:'container}, ${2:'url'}, {
+  parameters: { ${3:k}: ${4:v}},
+  insertion: 'before after top bottom',
+  opt$0,
+  cb
+});

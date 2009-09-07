@@ -1,0 +1,13 @@
+#name : option request prototype ajax
+# http://en.wikipedia.org/wiki/Same_origin_policy
+# --
+asynchronous: true,
+contentType:  'application/x-www-form-urlencoded',
+encoding: 'UTF-8',
+method: 'post',
+parameters: llit,
+postBody: 'content',
+requestHeaders: llit,
+evalJS: true,
+evalJSON: true,
+sanitizeJSON: true

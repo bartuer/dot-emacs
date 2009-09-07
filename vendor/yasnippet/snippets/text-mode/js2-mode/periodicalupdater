@@ -1,0 +1,12 @@
+# name: periodical updater prototype ajax
+# (link "~/local/src/prototype/src/ajax/periodical_updater.js" 1)
+# (link "~/local/src/prototype/src/ajax/periodical_updater.js" 2111)
+# --
+new Ajax.PeriodicalUpdater(${1:'container'}, ${2:'url'}, {
+  frequency: 2,
+  decay: 1,
+  parameters: { ${3:k}: ${4:v}},
+  insertion: 'before after top bottom',
+  opt$0,
+  cb
+});

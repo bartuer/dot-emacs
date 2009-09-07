@@ -1,0 +1,3 @@
+# name: getResponseHeader() response prototype ajax
+# --
+r.getResponseHeader()
