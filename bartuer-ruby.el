@@ -72,13 +72,16 @@ lisp, really need add one.
 (defun activerecord-rct-option ()
   "-I/Users/bartuer/local/src/rails/activerecord/lib -I/Users/bartuer/local/src/rails/activerecord/test -I/Users/bartuer/local/src/rails/activerecord/test/connections/native_sqlite3")
 
+(defun baza-rct-option ()
+  "-I~/local/src/baza/test")
+
 (defun ido-rct-option ()
   "select rct options from candidate"
   (list
    (let ((option (or rct-option-local "")))
      (if current-prefix-arg
          (let ((compact-rct-option (ido-completing-read "(describe-variable 'rct-option-local)"
-                                               (list "actionpack" "activerecord"))))(actionpack-rct-option)
+                                               (list "actionpack" "activerecord" "baza"))))(actionpack-rct-option)
            (setq rct-option-local (apply (intern (concat compact-rct-option "-rct-option")) nil)))
        option))))
 
