@@ -5,7 +5,7 @@
 (file-cache-add-directory "~/local/src/prototype/src/ajax")
 (file-cache-add-directory "~/local/src/prototype/src/dom")
 (file-cache-add-directory "~/local/src/prototype/src/lang")
-(file-cache-add-directory "~/local/src/baza/public/javascripts/Parts")
+(file-cache-add-directory "~/local/src/baza/lib/Parts")
 (file-cache-add-directory "~/local/src/rails3-tut-code/e1/ar")
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/bin")
 (file-cache-add-directory "~/etc/el/vendor/rcodetools/lib")
