@@ -34,7 +34,7 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "rhino" "MozRepl"  "squirrelfish" "spidermonkey" "v8") nil t)))
+                                   (list  "MozRepl" "rhino"  "squirrelfish" "spidermonkey" "v8") nil t)))
     (setq js-process (apply (intern jsh) nil))
     (pop-to-buffer (concat "*" jsh "*"))
     ))
