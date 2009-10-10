@@ -1,4 +1,3 @@
-#contributor : Jimmy Wu <frozenthrone88@gmail.com>
 #name : <ul class="...">...</ul>
 # --
 <ul class="$1">
