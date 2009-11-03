@@ -1,0 +1,14 @@
+#name : switch
+# --
+switch ( ${1:var} )
+  {
+  case ${2:val}:
+     
+    break;
+  case ${3:val}:
+    break;
+  case ${4:val}:
+    break;
+  default:
+    
+  }
