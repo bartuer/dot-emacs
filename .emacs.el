@@ -108,7 +108,6 @@ If give a negative ARG, will undo the last mark action, thus the
     (backward-up-list)
     (kill-sexp))))
 (global-set-key "\C-x\C-\M-k" 'kill-whole-sexp)
-(defalias 'k  'kill-backward-up-list)
 
 (defun kill-whole-sentence()
   (interactive)
@@ -191,11 +190,20 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-xa" 'append-to-buffer)
 
 (require 'winner nil t)
+
+(defun restore-frames ()
+  "resort saved frame configuration at 'f'"
+  (interactive)
+  (let ((val (cdr (assq 102 register-alist))))
+    (when (and (consp val) (frame-configuration-p (car val)))
+      (set-frame-configuration (car val) t)
+      (goto-char (cadr val)))))
+
 (defun meta-space-dwim()
   "multiple bindings for M-SPC"
   (interactive)
   (if (windowp (car (window-tree)))
-      (winner-undo)
+      (restore-frames)
     (delete-other-windows)))
 (global-set-key "\M- " 'meta-space-dwim)
 
