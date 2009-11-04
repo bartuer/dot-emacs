@@ -7,7 +7,7 @@
     ("\\(\\((.*)\\) \\(.*?\\) =\\)"
       (2 font-lock-variable-name-face)
       (3 font-lock-constant-face))))
-  "Font lock keywords used in `gdb-local-mode'.")
+  ;; "Font lock keywords used in `gdb-local-mode'.")
 
 (defun gdb-local-invisible-overlay-bounds (&optional pos)
   "Return cons cell of bounds of folding overlay at POS.
@@ -88,6 +88,7 @@ Returns the created {...} overlay if FLAG is non-nil."
        (list (concat  gdb-server-prefix "set variable " var " = " value "\n")
 	     'ignore)))))
 
+(setq gdb-locals-regex "\\(^[^ }]+\\)\\( = *\\)\\(.*\\)")
 (defun gdb-info-locals-handler-1 ()
   (setq gdb-pending-triggers (delq 'gdb-invalidate-locals-1
                                    gdb-pending-triggers))
