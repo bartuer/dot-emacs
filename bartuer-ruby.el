@@ -390,8 +390,10 @@ the block line three
   "mode hooks for ruby"
 
   ;; pre load to speed up
-  (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
-  (visit-tags-table "~/local/src/rails/TAGS.rtags")
+  (when (file-exists-p "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
+      (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant"))
+  (when (file-exists-p "~/local/src/rails/TAGS.rtags")
+    (visit-tags-table "~/local/src/rails/TAGS.rtags"))
 
 
   ;; toggle these modes
@@ -431,9 +433,7 @@ the block line three
   (define-key ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key inf-ruby-mode-map [(f7)] 'ri-ruby-show-args)
-  (define-key rhtml-mode-map "\M-=" 'bartuer-ruby-assign)
   (define-key ruby-mode-map "\C-x\C-e" 'eval-last-sexp)
-  (define-key rhtml-mode-map "\C-x\C-e" 'eval-last-sexp)
   )
 
 (provide 'bartuer-ruby)
