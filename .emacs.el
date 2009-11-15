@@ -603,6 +603,10 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq mumamo-chunk-coloring 'submode-colored)
 ;; (add-to-list 'auto-mode-alist '("\\.html'" . eruby-html-mumamo))
 
+(require 'rst-mode nil t)
+(autoload 'bartuer-rst-load "~/etc/el/bartuer-rst.el" "restructured text mode modification")
+(add-hook 'rst-mode-hook 'bartuer-rst-load)
+
 (defadvice auto-revert-handler (before ansi-color activate)
   "also show ansi color in log ."
   (ansi-color-apply-on-region (point-min) (point-max)))

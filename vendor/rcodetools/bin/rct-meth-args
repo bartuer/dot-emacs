@@ -1,4 +1,4 @@
-#! /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+#!/usr/bin/ruby
 # Copyright (c) 
 #  2006-2007 Mauricio Fernandez <mfp@acm.org>    http://eigenclass.org
 #  2006-2007 rubikitch <rubikitch@ruby-lang.org> http://www.rubyist.net/~rubikitch/
