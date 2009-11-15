@@ -203,7 +203,8 @@ If give a negative ARG, will undo the last mark action, thus the
   "multiple bindings for M-SPC"
   (interactive)
   (if (windowp (car (window-tree)))
-      (restore-frames)
+      (unless (restore-frames)
+        (winner-undo))
     (delete-other-windows)))
 (global-set-key "\M- " 'meta-space-dwim)
 
