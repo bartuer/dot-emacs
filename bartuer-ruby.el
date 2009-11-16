@@ -143,12 +143,17 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
                       (concat "cat " (rinari-root) "log/mongrel.pid")))
         )
     (if (eq 0 (signal-process mongrel_pid 19)) 
-        (shell-command (concat "mongrel_rails restart -P "
-                               (rinari-root) "log/mongrel.pid"))
+        (progn (shell-command (concat "mongrel_rails restart -P "
+                                      (rinari-root) "log/mongrel.pid"))
+               (sleep-for 3)
+               (message (format "dev-server restart %s -> %s"
+                                mongrel_pid
+                                (shell-command-to-string
+                                 (concat "cat " (rinari-root) "log/mongrel.pid")))))
       (shell-command (concat "mongrel_rails start -C "
                              (rinari-root) "config/mongrel_rails.rb"))
       (find-file (concat (rinari-root) "log/mongrel.log"))
-      (message (format "dev-server pid:%s"
+      (message (format "dev-server start as pid:%s"
                        mongrel_pid)))))
 
 (defun rinari-rails-rct-fork ()
