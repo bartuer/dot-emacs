@@ -288,13 +288,15 @@ show all ruby methods, filter and and invoke ri on candidate
   "start a server with debug enabled"
   (interactive)
   (unless (setq rails-debug-process (get-buffer-process "rails-debugger"))
+    (setq rails-debug-console-url (read-from-minibuffer "url to trigger debugger clause: " "http://localhost:3000/"))
     (signal-process (shell-command-to-string
                                  (concat "cat " (rinari-root) "log/mongrel.pid")) 9)
     (setq rails-debug-process (make-comint "rails-debugger"
                                            (concat (rinari-root) "script/server")
                                            nil
                                            "--debug")))
-  (pop-to-buffer "*rails-debugger*"))
+  (pop-to-buffer "*rails-debugger*")
+  (browse-url rails-debug-console-url))
 
 (setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
 (defun rinari-browserreload ()
