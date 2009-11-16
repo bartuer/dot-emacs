@@ -139,12 +139,17 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
 (defun bartuer-dev-server ()
   "start up mongrel_rails server"
   (interactive)
-  (shell-command (concat "mongrel_rails start -C "
-                         (rinari-root) "config/mongrel_rails.rb"))
-  (find-file (concat (rinari-root) "log/mongrel.log"))
-  (message (format "dev-server pid:%s"
-                   (shell-command-to-string
-                    (concat "cat " (rinari-root) "log/mongrel.pid")))))
+  (let ((mongrel_pid (shell-command-to-string
+                      (concat "cat " (rinari-root) "log/mongrel.pid")))
+        )
+    (if (eq 0 (signal-process mongrel_pid 19)) 
+        (shell-command (concat "mongrel_rails restart -P "
+                               (rinari-root) "log/mongrel.pid"))
+      (shell-command (concat "mongrel_rails start -C "
+                             (rinari-root) "config/mongrel_rails.rb"))
+      (find-file (concat (rinari-root) "log/mongrel.log"))
+      (message (format "dev-server pid:%s"
+                       mongrel_pid)))))
 
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
