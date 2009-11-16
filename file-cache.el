@@ -1,3 +1,5 @@
+(file-cache-add-directory "~/local/share/doc/mysql")
+(file-cache-add-directory "~/local/share/doc/sphinx")
 (file-cache-add-directory "~/etc/el/jcodetools")
 (file-cache-add-directory "~/etc/el/jcodetools/bin")
 (file-cache-add-directory "~/etc/el/jcodetools/lib/jcodetools")

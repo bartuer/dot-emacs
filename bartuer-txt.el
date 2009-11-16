@@ -1,7 +1,17 @@
+(defun txt-imenu ()
+  "make the 1.2.3. like section to imenu-index-alist"
+  (setq text-imenu ())
+  (beginning-of-buffer)
+  (while (search-forward-regexp "^\\([0-9]+\\.\\)+ [A-Z]" nil t)
+    (add-to-list 'text-imenu (cons (current-line) (point)) t))
+  text-imenu
+  )
+
 (defun bartuer-txt-load ()
   "for text mode"
   (require 'flyspell)
   (if (fboundp 'turn-on-flyspell) 
       (turn-on-flyspell))
   (auto-fill-mode)
+  (set (make-local-variable 'imenu-create-index-function) 'txt-imenu)
   (define-key text-mode-map "\M-\C-i" 'flyspell-auto-correct-word))
