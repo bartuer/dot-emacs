@@ -136,25 +136,28 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (ibuffer-jump-to-filter-group "log"))
 (defalias 'rinari-rails-logs 'rails-logs)
 
+(defvar mongrel_pid nil)
 (defun bartuer-dev-server ()
   "start up mongrel_rails server"
   (interactive)
-  (let ((mongrel_pid (shell-command-to-string
+  (let ((pid (shell-command-to-string
                       (concat "cat " (rinari-root) "log/mongrel.pid")))
         )
-    (if (eq 0 (signal-process mongrel_pid 19)) 
+    (if (eq 0 (signal-process pid 19)) 
         (progn (shell-command (concat "mongrel_rails restart -P "
                                       (rinari-root) "log/mongrel.pid"))
                (sleep-for 3)
                (message (format "dev-server restart %s -> %s"
-                                mongrel_pid
+                                pid
                                 (shell-command-to-string
-                                 (concat "cat " (rinari-root) "log/mongrel.pid")))))
+                                 (concat "cat " (rinari-root) "log/mongrel.pid"))))
+               (setq mongrel_pid pid))
       (shell-command (concat "mongrel_rails start -C "
                              (rinari-root) "config/mongrel_rails.rb"))
       (find-file (concat (rinari-root) "log/mongrel.log"))
       (message (format "dev-server start as pid:%s"
-                       mongrel_pid)))))
+                       pid))
+      (setq mongrel_pid pid))))
 
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
@@ -285,9 +288,12 @@ show all ruby methods, filter and and invoke ri on candidate
   "start a server with debug enabled"
   (interactive)
   (unless (setq rails-debug-process (get-buffer-process "rails-debugger"))
+    (signal-process (shell-command-to-string
+                                 (concat "cat " (rinari-root) "log/mongrel.pid")) 9)
     (setq rails-debug-process (make-comint "rails-debugger"
-                                           (concat (rinari-root) "script/debugconsole"))
-                                                            rails-debug-process))
+                                           (concat (rinari-root) "script/server")
+                                           nil
+                                           "--debug")))
   (pop-to-buffer "*rails-debugger*"))
 
 (setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
