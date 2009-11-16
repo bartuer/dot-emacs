@@ -284,6 +284,7 @@ show all ruby methods, filter and and invoke ri on candidate
       (call-interactively 'anything-qri))
    ))
 
+(require 'rdebug nil t)
 (defun bartuer-debug-console ()
   "start a server with debug enabled"
   (interactive)
@@ -296,6 +297,7 @@ show all ruby methods, filter and and invoke ri on candidate
                                            nil
                                            "--debug")))
   (pop-to-buffer "*rails-debugger*")
+  (turn-on-rdebug-track-mode)
   (browse-url rails-debug-console-url))
 
 (setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
