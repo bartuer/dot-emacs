@@ -3,7 +3,12 @@
   (setq text-imenu ())
   (beginning-of-buffer)
   (while (search-forward-regexp "^\\([0-9]+\\.\\)+ [A-Z]" nil t)
-    (add-to-list 'text-imenu (cons (current-line) (point)) t))
+    (add-to-list 'text-imenu (cons (save-excursion
+                                     (beginning-of-line)
+                                     (set-mark-command nil)
+                                     (end-of-line)
+                                     (buffer-substring-no-properties (mark) (point))
+                                     ) (point)) t))
   text-imenu
   )
 
