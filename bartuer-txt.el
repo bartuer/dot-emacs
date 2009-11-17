@@ -2,7 +2,7 @@
   "make the 1.2.3. like section to imenu-index-alist"
   (setq text-imenu ())
   (beginning-of-buffer)
-  (while (search-forward-regexp "^\\([0-9]+\\.\\)+ [A-Z]" nil t)
+  (while (search-forward-regexp "^\\([0-9]+\\.\\)+[0-9]+\\.? [A-Za-z0-9]" nil t)
     (add-to-list 'text-imenu (cons (save-excursion
                                      (beginning-of-line)
                                      (set-mark-command nil)
