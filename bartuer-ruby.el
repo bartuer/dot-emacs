@@ -300,6 +300,11 @@ show all ruby methods, filter and and invoke ri on candidate
   (turn-on-rdebug-track-mode)
   (browse-url rails-debug-console-url))
 
+(defun bartuer-rails-profile ()
+  (interactive)
+  (message "get url?profile!")
+  (link (concat (rinari-root)  "vendor/plugins/browser-prof/lib/browser-prof.rb") 762))
+
 (setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
 (defun rinari-browserreload ()
   "start a monitor server to reload browser when file changed"
@@ -315,6 +320,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-dev-server 'bartuer-dev-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 (defalias 'rinari-debug-console 'bartuer-debug-console)
+(defalias 'rinari-profile 'bartuer-rails-profile)
 (defalias 'q 'rinari-qri)
 
 (defun rinari-ido ()
@@ -329,7 +335,7 @@ it perfectly.
                                    (list  "find-model" "find-migration" "find-controller" "find-view" "find-stylesheet"
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
                                           "script" "browserreload" "dev-server" "web-server" "test"
-                                          "console" "debug-console" 
+                                          "console" "debug-console" "profile"
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
                                           "find-log" "rails-logs"
