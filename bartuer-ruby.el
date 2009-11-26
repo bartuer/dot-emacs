@@ -152,12 +152,16 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
                                 (shell-command-to-string
                                  (concat "cat " (rinari-root) "log/mongrel.pid"))))
                (setq mongrel_pid pid))
+      (shell-command (concat "rm -f " (rinari-root) "log/mongrel.pid"))
       (shell-command (concat "mongrel_rails start -C "
                              (rinari-root) "config/mongrel_rails.rb"))
+      (sleep-for 3)
       (find-file (concat (rinari-root) "log/mongrel.log"))
       (message (format "dev-server start as pid:%s"
-                       pid))
-      (setq mongrel_pid pid))))
+                       (shell-command-to-string
+                      (concat "cat " (rinari-root) "log/mongrel.pid"))))
+      (setq mongrel_pid (shell-command-to-string
+                      (concat "cat " (rinari-root) "log/mongrel.pid"))))))
 
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
@@ -167,7 +171,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
 
 (setq rinari-script-list
       (list "about" "browserreload" "console" "dbconsole" "debugconsole"
-       "destroy" "generate" "performance/benchmarker" "performance/profiler"
+       "destroy" "generate" "performance/benchmarker" "performance/profiler" "performance/rprof"
        "plugin" "process/inspector" "process/reaper" "process/spawner" "runner" "server" "spin"
        "generate controller" "generate helper" "generate integration_test" "generate mailer"
        "generate metal" "generate migration" "generate model" "generate observer"
@@ -335,7 +339,7 @@ it perfectly.
                                    (list  "find-model" "find-migration" "find-controller" "find-view" "find-stylesheet"
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
                                           "script" "browserreload" "dev-server" "web-server" "test"
-                                          "console" "debug-console" "profile"
+                                          "console" "debug-console" "profile" 
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
                                           "find-log" "rails-logs"
