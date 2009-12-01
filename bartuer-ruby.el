@@ -360,12 +360,12 @@ it is suitable to browse OO hierarchy"
       (setq anything-etags-cache-tag-file-dir nil))
   (unless anything-etags-cache-tag-file-dir
     (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
-                                                               (list "~/local/src/rails/actionpack"
-                                                                     "~/local/src/rails/activemodel"
-                                                                     "~/local/src/rails/activerecord"
-                                                                     "~/local/src/rails/railties"
-                                                                     "~/local/src/rails/actionmailer"
-                                                                     "~/local/src/rails/activesupport"))))
+                                                               (list "~/local/src/rails-2.3.4/actionpack"
+                                                                     "~/local/src/rails-2.3.4/activemodel"
+                                                                     "~/local/src/rails-2.3.4/activerecord"
+                                                                     "~/local/src/rails-2.3.4/rails"
+                                                                     "~/local/src/rails-2.3.4/actionmailer"
+                                                                     "~/local/src/rails-2.3.4/activesupport"))))
   (anything-etags-select))
 
 
@@ -422,8 +422,8 @@ the block line three
   ;; pre load to speed up
   (when (file-exists-p "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
       (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant"))
-  (when (file-exists-p "~/local/src/rails/TAGS.rtags")
-    (visit-tags-table "~/local/src/rails/TAGS.rtags"))
+  (when (file-exists-p "/Library/Ruby/Gems/1.8/gems/TAGS.rtags")
+    (visit-tags-table "/Library/Ruby/Gems/1.8/gems/TAGS.rtags"))
 
 
   ;; toggle these modes
