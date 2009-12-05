@@ -1,4 +1,3 @@
-
 # The name is taken from EmacsLisp
 def run_hooks_with_args_until_success(regexp, *args)
   private_methods(true).concat(methods(true)).grep(regexp).sort.each do |m|
@@ -74,6 +73,13 @@ class RubyToggleFile
     end
   end
 
+  def test_file_06_authlogic_lib(implementation, basedir, dir, node)
+    if m = %r!lib/(authlogic)/(.+)/(.+)\.rb$!.match(implementation)
+      "%stest/%s_test/%s_test.rb" % [ m.pre_match, m[2], m[3]]
+    end
+  end
+
+  
   def test_file_10_no_match(implementation, basedir, dir, node)
     if [basedir, dir, node].all?{|x| x.nil?}
       "#{File.dirname(implementation)}/test_#{File.basename(implementation)}"
@@ -110,6 +116,12 @@ class RubyToggleFile
     end
   end
 
+  def implementation_file_06_authlogic(test, basedir, dir, node)
+    if m = %r!test/(.+)_test/(.+)_test\.rb$!.match(test)
+      "%slib/authlogic/%s/%s.rb" % [ m.pre_match, m[1], m[2]]
+    end
+  end
+  
   def implementation_file_10_no_match(test, basename, dir, node)
     if dir == nil and node == nil and test =~ %r!/test_(.+)\.rb$!
       test.sub("/test_", "/")

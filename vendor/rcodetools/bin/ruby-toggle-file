@@ -1,4 +1,5 @@
-#! /usr/local/bin/ruby18
+#!/usr/bin/env ruby
+
 require 'ruby_toggle_file'
 require 'optparse'
 
