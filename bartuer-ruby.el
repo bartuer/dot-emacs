@@ -365,7 +365,8 @@ it is suitable to browse OO hierarchy"
                                                                      "~/local/src/rails-2.3.4/activerecord"
                                                                      "~/local/src/rails-2.3.4/rails"
                                                                      "~/local/src/rails-2.3.4/actionmailer"
-                                                                     "~/local/src/rails-2.3.4/activesupport"))))
+                                                                     "~/local/src/rails-2.3.4/activesupport"
+                                                                     "~/local/src/authlogic/lib/authlogic"))))
   (anything-etags-select))
 
 
