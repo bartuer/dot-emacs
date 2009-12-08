@@ -1,3 +1,3 @@
-#name : assert_redirect_to controller assert rails
+#name : assert_redirected_to controller assert rails
 # --
-assert_redirect_to urlh
+assert_redirected_to urlh
