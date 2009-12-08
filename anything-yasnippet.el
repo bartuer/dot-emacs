@@ -237,7 +237,8 @@ from static imenu->etags index and dynamically generated properties via introspe
 
 (defun yasnippet-complete-syntax-expand (msg)
   "constructure an snippet according to the syntax signature string"
-  (flymake-mode nil)
+  (if (buffer-file-name)
+    (flymake-mode nil))
   (insert (car msg))
   (yas/expand))
 
