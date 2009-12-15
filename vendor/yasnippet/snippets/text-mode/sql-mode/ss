@@ -1,0 +1,3 @@
+# name: select ss sql console
+# --
+select ${1:*} from ${2:table} where ${3:condition};
