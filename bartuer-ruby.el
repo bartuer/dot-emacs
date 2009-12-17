@@ -176,7 +176,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
        "generate controller" "generate helper" "generate integration_test" "generate mailer"
        "generate metal" "generate migration" "generate model" "generate observer"
        "generate performance_test" "generate plugin" "generate resource"
-       "generate scaffold" "generate session_migration"
+       "generate scaffold" "generate session_migration" "generate selenium" "routes"
        ))
 
 (defun insert-source-link (string)
