@@ -209,7 +209,8 @@ prefix argument allows editing of the console command arguments."
   (let* ((script ;; (concat (rinari-root) "script/console")
 	  (concat (expand-file-name "console" (file-name-as-directory
 					       (expand-file-name "script" (rinari-root))))
-		  (if rinari-rails-env (concat " " rinari-rails-env))))
+		  (if rinari-rails-env (concat " " rinari-rails-env))
+                  " --sandbox --debugger"))
 	 (command (if edit-cmd-args
 			      (read-string "Run Ruby: " (concat script " "))
 			    script)))
