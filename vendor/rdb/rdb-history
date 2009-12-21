@@ -1,3 +1,4 @@
+-*- mode: org; -*-
   145    print something               
   27     n
   27     c
@@ -18,7 +19,13 @@
    1     display errors.size
    1     catch errors
 
+check :    50%   
+step  :    25%   
+stack :    17%   
 
-   check :    50%    need heavy investment here, pp? & var -> var buffer?
-   stack :    17%    ruby-debug's down -> d, bt -> stack buffer
-   step  :    25%    ruby-debug's [n c s] already fine   
+* improvement
+*** TODO bt -> stack buffer <2009-12-21 Mon>
+*** TODO need heavy investment here, pp? & ps && var -> var buffer?
+*** DONE ruby-debug's [n c s] already fine
+*** DONE ruby-debug's down -> d 
+
