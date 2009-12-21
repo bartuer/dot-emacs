@@ -24,8 +24,13 @@ step  :    25%
 stack :    17%   
 
 * improvement
-*** TODO bt -> stack buffer <2009-12-21 Mon>
-*** TODO need heavy investment here, pp? & ps && var -> var buffer?
+*** TODO need heavy investment here, pp? & ps && var -> var buffer? <2009-12-21 Mon>
+*** DONE bt -> stack buffer 
+    just let rails start debugger with annotate 3, and invoke
+    script/server under rdebug, also need fix the frame buffer
+    highlight color.
 *** DONE ruby-debug's [n c s] already fine
 *** DONE ruby-debug's down -> d 
+    modify the regex of command down is okay, do not know why author
+    remove it (link "~/.gem/ruby/1.8/gems/ruby-debug-base-0.10.3/lib/ChangeLog" 22473)
 
