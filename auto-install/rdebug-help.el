@@ -40,6 +40,7 @@
 
 \\{rdebug-secondary-window-help-mode-map}"
   (interactive)
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-secondary-window-help-mode)
   (setq mode-name "RDEBUG Help")

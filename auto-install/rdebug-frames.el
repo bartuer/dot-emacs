@@ -176,6 +176,7 @@ non-digit will start entry number from the beginning again."
   "Major mode for displaying the stack trace in the `rdebug' Ruby debugger.
 \\{rdebug-frames-mode-map}"
   (interactive)
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (goto-char (point-min))
   (while (re-search-forward "" nil t)

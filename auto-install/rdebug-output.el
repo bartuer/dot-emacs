@@ -80,6 +80,7 @@
 \\{rdebug-output-mode}"
   (interactive)
   (let ((old-marker-number rdebug-output-marker-number))
+    (rdebug-remove-ctrl-m)
     (kill-all-local-variables)
     (setq major-mode 'rdebug-output-mode)
     (setq mode-name "RDEBUG Output")

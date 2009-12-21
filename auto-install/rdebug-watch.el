@@ -68,6 +68,7 @@
 
 \\{rdebug-watch-mode}"
   (interactive)
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-watch-mode)
   (setq mode-name "RDEBUG Watch")

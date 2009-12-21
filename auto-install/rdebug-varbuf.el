@@ -70,6 +70,7 @@
 
 \\{rdebug-variables-mode-map}"
   (interactive)
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-variables-mode)
   (setq mode-name "RDEBUG Variables")

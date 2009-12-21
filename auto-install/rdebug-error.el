@@ -49,6 +49,7 @@
 
 \\{rdebug-error-mode}"
   (interactive)
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-error-mode)
   (setq mode-name "RDEBUG Error")

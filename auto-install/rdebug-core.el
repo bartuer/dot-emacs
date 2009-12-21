@@ -476,6 +476,7 @@ and options used to invoke rdebug."
           (delete-window w)))
       (kill-buffer buffer))))
 
+
 (defun rdebug-reset-keymaps()
   "This unbinds the special debugger keys of the source buffers."
   (interactive)
@@ -488,6 +489,11 @@ and options used to invoke rdebug."
   (interactive)
   (customize-group 'rdebug))
 
+(defun rdebug-remove-ctrl-m ()
+  (goto-char (point-min))
+  (while (re-search-forward "" nil t)
+          (replace-match "" nil nil))
+)
 
 ;; -------------------------------------------------------------------
 ;; The end.
