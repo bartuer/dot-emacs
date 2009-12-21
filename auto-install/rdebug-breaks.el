@@ -97,6 +97,7 @@
   "Major mode for displaying breakpoints in the `rdebug' Ruby debugger.
 
 \\{rdebug-breakpoint-mode-map}"
+  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-breakpoint-mode)
   (setq mode-name "RDEBUG Breakpoints")

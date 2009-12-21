@@ -129,7 +129,7 @@ stepping commands (\"next\", or \"step\").")
   "Run a debugger print (pl, ps, pp, p) command on `EXPR'; `CMD' is the command to run."
   (interactive "s")
   (unless cmd (setq cmd "pp"))
-  (rdebug-call-return (format "%s %s " cmd expr) :tooltip))
+  (rdebug-call-return (format "%s %s " cmd expr) :info))
 
 (defun rdebug-print-list-region (from to)
   "Run a debugger \"pl\" command on the marked region."

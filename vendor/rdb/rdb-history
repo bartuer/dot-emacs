@@ -24,7 +24,8 @@ step  :    25%
 stack :    17%   
 
 * improvement
-*** TODO need heavy investment here, pp? & ps && var -> var buffer? <2009-12-21 Mon>
+*** DONE need heavy investment here, pp? & ps && var -> var buffer? <2009-12-21 Mon>
+    in rdebug-varbuf x could pretty print the var
 *** DONE bt -> stack buffer 
     just let rails start debugger with annotate 3, and invoke
     script/server under rdebug, also need fix the frame buffer
