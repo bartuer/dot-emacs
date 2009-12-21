@@ -137,7 +137,7 @@ non-digit will start entry number from the beginning again."
                 ;; And the next, if this entry was split into two.
                 "\\( *[^# ].*$\\)?") limit t)))
 
-(defvar rdebug-frames-current-frame-face 'highlight)
+(defvar rdebug-frames-current-frame-face 'underline)
 
 ;; Example of frame buffer content:
 ;;
@@ -177,6 +177,9 @@ non-digit will start entry number from the beginning again."
 \\{rdebug-frames-mode-map}"
   (interactive)
   (kill-all-local-variables)
+  (goto-char (point-min))
+  (while (re-search-forward "" nil t)
+          (replace-match "" nil nil))
   (setq major-mode 'rdebug-frames-mode)
   (setq mode-name "RDEBUG Stack Frames")
   (set (make-local-variable 'rdebug-secondary-buffer) t)
