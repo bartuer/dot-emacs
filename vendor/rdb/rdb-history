@@ -24,14 +24,19 @@ step  :    25%
 stack :    17%   
 
 * improvement
-*** DONE need heavy investment here, pp? & ps && var -> var buffer? <2009-12-21 Mon>
+*** DONE need heavy investment here, pp? & ps && var -> var buffer? 
     in rdebug-varbuf x could pretty print the var
+    info variables could print all variables currently available
 *** DONE bt -> stack buffer 
     just let rails start debugger with annotate 3, and invoke
     script/server under rdebug, also need fix the frame buffer
     highlight color.
 *** DONE ruby-debug's [n c s] already fine
-*** DONE ruby-debug's down -> d 
+*** DONE ruby-debug's down -> d <2009-12-21 Mon>
     modify the regex of command down is okay, do not know why author
     remove it (link "~/.gem/ruby/1.8/gems/ruby-debug-base-0.10.3/lib/ChangeLog" 22473)
-
+*** BUGS [0/3]
+    - [ ] when start rails server in debug mode, lots of require error
+    - [ ] set break point in controller, but the first fit one in template
+    - [ ] behavior is different with and without annotation, in
+      annotation mode, could not pretty print
