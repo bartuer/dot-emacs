@@ -1,0 +1,132 @@
+  21      n
+  19     down
+  18      s
+  15     up
+  12     c
+  11      c
+  10     p response.session["flash"][:notice].full_messages
+   8     p @user_session.errors.size
+   7     p self.class
+   6     n
+   5     p view.response.session["flash"][:notice].full_messages
+   4     p @user_session.errors
+   4     bt
+   4      p result
+   4      p errors
+   4       c
+   3     q
+   3     p flash[:notice]
+   3      up
+   2     pp response
+   2     p self
+   2     p response.pretty_print_instance_variables
+   2     p form_for
+   2     p flash[:notice].full_messages
+   2     p errors.size
+   2     f 0
+   2     display response.session["flash"][:notice].full_messages
+   2      q
+   2      p object
+   2      p method
+   2      p errors.size
+   2      p @openid_error
+   1    2367:(rdb:138p request.env["action_controller.rescue.response"]
+   1     s
+   1     return
+   1     pp f.methods
+   1     pp f.method
+   1     p view.user_session.class
+   1     p view.user_session
+   1     p view.response.class
+   1     p view.pretty_print_instance_variables
+   1     p view.methods(false)
+   1     p view.methods
+   1     p view.keys
+   1     p view.class
+   1     p view.@user_session.class
+   1     p view.@user_session
+   1     p view
+   1     p self.response.session["flash"][:notice].full_messages
+   1     p self.errors
+   1     p response.template
+   1     p response.session["flash"][:notice].methods(true)
+   1     p response.session["flash"][:notice].errors
+   1     p response.session["flash"][:notice].class
+   1     p response.session["flash"][:notice]
+   1     p response.session["flash"].keys
+   1     p response.session["flash"].errors
+   1     p response.session["flash"]
+   1     p response.session.keys
+   1     p response.session.flash
+   1     p response.session.class
+   1     p response.session.["flash"]
+   1     p response.redirected_to
+   1     p response.layout
+   1     p response.header
+   1     p response.body
+   1     p response.block
+   1     p response.assigns
+   1     p response
+   1     p request.env["action_controller.rescue.response"].pretty_print_instance_variables
+   1     p request.env["action_controller.rescue.response"].pretty_print_inspect
+   1     p request.env["action_controller.rescue.response"].methods(true)
+   1     p request.env["action_controller.rescue.response"].keys
+   1     p request.env["action_controller.rescue.response"].class
+   1     p request.env["action_controller.rescue.response"].attributes
+   1     p request.env["action_controller.rescue.response"].attribute
+   1     p request.env["action_controller.request.request_parameters"]
+   1     p request.env["SERVER_NAME"]
+   1     p request.env["SCRIPT_NAME"]
+   1     p request.env.keys
+   1     p request.class
+   1     p request
+   1     p local_assigns
+   1     p layout
+   1     p f.methods
+   1     p f.class
+   1     p errors
+   1     p error_messages_for('user_session')
+   1     p error_messages_for 'user_session'
+   1     p @user_sessions.errors
+   1     p @user_session.errors[0].message
+   1     p @user_session.errors.message
+   1     p @user_session
+   1     irb
+   1     help pp
+   1     help
+   1     f 27
+   1     f 22
+   1     f 2
+   1     f 16
+   1     error_messages
+   1     donw
+   1      watch errors
+   1      source
+   1      self.class
+   1      p self[2]
+   1      p self[1]
+   1      p self[0]
+   1      p self.size
+   1      p self.methods(true)
+   1      p self.methods(false)
+   1      p self
+   1      p result.message
+   1      p reault
+   1      p kind
+   1      p enumerator
+   1      p controller.url_for(:for_session => "1", :remember_me => remember_me?)
+   1      p callback
+   1      p block_given?
+   1      p __FILE__
+   1      p METHODS
+   1      p #{method}
+   1      info local
+   1      help
+   1      f 0
+   1      display errors.size
+   1      catch errors
+   1      bt
+   1      NameError Exception: undefined local variable or method `kind' for #<UserSessionsController:0x21db738>
+   1       p session[:return_to]
+   1       p default
+
