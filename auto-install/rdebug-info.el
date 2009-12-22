@@ -50,11 +50,11 @@
   "Major mode for Ruby debugger info buffer.
 
 \\{rdebug-info-mode-map}"
-  (rdebug-remove-ctrl-m)
   (kill-all-local-variables)
   (setq major-mode 'rdebug-info-mode)
   (setq mode-name "RDEBUG Info")
   (use-local-map rdebug-info-mode-map)
+  (rdebug-remove-ctrl-m)
   (setq buffer-read-only t)
   (set (make-local-variable 'rdebug-secondary-buffer) t)
   (setq mode-line-process 'rdebug-mode-line-process)

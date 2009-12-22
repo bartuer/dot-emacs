@@ -82,6 +82,7 @@
   (let ((old-marker-number rdebug-output-marker-number))
     (rdebug-remove-ctrl-m)
     (kill-all-local-variables)
+    (ansi-color-apply-on-region (point-min) (point-max))
     (setq major-mode 'rdebug-output-mode)
     (setq mode-name "RDEBUG Output")
     (setq buffer-read-only t)

@@ -121,7 +121,7 @@ This function is intended to be bound to a mouse key"
        (when (looking-at "^\\(@?[a-zA-Z_0-9]+\\) *= *\\(.*\\)$")
          (setq var (match-string 1)))
        (list var))))
-  (rdebug-print-cmd var "ps"))
+  (rdebug-print-cmd var "pp"))
 
 (defun rdebug-variables-pretty-print-mouse (&optional event)
   "Assign a value to a variable displayed in the variables buffer.

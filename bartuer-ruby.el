@@ -136,6 +136,12 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (ibuffer-jump-to-filter-group "log"))
 (defalias 'rinari-rails-logs 'rails-logs)
 
+(defun bartuer-rdebug-server ()
+  "start server under rdebug"
+  (interactive)
+  (rdebug (concat "rdebug --emacs 3 " (rinari-root) "script/server"))
+  )
+
 (defvar mongrel_pid nil)
 (defun bartuer-dev-server ()
   "start up mongrel_rails server"
@@ -322,6 +328,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
+(defalias 'rinari-rdebug-server 'bartuer-rdebug-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 (defalias 'rinari-debug-console 'bartuer-debug-console)
 (defalias 'rinari-profile 'bartuer-rails-profile)
@@ -338,7 +345,7 @@ it perfectly.
   (let* ((rinari-command (ido-completing-read "rinari:" 
                                    (list  "find-model" "find-migration" "find-controller" "find-view" "find-stylesheet"
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
-                                          "script" "browserreload" "dev-server" "web-server" "test"
+                                          "script" "browserreload" "rdebug-server" "dev-server" "web-server" "test"
                                           "console" "debug-console" "profile" 
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
