@@ -35,7 +35,7 @@ stack :    17%
 *** DONE ruby-debug's down -> d <2009-12-21 Mon>
     modify the regex of command down is okay, do not know why author
     remove it (link "~/.gem/ruby/1.8/gems/ruby-debug-base-0.10.3/lib/ChangeLog" 22473)
-*** TODO BUGS [6/6]
+*** DONE BUGS [6/6]
     - [X] behavior is different with and without annotation, in
       annotation mode, could not pretty print
           remove initializers/debugger.rb 
