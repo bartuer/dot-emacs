@@ -35,7 +35,7 @@ stack :    17%
 *** DONE ruby-debug's down -> d <2009-12-21 Mon>
     modify the regex of command down is okay, do not know why author
     remove it (link "~/.gem/ruby/1.8/gems/ruby-debug-base-0.10.3/lib/ChangeLog" 22473)
-*** TODO BUGS [5/6]
+*** TODO BUGS [6/6]
     - [X] behavior is different with and without annotation, in
       annotation mode, could not pretty print
           remove initializers/debugger.rb 
@@ -44,4 +44,11 @@ stack :    17%
     - [X] when start rails server in debug mode, lots of require error
     - [X] ansi-color the output buffer
     - [X] let ruby mode debugger-server start with rdebug <2009-12-22 Tue>
-    - [ ] face of variable buffer has tiny problems
+    - [X] face of variable buffer has tiny problems
+          (link "~/.gem/ruby/1.8/gems/ruby-debug-0.10.3/cli/ruby-debug/commands/variables.rb" 477)
+          -*- mode: grep; default-directory: "~/.gem/ruby/1.8/gems/ruby-debug-0.10.3/cli/ruby-debug/" -*-
+          # Hi-lock: (("width" (0 (quote hi-pink) t)))
+          ./commands/info.rb:122:          s[self.class.settings[:width]-3 .. -1] = "..."
+          ./commands/info.rb:286:          s[self.class.settings[:width]-3 .. -1] = "..."
+          ./commands/info.rb:414:          s[self.class.settings[:width]-3 .. -1] = "..."
+          ./commands/variables.rb:16:          s[self.class.settings[:width]-3 .. -1] = "..."

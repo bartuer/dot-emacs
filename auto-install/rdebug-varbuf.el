@@ -53,7 +53,7 @@
   "Keymap used in the variables buffer in the `rdebug' Ruby debugger.")
 
 (defvar rdebug-variables-font-lock-keywords
-  '(("@[a-zA-Z0-9_]+" 0 font-lock-variable-name-face)
+  '(("@@?[a-zA-Z0-9_]+" 0 font-lock-variable-name-face)
     ("\\<\\(nil\\|true\\|false\\)\\>" 0 font-lock-constant-face)
     ("#<\\([a-zA-Z0-9_]+\\):\\([0-9a-fx]*\\)"
      (1 font-lock-type-face)
