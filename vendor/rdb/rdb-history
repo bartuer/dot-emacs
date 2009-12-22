@@ -47,8 +47,7 @@ stack :    17%
     - [X] face of variable buffer has tiny problems
           (link "~/.gem/ruby/1.8/gems/ruby-debug-0.10.3/cli/ruby-debug/commands/variables.rb" 477)
           -*- mode: grep; default-directory: "~/.gem/ruby/1.8/gems/ruby-debug-0.10.3/cli/ruby-debug/" -*-
+          find . -type f  |grep -vE "BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc" |sed -e 's+ +\\ +g'|xargs grep -niHE \\.\\.\\.
           # Hi-lock: (("width" (0 (quote hi-pink) t)))
-          ./commands/info.rb:122:          s[self.class.settings[:width]-3 .. -1] = "..."
-          ./commands/info.rb:286:          s[self.class.settings[:width]-3 .. -1] = "..."
-          ./commands/info.rb:414:          s[self.class.settings[:width]-3 .. -1] = "..."
-          ./commands/variables.rb:16:          s[self.class.settings[:width]-3 .. -1] = "..."
+          (hi-lock-mode)
+
