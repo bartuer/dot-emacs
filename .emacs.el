@@ -197,6 +197,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (let ((val (cdr (assq 102 register-alist))))
     (when (and (consp val) (frame-configuration-p (car val)))
       (set-frame-configuration (car val) t)
+      (gud-refresh)
       (goto-char (cadr val)))))
 
 (defun meta-space-dwim()
