@@ -1,4 +1,4 @@
 # name: snippet
 # --
-# name: ${1:`(file-name-nondirectory (buffer-file-name))`} sql console
+# name: ${1:`(file-name-nondirectory (buffer-file-name))`} rdbeug
 # --
