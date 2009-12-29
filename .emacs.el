@@ -198,7 +198,7 @@ If give a negative ARG, will undo the last mark action, thus the
     (when (and (consp val) (frame-configuration-p (car val)))
       (set-frame-configuration (car val) t)
       (gud-refresh)
-      (goto-char (cadr val)))))
+      (goto-char (point-max)))))
 
 (defun meta-space-dwim()
   "multiple bindings for M-SPC"
