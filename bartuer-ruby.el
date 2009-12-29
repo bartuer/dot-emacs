@@ -325,6 +325,7 @@ show all ruby methods, filter and and invoke ri on candidate
 
 (require 'bartuer-gem)
 (require 'rcodetools)
+(defalias 'rinari-find-css 'rinari-find-stylesheet)
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
@@ -343,7 +344,7 @@ it perfectly.
 "
   (interactive)
   (let* ((rinari-command (ido-completing-read "rinari:" 
-                                   (list  "find-model" "find-migration" "find-controller" "find-view" "find-stylesheet"
+                                   (list  "find-model" "find-migration" "find-controller" "find-view" "find-css"
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
                                           "script" "browserreload" "rdebug-server" "dev-server" "web-server" "test"
                                           "console" "debug-console" "profile" 
