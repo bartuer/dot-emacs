@@ -459,6 +459,18 @@ If give a negative ARG, will undo the last mark action, thus the
      (let ((null-device nil))		; see grep
        (grep command-args))))
 
+(defalias 'u (lambda (url-content-insert-location)
+               (interactive "surl: ")
+               (shell-command  (concat "curl " url-content-insert-location " 2>/dev/null")
+                               (get-buffer-create "preview-url"))
+               (pop-to-buffer "preview-url")
+               (if (search-forward "<!DOCTYPE" 20 t)
+                   (html-mode)
+                   (setq buffer-file-name "/tmp/preview-url.html")
+                   (flymake-mode t)
+                 )
+               ))
+
 (require 'cheat nil t)            
 (require 'gist nil t)
 (require 'pastie nil t)
