@@ -1,4 +1,3 @@
-#contributor : Jimmy Wu <frozenthrone88@gmail.com>
-#name : <input ... />
+#name : html_input
 # --
-<input type="$1" name="$2" value="$3" />
+<input id="${1:id}"  name="${2:model}[${3:attribute}]" type=inputtype$0 value="${4:val}" />
