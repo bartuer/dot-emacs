@@ -169,6 +169,19 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
       (setq mongrel_pid (shell-command-to-string
                       (concat "cat " (rinari-root) "log/mongrel.pid"))))))
 
+(defun bartuer-probe-server ()
+  "startup socat probe server to check http"
+  (interactive)
+  (shell-command "rails-probe-server &")
+  (find-file "/tmp/3000-request.log")
+  (pop-to-buffer "3000-request.log")
+  (setq auto-revert-mode t)
+  (split-window-vertically)
+  (find-file "/tmp/3000-response.log")
+  (pop-to-buffer "3000-response.log")
+  (setq auto-revert-mode t) 
+  )
+
 (defun rinari-rails-rct-fork ()
   "start and shutdown rcodetool fork server"
   (interactive)
@@ -329,6 +342,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-bartuer-gem 'bartuer-gem)
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
+(defalias 'rinari-probe-server 'bartuer-probe-server)
 (defalias 'rinari-rdebug-server 'bartuer-rdebug-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 (defalias 'rinari-debug-console 'bartuer-debug-console)
@@ -346,7 +360,8 @@ it perfectly.
   (let* ((rinari-command (ido-completing-read "rinari:" 
                                    (list  "find-model" "find-migration" "find-controller" "find-view" "find-css"
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
-                                          "script" "browserreload" "rdebug-server" "dev-server" "web-server" "test"
+                                          "script" "test"
+                                          "browserreload" "rdebug-server" "dev-server" "probe-server" "web-server" 
                                           "console" "debug-console" "profile" 
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
