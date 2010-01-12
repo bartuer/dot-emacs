@@ -126,7 +126,7 @@
  '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))
  '(magit-section-title ((t (:inherit magit-header :foreground "red" :weight bold))))
  '(mode-line ((t (:inverse-video t))))
- '(mode-line-buffer-id ((t (:background "yellow" :foreground "green" :weight bold))))
+ '(mode-line-buffer-id ((t (:background "yellow" :foreground "blue" :weight bold))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:inverse-video nil))))
  '(org-agenda-structure ((t (:foreground "cyan" :weight bold))))
  '(org-drawer ((t (:foreground "cyan" :weight bold))))
