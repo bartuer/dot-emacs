@@ -169,6 +169,11 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
       (setq mongrel_pid (shell-command-to-string
                       (concat "cat " (rinari-root) "log/mongrel.pid"))))))
 
+(defun bartuer-kill-current-server ()
+  "kill current rails server"
+  (interactive)
+  (shell-command "kill -KILL `lsof -t -i TCP:3000` 2>/dev/null;"))
+
 (defun bartuer-probe-server ()
   "startup socat probe server to check http"
   (interactive)
@@ -179,7 +184,8 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (split-window-vertically)
   (find-file "/tmp/3000-response.log")
   (pop-to-buffer "3000-response.log")
-  (setq auto-revert-mode t) 
+  (setq auto-revert-mode t)
+  (kill-buffer "*Async Shell Command*")
   )
 
 (defun rinari-rails-rct-fork ()
@@ -344,6 +350,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-dev-server 'bartuer-dev-server)
 (defalias 'rinari-probe-server 'bartuer-probe-server)
 (defalias 'rinari-rdebug-server 'bartuer-rdebug-server)
+(defalias 'rinari-kill-server 'bartuer-kill-current-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
 (defalias 'rinari-debug-console 'bartuer-debug-console)
 (defalias 'rinari-profile 'bartuer-rails-profile)
@@ -362,7 +369,7 @@ it perfectly.
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
                                           "script" "test"
                                           "browserreload" "rdebug-server" "dev-server" "probe-server" "web-server" 
-                                          "console" "debug-console" "profile" 
+                                          "kill-server" "console" "debug-console" "profile" 
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
                                           "find-log" "rails-logs"
