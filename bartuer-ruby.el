@@ -185,7 +185,6 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (find-file "/tmp/3000-response.log")
   (pop-to-buffer "3000-response.log")
   (setq auto-revert-mode t)
-  (kill-buffer "*Async Shell Command*")
   )
 
 (defun rinari-rails-rct-fork ()
