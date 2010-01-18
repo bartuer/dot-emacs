@@ -125,7 +125,7 @@
 (defun css-find (keyword)
   "check what the property means"
   (interactive)
-  (find-file "~/local/share/doc/css2.txt")
+  (find-file "~/local/share/doc/css/css2.txt")
   (with-current-buffer "css2.txt"
   (list-matching-lines keyword 3)))
 
