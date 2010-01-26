@@ -333,7 +333,7 @@ show all ruby methods, filter and and invoke ri on candidate
   (message "get url?profile!")
   (link (concat (rinari-root)  "vendor/plugins/browser-prof/lib/browser-prof.rb") 762))
 
-(setq browserreload-location "script/browserreload -b Safari,Firefox http://localhost:3000/")
+(setq browserreload-location "script/browserreload -b Safari http://localhost:3000/")
 (defun rinari-browserreload ()
   "start a monitor server to reload browser when file changed"
   (interactive)
