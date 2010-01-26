@@ -7,6 +7,7 @@
  '(PC-meta-flag nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
+ '(auto-revert-verbose nil)
  '(blink-cursor-mode t)
  '(bookmark-default-file "~/etc/el/bookmark/.emacs.bmk")
  '(bookmark-save-flag 1)
