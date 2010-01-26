@@ -550,6 +550,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'apache-mode nil t)
 (add-to-list 'auto-mode-alist '("httpd.conf" . apache-mode))
 
+(require 'conf-mode nil t)
+(add-to-list 'auto-mode-alist '("nginx.conf" . conf-nginx-mode))
+
 (require 'bartuer-ruby nil t)
 
 (require 'flymake nil t)

@@ -185,7 +185,7 @@ not align (only setting space according to `conf-assignment-space')."
      (1 'font-lock-variable-name-face)
      (2 'font-lock-constant-face nil t))
     ;; section { ... } (do this last because some assign ...{...)
-    ("^[ \t]*\\([^=:\n]+?\\)[ \t\n]*{[^{}]*?$" 1 'font-lock-type-face prepend))
+    ("^[ \t]*\\([^=:\n]+?\\)[ \t\n]*{[^{}]*?$" 1 'font-lock-constant-face prepend))
   "Keywords to hilight in Conf mode.")
 
 (defvar conf-javaprop-font-lock-keywords
@@ -539,7 +539,7 @@ See `conf-space-mode'."
   (if (string-equal keywords "")
       (setq keywords nil))
   (setq conf-space-keywords keywords)
-  (conf-space-mode-internal)
+
   (run-mode-hooks))
 
 (defun conf-space-mode-internal ()
@@ -606,6 +606,25 @@ For details see `conf-mode'.  Example:
   (conf-mode-initialize "*%")
   ;; no sections, they match within PostScript code
   (setq imenu-generic-expression (list (car imenu-generic-expression))))
+
+;;;###autoload
+(setq conf-nginx-font-lock-keywords
+   `(
+     ("^[ \t]*\\([a-zA-Z0-9_]+\\)[ \t]\\(.*\\);"
+         (1 font-lock-keyword-face)
+         (2 font-lock-variable-name-face))
+     ("^[ \t]*\\([^=:\n]+?\\)[ \t\n]*{[^{}]*?$" 1 'font-lock-constant-face)))
+
+(define-derived-mode conf-nginx-mode conf-mode "Conf[nginx]"
+  "Conf Mode for Ngnix configure files.
+Comments start with `#' and \"assignments\" are space.
+For details see `conf-mode'.  Example:
+"
+  (conf-mode-initialize "#" 'conf-nginx-font-lock-keywords)
+  (setq imenu-generic-expression
+	  '(("value" "^[ \t]*\\([^ \t#]+\\|#[ \t#]*[^ \t]+\\)[ \t]*.*;$" 1)
+	    ;; section { ... }
+	    ("section" "^[ \t]*\\([^=:{} \t\n][^=:{}\n]+\\)[ \t\n]*{" 1))))
 
 ;;;###autoload
 (define-derived-mode conf-xdefaults-mode conf-colon-mode "Conf[Xdefaults]"
