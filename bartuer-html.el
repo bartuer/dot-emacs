@@ -108,3 +108,47 @@
                    (setq tag (list (cons (car tag) (xml-tag-end (car data))) (cadr tag))))
 		 tag)
                )))))))
+
+(defun xml-sexp-to-imenu (sexp level)
+  "convert the sexp of xml to imenu alist
+
+  for a sexp converted from xml by `xml-to-sexp', only the tag
+  start position and tag name ,attribute string will be added
+  to `imenu--index-alist', using prefix string \"|-\" to denote
+  the level of tag.
+"
+  (setq start-pos nil)
+  ;; if the third item is list, that means level should increase one
+  (let ((index 0))                      
+    (dolist (item sexp)
+      (setq index (1+ index))
+      (cond
+       ((and
+         (listp item)
+         (consp (car item)))
+        (if (eq index 3) 
+            (setq level (1+ level)))
+        (xml-sexp-to-imenu item level)
+        )
+       ((stringp item)
+        (let ((l level)
+              (level-prefix ""))
+          (while (> l 0)
+            (setq level-prefix (concat level-prefix "|-"))
+            (setq l (1- l)))
+          (push (cons (concat level-prefix item)
+                      start-pos)
+                imenu--index-alist)))
+       ((consp item)
+        (if (eq start-pos nil)
+            (setq start-pos (car item))))))))
+
+(defun xml-imenu ()
+  (setq imenu--index-alist nil)
+  (save-excursion
+    (goto-char (point-min))
+    (xml-sexp-to-imenu (xml-to-sexp) 0)
+    (setq imenu--index-alist (reverse imenu--index-alist))))
+
+;; add this line to html/xhtml/xml/sgml mode definition 
+(setq imenu-create-index-function 'xml-imenu)
