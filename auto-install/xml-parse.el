@@ -294,7 +294,7 @@ Note that this only works if the opening tag starts at column 0."
   "Add the string from BEG to END to LST, ignoring pure whitespace."
   (save-excursion
     (goto-char beg)
-    (while (search-forward "<" end t)
+    (while (search-forward-tag-head end t)
       (setq lst (xml-parse-add-non-ws
 		 (buffer-substring-no-properties beg (1- (point))) lst)
 	    beg (1- (point)))
@@ -307,8 +307,18 @@ Note that this only works if the opening tag starts at column 0."
 		   (buffer-substring-no-properties beg end) lst)))
     lst))
 
+(defun search-forward-tag-head (end inner-p)
+  (if (and inner-p
+           (stringp (car tag))
+           (string-equal (car tag) "script"))
+      (progn
+        (search-forward "</script" end t)
+        (backward-char 8)
+        )
+    (search-forward "<" end t)))
+
 (defun xml-parse-read (&optional inner-p)
-  (let ((beg (search-forward "<" nil t)) after)
+  (let ((beg (search-forward-tag-head nil inner-p)) after)
     (while (and beg (memq (setq after (char-after)) '(?! ??)))
       (xml-parse-skip-tag)
       (setq beg (search-forward "<" nil t)))
@@ -354,13 +364,16 @@ Note that this only works if the opening tag starts at column 0."
 	       (let ((data-beg (point)) (tag-end (last tag)))
 		 (while (and (setq data (xml-parse-read t))
 			     (not (stringp (cdr data))))
-		   (setq tag-end (xml-parse-concat data-beg (car data)
+                  (setq tag-end (xml-parse-concat data-beg (car data)
 						   tag-end)
 			 data-beg (point))
 		   (setcdr tag-end (list (cdr data)))
 		   (setq tag-end (cdr tag-end)))
-		 (xml-parse-concat data-beg (or (car data)
-						(point-max)) tag-end)
+                 (xml-parse-concat data-beg (or (car data) 
+                                                (unless (eq data-beg (point))
+                                                  (point-max)
+                                                  (point)))
+                                   tag-end)
 		 tag)))))))))
 
 (provide 'xml-parse)

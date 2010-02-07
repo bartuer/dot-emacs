@@ -9,6 +9,7 @@
 
 ;; borrow from http://www.gci-net.com/~johnw/emacs.html, if the xml
 ;; document has error, such as unclosed tag, parse will fail
+;; if embedded script has <, the parser should handle that
 
 (defun xml-to-sexp (&optional inner-p)
   "parse a xml document to sexp
