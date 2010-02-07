@@ -191,8 +191,8 @@ top of the document to identify it as an XML document.
 DEPTH is normally for internal use only, and controls the depth of the
 indentation."
   (when (and (not depth) public system)
-    (insert "<?xml version=\"1.0\"?>\n")
-    (insert "<!DOCTYPE " (if (stringp (car data))
+    (insert "\n<?xml version=\"1.0\"?>\n")
+    (insert "\n<!DOCTYPE " (if (stringp (car data))
 			     (car data)
 			   (caar data))
 	    " PUBLIC \"" public "\"\n  \"" system "\">\n"))
@@ -202,9 +202,9 @@ indentation."
       (and depth (bolp)
 	   (insert (make-string (* depth 2) ? )))
       (if (stringp node)
-	  (insert "<" node)
+	  (insert "\n<" node)
 	(setq node (caar data))
-	(insert "<" node)
+	(insert "\n<" node)
 	(let ((attrs (cdar data)))
 	  (while attrs
 	    (insert " " (caar attrs) "=\"" (cdar attrs) "\"")
@@ -223,7 +223,7 @@ indentation."
 	(when add-nl
 	  (and add-newlines (insert ?\n))
 	  (and depth (insert (make-string (* depth 2) ? ))))
-	(insert "</" node ">"))
+	(insert "\n</" node ">"))
       t)))
 
 ;;;###autoload
