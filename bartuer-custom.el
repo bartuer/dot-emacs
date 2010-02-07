@@ -54,6 +54,17 @@
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(hippie-expand-verbose t)
+ '(htmlize-hyperlink-style "
+      a {
+        color: inherit;
+        background-color: #000000;
+        font: inherit;
+        text-decoration: inherit;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+")
  '(ibuffer-elide-long-columns nil)
  '(ibuffer-saved-filter (quote (nil)))
  '(ibuffer-saved-filter-groups (quote (("normal" ("emacs" (or (mode . Custom-mode) (mode . lisp-interaction-mode) (mode . emacs-lisp-mode))) ("console" (or (mode . debugger-mode) (mode . comint-mode) (mode . reb-mode) (mode . inferior-ess-mode) (mode . inf-ruby-mode) (mode . shell-mode) (mode . inferior-moz-mode))) ("result" (or (mode . anything-mode) (mode . ediff-meta-mode) (mode . ediff-mode) (mode . occur-mode) (mode . compilation-mode) (name . "^\\*pP") (mode . grep-mode) (mode . completion-list-mode) (mode . apropos-mode) (name . "rct-result") (name . "*rct-compilation*") (name . "^\\*rake") (mode . term-mode))) ("debugger" (or (name . "^*gud") (name . "^*locals") (name . "^*register") (name . "^*stack") (name . "^*breakpoints") (name . "^*input") (name . "^*disassembly") (name . "^*threads") (name . "^*memory") (name . "^*rdebug"))) ("log" (or (name . "\\.log$") (name . "_log"))) ("help" (or (name . "^readme") (name . "^ri") (mode . help-mode) (mode . Info-mode) (mode . Man-mode) (mode . woman-mode))) ("irc" (or (mode . rcirc-mode))) ("tags" (or (name . "^TAGS") (mode . tags-table-mode))) ("org" (or (name . "^\\*Org") (mode . calendar-mode) (mode . org-mode))) ("ver" (or (mode . vc-annotate-mode) (name . "^\\*VC") (mode . vc-mode) (name . "^\\*magit"))) ("dir" (or (mode . dired-mode) (mode . archive-mode)))))))
@@ -137,6 +148,6 @@
  '(org-target ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
  '(speedbar-button-face ((((class color) (background dark)) (:foreground "cyan" :underline t))))
- '(which-func ((((background dark)) (:background "yellow" :foreground "green"))))
+ '(which-func ((((background dark)) (:background "yellow" :foreground "blue"))))
  '(yas/field-highlight-face ((t (:background "blue"))))
  '(yas/mirror-highlight-face ((t (:background "blue")))))
