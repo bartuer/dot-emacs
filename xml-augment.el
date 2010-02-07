@@ -3,7 +3,8 @@
 (defun xml-tag-end (data-end-pos)
   (save-excursion
     (goto-char data-end-pos)
-    (xml-parse-skip-tag)
+    (unless (eq (char-after) nil)
+      (xml-parse-skip-tag))
     (point)))
 
 ;; borrow from http://www.gci-net.com/~johnw/emacs.html, if the xml
