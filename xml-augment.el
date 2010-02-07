@@ -7,6 +7,16 @@
       (xml-parse-skip-tag))
     (point)))
 
+(defun search-forward-tag-head-aug (end inner-p)
+  (if (and inner-p
+           (stringp (cadr tag))
+           (string-equal (cadr tag) "script"))
+      (progn
+        (search-forward "</script" end t)
+        (backward-char 8)
+        )
+    (search-forward "<" end t)))
+
 ;; borrow from http://www.gci-net.com/~johnw/emacs.html, if the xml
 ;; document has error, such as unclosed tag, parse will fail
 ;; if embedded script has <, the parser should handle that
@@ -37,8 +47,8 @@
   If that tag include any inner HTML, then (cons beg end) of the
   inner part, if that tag has children, sexp of children
   followed, else, end of the tag sexp. "
-
-  (let ((beg (search-forward "<" nil t)) after)
+  
+  (let ((beg (search-forward-tag-head-aug nil inner-p)) after)
     (while (and beg (memq (setq after (char-after)) '(?! ??)))
       (xml-parse-skip-tag)
       (setq beg (search-forward "<" nil t)))
