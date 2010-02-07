@@ -144,4 +144,15 @@
     (xml-sexp-to-imenu (xml-to-sexp) 0)
     (setq imenu--index-alist (reverse imenu--index-alist))))
 
+
+(defun xml-format ()
+  "parse the dom tree, then insert it again"
+  (interactive)
+  (goto-char (point-min))
+  (save-excursion
+    (let ((tree (read-xml)))
+      (kill-region (point-min) (point-max))
+      (insert-xml tree)
+      (indent-region (point-min) (point-max)))))
+
 (provide 'xml-augment)
