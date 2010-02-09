@@ -165,4 +165,112 @@
       (insert-xml tree)
       (indent-region (point-min) (point-max)))))
 
+;; (set (make-local-variable 'forward-sexp-function) 'xml-forward-sexp)
+(defun dom-tree ()
+  (interactive)
+  (goto-char (point-min))
+  (setq dom-tree (xml-to-sexp))
+  (with-current-buffer (get-buffer-create
+                        "*dom-tree*")
+    (delete-region (point-min) (point-max))
+    (insert (format "%S" dom-tree))))
+    
+(defun pos-inside (pos range)
+  (if (consp range)
+      (let ((left (car range))
+            (right (cdr range)))
+        (and
+         (numberp left)
+         (numberp right)
+         (<= left pos)
+         (>= right pos)))
+    nil))
+
+(defun search-inner-most-sexp (pos tree)
+  (let ((subtree nil)
+        (loop-tree tree)
+        item)
+    (while (and
+            (null subtree)
+            (> (length loop-tree) 0))
+      (when (listp (setq item (car loop-tree)))
+        (cond ((pos-inside pos item)
+               (setq cache loop-tree)
+               (setq subtree (cddr loop-tree)))
+              ((let ((index 2))
+                 (when (pos-inside pos (car item))
+                     (while (and
+                             (null subtree)
+                             (< index (length item)))
+                       (when (pos-inside pos (car (elt item index)))
+                         (setq cache item)
+                         (setq subtree (elt item index)))
+                       (setq index (1+ index))))
+                 (not (null subtree))))
+              ((pos-inside pos (car item))
+               (setq cache item)
+               (setq subtree (car item)))))
+      (setq loop-tree (cdr loop-tree)))
+    (if (and
+         (listp (car subtree))
+         (> (length subtree) 0))
+        (search-inner-most-sexp pos subtree)
+      (if (null subtree)
+          (if (consp (car cache))
+              (car cache)
+            cache)
+        (if (consp (car subtree))
+            (car subtree)
+          subtree)))))
+
+(defun mark-xml-sexp (&optional allow-extend)
+  "Put mark at end of this sexp, point at beginning.
+The sexp marked is the one that contains point or follows point."
+  (interactive "p")
+  (let ((range (search-inner-most-sexp (point) dom-tree)))
+    (cond ((and allow-extend
+                (or (and (eq last-command this-command) (mark t))
+                    (and transient-mark-mode mark-active)))
+           (set-mark
+            (save-excursion
+              (goto-char (mark))
+              (goto-char (cdr range))
+              (point))))
+          (t
+           (let ((opoint (point))
+                 beg end)
+             (push-mark opoint)
+             (goto-char (car range))
+             (setq beg (point))
+             (goto-char (cdr range))
+             (setq end (point))
+             (if (> (point) opoint)
+                 (progn
+                   (push-mark beg nil t)
+                   (goto-char end)
+                   (exchange-point-and-mark))
+               (goto-char opoint)
+               (goto-char (cdr range))
+               (push-mark (point) nil t)
+               (goto-char (car range)))
+             )))))
+
+(defun map-to-list-world (pos)
+  )
+
+(defun xml-forward ()
+  )
+
+(defun xml-backward ()
+
+  )
+
+(defun xml-up ()
+
+  )
+
+(defun xml-down ()
+
+  )
+
 (provide 'xml-augment)
