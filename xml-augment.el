@@ -242,7 +242,7 @@ The sexp marked is the one that contains point or follows point."
              (push-mark opoint)
              (goto-char (car range))
              (setq beg (point))
-             (goto-char (cdr range))
+             (goto-char (cdr range)) 
              (setq end (point))
              (if (> (point) opoint)
                  (progn
@@ -255,22 +255,64 @@ The sexp marked is the one that contains point or follows point."
                (goto-char (car range)))
              )))))
 
-(defun map-to-list-world (pos)
+
+(defun xml-next-tag-head ()
+  (while (looking-at "<\\?")
+      (search-forward "?>"))
+  (while (looking-at "!--")
+      (search-forward "-->")
+      (search-forward "<")
+      )
+  (unless (eq (char-before) 60)         ;'<'
+    (search-forward "<"))
+  (point))
+
+(defun xml-forward (&optional pos)
+  (interactive)
+  (if (eq nil pos)
+      (setq pos (point)))
+  (let ((range (search-inner-most-sexp pos dom-tree)))
+    (if (< pos (cdr range))
+        (goto-char (cdr range))
+      (xml-next-tag-head)
+      )))
+
+(defun xml-before-tag-tail ()
+  (while (and
+          (eq (char-after) 62)           ;'?'
+          (eq (char-before) 63))
+      (search-backward "<?")
+      (search-backward ">")
+      )
+  (while (and
+          (eq (char-after) 62)
+          (eq (char-before) 45))
+      (search-backward "<!--")
+      (search-backward ">")
+      )
+  (unless (eq (char-after) 62)          ;'>'
+    (search-backward ">"))
+  (point))
+
+(defun xml-backward (&optional pos)
+  (interactive)
+  (if (eq nil pos)
+      (setq pos (point)))
+  (let ((range (search-inner-most-sexp pos dom-tree)))
+    (if (> pos (car range))
+        (goto-char (car range))
+      (xml-before-tag-tail)
+      )
+  ))
+
+(defun xml-up (&optional pos)
+  (interactive)
+
   )
 
-(defun xml-forward ()
-  )
-
-(defun xml-backward ()
-
-  )
-
-(defun xml-up ()
-
-  )
-
-(defun xml-down ()
-
+(defun xml-down (&optional pos)
+  (interactive)
+  
   )
 
 (provide 'xml-augment)
