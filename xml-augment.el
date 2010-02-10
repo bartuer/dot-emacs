@@ -223,7 +223,7 @@
             (car subtree)
           subtree)))))
 
-(defun mark-xml-sexp (&optional allow-extend)
+(defun xml-mark-sexp (&optional allow-extend)
   "Put mark at end of this sexp, point at beginning.
 The sexp marked is the one that contains point or follows point."
   (interactive "p")
@@ -263,7 +263,7 @@ The sexp marked is the one that contains point or follows point."
       (search-forward "-->")
       (search-forward "<")
       )
-  (unless (eq (char-before) 60)         ;'<'
+  (unless (eq (char-before) 60);'<'
     (search-forward "<"))
   (point))
 
@@ -279,8 +279,8 @@ The sexp marked is the one that contains point or follows point."
 
 (defun xml-before-tag-tail ()
   (while (and
-          (eq (char-after) 62)           ;'?'
-          (eq (char-before) 63))
+          (eq (char-after) 62);'?'
+          (eq (char-before) 63));'-'
       (search-backward "<?")
       (search-backward ">")
       )
@@ -290,7 +290,7 @@ The sexp marked is the one that contains point or follows point."
       (search-backward "<!--")
       (search-backward ">")
       )
-  (unless (eq (char-after) 62)          ;'>'
+  (unless (eq (char-after) 62);'>'
     (search-backward ">"))
   (point))
 
@@ -307,12 +307,53 @@ The sexp marked is the one that contains point or follows point."
 
 (defun xml-up (&optional pos)
   (interactive)
-
-  )
+  (if (eq nil pos)
+      (setq pos (point)))
+  (let ((range (search-inner-most-sexp pos dom-tree))
+        up-range)
+    (with-current-buffer (get-buffer-create "*dom-tree*")
+      (goto-char (point-min))
+      (goto-char (search-forward (format "%S" range)))
+      (if (eq (char-after) 41);')'
+          (progn
+            (search-backward "(" nil nil 2)
+            (setq up-range (read (buffer-substring-no-properties
+                                  (point)
+                                  (search-forward ")")))))
+        (while (or
+                (null up-range)
+                (eq pos (car up-range)))   
+          (goto-char (scan-lists (point) 1 1))    ;; up-list
+          (backward-sexp)
+          (setq up-range (read (buffer-substring-no-properties
+                                (1+ (point))
+                                (save-excursion
+                                  (search-forward ")"))))
+                ))))
+    (goto-char (car up-range))))
 
 (defun xml-down (&optional pos)
   (interactive)
-  
-  )
+  (if (eq nil pos)
+      (setq pos (point)))
+  (let ((range (search-inner-most-sexp pos dom-tree))
+        down-range)
+    (with-current-buffer (get-buffer-create "*dom-tree*")
+      (goto-char (point-min))
+      (goto-char (search-forward (format "%S" range)))
+      (condition-case nil
+          ((lambda ()
+             (goto-char (scan-lists (point) 1 -1))
+             (when (and
+                    (eq (char-before) 40);'('
+                    (not (eq (char-after) 40)))
+                 (backward-char))
+             (setq down-range (read (buffer-substring-no-properties
+                              (point)
+                              (save-excursion
+                                (search-forward ")")))))))
+        (error)))
+    (when (numberp (car down-range))
+      (goto-char (car down-range)))))
 
 (provide 'xml-augment)
