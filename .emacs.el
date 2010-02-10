@@ -410,11 +410,8 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq-default ido-mode 'both)
   (ido-mode 1))
 
-(defun set-xml-imenu ()
-  (set (make-local-variable 'imenu-create-index-function) 'xml-imenu))
-
 (require 'xml-augment nil t)
-(add-hook 'sgml-mode-hook 'set-xml-imenu)
+(add-hook 'sgml-mode-hook 'xml-augment-hook)
 
 (autoload 'file-cache-ido-read "bartuer-filecache.el" "prompt to ido filecache" t nil)
 (autoload 'file-cache-ido-find-file "bartuer-filecache.el" "using ido find filecache" t nil)

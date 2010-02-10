@@ -168,8 +168,9 @@
 ;; (set (make-local-variable 'forward-sexp-function) 'xml-forward-sexp)
 (defun dom-tree ()
   (interactive)
-  (goto-char (point-min))
-  (setq dom-tree (xml-to-sexp))
+  (save-excursion
+    (goto-char (point-min))
+    (setq dom-tree (xml-to-sexp)))
   (with-current-buffer (get-buffer-create
                         "*dom-tree*")
     (delete-region (point-min) (point-max))
@@ -187,6 +188,10 @@
     nil))
 
 (defun search-inner-most-sexp (pos tree)
+  "search most inner cons contain the POS in the TREE.
+
+the TREE is genereated by `xml-to-sexp'.
+returned cons is (head_of_tag_closure. end_of_tag_closure)."
   (let ((subtree nil)
         (loop-tree tree)
         item)
@@ -224,8 +229,7 @@
           subtree)))))
 
 (defun xml-mark-sexp (&optional allow-extend)
-  "Put mark at end of this sexp, point at beginning.
-The sexp marked is the one that contains point or follows point."
+  "Put mark at end of this tag closure, point at beginning. "
   (interactive "p")
   (let ((range (search-inner-most-sexp (point) dom-tree)))
     (cond ((and allow-extend
@@ -268,6 +272,12 @@ The sexp marked is the one that contains point or follows point."
   (point))
 
 (defun xml-forward (&optional pos)
+  "if POS in a tag closure, current position will move to the head of the closure.
+
+if POS is at end of the tag closure, current position will move
+to the head of next tag closure.
+
+default POS is current position."
   (interactive)
   (if (eq nil pos)
       (setq pos (point)))
@@ -295,6 +305,12 @@ The sexp marked is the one that contains point or follows point."
   (point))
 
 (defun xml-backward (&optional pos)
+  "if POS in a tag closure, current position will move to the end of the closure.
+
+if POS is at head of the tag closure, current position will move
+to the end of previous tag closure.
+
+default POS is current position."
   (interactive)
   (if (eq nil pos)
       (setq pos (point)))
@@ -306,6 +322,14 @@ The sexp marked is the one that contains point or follows point."
   ))
 
 (defun xml-up (&optional pos)
+  "if POS in a tag closure, position will move to the head of the current tag closure.
+
+if POS is at the head of the tag closure, position will move to
+the head of tag closure contain current one.  if POS is in a tag
+closure's inner HTML, position will move to the head of current tag
+closure.
+
+default POS is current position."
   (interactive)
   (if (eq nil pos)
       (setq pos (point)))
@@ -333,6 +357,11 @@ The sexp marked is the one that contains point or follows point."
     (goto-char (car up-range))))
 
 (defun xml-down (&optional pos)
+  "if POS in a tag closure, position will move to the head of first child tag closure.
+
+if current tag closure has no child, nothing will happen.
+
+default POS is current position."
   (interactive)
   (if (eq nil pos)
       (setq pos (point)))
@@ -355,5 +384,20 @@ The sexp marked is the one that contains point or follows point."
         (error)))
     (when (numberp (car down-range))
       (goto-char (car down-range)))))
+
+(defun xml-forward-adapt (&optional arg)
+  (interactive "^p")
+  (if (eq arg -1)
+      (xml-backward)
+    (xml-forward)))
+
+(defun xml-augment-hook ()
+  (set (make-local-variable 'forward-sexp-function) 'xml-forward-adapt)
+  (set (make-local-variable 'imenu-create-index-function) 'xml-imenu)
+  (define-key sgml-mode-map "\C-\M-h" 'xml-mark-sexp)
+  (define-key html-mode-map "\C-\M-h" 'xml-mark-sexp) ;that would be shadow if not do this
+  (define-key sgml-mode-map "\C-\M-u" 'xml-up)
+  (define-key sgml-mode-map "\C-\M-d" 'xml-down)
+  )
 
 (provide 'xml-augment)
