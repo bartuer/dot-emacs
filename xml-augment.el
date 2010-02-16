@@ -392,6 +392,7 @@ default POS is current position."
     (xml-forward)))
 
 (defun xml-augment-hook ()
+  (flymake-mode 1)
   (set (make-local-variable 'forward-sexp-function) 'xml-forward-adapt)
   (set (make-local-variable 'imenu-create-index-function) 'xml-imenu)
   (define-key sgml-mode-map "\C-\M-h" 'xml-mark-sexp)
