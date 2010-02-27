@@ -150,8 +150,8 @@
 (defun xml-imenu ()
   (setq imenu--index-alist nil)
   (save-excursion
-    (goto-char (point-min))
-    (xml-sexp-to-imenu (xml-to-sexp) 0)
+    (dom-tree)
+    (xml-sexp-to-imenu dom-tree 0)
     (setq imenu--index-alist (reverse imenu--index-alist))))
 
 
