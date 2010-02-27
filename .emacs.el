@@ -605,7 +605,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
 (add-hook 'css-mode-hook (lambda ()
                            (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)))
-
+(add-hook 'css-mode-hook (lambda () (flymake-mode t)))
 
 (autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
   "mode for yaml file" t nil)
