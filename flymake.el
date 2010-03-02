@@ -1815,7 +1815,7 @@ Use CREATE-TEMP-F for creating temp copy."
          (local-file (file-relative-name
                       temp-file
                       (file-name-directory buffer-file-name))))
-    (list "tidy" (list local-file))))
+    (list "tidy" (list "-e" "-utf8" local-file))))
 
 (add-to-list 'flymake-allowed-file-name-masks
              '("\\.html?$" flymake-html-init))
