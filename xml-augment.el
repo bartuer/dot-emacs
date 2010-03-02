@@ -391,9 +391,20 @@ default POS is current position."
       (xml-backward)
     (xml-forward)))
 
+(defun xml-indent-region (start end)
+  "using tidy to indent the whole buffer"
+  (interactive)
+  (let ((indent-col (current-column)))
+    (shell-command-on-region start end "tidy -i -xml -q -utf8 2>/dev/null" t)
+    (indent-rigidly start (point) indent-col))
+  (dom-tree))
+
 (defun xml-augment-hook ()
   (flymake-mode 1)
   (set (make-local-variable 'forward-sexp-function) 'xml-forward-adapt)
+  ;; for html, implement indent region by indent line , will call too
+  ;; much sgml-calculate-indent
+  (set (make-local-variable 'indent-region-function) 'xml-indent-region)
   (set (make-local-variable 'imenu-create-index-function) 'xml-imenu)
   (define-key sgml-mode-map "\C-\M-h" 'xml-mark-sexp)
   (define-key html-mode-map "\C-\M-h" 'xml-mark-sexp) ;that would be shadow if not do this

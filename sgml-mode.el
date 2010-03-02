@@ -35,6 +35,7 @@
 (eval-when-compile
   (require 'skeleton)
   (require 'outline)
+  (require 'xml-augment)
   (require 'cl))
 
 (defgroup sgml nil
@@ -1451,7 +1452,9 @@ LCON is the lexical context, if any."
 
     (text
      (while (looking-at "</")
-       (forward-sexp 1)
+       ;; (forward-sexp 1), should use the original define, mask
+       ;; forward-sexp-function
+       (goto-char (or (scan-sexps (point) 1) (buffer-end 1)))
        (skip-chars-forward " \t"))
      (let* ((here (point))
 	    (unclosed (and ;; (not sgml-xml-mode)
@@ -1515,7 +1518,8 @@ LCON is the lexical context, if any."
 	'noindent
       (if savep
 	  (save-excursion (indent-line-to indent-col))
-	(indent-line-to indent-col)))))
+	(indent-line-to indent-col))))
+  (dom-tree))
 
 (defun sgml-guess-indent ()
   "Guess an appropriate value for `sgml-basic-offset'.
