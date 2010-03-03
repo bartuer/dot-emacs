@@ -36,12 +36,15 @@ directory, select directory. Lastly the file is opened."
   (require 'filecache)
   (if (fboundp 'file-cache-add-directory)
       (progn
-         (file-cache-add-directory "~/etc/el")
-         (file-cache-add-directory "~/org")
-         (file-cache-add-directory "~/local/share/doc/")
-         (file-cache-add-directory "~/local/share/")
-         (file-cache-add-directory "~/local/share/info")
-         (file-cache-add-directory "~/rails-learn")
+         (file-cache-add-directory-list (list
+                                         "~/etc/el"
+                                         "~/etc/el/auto-install"
+                                         "~/org"
+                                         "~/scripts"
+                                         "~/local/share/doc/"
+                                         "~/local/share/"
+                                         "/tmp"
+                                         "~/local/share/info"))
          (load "~/etc/el/file-cache.el")
          (add-hook 'kill-buffer-hook 'file-cache-add-this-file)
          (global-set-key "\M-2" 'file-cache-ido-find-file))))
