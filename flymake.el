@@ -1825,15 +1825,13 @@ Use CREATE-TEMP-F for creating temp copy."
                nil 1 2 4))
 
 ;;;; for css
-(defconst css-validator "/usr/bin/java -jar /Users/bartuer/etc/el/vendor/css-validate/css-validator.jar")
-
 (defun flymake-css-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
                        'flymake-create-temp-inplace))
          (local-file  (file-relative-name
                        temp-file
                        (file-name-directory buffer-file-name))))
-    (list "java" (list "-jar" "/Users/bartuer/etc/el/vendor/css-validate/css-validator.jar" "-output" "gnu" (concat "file:" local-file)))))
+    (list "/Users/bartuer/etc/el/vendor/css-validate/css-flymake" (list local-file))))
 
 (add-to-list  'flymake-allowed-file-name-masks
        '(".+\\.css$" flymake-css-init))
