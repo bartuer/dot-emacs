@@ -396,7 +396,8 @@ default POS is current position."
   (interactive)
   (let ((indent-col (current-column)))
     (shell-command-on-region start end "tidy -i -xml -q -utf8 2>/dev/null" t)
-    (indent-rigidly start (point) indent-col))
+    (indent-rigidly start (point) indent-col)
+    (delete-backward-char 1))
   (dom-tree))
 
 (defun xml-augment-hook ()
