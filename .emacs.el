@@ -271,8 +271,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'remember nil t)
 (org-remember-insinuate)
-(setq org-directory "~/path/to/my/orgfiles/")
-(setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-directory "~/org")
+(setq org-default-notes-file (concat org-directory "/note.org"))
 (define-key global-map "\C-cr" 'org-remember)
 (defalias 'rr 'org-remember)
 
