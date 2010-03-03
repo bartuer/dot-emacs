@@ -9,7 +9,6 @@
 (put 'set-goal-column 'disabled nil)
 (setq-default source-directory (expand-file-name "~/local/src/emacs/"))
 (setq-default major-mode 'text-mode)
-(defalias 'c 'describe-char)
 (defalias 'n 'rename-buffer)
 
 (defun link (file point)
@@ -269,6 +268,13 @@ If give a negative ARG, will undo the last mark action, thus the
     (winner-mode 1))
 (if (fboundp 'which-function-mode)
     (which-function-mode 1))
+
+(require 'remember nil t)
+(org-remember-insinuate)
+(setq org-directory "~/path/to/my/orgfiles/")
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(define-key global-map "\C-cr" 'org-remember)
+(defalias 'rr 'org-remember)
 
 (require 'auto-install nil t)
 
