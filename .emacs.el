@@ -274,6 +274,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq org-directory "~/org")
 (setq org-default-notes-file (concat org-directory "/note.org"))
 (define-key global-map "\C-cr" 'org-remember)
+(setq remember-annotation-functions nil) ;dislike insert filename
 (defalias 'rr 'org-remember)
 
 (require 'auto-install nil t)
@@ -760,11 +761,15 @@ If give a negative ARG, will undo the last mark action, thus the
   (insert "→ "))
 (global-set-key "\C-c0" 'mac-right)
 
+
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for emacs lisp" t)
 (add-hook 'emacs-lisp-mode-hook 'bartuer-elisp-load)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
+
+(autoload 'bartuer-clearcase-load "bartuer-clearcase.el" "for clearcase" t)
+(defalias 'cc 'bartuer-clearcase-load)
 
 (autoload 'bartuer-gdb-load "bartuer-gdb.el" "for gdb" t)
 (add-hook 'gud-mode-hook 'bartuer-gdb-load)
