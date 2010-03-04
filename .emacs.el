@@ -419,10 +419,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'xml-augment nil t)
 (add-hook 'sgml-mode-hook 'xml-augment-hook)
 
-(autoload 'file-cache-ido-read "bartuer-filecache.el" "prompt to ido filecache" t nil)
-(autoload 'file-cache-ido-find-file "bartuer-filecache.el" "using ido find filecache" t nil)
-(autoload 'file-cache-add-this-file "bartuer-filecache.el" "when kill buffer, add to filename cache" t nil)
-(autoload 'bartuer-filecache-load "bartuer-filecache.el" "for access file cache" t)
+(require 'bartuer-filecache nil t)
 (bartuer-filecache-load)
 
 (require 'anything nil t)
@@ -763,15 +760,11 @@ If give a negative ARG, will undo the last mark action, thus the
   (insert "→ "))
 (global-set-key "\C-c0" 'mac-right)
 
-
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for emacs lisp" t)
 (add-hook 'emacs-lisp-mode-hook 'bartuer-elisp-load)
 
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
-
-(autoload 'bartuer-clearcase-load "bartuer-clearcase.el" "for clearcase" t)
-(defalias 'cc 'bartuer-clearcase-load)
 
 (autoload 'bartuer-gdb-load "bartuer-gdb.el" "for gdb" t)
 (add-hook 'gud-mode-hook 'bartuer-gdb-load)

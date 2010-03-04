@@ -1,5 +1,6 @@
 ;; maybe [[http://bc.tech.coop/blog/070225.html][link spotlight and emacsclient]] is a good idea
 ;; add below file cache content to bartuer-filecache.el
+(require 'filecache)
 (defun file-cache-ido-find-file (file)
   "Using ido, interactively open file from file cache'.
 First select a file, matched using ido-switch-buffer against the contents
@@ -33,7 +34,6 @@ directory, select directory. Lastly the file is opened."
 
 (defun bartuer-filecache-load ()
   "for access file cache"
-  (require 'filecache)
   (if (fboundp 'file-cache-add-directory)
       (progn
          (file-cache-add-directory-list (list
@@ -47,7 +47,10 @@ directory, select directory. Lastly the file is opened."
                                          "~/local/share/info"))
          (load "~/etc/el/file-cache.el")
          (add-hook 'kill-buffer-hook 'file-cache-add-this-file)
-         (global-set-key "\M-2" 'file-cache-ido-find-file))))
+         (global-set-key "\M-2" 'file-cache-ido-find-file)
+         )))
+
+(provide 'bartuer-filecache)
 
 
 
