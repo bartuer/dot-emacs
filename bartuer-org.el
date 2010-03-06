@@ -8,7 +8,7 @@
   "for org mode"
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cb" 'org-iswitchb)
+  (global-set-key "\C-cb" 'org-sparse-tree)
   (global-set-key "\C-cu" 'org-insert-link-global)
   (global-set-key "\C-co" 'org-open-at-point-global)
   (turn-on-font-lock)
