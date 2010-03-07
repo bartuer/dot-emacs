@@ -180,6 +180,19 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (interactive)
   (shell-command "kill -KILL `lsof -t -i TCP:3000` 2>/dev/null;"))
 
+(defun bartuer-probe-nginx ()
+  "startup socat probe nginxserver to check http"
+  (interactive)
+  (shell-command "nginx-probe-server &")
+  (find-file "/tmp/80-request.log")
+  (pop-to-buffer "80-request.log")
+  (setq auto-revert-mode t)
+  (split-window-vertically)
+  (find-file "/tmp/80-response.log")
+  (pop-to-buffer "80-response.log")
+  (setq auto-revert-mode t)
+  )
+
 (defun bartuer-probe-server ()
   "startup socat probe server to check http"
   (interactive)
@@ -354,6 +367,7 @@ show all ruby methods, filter and and invoke ri on candidate
 (defalias 'rinari-bartuer-mongrel 'bartuer-mongrel)
 (defalias 'rinari-dev-server 'bartuer-dev-server)
 (defalias 'rinari-probe-server 'bartuer-probe-server)
+(defalias 'rinari-probe-nginx 'bartuer-probe-nginx)
 (defalias 'rinari-rdebug-server 'bartuer-rdebug-server)
 (defalias 'rinari-kill-server 'bartuer-kill-current-server)
 (defalias 'rinari-rct-fork-kill 'rct-fork-kill)
@@ -374,7 +388,7 @@ it perfectly.
                                           "find-javascript" "find-script" "find-public" "find-test" "find-fixture"
                                           "script" "test"
                                           "browserreload" "rdebug-server" "dev-server" "probe-server" "web-server" 
-                                          "kill-server" "console" "debug-console" "profile" 
+                                          "probe-nginx" "kill-server" "console" "debug-console" "profile" 
                                           "find-environment" "find-configuration" "find-file-in-project"
                                           "find-helper"  "find-plugin" 
                                           "find-log" "rails-logs"

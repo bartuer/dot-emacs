@@ -274,6 +274,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq org-directory "~/org")
 (setq org-default-notes-file (concat org-directory "/note.org"))
 (define-key global-map "\C-cr" 'org-remember)
+(add-hook 'remember-mode-hook (lambda ()
+                                (setq remember-annotation-functions nil)))
 (defalias 'rr 'org-remember)
 
 (require 'auto-install nil t)
