@@ -1,8 +1,3 @@
-(defun html-2-txt ()
-  "invoke html2text to see the downloaded html"
-  (interactive)
-  (shell-command-on-region (point-min) (point-max) "html2text -nobs -style pretty"))
-
 (defun bartuer-html-load ()
   "html mode modification"
   (define-key sgml-mode-map "\C-cj" 'js-smart-toggle)

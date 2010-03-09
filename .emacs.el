@@ -469,17 +469,29 @@ If give a negative ARG, will undo the last mark action, thus the
      (let ((null-device nil))		; see grep
        (grep command-args))))
 
+(defun html-2-txt ()
+  "invoke html2text to see the downloaded html"
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "html2text -nobs -style pretty"
+                           (get-buffer-create "html-text"))
+  )
+
 (defalias 'u (lambda (url-content-insert-location)
                (interactive "surl: ")
                (shell-command  (concat "curl " url-content-insert-location " 2>/dev/null")
                                (get-buffer-create "preview-url") (get-buffer "*Shell Command Output*"))
-               (pop-to-buffer "preview-url")
-               (goto-char (point-min))
-               (if (search-forward "html" (point-max) t)
-                   (html-mode)
-                   (setq buffer-file-name "/tmp/preview-url.html")
-                   (flymake-mode t)
-                 )
+               (with-current-buffer "preview-url"
+                 (goto-char (point-min))
+                 (if (search-forward "html" (point-max) t)
+                     (html-2-txt)
+                     (html-mode)
+                     (setq buffer-file-name "/tmp/preview-url.html")
+                     (save-buffer)
+                     (flymake-mode t)
+                     )
+               )
+               (pop-to-buffer "preview-url" t)
+               (pop-to-buffer "html-text" t)
                ))
 
 (require 'cheat nil t)            
