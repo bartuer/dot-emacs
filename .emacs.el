@@ -143,7 +143,10 @@ If give a negative ARG, will undo the last mark action, thus the
   (interactive)
   (if (windowp (car (window-tree)))
       (forward-list)
-    (next-error)))
+    (if (eq major-mode 'shell-mode)
+        (scroll-other-window 10)
+      (next-error))))
+
 (global-set-key "\C-\M-n" 'ctrl-meta-n-dwim)
 
 (defun ctrl-meta-p-dwim()
@@ -151,7 +154,10 @@ If give a negative ARG, will undo the last mark action, thus the
   (interactive)
   (if (windowp (car (window-tree)))
       (backward-list)
-    (previous-error)))
+    (if (eq major-mode 'shell-mode)
+        (scroll-other-window 10)
+      (previous-error))))
+
 (global-set-key "\C-\M-p" 'ctrl-meta-p-dwim)
 
 (defalias 'f 'auto-fill-mode)
