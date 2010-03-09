@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar /Users/bartuer/etc/el/vendor/yui/yuicompressor-2.4.2.jar --charset utf8 --type css -o $2 $1 

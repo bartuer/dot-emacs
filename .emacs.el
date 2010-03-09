@@ -604,13 +604,10 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)) 
 
 
-(autoload 'css-mode "css-mode.el"
-  "mode for css file" t nil)
 (require 'css-mode nil t)
+(autoload 'bartuer-css-load "~/etc/el/bartuer-css.el" t)
+(add-hook 'css-mode-hook 'bartuer-css-load)
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
-(add-hook 'css-mode-hook (lambda ()
-                           (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)))
-(add-hook 'css-mode-hook (lambda () (flymake-mode t)))
 
 (autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
   "mode for yaml file" t nil)
