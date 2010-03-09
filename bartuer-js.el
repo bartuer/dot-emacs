@@ -218,6 +218,17 @@ behavior."
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
   )
 
+(defun js-min ()
+  "invoke yuicompress minimize current buffer"
+  (interactive)
+  (let ((file-name (replace-regexp-in-string ".js" "_min.js"  (buffer-file-name))))
+        (unless (eq 0 (shell-command (concat
+                                      "~/etc/el/vendor/yui/js-min "
+                                      (buffer-file-name)  " " file-name) nil))
+          (message "minimize js failed")
+          )
+  ))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
