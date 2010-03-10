@@ -155,7 +155,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (if (windowp (car (window-tree)))
       (backward-list)
     (if (eq major-mode 'shell-mode)
-        (scroll-other-window 10)
+        (scroll-other-window -10)
       (previous-error))))
 
 (global-set-key "\C-\M-p" 'ctrl-meta-p-dwim)
