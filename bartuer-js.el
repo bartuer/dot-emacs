@@ -218,17 +218,31 @@ behavior."
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
   )
 
-(defun js-min ()
+(defun js-min-file (orig)
   "invoke yuicompress minimize current buffer"
-  (interactive)
-  (let ((file-name (replace-regexp-in-string ".js" "_min.js"  (buffer-file-name))))
+  (let ((file-name (replace-regexp-in-string ".js" "_min.js"  orig)))
         (unless (eq 0 (shell-command (concat
                                       "~/etc/el/vendor/yui/js-min "
-                                      (buffer-file-name)  " " file-name) nil))
+                                      orig  " " file-name) nil))
           (message "minimize js failed")
           )
   ))
 
+(defun js-min ()
+  (interactive)
+  (js-min-file (buffer-file-name)))
+ 
+(defun js-merge ()
+  "invoke sprocketize merge js files"
+  (interactive)
+  (unless (eq 0 (shell-command (concat
+                                "sprocketize "
+                                (buffer-file-name)
+                                " > base.js") nil))
+          (message "merge js failed")
+          )
+  )
+  
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -241,6 +255,8 @@ behavior."
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (defalias  'w 'js2-mode-show-node)
+  (defalias 'min 'js-min)
+  (add-hook 'after-save-hook 'js-merge nil t)
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
