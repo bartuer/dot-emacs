@@ -235,12 +235,13 @@ behavior."
 (defun js-merge ()
   "invoke sprocketize merge js files"
   (interactive)
-  (unless (eq 0 (shell-command (concat
-                                "sprocketize "
-                                (buffer-file-name)
-                                " > base.js") nil))
-          (message "merge js failed")
-          )
+  (when (string-equal (file-name-nondirectory (buffer-file-name)) "load.js")
+    (unless (eq 0 (shell-command (concat
+                                  "sprocketize "
+                                  (buffer-file-name)
+                                  " > base.js") nil))
+      (message "merge js failed")
+      ))
   )
   
 (defun bartuer-js-load ()
