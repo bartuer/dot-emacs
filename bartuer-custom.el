@@ -90,7 +90,7 @@
  '(mode-require-final-newline nil)
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
- '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org" "~/local/src/baza/sbs.org")))
+ '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org" "~/local/src/baza/sbs.org" "~/org/note.org")))
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
  '(ps-multibyte-buffer (quote bdf-font))
