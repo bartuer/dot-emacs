@@ -256,7 +256,6 @@ behavior."
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (defalias  'w 'js2-mode-show-node)
-  (defalias 'min 'js-min)
   (add-hook 'after-save-hook 'js-merge nil t)
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
