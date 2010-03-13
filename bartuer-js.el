@@ -231,17 +231,21 @@ behavior."
 (defun js-min ()
   (interactive)
   (js-min-file (buffer-file-name)))
- 
+
 (defun js-merge ()
   "invoke sprocketize merge js files"
   (interactive)
-  (when (string-equal (file-name-nondirectory (buffer-file-name)) "load.js")
+  (let ((find-js-merge nil))
+    (mapcar (lambda (f)
+            (when (string-equal (buffer-file-name) f)
+              (setq find-js-merge t))) (split-string (shell-command-to-string "sprocketlist")))
+  (when (find-js-merge
     (unless (eq 0 (shell-command (concat
                                   "sprocketize "
-                                  (buffer-file-name)
+                                  "./load.js"
                                   " > base.js") nil))
       (message "merge js failed")
-      ))
+      )))
   )
   
 (defun bartuer-js-load ()
