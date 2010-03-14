@@ -16,6 +16,7 @@
                                        (interactive)
                                        (org-up-heading-safe)))
   (define-key org-mode-map "\C-j" 'org-meta-return)
+  (define-key org-mode-map "\C-c\C-a" 'org-archive-subtree)
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
                                  (insert "[ ] ")))
