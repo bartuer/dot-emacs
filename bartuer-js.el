@@ -247,7 +247,14 @@ behavior."
       (message "merge js failed")
       )))
   ))
-  
+
+(defvar js2-mode-show-node)
+
+(defadvice js2-mode-forward-sexp (after js2-show-parse activate)
+  "show current node when move"
+  (when js2-mode-show-node
+    (js2-mode-show-node)))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -259,8 +266,11 @@ behavior."
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
-  (defalias  'w 'js2-mode-show-node)
+  (defalias  'w (lambda () (interactive)
+                  (setq js2-mode-show-node t)))
   (add-hook 'after-save-hook 'js-merge nil t)
+  (make-local-variable 'js2-mode-show-node)
+  (setq js2-mode-show-node nil)
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
