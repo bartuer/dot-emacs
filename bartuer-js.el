@@ -281,7 +281,7 @@ behavior."
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
-  (defalias  'w (lambda () (interactive)
+  (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
