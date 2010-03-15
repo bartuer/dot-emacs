@@ -248,12 +248,27 @@ behavior."
       )))
   ))
 
-(defvar js2-mode-show-node)
 
-(defadvice js2-mode-forward-sexp (after js2-show-parse activate)
-  "show current node when move"
-  (when js2-mode-show-node
-    (js2-mode-show-node)))
+(defvar js2-parse-mode nil)
+
+(defcustom js2-parse-minor-mode-string " Js2-parse"
+  "String to display in mode line when Js2-parse Mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'js2)
+
+(defun js2-show-parse ()
+  (interactive)
+  (js2-mode-show-node))
+
+(define-minor-mode js2-parse-mode
+  "Minor mode to show parse result"
+  :group 'js2 :lighter js2-parse-minor-mode-string
+  (cond
+   (js2-parse-mode
+    (add-hook 'post-command-hook 'js2-show-parse nil t)
+    )
+   (t
+    (remove-hook 'post-command-hook 'js2-show-parse t))))
 
 (defun bartuer-js-load ()
   "for javascript language
@@ -267,7 +282,7 @@ behavior."
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (defalias  'w (lambda () (interactive)
-                  (setq js2-mode-show-node t)))
+                 (js2-parse-mode)))
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
