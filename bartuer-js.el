@@ -246,7 +246,7 @@ behavior."
                                   " > base.js") nil))
       (message "merge js failed")
       )))
-  )
+  ))
   
 (defun bartuer-js-load ()
   "for javascript language
