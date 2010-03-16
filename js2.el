@@ -10848,12 +10848,6 @@ This ensures that the counts and `next-error' are correct."
   (let ((parse-status (save-excursion
                         (parse-partial-sexp (point-min) (point)))))
     (cond
-     ;; check if we're inside a string
-     ((nth 3 parse-status)
-      (js2-mode-split-string parse-status))
-     ;; check if inside a block comment
-     ((nth 4 parse-status)
-      (js2-mode-extend-comment))
      (t
       ;; should probably figure out what the mode-map says we should do
       (if js2-indent-on-enter-key
@@ -10863,30 +10857,6 @@ This ensures that the counts and `next-error' are correct."
       (if js2-enter-indents-newline
           (let ((js2-bounce-indent-flag nil))
             (js2-indent-line)))))))
-
-(defun js2-mode-split-string (parse-status)
-  "Turn a newline in mid-string into a string concatenation."
-  (let* ((col (current-column))
-         (quote-char (nth 3 parse-status))
-         (quote-string (string quote-char))
-         (string-beg (nth 8 parse-status))
-         (indent (save-match-data
-                   (or
-                    (save-excursion
-                      (back-to-indentation)
-                      (if (looking-at "\\+")
-                          (current-column)))
-                    (save-excursion
-                      (goto-char string-beg)
-                      (if (looking-back "\\+\\s-+")
-                          (goto-char (match-beginning 0)))
-                      (current-column))))))
-    (insert quote-char "\n")
-    (indent-to indent)
-    (insert "+ " quote-string)
-    (when (eolp)
-      (insert quote-string)
-      (backward-char 1))))
 
 (defun js2-mode-extend-comment ()
   "When inside a comment block, add comment prefix."
