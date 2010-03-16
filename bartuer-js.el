@@ -220,7 +220,7 @@ behavior."
 
 (defun js-min-file (orig)
   "invoke yuicompress minimize current buffer"
-  (let ((file-name (replace-regexp-in-string ".js" "_min.js"  orig)))
+  (let ((file-name (replace-regexp-in-string "\\.js" "_min.js"  orig)))
         (unless (eq 0 (shell-command (concat
                                       "~/etc/el/vendor/yui/js-min "
                                       orig  " " file-name) nil))
