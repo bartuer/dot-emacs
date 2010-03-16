@@ -239,14 +239,13 @@ behavior."
   (mapcar (lambda (f)
             (when (string-equal (buffer-file-name) f)
               (setq find-js-merge t))) (split-string (shell-command-to-string "sprocketlist")))
-  (when (find-js-merge
+  (when (eq find-js-merge t)
          (unless (eq 0 (shell-command (concat
                                        "sprocketize "
                                        "./load.js"
                                        " > base.js") nil))
            (message "merge js failed")
            )))
-  )
 
 
 (defvar js2-parse-mode nil)
