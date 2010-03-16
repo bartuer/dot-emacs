@@ -1834,7 +1834,7 @@ Use CREATE-TEMP-F for creating temp copy."
          (local-file (file-relative-name
 		      temp-file
 		      (file-name-directory buffer-file-name))))
-    (list "rhino" (list (expand-file-name "~/etc/el/js/jslint.js") local-file))))
+    (list "rhino" (list (expand-file-name "~/etc/el/vendor/jslint/jslint.js") local-file))))
 
 (add-to-list 'flymake-err-line-patterns 
              '("^Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\): \\(.+\\)$"  
