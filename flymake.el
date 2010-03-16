@@ -1825,7 +1825,7 @@ Use CREATE-TEMP-F for creating temp copy."
          (local-file  (file-relative-name
                        temp-file
                        (file-name-directory buffer-file-name))))
-    (list "/Users/bartuer/etc/el/vendor/css-validate/css-flymake" (list local-file))))
+    (list (expand-file-name "~/etc/el/vendor/css-validate/css-flymake") (list local-file))))
 
 ;;;; for js
 (defun flymake-jslint-init ()
