@@ -1805,9 +1805,6 @@ Use CREATE-TEMP-F for creating temp copy."
 (defun flymake-xml-init ()
   (list "xmllint" (list (flymake-init-create-temp-buffer-copy 'flymake-create-temp-inplace))))
 
-(add-to-list 'flymake-allowed-file-name-masks
-             '("\\.xml$\\|\\.plist$" flymake-html-init))
-
 ;;;; for html, use tidy 
 (defun flymake-html-init ()
   (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -1816,9 +1813,6 @@ Use CREATE-TEMP-F for creating temp copy."
                       temp-file
                       (file-name-directory buffer-file-name))))
     (list "tidy" (list "-e" "-q" "-utf8" local-file))))
-
-(add-to-list 'flymake-allowed-file-name-masks
-             '("\\.html?$" flymake-html-init))
 
 (add-to-list 'flymake-err-line-patterns
              '("line \\([0-9]+\\) column \\([0-9]+\\) - \\(Warning\\|Error\\): \\(.*\\)"
@@ -1833,8 +1827,6 @@ Use CREATE-TEMP-F for creating temp copy."
                        (file-name-directory buffer-file-name))))
     (list "/Users/bartuer/etc/el/vendor/css-validate/css-flymake" (list local-file))))
 
-(add-to-list  'flymake-allowed-file-name-masks
-       '(".+\\.css$" flymake-css-init))
 
 (provide 'flymake)
 

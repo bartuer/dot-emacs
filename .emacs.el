@@ -594,10 +594,6 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for ruby mode" t nil)
 (autoload 'flymake-ruby-init "~/etc/el/bartuer-ruby.el"
   "using ruby -c check syntax" t nil)
-(push '(".+\\.rb$" flymake-ruby-init)
-      flymake-allowed-file-name-masks)
-(push '("Rakefile$" flymake-ruby-init)
-      flymake-allowed-file-name-masks)
 (push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
       flymake-err-line-patterns)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
