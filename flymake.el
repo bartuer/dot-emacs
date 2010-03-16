@@ -1801,7 +1801,7 @@ Use CREATE-TEMP-F for creating temp copy."
 (defun flymake-get-include-dirs-dot (base-dir)
   '("."))
 
-;;;; xml-specific init-cleanup routines
+;;;; for xml, use xmllint
 (defun flymake-xml-init ()
   (list "xmllint" (list (flymake-init-create-temp-buffer-copy 'flymake-create-temp-inplace))))
 
@@ -1826,6 +1826,32 @@ Use CREATE-TEMP-F for creating temp copy."
                        temp-file
                        (file-name-directory buffer-file-name))))
     (list "/Users/bartuer/etc/el/vendor/css-validate/css-flymake" (list local-file))))
+
+;;;; for js
+(defun flymake-jslint-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+		     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+		      temp-file
+		      (file-name-directory buffer-file-name))))
+    (list "rhino" (list (expand-file-name "~/etc/el/js/jslint.js") local-file))))
+
+(add-to-list 'flymake-err-line-patterns 
+             '("^Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\): \\(.+\\)$"  
+	      nil 1 2 3))
+
+
+;;;; for ruby
+(defun flymake-ruby-init ()             
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+	 (local-file  (file-relative-name
+                       temp-file
+                       (file-name-directory buffer-file-name))))
+    (list "ruby" (list "-c" local-file))))
+
+(add-to-list 'flymake-err-line-patterns
+             '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3))
 
 
 (provide 'flymake)
