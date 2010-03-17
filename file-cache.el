@@ -1,4 +1,7 @@
 (file-cache-add-directory-list (list    
+                                "~/etc/el/vendor/jslint"
+                                "~/local/src/v8/test"
+                                "~/local/src/jspec/lib"
                                 "~/local/src/baza"
                                 "~/local/src/baza/app"
                                 "~/local/src/baza/app/controllers"
