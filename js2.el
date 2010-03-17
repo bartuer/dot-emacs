@@ -1053,7 +1053,6 @@ another file, or you've got a potential bug."
   (let ((map (make-sparse-keymap))
         keys)
     (define-key map [mouse-1] #'js2-mode-show-node)
-    (define-key map "\C-m" #'js2-enter-key)
     (when js2-rebind-eol-bol-keys
       (define-key map "\C-a" #'js2-beginning-of-line)
       (define-key map "\C-e" #'js2-end-of-line))
@@ -1079,64 +1078,6 @@ another file, or you've got a potential bug."
       (mapc (lambda (key)
               (define-key map key #'js2-insert-and-indent))
             js2-electric-keys))
-
-    (define-key map [menu-bar javascript]
-      (cons "JavaScript" (make-sparse-keymap "JavaScript")))
-
-    (define-key map [menu-bar javascript customize-js2-mode]
-      '(menu-item "Customize js2-mode" js2-mode-customize
-                  :help "Customize the behavior of this mode"))
-
-    (define-key map [menu-bar javascript js2-force-refresh]
-      '(menu-item "Force buffer refresh" js2-mode-reset
-                  :help "Re-parse the buffer from scratch"))
-
-    (define-key map [menu-bar javascript separator-2]
-      '("--"))
-
-    (define-key map [menu-bar javascript next-error]
-      '(menu-item "Next warning or error" js2-next-error
-                  :enabled (and js2-mode-ast
-                                (or (js2-ast-root-errors js2-mode-ast)
-                                    (js2-ast-root-warnings js2-mode-ast)))
-                  :help "Move to next warning or error"))
-
-    (define-key map [menu-bar javascript display-errors]
-      '(menu-item "Show errors and warnings" js2-mode-display-warnings-and-errors
-                  :visible (not js2-mode-show-parse-errors)
-                  :help "Turn on display of warnings and errors"))
-
-    (define-key map [menu-bar javascript hide-errors]
-      '(menu-item "Hide errors and warnings" js2-mode-hide-warnings-and-errors
-                  :visible js2-mode-show-parse-errors
-                  :help "Turn off display of warnings and errors"))
-
-    (define-key map [menu-bar javascript separator-1]
-      '("--"))
-
-    (define-key map [menu-bar javascript js2-toggle-function]
-      '(menu-item "Show/collapse element" js2-mode-toggle-element
-                  :help "Hide or show function body or comment"))
-
-    (define-key map [menu-bar javascript show-comments]
-      '(menu-item "Show block comments" js2-mode-toggle-hide-comments
-                  :visible js2-mode-comments-hidden
-                  :help "Expand all hidden block comments"))
-
-    (define-key map [menu-bar javascript hide-comments]
-      '(menu-item "Hide block comments" js2-mode-toggle-hide-comments
-                  :visible (not js2-mode-comments-hidden)
-                  :help "Show block comments as /*...*/"))
-
-    (define-key map [menu-bar javascript show-all-functions]
-      '(menu-item "Show function bodies" js2-mode-toggle-hide-functions
-                  :visible js2-mode-functions-hidden
-                  :help "Expand all hidden function bodies"))
-
-    (define-key map [menu-bar javascript hide-all-functions]
-      '(menu-item "Hide function bodies" js2-mode-toggle-hide-functions
-                  :visible (not js2-mode-functions-hidden)
-                  :help "Show {...} for all top-level function bodies"))
 
     map)
   "Keymap used in `js2-mode' buffers.")
