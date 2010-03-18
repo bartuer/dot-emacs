@@ -4451,13 +4451,13 @@ var JSLINT = (function() {
         eqeqeq: true,
         immed: true,
         newcap: true,
-        nomen: true,
+        nomen: false,
         onevar: true,
         plusplus: true,
         regexp: true,
         rhino: true,
         undef: true,
-        white: true
+        white: false
     })) {
         for (var i = 0; i < JSLINT.errors.length; i += 1) {
             var e = JSLINT.errors[i];
