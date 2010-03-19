@@ -800,6 +800,12 @@ Return t if it has at least one flymake overlay, nil if no overlay."
   "Face used for marking warning lines."
   :group 'flymake)
 
+(defface flymake-pos
+  '((((class color)) (:background "LightBlue2"))
+    (t (:bold t)))
+  "Face used for high light char."
+  :group 'flymake)
+
 (defun flymake-highlight-line (line-no line-err-info-list)
   "Highlight line LINE-NO in current buffer.
 Perhaps use text from LINE-ERR-INFO-LIST to enhance highlighting."
@@ -1357,6 +1363,23 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
               )
     (progn
       (message erro-msg)
+      (when (string-match "^\\([[:digit:]]+\\):" erro-msg)
+        (let* ((line-beg (save-excursion
+                           (beginning-of-line)
+                           (point)))
+               (line-end (save-excursion
+                           (end-of-line)
+                           (point)))
+               (beg (+ line-beg
+                       (- (read (match-string 1 erro-msg)) 1)))
+               (end (+ 1 beg))
+               (face 'flymake-pos)
+               )
+          (setq ov (make-overlay beg end nil t t))
+          (overlay-put ov 'face face)
+          (overlay-put ov 'flymake-overlay t)
+          (overlay-put ov 'priority 101)
+          ))
       (setq flymake-last-position (point))
       )))
 
@@ -1837,7 +1860,7 @@ Use CREATE-TEMP-F for creating temp copy."
     (list "d8" (list (expand-file-name "~/etc/el/vendor/jslint/jslint_v8.js") "--" local-file))))
 
 (add-to-list 'flymake-err-line-patterns 
-             '("^Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\): \\(.+\\)$"  
+             '("^Lint at line \\([[:digit:]]+\\) \\(character\\) \\([[:digit:]]+: .+\\)$"  
 	      nil 1 2 3))
 
 
@@ -1858,3 +1881,5 @@ Use CREATE-TEMP-F for creating temp copy."
 
 ;; arch-tag: 8f0d6090-061d-4cac-8862-7c151c4a02dd
 ;;; flymake.el ends here
+
+{ bartuer-flymake-post-command-hook args: nil

@@ -123,6 +123,7 @@
  '(custom-comment-tag ((((class color) (background light)) (:foreground "cyan"))))
  '(erb-face ((((class color) (min-colors 8)) nil)))
  '(flymake-errline ((((class color)) (:foreground "red"))))
+ '(flymake-pos ((((class color)) (:background "yellow" :foreground "red"))))
  '(flymake-warnline ((t (:foreground "pink"))))
  '(flyspell-duplicate ((t (:underline t))))
  '(flyspell-duplicate-face ((t (:underline t))) t)
