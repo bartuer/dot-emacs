@@ -1,5 +1,5 @@
 (defun terminal-init-screen ()
-  "Terminal initailization function for sceen ."
+  "Terminal initailization function for screen ."
   ;; use the xterm color initailization code.
   (load "term/xterm")
   (xterm-register-default-colors)
