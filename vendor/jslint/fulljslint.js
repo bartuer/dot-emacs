@@ -2285,8 +2285,12 @@ loop:   for (;;) {
 
         if (!t.block) {
             if (nexttoken.id !== ';') {
-                warningAt("Missing semicolon.", token.line,
-                        token.from + token.value.length);
+                if (token.id !== 'new') {
+                    var len = token.value.length;
+                    len = token.id === '(string)' ? len + 1 : len;
+                    warningAt("Missing semicolon.", token.line,
+                            token.from + len);
+                }
             } else {
                 adjacent(token, nexttoken);
                 advance(';');
