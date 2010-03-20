@@ -269,6 +269,13 @@ behavior."
    (t
     (remove-hook 'post-command-hook 'js2-show-parse t))))
 
+(fset 'stepin
+        (lambda (&optional arg)
+          "Keyboard macro.
+can bind C-j in comint buffer"
+          (interactive "p")
+          (kmacro-exec-ring-item (quote ("step in" 0 "%d")) arg)))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
