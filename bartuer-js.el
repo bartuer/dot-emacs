@@ -327,7 +327,13 @@ can bind C-j in comint buffer"
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
+
+  (when (> (buffer-size) 15000)         ;the limitation of js2 parser
+      (require 'espresso nil t)
+      (setq indent-line-function 'espresso-indent-line)
+      (define-key js2-mode-map "\C-m" 'newline))
   (set (make-local-variable 'indent-region-function) 'js-beautify)
+
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
@@ -342,4 +348,4 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
-{ js-indent args: (26316 26469)
+
