@@ -953,7 +953,7 @@ var JSLINT = (function () {
         }
         warnings += 1;
         // try to maxerr
-        if (warnings === 500) {
+        if (warnings === Number.MAX_VALUE) {
             quit("Too many errors.", l, ch);
         }
         return w;

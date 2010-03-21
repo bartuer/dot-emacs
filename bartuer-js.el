@@ -247,6 +247,15 @@ behavior."
            (message "merge js failed")
            )))
 
+(defun js-correct (start end)
+  "correct js files
+wrap block add semicolon correct plus and equal"
+  (interactive)
+  (let ((indent-col (current-column)))
+    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jscorrect.js -- -" t)
+    )
+  )
+
 (defun js-indent (start end)
   "invoke jsindent to indent"
   (interactive)
