@@ -255,13 +255,13 @@ wrap block add semicolon correct plus and equal"
     (setq start (region-beginning))
     (setq end (region-end)))
   (let ((content (buffer-substring (point-min) (point-max))))
-  (with-current-buffer
-      (get-buffer-create (concat (buffer-name) "-correct"))
+    (with-current-buffer
+        (get-buffer-create (concat (buffer-name) "-correct"))
       (insert content)
-    (let ((indent-col (current-column)))
-      (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jscorrect.js -- -" t)))
-  (ediff-buffers (get-buffer (buffer-name))
-                 (get-buffer-create (concat (buffer-name) "-correct")))))
+      (let ((indent-col (current-column)))
+        (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jscorrect.js -- -" t)))
+    (ediff-buffers (get-buffer (buffer-name))
+                   (get-buffer-create (concat (buffer-name) "-correct")))))
 
 (defun js-indent (start end)
   "invoke jsindent to indent"
