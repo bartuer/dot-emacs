@@ -247,10 +247,13 @@ behavior."
            (message "merge js failed")
            )))
 
-(defun js-correct (start end)
+(defun js-correct (&optional start end)
   "correct js files
 wrap block add semicolon correct plus and equal"
   (interactive)
+  (when (eq start nil)
+    (setq start (region-beginning))
+    (setq end (region-end)))
   (let ((content (buffer-substring (point-min) (point-max))))
   (with-current-buffer
       (get-buffer-create (concat (buffer-name) "-correct"))
@@ -265,15 +268,18 @@ wrap block add semicolon correct plus and equal"
   (interactive)
   (let ((indent-col (current-column)))
     (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsindent.js -- -" t)
+    (indent-rigidly start (point) indent-col)
+    (delete-backward-char 1)
     )
   )
 
 (defun js-beautify (start end)
   "invoke jsbeautify to indent"
   (interactive)
-  (interactive)
   (let ((indent-col (current-column)))
     (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -p -i 2 -" t)
+    (indent-rigidly start (point) indent-col)
+    (delete-backward-char 1)
     )
   )
 
@@ -336,3 +342,4 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
+{ js-indent args: (26316 26469)
