@@ -585,7 +585,7 @@ var JSLINT = (function () {
         ids,            // HTML ids
         implied,        // Implied globals
         inblock,
-        indent = 4,
+        indent = 2,
         jsonmode,
         lines,
         lookahead,
@@ -4859,7 +4859,7 @@ loop:   for (;;) {
         } else {
             option = {};
         }
-        option.indent = option.indent || 4;
+        option.indent = option.indent || 2;
         adsafe_id = '';
         adsafe_may = false;
         adsafe_went = false;
@@ -5171,7 +5171,7 @@ loop:   for (;;) {
             strict     : false,
             sub        : false,
             white      : true,
-            indent     : 4,
+            indent     : 2,
             maxerr     : 500,
             widget     : false
     })) {

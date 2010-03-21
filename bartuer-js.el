@@ -247,6 +247,22 @@ behavior."
            (message "merge js failed")
            )))
 
+(defun js-indent (start end)
+  "invoke jsindent to indent"
+  (interactive)
+  (let ((indent-col (current-column)))
+    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsindent.js -- -" t)
+    )
+  )
+
+(defun js-beautify (start end)
+  "invoke jsbeautify to indent"
+  (interactive)
+  (interactive)
+  (let ((indent-col (current-column)))
+    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -p -i 2 -" t)
+    )
+  )
 
 (defvar js2-parse-mode nil)
 
@@ -292,6 +308,7 @@ can bind C-j in comint buffer"
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
+  (set (make-local-variable 'indent-region-function) 'js-beautify)
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
