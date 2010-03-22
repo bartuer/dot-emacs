@@ -257,6 +257,7 @@ wrap block add semicolon correct plus and equal"
   (let ((content (buffer-substring (point-min) (point-max))))
     (with-current-buffer
         (get-buffer-create (concat (buffer-name) "-correct"))
+      (delete-region (point-min) (point-max))
       (insert content)
       (let ((indent-col (current-column)))
         (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jscorrect.js -- -" t)))
