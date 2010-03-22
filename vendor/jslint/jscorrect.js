@@ -27,6 +27,11 @@ SOFTWARE.
 
 /* the idea is, jslint already done a parser, why not correct common error on it?
 how to test:  d8 jcti.js this_file.js -- the_test_data.js
+function name() {
+  if(true) return 2;
+  if (object == true) return 'true'
+}
+
 var b = function () {
   if (true) this.type = 0;
 }
@@ -2509,34 +2514,45 @@ loop:   for (;;) {
             warning("Expected '{a}' and instead saw '{b}'.",
                     nexttoken, '{', nexttoken.value);
             noreach = true;
+            var ntt = nexttoken; //for return
             a = [statement()];
             noreach = false;
             //  try to wrap with '{...}'
+            var lbeg,cbeg,lend,cend,c,l;
+            if (ntt.id === 'return') {
+                lbeg = ntt.line;
+                cbeg = ntt.from;
+                lend = token.line;
+                cend = token.from + token.value.length;
+                if (token.id === '(string)') {
+                  cend += 2;
+                }
+            }
             if (a[0] !== undefined ) { //can not handle that case, give up
-
                 var left_most = a[0].left;
                 if (left_most) {
                   while (left_most.left) {
                     left_most = left_most.left;
                   }
                 }
-                var lbeg = left_most ? left_most.line: a[0].line,
-                    cbeg = left_most ? left_most.from: a[0].from,
-                    lend = token.line,
-                    cend = token.from + token.value.length,
-                    c,l;
-                l = lines[lbeg];
-                c = cbeg + book.query(lbeg, cbeg);
-                lines[lbeg] = l.slice(0, c) + '{' + l.slice(c);
-                book.inc(lbeg, cbeg);
+                lbeg = left_most ? left_most.line: a[0].line;
+                cbeg = left_most ? left_most.from: a[0].from;
+                lend = token.line;
+                cend = token.from + token.value.length;
+              }
+              if (lbeg !== undefined && cbeg !== undefined && lend !== undefined && cend !== undefined) {
+                 l = lines[lbeg];
+                 c = cbeg + book.query(lbeg, cbeg);
+                 lines[lbeg] = l.slice(0, c) + '{' + l.slice(c);
+                 book.inc(lbeg, cbeg);
 
-                l = lines[lend];
-                c = cend + book.query(lend, cend);
-                // resolve '}' and ';' insert conflict
-                c = lines[lend][c] === ';' ? c + 1 : c;
-                lines[lend] = l.slice(0, c) + '}' + l.slice(c);
-                book.inc(lend, c);
-            }
+                 l = lines[lend];
+                 c = cend + book.query(lend, cend);
+                 // resolve '}' and ';' insert conflict
+                 c = lines[lend][c] === ';' ? c + 1 : c;
+                 lines[lend] = l.slice(0, c) + '}' + l.slice(c);
+                 book.inc(lend, c);
+               }
         }
         funct['(verb)'] = null;
         scope = s;
