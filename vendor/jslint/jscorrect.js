@@ -27,6 +27,10 @@ SOFTWARE.
 
 /* the idea is, jslint already done a parser, why not correct common error on it?
 how to test:  d8 jcti.js this_file.js -- the_test_data.js
+var b = function () {
+  if (true) this.type = 0;
+}
+
 var b;
 if ('object' != typeof= b) {
 
@@ -2509,12 +2513,18 @@ loop:   for (;;) {
             noreach = false;
             //  try to wrap with '{...}'
             if (a[0] !== undefined ) { //can not handle that case, give up
-                var lbeg = a[0].left ? a[0].left.line: a[0].line,
-                    cbeg = a[0].left ? a[0].left.from: a[0].from,
+
+                var left_most = a[0].left;
+                if (left_most) {
+                  while (left_most.left) {
+                    left_most = left_most.left;
+                  }
+                }
+                var lbeg = left_most ? left_most.line: a[0].line,
+                    cbeg = left_most ? left_most.from: a[0].from,
                     lend = token.line,
                     cend = token.from + token.value.length,
                     c,l;
-
                 l = lines[lbeg];
                 c = cbeg + book.query(lbeg, cbeg);
                 lines[lbeg] = l.slice(0, c) + '{' + l.slice(c);
