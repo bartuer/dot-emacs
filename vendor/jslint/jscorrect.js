@@ -28,6 +28,7 @@ SOFTWARE.
 /* the idea is, jslint already done a parser, why not correct common error on it?
 how to test:  d8 jcti.js this_file.js -- the_test_data.js
 
+var str = ' ' + ' '
 if (this.length==4) for(var i=1;i<4;i++) color += (this.charAt(i) + this.charAt(i)).toLowerCase() //book works, but recursive parse does not works
 if (true) -i //no led works; and } insert meanwhile
 if (true ) a = //statement span two lines works
@@ -2369,6 +2370,7 @@ loop:   for (;;) {
                     var l = lines[token.line];
                     var c = token.from  + len;
                     c += book.query(token.line, c);
+                    if (token.type === '(string)') { c += 1;}
                     lines[token.line] = l.slice(0, c) + ';' + l.slice(c);
                     book.inc(token.line, c);
                 }
