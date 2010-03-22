@@ -277,7 +277,7 @@ wrap block add semicolon correct plus and equal"
   "invoke jsbeautify to indent"
   (interactive)
   (let ((indent-col (current-column)))
-    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -p -i 2 -" t)
+    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -p -n -i 2 -" t)
     (indent-rigidly start (point) indent-col)
     (delete-backward-char 1)
     )
