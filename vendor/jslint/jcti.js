@@ -1,4 +1,4 @@
-function jcti(jct_target) {
+function jcti(jct_target,from) {
   var members = [];
   var jct_k;
   for (jct_k in jct_target) {
@@ -30,5 +30,5 @@ function jcti(jct_target) {
       members.push(' ' + jct_k + ':' + jct_k);
     }
   }
-  return members.join('\n');
+  return members.slice(from,members.length).join('\n');
 }
