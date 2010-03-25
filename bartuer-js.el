@@ -349,4 +349,3 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
-
