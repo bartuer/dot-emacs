@@ -51,7 +51,7 @@
  '(global-mark-ring-max 32)
  '(grep-find-command "find . -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |sed -e 's+ +\\\\ +g'|xargs grep -niHE ")
  '(grep-highlight-matches t)
- '(gud-gdb-command-name "~/local/bin/gdb -annotate=3 -q -x ~/etc/el/gdb/init.gdb  -x ~/local/src/")
+ '(gud-gdb-command-name "gdb-darwin -annotate=3 -q -x ~/etc/el/gdb/init.gdb  -x ~/local/src/")
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))

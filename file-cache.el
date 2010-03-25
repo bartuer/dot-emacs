@@ -1,4 +1,7 @@
 (file-cache-add-directory-list (list    
+                                "~/local/src/chromium/src/chrome/app"
+                                "~/local/src/chromium/src/chrome/common"
+                                "~/local/src/chromium/src/chrome/browser"
                                 "~/etc/el/vendor/jslint"
                                 "~/local/src/v8/test"
                                 "~/local/src/jspec/lib"
