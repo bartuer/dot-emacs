@@ -28,6 +28,6 @@ screen -t "ec-5 log" 5
 stuff "~/local/bin/emacsclient -t"
 
 screen -t "ec-0 task" 0
-stuff "~/local/bin/emacs -nw -fg yellow"
+stuff "~/local/bin/emacsclient -t"
 
 
