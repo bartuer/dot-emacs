@@ -48,7 +48,8 @@ b DevToolsProtocolHandler::Init
 # if (*pBuf == '\r') {
 # set pBuf[4]='\r'
 # handshake should be "ChromeDevToolsHandshake\r\n"
-# header in format : value, the message will be delegate to different destination
+# header in format, key : value, the message will be delegate to different handler
+# destination is just the tab
 # payload hold the protocol json?
 
 # b DevToolsRemoteListenSocket::HandleMessage
@@ -60,10 +61,19 @@ b DevToolsProtocolHandler::Init
 
 # set $message_builder = DevToolsRemoteMessageBuilder::instance()
 # that message blocked by messy c++ syntax, need hand write the protocol message
-# DebuggerRemoteService::HandleMessage
-b DevToolsRemoteListenSocket::Read #recieve 
-b DevToolsRemoteListenSocket::DispatchField #parse header
+b DevToolsRemoteListenSocket::Accept        #connect
+b DevToolsRemoteListenSocket::Read          #recieve 
 b DevToolsRemoteListenSocket::DispatchRead  #handshake
+b DevToolsRemoteListenSocket::DispatchField #parse header
 b DevToolsRemoteListenSocket::HandleMessage #dispatch to right handler
 b DebuggerRemoteService::HandleMessage      #proxy to v8 debugger
+# socat - TCP4:127.0.0.1:5858,crnl
+# ChromeDevToolsHandshake
+# Tool:V8Debugger
+# Destination:1
+
+# {}
+# enter DebuggerRemoteService::HandleMessage
+
+b DebuggerRemoteService::DispatchDebuggerCommand
 r
