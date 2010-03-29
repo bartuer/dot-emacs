@@ -86,3 +86,52 @@ b DebuggerRemoteService::DispatchDebuggerCommand
 # report the tool is wrong
 b devtools_protocol_handler.cc:70
 r
+# fix a bug in (link "~/local/src/chromium/src/chrome/browser/debugger/devtools_remote_listen_socket.cc" 6446)
+# the protocol works!
+# socat - TCP4:127.0.0.1:5858,crnl
+# ChromeDevToolsHandshake
+# Tool:V8Debugger
+# Destination:2
+# Content-Length:20
+
+# {"command":"attach"}
+# ChromeDevToolsHandshake
+# Destination:2
+# Tool:V8Debugger
+# Content-Length:31
+
+# {"command":"attach","result":0}
+# ChromeDevToolsHandshake
+# Tool:V8Debugger
+# Destination:2
+# Content-Length:20
+
+# {"command":"detach"}
+# Destination:2
+# Tool:V8Debugger
+# Content-Length:31
+
+# {"command":"detach","result":0}
+# ChromeDevToolsHandshake
+# Tool:V8Debugger
+# Destination:2
+# Content-Length:20
+
+# {"command":"attach"}
+# Destination:2
+# Tool:V8Debugger
+# Content-Length:31
+
+# {"command":"attach","result":0}
+# ChromeDevToolsHandshake
+# Tool:V8Debugger
+# Destination:2
+# Content-Length:86
+
+# {"command":"debugger_command", "data":{"seq":0,"type":"request","command":"continue"}}
+# Destination:2
+# Tool:V8Debugger
+# Content-Length:127
+
+# {"command":"debugger_command","result":0,"data":{"seq":4,"type":"response","command":"continue","success":true,"running":true}}
+
