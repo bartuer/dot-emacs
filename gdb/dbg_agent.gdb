@@ -1,20 +1,20 @@
 file /Users/bartuer/local/src/chromium/src/xcodebuild/Debug/Chromium.app/Contents/MacOS/Chromium
-set args --remote-shell-port="5858"
+set args --remote-shell-port="8585"
 # not called here when launch browser
 # b v8::V8::Initialize
-b DebuggerRemoteService::HandleMessage
-b v8::Debug::EnableAgent
+# b DebuggerRemoteService::HandleMessage
+# b v8::Debug::EnableAgent
 # b BrowserInit::LaunchBrowser
 # call v8::Debug::EnableAgent("d8 shell", 5858, true)
 # #6  0x07fcc5ac in CheckHelper (file=0x9128c6e "../../src/debug-agent.h", line=52, source=0x9128c5a "instance_ == __null", condition=false) at checks.h:62
 # abort for v8 has not available
-b BrowserInit::LaunchWithProfile::Launch
-b /Users/bartuer/local/src/chromium/src/chrome/browser/browser_init.cc:472
+# b BrowserInit::LaunchWithProfile::Launch
+# b /Users/bartuer/local/src/chromium/src/chrome/browser/browser_init.cc:472
 # set port = 5858
-b BrowserProcessImpl::InitDebuggerWrapper 
+# b BrowserProcessImpl::InitDebuggerWrapper 
 # set $port = 5858
 # call g_browser_process->InitDebuggerWrapper($port)
-b DevToolsProtocolHandler::Init
+# b DevToolsProtocolHandler::Init
 # NEW THREAD BEGIN LISTEN NOW:
 # [Switching to process 1687 thread 0x4b03]
 # DevToolsRemoteListenSocket::Listen (ip=@0xb02a88e8, port=5858, del=0x16fca0, listener=0x16fc90) at /Users/bartuer/local/src/chromium/src/chrome/browser/debugger/devtools_remote_listen_socket.cc:97
@@ -61,19 +61,28 @@ b DevToolsProtocolHandler::Init
 
 # set $message_builder = DevToolsRemoteMessageBuilder::instance()
 # that message blocked by messy c++ syntax, need hand write the protocol message
-b DevToolsRemoteListenSocket::Accept        #connect
-b DevToolsRemoteListenSocket::Read          #recieve 
-b DevToolsRemoteListenSocket::DispatchRead  #handshake
-b DevToolsRemoteListenSocket::DispatchField #parse header
-b DevToolsRemoteListenSocket::HandleMessage #dispatch to right handler
-b DebuggerRemoteService::HandleMessage      #proxy to v8 debugger
+# b DevToolsRemoteListenSocket::Accept        #connect
+# b DevToolsRemoteListenSocket::Read          #recieve 
+# b DevToolsRemoteListenSocket::DispatchRead  #handshake
+# b DevToolsRemoteListenSocket::DispatchField #parse header
+# b DevToolsRemoteListenSocket::HandleMessage #dispatch to right handler
+
 # socat - TCP4:127.0.0.1:5858,crnl
 # ChromeDevToolsHandshake
 # Tool:V8Debugger
-# Destination:1
+# Destination:2
+# Content-Length:20
 
-# {}
+# {"command":"attach"}
 # enter DebuggerRemoteService::HandleMessage
 
+# message not reach v8 debugger
+# b DebuggerRemoteService::HandleMessage
 b DebuggerRemoteService::DispatchDebuggerCommand
+# b DebuggerRemoteService::AttachToTab
+# see the tab_uid, it is 2, strange
+# b inspectable_tab_proxy.cc:73;
+
+# report the tool is wrong
+b devtools_protocol_handler.cc:70
 r
