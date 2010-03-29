@@ -2,6 +2,8 @@
                                 "~/local/src/chromium/src/chrome/app"
                                 "~/local/src/chromium/src/chrome/common"
                                 "~/local/src/chromium/src/chrome/browser"
+                                "~/local/src/chromium/src/chrome/browser/debugger"
+                                "~/local/src/chromium/src/v8"
                                 "~/etc/el/vendor/jslint"
                                 "~/local/src/v8/test"
                                 "~/local/src/jspec/lib"
