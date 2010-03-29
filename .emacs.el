@@ -670,10 +670,13 @@ If give a negative ARG, will undo the last mark action, thus the
   (interactive)
   (if (string-equal (substring (buffer-file-name) -2) ".h")
       (progn
-        (let ((dot-m-file (concat (substring (buffer-file-name) 0 -1) "m"))
+        (let ((dot-m-file (list
+                           (concat (substring (buffer-file-name) 0 -1) "m")
+                           (concat (substring (buffer-file-name) 0 -1) "mm")))
               (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp"))
               (dot-cc-file (concat (substring (buffer-file-name) 0 -1) "cc")))
-              (if (file-exists-p dot-m-file)
+              (if (mapcan (lambda (f)
+                            (file-exists-p f)) dot-m-file)
                   (progn
                     (objc-mode)
                     )
@@ -686,22 +689,28 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (defun bartuer-toggle-target ()
   (cond ((or (string-equal (substring (buffer-file-name) -2) ".c")
-             (string-equal (substring (buffer-file-name) -2) ".m"))
+             (string-equal (substring (buffer-file-name) -2) ".m")
+             )
          (concat (substring (buffer-file-name) 0 -1) "h"))
         ((string-equal (substring (buffer-file-name) -4) ".cpp")
          (concat (substring (buffer-file-name) 0 -3) "h"))
-        ((string-equal (substring (buffer-file-name) -3) ".cc")
+        ((or
+          (string-equal (substring (buffer-file-name) -3) ".cc")
+          (string-equal (substring (buffer-file-name) -3) ".mm"))
          (concat (substring (buffer-file-name) 0 -2) "h"))
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
              (equal major-mode 'objc-mode))
-         (concat (substring (buffer-file-name) 0 -1) "m"))
+         (list
+          (concat (substring (buffer-file-name) 0 -1) "m")
+          (concat (substring (buffer-file-name) 0 -1) "mm")))
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
              (equal major-mode 'c-mode))
          (concat (substring (buffer-file-name) 0 -1) "c"))
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
              (equal major-mode 'c++-mode))
          (list (concat (substring (buffer-file-name) 0 -1) "cpp")
-               (concat (substring (buffer-file-name) 0 -1) "cc")))))
+               (concat (substring (buffer-file-name) 0 -1) "cc")
+               ))))
 
 (defun bartuer-toggle-header ()
   (interactive)
@@ -720,6 +729,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
+(add-to-list 'auto-mode-alist '("\\mm$" . objc-mode))
 
 (defun mac-control ()
   "insert key symbol for shift"
