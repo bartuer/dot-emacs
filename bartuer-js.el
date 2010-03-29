@@ -264,9 +264,12 @@ wrap block add semicolon correct plus and equal"
     (ediff-buffers (get-buffer (buffer-name))
                    (get-buffer-create (concat (buffer-name) "-correct")))))
 
-(defun js-indent (start end)
+(defun js-indent (&optional start end)
   "invoke jsindent to indent"
   (interactive)
+  (when (eq start nil)
+    (setq start (region-beginning))
+    (setq end (region-end)))
   (let ((indent-col (current-column)))
     (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsindent.js -- -" t)
     (indent-rigidly start (point) indent-col)
@@ -274,9 +277,12 @@ wrap block add semicolon correct plus and equal"
     )
   )
 
-(defun js-beautify (start end)
+(defun js-beautify (&optional start end)
   "invoke jsbeautify to indent"
   (interactive)
+  (when (eq start nil)
+    (setq start (region-beginning))
+    (setq end (region-end)))
   (let ((indent-col (current-column)))
     (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -p -n -i 2 -" t)
     (indent-rigidly start (point) indent-col)
