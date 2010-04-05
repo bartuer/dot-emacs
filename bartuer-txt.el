@@ -18,6 +18,8 @@
   (if (fboundp 'turn-on-flyspell) 
       (turn-on-flyspell))
   (auto-fill-mode)
-  (unless (eq major-mode 'outline-mode)
+  (unless (or
+           (eq major-mode 'outline-mode)
+           (eq major-mode 'markdown-mode))
       (set (make-local-variable 'imenu-create-index-function) 'txt-imenu))
   (define-key text-mode-map "\M-\C-i" 'flyspell-auto-correct-word))

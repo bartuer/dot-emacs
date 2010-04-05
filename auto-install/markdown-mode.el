@@ -433,7 +433,23 @@
   "Default highlighting expressions for Markdown mode")
 
 
+;;; imenu  ==============================================================
 
+(defun markdown-imenu ()
+  "make imenu-index-alist"
+  (setq markdown-imenu ())
+  (beginning-of-buffer)
+  (while (search-forward-regexp  markdown-regex-header-atx nil t)
+    (add-to-list 'markdown-imenu (cons (save-excursion
+                                     (beginning-of-line)
+                                     (set-mark-command nil)
+                                     (end-of-line)
+                                     (buffer-substring-no-properties (mark) (point))
+                                     ) (point)) t))
+  markdown-imenu
+  )
+
+
 ;;; Syntax Table ==============================================================
 
 (defvar markdown-mode-syntax-table
@@ -1019,6 +1035,7 @@ This is an exact copy of line-number-at-pos for use in emacs21."
   (make-local-variable 'outline-regexp)
   (setq outline-regexp "#+")
   ;; Cause use of ellipses for invisible text.
+  (set (make-local-variable 'imenu-create-index-function) 'markdown-imenu)
   (add-to-invisibility-spec '(outline . t)))
 
 ;(add-to-list 'auto-mode-alist '("\\.text$" . markdown-mode))
