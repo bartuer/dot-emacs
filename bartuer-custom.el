@@ -51,8 +51,7 @@
  '(global-mark-ring-max 32)
  '(grep-find-command "find . -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |sed -e 's+ +\\\\ +g'|xargs grep -niHE ")
  '(grep-highlight-matches t)
- '(gud-gdb-command-name (concat "gdb-darwin -annotate=3 -silent -x ~/etc/el/gdb/init.gdb  -x "
-                                (expand-file-name "~/local/src/chromium/src/v8/dbg_agent.gdb")))
+ '(gud-gdb-command-name (concat "gdb-darwin -annotate=3 -silent -x ~/etc/el/gdb/init.gdb  -x " (expand-file-name "~/local/src/chromium/src/v8/dbg_agent.gdb")))
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -89,6 +88,7 @@
  '(list-matching-lines-default-context-lines 0)
  '(load-path (quote ("~/etc/el/" "~/etc/el/ess/" "~/etc/el/ess/" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/rcodetools" "~/etc/el/auto-install" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el/vendor/yasnippet" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el/ess/" "~/etc/el" "~/etc/el/icicles" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/nxhtml/util" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/rinari/" "~/etc/el/vendor/rinari/jump" "~/etc/el/vendor/rinari/util" "~/etc/el/vendor/magit" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el" "~/etc/el/icicles" "~/etc/el/ess" "~/local/share/emacs/23.1/site-lisp" "~/local/share/emacs/site-lisp" "~/local/share/emacs/23.1/lisp" "~/local/share/emacs/23.1/lisp/url" "~/local/share/emacs/23.1/lisp/toolbar" "~/local/share/emacs/23.1/lisp/textmodes" "~/local/share/emacs/23.1/lisp/progmodes" "~/local/share/emacs/23.1/lisp/play" "~/local/share/emacs/23.1/lisp/org" "~/local/share/emacs/23.1/lisp/obsolete" "~/local/share/emacs/23.1/lisp/nxml" "~/local/share/emacs/23.1/lisp/nxml/char-name" "~/local/share/emacs/23.1/lisp/nxml/char-name/unicode" "~/local/share/emacs/23.1/lisp/net" "~/local/share/emacs/23.1/lisp/mh-e" "~/local/share/emacs/23.1/lisp/mail" "~/local/share/emacs/23.1/lisp/language" "~/local/share/emacs/23.1/lisp/international" "~/local/share/emacs/23.1/lisp/gnus" "~/local/share/emacs/23.1/lisp/eshell" "~/local/share/emacs/23.1/lisp/erc" "~/local/share/emacs/23.1/lisp/emulation" "~/local/share/emacs/23.1/lisp/emacs-lisp" "~/local/share/emacs/23.1/lisp/calendar" "~/local/share/emacs/23.1/lisp/calc" "~/local/share/emacs/23.1/leim" "~/local/share/emacs/23.1/site-lisp/emms" "~/etc/el/")) t)
  '(make-backup-files nil)
+ '(markdown-command "markdown /dev/stdin")
  '(max-mini-window-height 0.7)
  '(mode-require-final-newline nil)
  '(next-line-add-newlines nil)
