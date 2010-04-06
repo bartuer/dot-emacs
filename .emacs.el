@@ -861,6 +861,7 @@ If give a negative ARG, will undo the last mark action, thus the
      "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.text" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
