@@ -135,10 +135,16 @@ b devtools_protocol_handler.cc:70
 
 # {"command":"debugger_command","result":0,"data":{"seq":4,"type":"response","command":"continue","success":true,"running":true}}
 # b BrowserRenderProcessHost::Send
-rbreak DebuggerAgentImpl::*
-rbreak DebuggerAgentManager::*
 
+# rbreak DebuggerAgentImpl::*
+# rbreak DebuggerAgentManager::*
 # shell: dtruss -t sendmsg -p $(pidof chromium)
 # shell: dtruss -t recvmsg -p $(pidof chromium help)
 # the reason could not set break point is v8 and webkit debuggeragent run in another process
+set follow-fork-mode child
+# b DebuggerAgentManager::sendCommandToV8
+
+# start gdb
+# she ps |grep chromi
+# attach to help works
 r
