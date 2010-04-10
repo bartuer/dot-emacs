@@ -78,14 +78,14 @@ set args --remote-shell-port="8585"
 
 # message not reach v8 debugger
 # b DebuggerRemoteService::HandleMessage
-b DebuggerRemoteService::DispatchDebuggerCommand
+# b DebuggerRemoteService::DispatchDebuggerCommand
 # b DebuggerRemoteService::AttachToTab
 # see the tab_uid, it is 2, strange
 # b inspectable_tab_proxy.cc:73;
 
 # report the tool is wrong
 b devtools_protocol_handler.cc:70
-r
+
 # fix a bug in (link "~/local/src/chromium/src/chrome/browser/debugger/devtools_remote_listen_socket.cc" 6446)
 # the protocol works!
 # socat - TCP4:127.0.0.1:5858,crnl
@@ -134,4 +134,11 @@ r
 # Content-Length:127
 
 # {"command":"debugger_command","result":0,"data":{"seq":4,"type":"response","command":"continue","success":true,"running":true}}
+# b BrowserRenderProcessHost::Send
+rbreak DebuggerAgentImpl::*
+rbreak DebuggerAgentManager::*
 
+# shell: dtruss -t sendmsg -p $(pidof chromium)
+# shell: dtruss -t recvmsg -p $(pidof chromium help)
+# the reason could not set break point is v8 and webkit debuggeragent run in another process
+r
