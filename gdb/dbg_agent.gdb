@@ -1,5 +1,5 @@
 file /Users/bartuer/local/src/chromium/src/xcodebuild/Debug/Chromium.app/Contents/MacOS/Chromium
-set args --remote-shell-port="8585"
+# set args --remote-shell-port="8585"
 # not called here when launch browser
 # b v8::V8::Initialize
 # b DebuggerRemoteService::HandleMessage
@@ -142,9 +142,10 @@ b devtools_protocol_handler.cc:70
 # shell: dtruss -t recvmsg -p $(pidof chromium help)
 # the reason could not set break point is v8 and webkit debuggeragent run in another process
 set follow-fork-mode child
-# b DebuggerAgentManager::sendCommandToV8
+b DebuggerAgentImpl::processDebugCommands
+b WebKit::DebuggerAgentManager::sendCommandToV8
 
 # start gdb
-# she ps |grep chromi
+shell ps |grep Chromium.*Helper
 # attach to help works
-r
+# r
