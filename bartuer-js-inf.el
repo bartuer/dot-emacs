@@ -20,6 +20,11 @@
     (setq v8-process (make-comint "v8" "v8_shell")))
   v8-process)
 
+(defun d8r ()
+  (unless (setq d8r-process (get-buffer-process "*d8r*"))
+    (setq d8r-process (make-comint "d8r" "d8r")))
+  d8r-process)
+
 (defun squirrelfish ()
   (unless (setq squirrelfish-process (get-buffer-process "*squirrelfish*"))
     (setq squirrelfish-process (make-comint "squirrelfish" "squirrelfish")))
@@ -34,7 +39,7 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "MozRepl" "rhino"  "squirrelfish" "spidermonkey" "v8") nil t)))
+                                   (list  "MozRepl" "rhino"  "squirrelfish" "spidermonkey" "v8" "d8r") nil t)))
     (setq js-process (apply (intern jsh) nil))
     (pop-to-buffer (concat "*" jsh "*"))
     ))
