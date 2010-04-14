@@ -318,6 +318,13 @@ can bind C-j in comint buffer"
           (interactive "p")
           (kmacro-exec-ring-item (quote ("step in" 0 "%d")) arg)))
 
+(defun d8-location (line)
+  (interactive)
+  (pop-to-buffer "base.js")
+  (goto-char (point-min))
+  (forward-line line)
+  (pop-to-buffer "*d8r*"))
+
 (defun bartuer-js-load ()
   "for javascript language
 "
