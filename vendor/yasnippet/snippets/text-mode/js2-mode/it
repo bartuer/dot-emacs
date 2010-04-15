@@ -1,0 +1,7 @@
+#name : describe
+# --
+it
+('${1:should success}',
+  function () {
+    expect(true).to(be, true);
+});
