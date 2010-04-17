@@ -1,0 +1,3 @@
+# name: script.link 
+# --
+<a href="#" onclick="${1:funcname}()">${2:linktest}</a>
