@@ -147,5 +147,7 @@ b WebKit::DebuggerAgentManager::sendCommandToV8
 
 # start gdb
 shell ps |grep Chromium.*Helper
+b /Users/bartuer/local/src/chromium/src/v8/src/log.cc:1432
+b /Users/bartuer/local/src/chromium/src/v8/src/log.cc:1238
 # attach to help works
 # r
