@@ -323,7 +323,7 @@ can bind C-j in comint buffer"
   (pop-to-buffer "base.js")
   (goto-char (point-min))
   (forward-line line)
-  (setq overlay-arrow-string "=>")
+  (setq overlay-arrow-string "B>")
   (setq overlay-arrow-position (make-marker))
   (set-marker overlay-arrow-position (point))
   (pop-to-buffer "*d8r*"))
