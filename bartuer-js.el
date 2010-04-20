@@ -95,7 +95,7 @@ it is suitable to browse OO hierarchy"
                  "\\(.*\\)/spec/"
                  (expand-file-name (buffer-file-name))))
           (eq 0 (string-match
-                 "\\(.*\\)/lib/"
+                 "\\(.*\\)/"
                  (expand-file-name (buffer-file-name))))
           (eq 0 (string-match
                  "\\(.*\\)/spec/fixtures/"
@@ -128,18 +128,18 @@ it is suitable to browse OO hierarchy"
      (t                                         . "test/unit/fixtures/.*"))
     nil)
    (jspecimp
-    (("spec/spec.\\1.js"                        . "lib/\\1.js")
-     ("spec/fixtures/\\1.html"                  . "lib/\\1.js")
-     (t                                         . "lib/.*js"))
+    (("spec/\\1.spec.js"                        . "\\1.js")
+     ("spec/fixtures/\\1.html"                  . "\\1.js")
+     (t                                         . "\\1.js"))
      nil)
    (jspec
-    (("lib/\\1.js"                              . "spec/spec.\\1.js")
-     ("spec/fixtures/\\1.html"                  . "spec/spec.\\1.js")
-     (t                                         . "spec/spec.*"))
+    (("javascripts/\\1.js"                      . "spec/\\1.spec.js")
+     ("spec/fixtures/\\1.html"                  . "spec/\\1.spec.js")
+     (t                                         . "spec/.*"))
     t);here need a lambda generate a new test file
    (jspec-fixture
-    (("spec/spec.\\1.js"                        . "spec/fixtures/\\1.html")
-     ("lib/\\1.js"                              . "spec/fixtures/\\1.html")
+    (("spec/\\1.spec.js"                        . "spec/fixtures/\\1.html")
+     ("javascripts/\\1.js"                      . "spec/fixtures/\\1.html")
      (t                                         . "spec/fixtures/.*"))
     t)
    (file-in-project ((t . ".*")) nil)
@@ -161,6 +161,8 @@ behavior."
 		'js-project-root
 		,(format "Go to the most logical %S given the current location" name)
 		,(if make `(quote ,make))
+                ,(lambda ()
+                   (car (which-function)))
 		))))
    schema))
 
@@ -181,7 +183,7 @@ behavior."
           (js-find-jspecimp)
           )
          ((eq 0 (string-match
-                 "\\(.*\\)/lib/"
+                 "\\(.*\\)"
                  (expand-file-name (buffer-file-name)))
               )
           (js-find-jspec)
@@ -213,7 +215,7 @@ behavior."
   (interactive)
   (let* ((js-toggle-target (ido-completing-read "Jump to :" 
                                                  (list  "jspec-fixture" "file-in-project" "autotest"
-                                                        "jspec"  "jsepcimp"
+                                                        "jspec"  "jspecimp"
                                                         "prototype-fixture" "prototype-test" "prototype-testimp") nil t)))
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
   )
@@ -365,3 +367,5 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
+
+(provide 'bartuer-js)
