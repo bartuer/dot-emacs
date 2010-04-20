@@ -817,6 +817,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-js-load "bartuer-js" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
 
+(autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
+(add-hook 'sgml-mode-hook 'bartuer-sgml-load)
+
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
 
