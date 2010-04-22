@@ -171,42 +171,43 @@ behavior."
 (defun js-smart-toggle ()
   "depend on current buffer, switch to the buffer most possible, DWIM"
   (interactive)
-  (cond 
-         ((eq 0 (string-match
-                 "\\(.*\\)/spec/fixtures"
-                 (expand-file-name (buffer-file-name))))
-          (js-find-jspec)
-          )
-         ((eq 0 (string-match
-                 "\\(.*\\)/spec/"
-                 (expand-file-name (buffer-file-name))))
-          (js-find-jspecimp)
-          )
-         ((eq 0 (string-match
-                 "\\(.*\\)"
-                 (expand-file-name (buffer-file-name)))
-              )
-          (js-find-jspec)
-          )
-         ((eq 0 (string-match
-                 (expand-file-name (concat prototype-root "test/unit/fixtures"))
-                 (expand-file-name (buffer-file-name)))
-              )
-          (js-find-prototype-test)
-          )
-         ((eq 0 (string-match
-                 (expand-file-name (concat prototype-root "test/unit"))
-                 (expand-file-name (buffer-file-name)))
-              )
-          (js-find-prototype-testimp)
-          )
-         ((eq 0 (string-match
-                 (expand-file-name (concat prototype-root "src"))
-                 (expand-file-name (buffer-file-name)))
-              )
-          (js-find-prototype-test)
-          ))
+  (cond
+   ((eq 0 (string-match
+           (expand-file-name (concat prototype-root "test/unit/fixtures"))
+           (expand-file-name (buffer-file-name)))
         )
+    (js-find-prototype-test)
+    )
+   ((eq 0 (string-match
+           (expand-file-name (concat prototype-root "test/unit"))
+           (expand-file-name (buffer-file-name)))
+        )
+    (js-find-prototype-testimp)
+    )
+   ((eq 0 (string-match
+           (expand-file-name (concat prototype-root "src"))
+           (expand-file-name (buffer-file-name)))
+        )
+    (js-find-prototype-test)
+    )
+   ((eq 0 (string-match
+           "\\(.*\\)/spec/fixtures"
+           (expand-file-name (buffer-file-name))))
+    (js-find-jspec)
+    )
+   ((eq 0 (string-match
+           "\\(.*\\)/spec/"
+           (expand-file-name (buffer-file-name))))
+    (js-find-jspecimp)
+    )
+   ((eq 0 (string-match
+           "\\(.*\\)"
+           (expand-file-name (buffer-file-name)))
+        )
+    (js-find-jspec)
+    )
+   )
+  )
 
 (defalias 'js-find-autotest 'autotest)
 
@@ -248,6 +249,13 @@ behavior."
                                        " > base.js") nil))
            (message "merge js failed")
            )))
+
+(defun js-push ()
+  (when (string-equal
+         (file-name-nondirectory (buffer-file-name))
+         "dom_scratch.js")
+    (shell-command-on-region (point-min) (point-max) "push")
+    ))
 
 (defun js-correct (&optional start end)
   "correct js files
@@ -322,12 +330,12 @@ can bind C-j in comint buffer"
 
 (defun d8-location (line)
   (interactive)
-  (pop-to-buffer "base.js")
-  (goto-char (point-min))
-  (forward-line line)
-  (setq overlay-arrow-string "B>")
-  (setq overlay-arrow-position (make-marker))
-  (set-marker overlay-arrow-position (point))
+  (with-current-buffer (get-buffer "base.js")
+    (goto-char (point-min))
+    (forward-line line)
+    (setq overlay-arrow-string "B>")
+    (setq overlay-arrow-position (make-marker))
+    (set-marker overlay-arrow-position (point)))
   (pop-to-buffer "*d8r*"))
 
 (defun bartuer-js-load ()
@@ -344,6 +352,7 @@ can bind C-j in comint buffer"
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
   (add-hook 'after-save-hook 'js-merge nil t)
+  (add-hook 'after-save-hook 'js-push nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
