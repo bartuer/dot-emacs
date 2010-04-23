@@ -97,6 +97,7 @@
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
  '(ps-multibyte-buffer (quote bdf-font))
+ '(push-minor-mode-string " Pu")
  '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")))))
  '(rdebug-many-windows nil)
  '(rdebug-short-key-mode nil)

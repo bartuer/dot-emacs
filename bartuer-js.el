@@ -251,11 +251,9 @@ behavior."
            )))
 
 (defun js-push ()
-  (when (string-equal
-         (file-name-nondirectory (buffer-file-name))
-         "dom_scratch.js")
-    (shell-command-on-region (point-min) (point-max) "push")
-    ))
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "push")
+  )
 
 (defun js-correct (&optional start end)
   "correct js files
@@ -303,7 +301,7 @@ wrap block add semicolon correct plus and equal"
 (defvar js2-parse-mode nil)
 
 (defcustom js2-parse-minor-mode-string " Js2-parse"
-  "String to display in mode line when Js2-parse Mode is enabled; nil for none."
+  "String to display in mode line when Js2-parse mode is enabled; nil for none."
   :type '(choice string (const :tag "None" nil))
   :group 'js2)
 
@@ -320,6 +318,22 @@ wrap block add semicolon correct plus and equal"
     )
    (t
     (remove-hook 'post-command-hook 'js2-show-parse t))))
+
+(defcustom push-minor-mode-string " Push"
+  "String to display in mode line when push mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'js2)
+
+(define-minor-mode push-mode
+  "Minor mode to push current buffer to browser"
+  :group 'js2 :lighter push-minor-mode-string
+  (cond
+   (push-mode
+    (add-hook 'after-save-hook 'js-push nil t)
+    )
+   (t
+    (remove-hook 'after-save-hook 'js-push t)))
+)
 
 (fset 'stepin
         (lambda (&optional arg)
@@ -351,8 +365,9 @@ can bind C-j in comint buffer"
   (setq js2-mode-show-overlay t)
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
+  (defalias  'pu (lambda () (interactive)
+                 (push-mode)))
   (add-hook 'after-save-hook 'js-merge nil t)
-  (add-hook 'after-save-hook 'js-push nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
