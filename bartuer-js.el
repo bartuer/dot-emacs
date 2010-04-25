@@ -246,7 +246,7 @@ behavior."
          (unless (eq 0 (shell-command (concat
                                        "sprocketize "
                                        "./load.js"
-                                       " > base.js") nil))
+                                       " > z.js") nil))
            (message "merge js failed")
            )))
 
@@ -344,7 +344,7 @@ can bind C-j in comint buffer"
 
 (defun d8-location (line)
   (interactive)
-  (with-current-buffer (get-buffer "base.js")
+  (with-current-buffer (get-buffer "z.js")
     (goto-char (point-min))
     (forward-line line)
     (setq overlay-arrow-string "B>")
