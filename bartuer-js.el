@@ -251,10 +251,6 @@ behavior."
            )
          ))
 
-(defun js-push ()
-  (interactive)
-  (shell-command-on-region (point-min) (point-max) "push")
-  )
 
 (defun js-correct (&optional start end)
   "correct js files
@@ -320,6 +316,16 @@ wrap block add semicolon correct plus and equal"
    (t
     (remove-hook 'post-command-hook 'js2-show-parse t))))
 
+(defun js-push ()
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "push")
+  (unless (eq 0 (shell-command (concat
+                                "push "
+                                "'window.location.reload(true)'") nil))
+    (message "update change failed")
+    )
+  )
+
 (defcustom push-minor-mode-string " Push"
   "String to display in mode line when push mode is enabled; nil for none."
   :type '(choice string (const :tag "None" nil))
@@ -334,31 +340,7 @@ wrap block add semicolon correct plus and equal"
     )
    (t
     (remove-hook 'after-save-hook 'js-push t)))
-)
-
-(defun js-reload ()
-  (unless (eq 0 (shell-command (concat
-                                "push "
-                                "'window.location.reload(true)'") nil))
-    (message "update change failed")
-    )
   )
-
-(defcustom reload-minor-mode-string " Reload"
-  "String to display in mode line when reload mode is enabled; nil for none."
-  :type '(choice string (const :tag "None" nil))
-  :group 'js2)
-
-(define-minor-mode reload-mode
-  "Minor mode to reload browser"
-  :group 'js2 :lighter reload-minor-mode-string
-  (cond
-   (reload-mode
-    (add-hook 'after-save-hook 'js-reload nil t)
-    )
-   (t
-    (remove-hook 'after-save-hook 'js-reload t)))
-)
 
 (fset 'stepin
         (lambda (&optional arg)
@@ -377,6 +359,7 @@ can bind C-j in comint buffer"
     (set-marker overlay-arrow-position (point)))
   (pop-to-buffer "*d8r*"))
 
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -393,8 +376,6 @@ can bind C-j in comint buffer"
                  (js2-parse-mode)))
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
-  (defalias  're (lambda () (interactive)
-                 (reload-mode)))
   
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)

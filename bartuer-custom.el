@@ -101,6 +101,7 @@
  '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")))))
  '(rdebug-many-windows nil)
  '(rdebug-short-key-mode nil)
+ '(reload-minor-mode-string " Reload")
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(rst-level-face-base-color "")
  '(safe-local-variable-values (quote ((require-final-newline) (backup-inhibited . t) (ruby-compilation-executable . "ruby") (ruby-compilation-executable . "ruby1.8") (ruby-compilation-executable . "ruby1.9") (ruby-compilation-executable . "rbx") (ruby-compilation-executable . "jruby") (minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
