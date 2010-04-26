@@ -1,6 +1,5 @@
-file ~/local/src/v8/d8_g
-cd ~/local/src/v8
-set args --expose_debug_as  v8debugger --trace_debug_json ~/local/src/baza/public/javascripts/debug.js
-b d8.cc:202
-r
+file /Users/bartuer/local/src/v8/d8_g
+cd /Users/bartuer/local/src/v8
+set args --trace-codegen --print-ir --print-ast --print-code --print-builtin-code  -- /Users/bartuer/local/src/v8/tools/splaytree.js
+rbreak v8::internal::FullCodeGenerator::*
 
