@@ -33,7 +33,7 @@
  '(file-cache-filter-regexps (quote ("~$" "\\.o$" "\\.exe$" "\\.a$" "\\.elc$" ",v$" "\\.output$" "\\.$" "#$" "\\.class$" "\\.DS_Store$" "\\.gif$" "\\.pdf$" "\\.png$" "\\.jpg$" "\\.gitignore$")))
  '(fill-column 70)
  '(find-function-C-source-directory "~/local/src/emacs-23.1/src" t)
- '(find-grep-options "-vE \".svn|drw|svn-base|*.pyc\"")
+ '(find-grep-options "-vE \".svn|drw|svn-base|*.pyc|z.js|z_min.js\"")
  '(find-ls-option (quote ("-exec ls -ld {} \\;" . "-ld")))
  '(flymake-allowed-file-name-masks (quote (("\\.c\\'" flymake-simple-make-init) ("\\.m\\'" flymake-objc-init) ("Rakefile" flymake-ruby-init) ("\\.rb\\'" flymake-ruby-init) ("\\.js\\'" flymake-jslint-init) ("\\.xml\\'" flymake-xml-init) ("\\.plist\\'" flymake-xml-init) ("\\.html?\\'" flymake-jslint-init) ("\\.css" flymake-css-init) ("\\.cs\\'" flymake-simple-make-init) ("\\.cpp\\'" flymake-simple-make-init) ("\\.p[ml]\\'" flymake-perl-init) ("\\.php[345]?\\'" flymake-php-init) ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup) ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup) ("\\.tex\\'" flymake-simple-tex-init) ("\\.idl\\'" flymake-simple-make-init))))
  '(flymake-log-level -1)
