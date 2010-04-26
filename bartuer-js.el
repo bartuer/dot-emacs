@@ -248,7 +248,8 @@ behavior."
                                        "./load.js"
                                        " > z.js") nil))
            (message "merge js failed")
-           )))
+           )
+         ))
 
 (defun js-push ()
   (interactive)
@@ -335,6 +336,30 @@ wrap block add semicolon correct plus and equal"
     (remove-hook 'after-save-hook 'js-push t)))
 )
 
+(defun js-reload ()
+  (unless (eq 0 (shell-command (concat
+                                "push "
+                                "'window.location.reload(true)'") nil))
+    (message "update change failed")
+    )
+  )
+
+(defcustom reload-minor-mode-string " Reload"
+  "String to display in mode line when reload mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'js2)
+
+(define-minor-mode reload-mode
+  "Minor mode to reload browser"
+  :group 'js2 :lighter reload-minor-mode-string
+  (cond
+   (reload-mode
+    (add-hook 'after-save-hook 'js-reload nil t)
+    )
+   (t
+    (remove-hook 'after-save-hook 'js-reload t)))
+)
+
 (fset 'stepin
         (lambda (&optional arg)
           "Keyboard macro.
@@ -363,10 +388,14 @@ can bind C-j in comint buffer"
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
+  
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
+  (defalias  're (lambda () (interactive)
+                 (reload-mode)))
+  
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
