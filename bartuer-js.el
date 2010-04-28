@@ -211,6 +211,17 @@ behavior."
 
 (defalias 'js-find-autotest 'autotest)
 
+(defun js-find-suite ()
+  "find suite name for current buffer"
+  (let ((filename (file-name-nondirectory (buffer-file-name)))
+        suite-name)
+    (cond ((string-match "\\(app.*\\).spec.js" filename)
+           (setq suite-name (match-string 1 filename)))
+          ((string-match "\\(app.*\\).js" filename)
+           (setq suite-name (match-string 1 filename))))
+    (add-to-list 'suite-list suite-name)
+))
+
 (defun js-toggle ()
   "js version `rinari-ido'"
   (interactive)
@@ -319,11 +330,19 @@ wrap block add semicolon correct plus and equal"
 (defun js-push ()
   (interactive)
   (shell-command-on-region (point-min) (point-max) "push")
-  (unless (eq 0 (shell-command (concat
-                                "push "
-                                "'window.location.reload(true)'") nil))
-    (message "update change failed")
-    )
+  (shell-command
+   (concat
+    "push "
+    "'window.location.reload(true)'"))
+  (mapcar (lambda (suite)
+            (shell-command
+             (concat
+              "push "
+              "\"dev.exesuite('"
+              suite
+              "')\""
+              )))
+          suite-list)
   )
 
 (defcustom push-minor-mode-string " Push"
@@ -371,6 +390,10 @@ can bind C-j in comint buffer"
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
+
+  (make-local-variable 'suite-list)
+  (setq suite-list nil)
+  (js-find-suite)
   
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
