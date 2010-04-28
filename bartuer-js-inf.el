@@ -46,7 +46,7 @@
 
 (defun d8r-head ()
   (when (string-equal (process-name js-process) "d8r")
-      (process-send-string js-process "p ")))
+      (process-send-string js-process "pp ")))
 
 (defun send-expression-jsh (expression)
   "prompt for a expression, then send it to jsh
