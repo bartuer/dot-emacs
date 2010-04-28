@@ -226,9 +226,9 @@ behavior."
   "js version `rinari-ido'"
   (interactive)
   (let* ((js-toggle-target (ido-completing-read "Jump to :" 
-                                                 (list  "jspec-fixture" "file-in-project" "autotest"
-                                                        "jspec"  "jspecimp"
-                                                        "prototype-fixture" "prototype-test" "prototype-testimp") nil t)))
+                                                 (list  "file-in-project" "jspec"  "jspecimp" "jspec-fixture" 
+                                                        "prototype-fixture" "prototype-test" "prototype-testimp"
+                                                        "autotest") nil t)))
     (apply (intern (concat "js-find-" js-toggle-target)) nil))
   )
 
