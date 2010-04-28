@@ -47,7 +47,7 @@
   (if (file-exists-p "/tmp/jct-emacs-backtrace")
       (progn (pop-to-buffer 
               (ruby-compilation-do "jct-compilation"
-                            (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
+  ```                          (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
              (sleep-for 0.1)
              (goto-char (point-min))
              (compile-goto-error))
@@ -421,4 +421,5 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
 
+(require 'bartuer-page nil t)
 (provide 'bartuer-js)

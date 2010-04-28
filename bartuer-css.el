@@ -20,3 +20,5 @@ css imenu build see `css-extract-keyword-list'
   (add-hook 'after-save-hook 'css-min nil t)
   (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
   )
+
+(require 'bartuer-page nil t)

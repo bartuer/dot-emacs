@@ -25,4 +25,4 @@
 (defalias  're (lambda () (interactive)
                  (reload-mode)))
 
-(provide 'bartuer-reload)
+(provide 'bartuer-page)

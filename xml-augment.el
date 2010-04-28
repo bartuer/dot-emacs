@@ -413,4 +413,5 @@ default POS is current position."
   (define-key sgml-mode-map "\C-\M-d" 'xml-down)
   )
 
+(require 'bartuer-page nil t)
 (provide 'xml-augment)
