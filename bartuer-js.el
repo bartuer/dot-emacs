@@ -395,7 +395,8 @@ can bind C-j in comint buffer"
                  (js2-parse-mode)))
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
-  
+
+  (push-mode t)
   (add-hook 'after-save-hook 'js-merge nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
