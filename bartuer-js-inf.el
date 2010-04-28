@@ -43,11 +43,16 @@
     (setq js-process (apply (intern jsh) nil))
     (pop-to-buffer (concat "*" jsh "*"))
     ))
-  
+
+(defun d8r-head ()
+  (when (string-equal (process-name js-process) "d8r")
+      (process-send-string js-process "p ")))
+
 (defun send-expression-jsh (expression)
   "prompt for a expression, then send it to jsh
 \\[send-expression-jsh]"
   (interactive "sEval in jsh: ")
+  (d8r-head)
   (process-send-string js-process (concat expression "\n")))
 
 
@@ -67,6 +72,8 @@
         (js2-mode-forward-sibling)
       (setq pos_end_def (+ 1 (+ (js2-node-abs-pos parent)
                          (js2-node-len parent)))))
+
+    (d8r-head)
     (process-send-region js-process pos_begin_def pos_end_def)
     (process-send-string js-process "\n")))
 
@@ -74,6 +81,7 @@
   "send the region to jsh
 \\[send-region-jsh]"
   (interactive "r")
+  (d8r-head)
   (process-send-region js-process start end)
   (process-send-string js-process "\n"))
 
@@ -81,6 +89,9 @@
   "send the current buffer to jsh
 \\[send-buffer-jsh]"
   (interactive)
+  (when (string-equal (process-name js-process) "d8r")
+      (process-send-string js-process "p "))
+  (d8r-head)
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
 
