@@ -1,11 +1,7 @@
-#name : describe
+#name : jspec spec describe
 # --
-describe
-('${2:case}',
- function () {
-   it
-   ('${3:should success}',
-    function () {
-      expect(true).to(be, true);
-    });
- });
+describe('${2:case}', function () {
+  it('${3:should success}', function () {
+    expect(true).to(be, true);
+  });
+});

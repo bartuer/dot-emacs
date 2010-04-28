@@ -1,23 +1,16 @@
-#name : JSpec describe
+#name : jspec suite describe
 # --
-
-JSpec.describe(
-  '${1:suite}',
+JSpec.describe('${1:suite}',
 
   function () {
     before_each(
       function () {
-        $0  
       });
 
-    describe
-    ('${2:case}',
-     function () {
-       it
-       ('${3:should success}',
-        function () {
-          expect(true).to(be, true);
-        });
-     });
+    desc$0
+    
+    after_each(
+      function () {
+      });
 
   });
