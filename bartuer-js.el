@@ -40,27 +40,48 @@
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
   (interactive (jct-interactive))
-  (when (string-equal (js-project-root)
-                    (expand-file-name prototype-root))
-      (unit-test-js))
-  (jxmp (concat option " --current_file_name=" (expand-file-name (buffer-file-name))))
-  (if (file-exists-p "/tmp/jct-emacs-backtrace")
-      (progn (pop-to-buffer 
-              (ruby-compilation-do "jct-compilation"
-  ```                          (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
-             (sleep-for 0.1)
-             (goto-char (point-min))
-             (compile-goto-error))
+  (cond ((string-equal (js-project-root)
+                       (expand-file-name prototype-root))
+         (unit-test-js))
+        ((save-excursion
+           (goto-char (point-min))
+           (re-search-forward "\\(JSpec.describe(\\)" nil t)
+           )
+         (mapcar (lambda (suite)
+                   (shell-command
+                    (concat
+                     "push "
+                     "\"dev.exesuite('"
+                     suite
+                     "')\""
+                     )))
+                 suite-list)
+         )
+        (t (jxmp (concat option
+                         " --current_file_name="
+                         (expand-file-name (buffer-file-name))))
+           (if (file-exists-p "/tmp/jct-emacs-backtrace")
+               (progn (pop-to-buffer 
+                       (ruby-compilation-do
+                        "jct-compilation"
+                        (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
+                      (sleep-for 0.1)
+                      (goto-char (point-min))
+                      (compile-goto-error))
              )
-  (if (file-exists-p "/tmp/jct-emacs-message")
-      (with-current-buffer
-          (get-buffer-create "jct-result")
-        (if (buffer-size)
-            (erase-buffer))
-        (with-output-to-string (call-process "cat" nil t nil "/tmp/jct-emacs-message"))    
-        (ansi-color-apply-on-region (point-min) (point-max))
-        (goto-char (point-min))
-        t))
+           (if (file-exists-p "/tmp/jct-emacs-message")
+               (with-current-buffer
+                   (get-buffer-create "jct-result")
+                 (if (buffer-size)
+                     (erase-buffer))
+                 (with-output-to-string
+                   (call-process
+                    "cat" nil t nil "/tmp/jct-emacs-message"))    
+                 (ansi-color-apply-on-region (point-min) (point-max))
+                 (goto-char (point-min))
+                 t))
+           )
+        )
   )
 
 
