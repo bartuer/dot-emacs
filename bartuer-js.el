@@ -330,10 +330,6 @@ wrap block add semicolon correct plus and equal"
 (defun js-push ()
   (interactive)
   (shell-command-on-region (point-min) (point-max) "push")
-  (shell-command
-   (concat
-    "push "
-    "'window.location.reload(true)'"))
   (mapcar (lambda (suite)
             (shell-command
              (concat
