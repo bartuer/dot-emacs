@@ -82,7 +82,10 @@
 \\[send-region-jsh]"
   (interactive "r")
   (d8r-head)
-  (process-send-region js-process start end)
+  (process-send-string js-process
+                       (replace-regexp-in-string
+                        "\n" " "
+                        (buffer-substring-no-properties start end)))
   (process-send-string js-process "\n")
   (when (region-active-p)
     (deactivate-mark))
