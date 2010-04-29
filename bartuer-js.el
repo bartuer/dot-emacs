@@ -43,20 +43,6 @@
   (cond ((string-equal (js-project-root)
                        (expand-file-name prototype-root))
          (unit-test-js))
-        ((save-excursion
-           (goto-char (point-min))
-           (re-search-forward "\\(JSpec.describe(\\)" nil t)
-           )
-         (mapcar (lambda (suite)
-                   (shell-command
-                    (concat
-                     "push "
-                     "\"dev.exesuite('"
-                     suite
-                     "')\""
-                     )))
-                 suite-list)
-         )
         (t (jxmp (concat option
                          " --current_file_name="
                          (expand-file-name (buffer-file-name))))
@@ -82,6 +68,16 @@
                  t))
            )
         )
+  (mapcar (lambda (suite)
+            (shell-command
+             (concat
+              "push "
+              "\"dev.exesuite('"
+              suite
+              "')\""
+              )))
+          suite-list)
+  
   )
 
 
