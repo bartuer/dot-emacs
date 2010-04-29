@@ -37,6 +37,18 @@
       (insert unit-test-result))
   )
 
+(defun js-push-spec ()
+  "send current buffer related spec to browser"
+  (mapcar (lambda (suite)
+            (shell-command
+             (concat
+              "push "
+              "\"dev.exesuite('"
+              suite
+              "')\""
+              )))
+          suite-list))
+
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
   (interactive (jct-interactive))
@@ -68,18 +80,8 @@
                  t))
            )
         )
-  (mapcar (lambda (suite)
-            (shell-command
-             (concat
-              "push "
-              "\"dev.exesuite('"
-              suite
-              "')\""
-              )))
-          suite-list)
-  
+  (js-push-spec)
   )
-
 
 (defun anything-js-browser (reset)
   "let `anything-etags-select' do the right job
@@ -345,17 +347,10 @@ wrap block add semicolon correct plus and equal"
     (remove-hook 'post-command-hook 'js2-show-parse t))))
 
 (defun js-push ()
+  "send current buffer to browser"
   (interactive)
   (shell-command-on-region (point-min) (point-max) "push")
-  (mapcar (lambda (suite)
-            (shell-command
-             (concat
-              "push "
-              "\"dev.exesuite('"
-              suite
-              "')\""
-              )))
-          suite-list)
+  (js-push-spec)
   )
 
 (defcustom push-minor-mode-string " Push"
