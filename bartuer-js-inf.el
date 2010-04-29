@@ -83,7 +83,10 @@
   (interactive "r")
   (d8r-head)
   (process-send-region js-process start end)
-  (process-send-string js-process "\n"))
+  (process-send-string js-process "\n")
+  (when (region-active-p)
+    (deactivate-mark))
+)
 
 (defun send-buffer-jsh ()
   "send the current buffer to jsh
