@@ -1,6 +1,6 @@
 #name : jspec suite describe
 # --
-JSpec.describe('${1:suite}',
+JSpec.describe('`(replace-regexp-in-string ".spec.js" "" (file-name-nondirectory (buffer-file-name)))`',
 
   function () {
     before_each(
