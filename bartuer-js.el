@@ -55,7 +55,10 @@
   (cond ((string-equal (js-project-root)
                        (expand-file-name prototype-root))
          (unit-test-js))
-        (t (jxmp (concat option
+        ((string-match ".*scratch.js"
+                       (file-name-nondirectory
+                        (buffer-file-name)))
+         (jxmp (concat option
                          " --current_file_name="
                          (expand-file-name (buffer-file-name))))
            (if (file-exists-p "/tmp/jct-emacs-backtrace")
