@@ -1,7 +1,5 @@
-# name: rails
+# 
 # --
-# name: ${1:`(file-name-nondirectory (buffer-file-name))`} callback model rails 
-# (rdoc "ActiveRecord::Callbacks")
-# (link "~/scripts/cheat-sheet" 8626)
+# name: jspec expect ${1:matcher}
 # --
-{1:before}_$1 :{2:method} callbackdo
+expect('{1:element}').to($1);
