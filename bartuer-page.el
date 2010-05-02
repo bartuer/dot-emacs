@@ -16,7 +16,7 @@
   :lighter reload-minor-mode-string
   (cond
    (reload-mode
-    (add-hook 'after-save-hook 'page-reload nil t)
+    (add-hook 'after-save-hook 'page-reload t t)
     )
    (t
     (remove-hook 'after-save-hook 'page-reload t)))

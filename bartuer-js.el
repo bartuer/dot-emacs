@@ -366,7 +366,7 @@ wrap block add semicolon correct plus and equal"
   :group 'js2 :lighter push-minor-mode-string
   (cond
    (push-mode
-    (add-hook 'after-save-hook 'js-push nil t)
+    (add-hook 'after-save-hook 'js-push t t)
     )
    (t
     (remove-hook 'after-save-hook 'js-push t)))
