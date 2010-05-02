@@ -3,14 +3,10 @@
 JSpec.describe('`(replace-regexp-in-string ".spec.js" "" (file-name-nondirectory (buffer-file-name)))`',
 
   function () {
-    before_each(
-      function () {
-      });
+    before_each(function () {});
 
     desc$0
     
-    after_each(
-      function () {
-      });
+    after_each(function () {});
 
   });
