@@ -1,5 +1,5 @@
 # 
 # --
-# name: jspec expect ${1:matcher}
+# name: jspec expect compare ${1:matcher}
 # --
-expect('{1:element}').to($1);
+expect($0{1:val1}).to(be_$1, {2:val2});
