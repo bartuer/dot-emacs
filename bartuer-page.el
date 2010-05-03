@@ -11,15 +11,26 @@
   :type '(choice string (const :tag "None" nil))
   )
 
+(defun page-reload-save ()
+  (interactive)
+  (unless (buffer-modified-p)
+    (shell-command (concat
+                    "push "
+                    "'window.location.reload(true)'") nil))
+  (save-buffer))
+                    
 (define-minor-mode reload-mode
   "Minor mode to reload browser"
   :lighter reload-minor-mode-string
   (cond
    (reload-mode
     (add-hook 'after-save-hook 'page-reload t t)
+    (define-key global-map "\C-\M-j" 'page-reload-save)
     )
    (t
-    (remove-hook 'after-save-hook 'page-reload t)))
+    (remove-hook 'after-save-hook 'page-reload t)
+    (define-key global-map "\C-\M-j" 'save-buffer)
+    ))
   )
 
 (defalias  're (lambda () (interactive)
