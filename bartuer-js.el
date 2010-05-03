@@ -59,31 +59,34 @@
                        (file-name-nondirectory
                         (buffer-file-name)))
          (jxmp (concat option
-                         " --current_file_name="
-                         (expand-file-name (buffer-file-name))))
-           (if (file-exists-p "/tmp/jct-emacs-backtrace")
-               (progn (pop-to-buffer 
-                       (ruby-compilation-do
-                        "jct-compilation"
-                        (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
-                      (sleep-for 0.1)
-                      (goto-char (point-min))
-                      (compile-goto-error))
-             )
-           (if (file-exists-p "/tmp/jct-emacs-message")
-               (with-current-buffer
-                   (get-buffer-create "jct-result")
-                 (if (buffer-size)
-                     (erase-buffer))
-                 (with-output-to-string
-                   (call-process
-                    "cat" nil t nil "/tmp/jct-emacs-message"))    
-                 (ansi-color-apply-on-region (point-min) (point-max))
-                 (goto-char (point-min))
-                 t))
+                       " --current_file_name="
+                       (expand-file-name (buffer-file-name))))
+         (if (file-exists-p "/tmp/jct-emacs-backtrace")
+             (progn (pop-to-buffer 
+                     (ruby-compilation-do
+                      "jct-compilation"
+                      (cons "cat" (list "/tmp/jct-emacs-backtrace"))))
+                    (sleep-for 0.1)
+                    (goto-char (point-min))
+                    (compile-goto-error))
            )
+         (if (file-exists-p "/tmp/jct-emacs-message")
+             (with-current-buffer
+                 (get-buffer-create "jct-result")
+               (if (buffer-size)
+                   (erase-buffer))
+               (with-output-to-string
+                 (call-process
+                  "cat" nil t nil "/tmp/jct-emacs-message"))    
+               (ansi-color-apply-on-region (point-min) (point-max))
+               (goto-char (point-min))
+               t))
+         )
         )
-  (js-push-spec)
+  (if (string-match "spec.js" (file-name-nondirectory
+                               (buffer-file-name)))
+      (js-push)
+    (js-push-spec))
   )
 
 (defun anything-js-browser (reset)
@@ -352,8 +355,18 @@ wrap block add semicolon correct plus and equal"
 (defun js-push ()
   "send current buffer to browser"
   (interactive)
-  (shell-command-on-region (point-min) (point-max) "push")
-  (js-push-spec)
+  (let ((filename (buffer-file-name)))
+    (if (string-match "spec.js" (file-name-nondirectory
+                                 (buffer-file-name)))
+        (with-current-buffer (get-buffer-create "*jspec-without-reload*")
+          (delete-region (point-min) (point-max))
+          (goto-char (point-min))
+          (insert "JSpec.allSuites=[];")
+          (insert-file filename)
+          (shell-command-on-region (point-min) (point-max) "push")
+          )
+      (shell-command-on-region (point-min) (point-max) "push"))
+    (js-push-spec))
   )
 
 (defcustom push-minor-mode-string " Push"
