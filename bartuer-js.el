@@ -355,18 +355,18 @@ wrap block add semicolon correct plus and equal"
 (defun js-push ()
   "send current buffer to browser"
   (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (string-match "spec.js" (file-name-nondirectory
-                                 (buffer-file-name)))
-        (with-current-buffer (get-buffer-create "*jspec-without-reload*")
-          (delete-region (point-min) (point-max))
-          (goto-char (point-min))
-          (insert "JSpec.allSuites=[];")
-          (insert-file filename)
-          (shell-command-on-region (point-min) (point-max) "push")
-          )
-      (shell-command-on-region (point-min) (point-max) "push"))
-    (js-push-spec))
+  (copy-region-as-kill (point-min) (point-max))
+  (if (string-match "spec.js" (file-name-nondirectory
+                               (buffer-file-name)))
+      (with-current-buffer (get-buffer-create "*jspec-without-reload*")
+        (delete-region (point-min) (point-max))
+        (goto-char (point-min))
+        (insert "JSpec.allSuites=[];")
+        (yank)
+        (shell-command-on-region (point-min) (point-max) "push")
+        )
+    (shell-command-on-region (point-min) (point-max) "push"))
+  (js-push-spec)
   )
 
 (defcustom push-minor-mode-string " Push"
