@@ -3,6 +3,8 @@
 
 (defvar suite-list nil)
 
+(defvar live-edit-string "")
+
 (defun autotest ()
   (interactive)
   (cd "..")
@@ -85,10 +87,7 @@
                t))
          )
         )
-  (if (string-match "spec.js" (file-name-nondirectory
-                               (buffer-file-name)))
-      (js-push)
-    (js-push-spec))
+  (js-push)
   )
 
 (defun anything-js-browser (reset)
@@ -251,6 +250,22 @@ behavior."
     (add-to-list 'suite-list suite-name)
 ))
 
+(defun js-find-live-edit-string ()
+  "find live edit string for current buffer"
+  (let (start end)
+    (save-excursion
+      (goto-char (point-max))
+      (if (search-backward "//live-edit:" nil t 1)
+          (progn
+           (search-forward " ")
+           (setq start (point))
+           (end-of-line)
+           (setq end (point))
+           (setq live-edit-string (buffer-substring-no-properties start end)))
+        (setq live-edit-string ""))
+      )
+    ))
+
 (defun js-toggle ()
   "js version `rinari-ido'"
   (interactive)
@@ -360,16 +375,29 @@ wrap block add semicolon correct plus and equal"
   "send current buffer to browser"
   (interactive)
   (copy-region-as-kill (point-min) (point-max))
-  (if (string-match "spec.js" (file-name-nondirectory
-                               (buffer-file-name)))
-      (with-current-buffer (get-buffer-create "*jspec-without-reload*")
-        (delete-region (point-min) (point-max))
-        (goto-char (point-min))
-        (insert "JSpec.allSuites=[];")
-        (yank)
-        (shell-command-on-region (point-min) (point-max) "push")
-        )
-    (shell-command-on-region (point-min) (point-max) "push"))
+  (let ((filename (file-name-nondirectory
+                   (buffer-file-name)))
+        (lanuch-cmd live-edit-string))
+    (cond ((string-match "spec.js" filename)
+           (with-current-buffer (get-buffer-create "*jspec-without-reload*")
+             (delete-region (point-min) (point-max))
+             (goto-char (point-min))
+             (insert "JSpec.allSuites=[];")
+             (yank)
+             (shell-command-on-region (point-min) (point-max) "push")
+             ))
+          (t
+           (with-current-buffer (get-buffer-create "*js-without-reload*")
+             (delete-region (point-min) (point-max))
+             (yank)
+             (goto-char (point-max))
+             (insert "\n;")
+             (insert lanuch-cmd)
+             (shell-command-on-region (point-min) (point-max) "push")
+             )
+           )
+          )
+    )
   (js-push-spec)
   )
 
@@ -406,8 +434,6 @@ can bind C-j in comint buffer"
     (set-marker overlay-arrow-position (point)))
   (pop-to-buffer "*d8r*"))
 
-
-
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -421,8 +447,9 @@ can bind C-j in comint buffer"
   (setq js2-mode-show-overlay t)
 
   (make-local-variable 'suite-list)
-  (setq suite-list nil)
   (js-find-suite)
+  (make-local-variable 'live-edit-string)
+  (js-find-live-edit-string)
   
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
