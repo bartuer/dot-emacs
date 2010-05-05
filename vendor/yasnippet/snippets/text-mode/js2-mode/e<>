@@ -1,3 +1,3 @@
-# name: jspec expect compare within
+# name: e<> jspec expect compare within 
 # --
 expect(${1:val1}).to(be_within, [${2:min}, ${3:max)}]);
