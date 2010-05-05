@@ -456,6 +456,7 @@ can bind C-j in comint buffer"
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
 
+  (reload-mode t)
   (push-mode t)
   (add-hook 'after-save-hook 'js-merge nil t)
   (add-hook 'after-save-hook 'js-find-live-edit-string nil t)
