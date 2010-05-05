@@ -399,14 +399,16 @@ it is suitable to browse OO hierarchy"
   (if reset
       (setq anything-etags-cache-tag-file-dir nil))
   (unless anything-etags-cache-tag-file-dir
-    (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
-                                                               (list "~/local/src/rails-2.3.4/actionpack"
-                                                                     "~/local/src/rails-2.3.4/activemodel"
-                                                                     "~/local/src/rails-2.3.4/activerecord"
-                                                                     "~/local/src/rails-2.3.4/rails"
-                                                                     "~/local/src/rails-2.3.4/actionmailer"
-                                                                     "~/local/src/rails-2.3.4/activesupport"
-                                                                     "~/local/src/authlogic/lib/authlogic"))))
+    (setq anything-etags-cache-tag-file-dir
+          (ido-completing-read
+           "TAGS location:"
+           (list "~/local/src/rails-2.3.4/actionpack"
+                 "~/local/src/rails-2.3.4/activemodel"
+                 "~/local/src/rails-2.3.4/activerecord"
+                 "~/local/src/rails-2.3.4/rails"
+                 "~/local/src/rails-2.3.4/actionmailer"
+                 "~/local/src/rails-2.3.4/activesupport"
+                 "~/local/src/authlogic/lib/authlogic"))))
   (anything-etags-select))
 
 

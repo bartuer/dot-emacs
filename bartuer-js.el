@@ -100,15 +100,17 @@ it is suitable to browse OO hierarchy"
   (if reset
       (setq anything-etags-cache-tag-file-dir nil))
   (unless anything-etags-cache-tag-file-dir
-    (setq anything-etags-cache-tag-file-dir (ido-completing-read "TAGS location:"
-                                                               (list "~/etc/el/js"
-                                                                     "~/local/src/baza/lib/Parts"
-                                                                     (concat prototype-root "src")
-                                                                     "~/local/src/js-functional"
-                                                                     "~/local/src/scriptaculous/src"
-                                                                     "~/etc/el/js/jscore"
-                                                                     "~/local/src/mozilla-1.9.1/js/narcissus"
-                                                                     ))))
+    (setq anything-etags-cache-tag-file-dir
+          (ido-completing-read
+           "TAGS location:"
+           (list "~/etc/el/js"
+                 "~/local/src/baza/lib/Parts"
+                 (concat prototype-root "src")
+                 "~/local/src/js-functional"
+                 "~/local/src/scriptaculous/src"
+                 "~/etc/el/js/jscore"
+                 "~/local/src/mozilla-1.9.1/js/narcissus"
+                 ))))
   (anything-etags-select))
 
 (defun js-project-root ()
