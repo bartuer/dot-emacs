@@ -1,6 +1,8 @@
 (require 'moz nil t)
 (require 'bartuer-js-inf nil t)
 
+(defvar suite-list nil)
+
 (defun autotest ()
   (interactive)
   (cd "..")
@@ -401,6 +403,7 @@ can bind C-j in comint buffer"
     (setq overlay-arrow-position (make-marker))
     (set-marker overlay-arrow-position (point)))
   (pop-to-buffer "*d8r*"))
+
 
 
 (defun bartuer-js-load ()
