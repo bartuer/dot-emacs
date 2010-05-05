@@ -458,6 +458,7 @@ can bind C-j in comint buffer"
 
   (push-mode t)
   (add-hook 'after-save-hook 'js-merge nil t)
+  (add-hook 'after-save-hook 'js-find-live-edit-string nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
