@@ -405,7 +405,18 @@ wrap block add semicolon correct plus and equal"
           )
     )
   (js-push-spec)
+  (tmp-test)
   )
+
+(defun tmp-test ()
+  "run mini test for UI staff"
+  (interactive)
+  (let* ((test-script 
+          (replace-regexp-in-string ".js" ".test"
+           (buffer-file-name))))
+    (message test-script)
+    (when (file-exists-p test-script)
+      (shell-command test-script))))
 
 (defcustom push-minor-mode-string " Push"
   "String to display in mode line when push mode is enabled; nil for none."
