@@ -393,6 +393,7 @@ wrap block add semicolon correct plus and equal"
              (goto-char (point-max))
              (insert "\n;")
              (insert lanuch-cmd)
+             (shell-command-on-region (point-min) (point-max) "~/etc/el/vendor/yui/js-fast-min" "*Shell Command Output*" t)
              (shell-command-on-region (point-min) (point-max) "push")
              )
            )
