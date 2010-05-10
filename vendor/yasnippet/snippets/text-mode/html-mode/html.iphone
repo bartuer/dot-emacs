@@ -15,6 +15,11 @@
 
 <script src="/javascripts/lib.pusher.js"></script>
 <script type="text/javascript">
+function loaded() {
+  
+}
+document.addEventListener('DOMContentLoaded', loaded);
+
 var pusher = new Pusher.Client("/pusher", "cmd", function (cmd) {
   this.request = 'XMLHttpRequest' in window ? XMLHttpRequest : null;
 
