@@ -266,6 +266,19 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'google-define nil t)
 (defalias 'gd 'google-define)
+(defun wiki-this ()
+  "Ask wikipedia for the definition of a word.
+borrowed from google-define.el"
+  (interactive)
+  (let* ((search-word
+          (read-from-minibuffer
+           "wiki: "
+           (thing-at-point 'word)))
+         )
+    (message (shell-command-to-string (concat "wiki " search-word)))
+    ))
+(defalias 'wk 'wiki-this)
+
 (if (fboundp 'server-start)
     (server-start))
 (if (fboundp 'show-paren-mode)
