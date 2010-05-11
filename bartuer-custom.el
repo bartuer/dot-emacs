@@ -30,6 +30,7 @@
  '(emms-stream-default-action "play")
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
+ '(fast-wiki-minor-mode-string " wk")
  '(file-cache-filter-regexps (quote ("~$" "\\.o$" "\\.exe$" "\\.a$" "\\.elc$" ",v$" "\\.output$" "\\.$" "#$" "\\.class$" "\\.DS_Store$" "\\.gif$" "\\.pdf$" "\\.png$" "\\.jpg$" "\\.gitignore$")))
  '(fill-column 70)
  '(find-function-C-source-directory "~/local/src/emacs-23.1/src" t)
