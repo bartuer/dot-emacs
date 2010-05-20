@@ -22,7 +22,9 @@
 
 (defun d8r ()
   (unless (setq d8r-process (get-buffer-process "*d8r*"))
-    (setq d8r-process (make-comint "d8r" "d8r")))
+    (progn
+      (make-comint "d8r" "d8r")
+      (setq d8r-process (get-buffer-process "*d8r*"))))
   d8r-process)
 
 (defun squirrelfish ()
