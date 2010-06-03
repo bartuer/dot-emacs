@@ -408,6 +408,7 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/rails-2.3.4/rails"
                  "~/local/src/rails-2.3.4/actionmailer"
                  "~/local/src/rails-2.3.4/activesupport"
+                 "~/local/src/shopify/active_merchant/lib"
                  "~/local/src/authlogic/lib/authlogic"))))
   (anything-etags-select))
 
