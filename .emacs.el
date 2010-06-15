@@ -615,7 +615,7 @@ If give a negative ARG, will undo the last mark action, thus the
     "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)) 
 
-
+(require 'redis nil t)
 (require 'css-mode nil t)
 (autoload 'bartuer-css-load "~/etc/el/bartuer-css.el" t)
 (add-hook 'css-mode-hook 'bartuer-css-load)

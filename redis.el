@@ -144,3 +144,5 @@
   (kill-all-local-variables)
   (setq mode-name "Redis")
   (run-hooks 'redis-mode-hook))
+
+(provide 'redis)
