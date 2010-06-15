@@ -1,0 +1,4 @@
+# name : blpop Blocking LPOP
+# (link "~/local/src/redis/doc/BlpopCommand.txt" 1)
+# --
+blpop ${1:key1} ${2:key2} ${3:keyn} ${4:timeout}

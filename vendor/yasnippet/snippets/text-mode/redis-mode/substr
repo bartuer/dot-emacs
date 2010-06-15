@@ -1,0 +1,4 @@
+# name : substr return a substring out of a larger string
+# (link "~/local/src/redis/doc/SubstrCommand.txt" 1)
+# --
+substr ${1:key} ${2:start} ${3:end}

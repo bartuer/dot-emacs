@@ -1,0 +1,4 @@
+# name : zrange Return a range of elements from the sorted set at key
+# (link "~/local/src/redis/doc/ZrangeCommand.txt" 1)
+# --
+zrange ${1:key} ${2:start} ${3:end}

@@ -1,0 +1,4 @@
+# name : psubscribe patttern subsribe message
+# (link "~/local/src/redis/doc/PsubscribeCommand.txt" 1)
+# --
+psubscribe ${1:pattern1} ${2:pattern2} ${3:patternn}

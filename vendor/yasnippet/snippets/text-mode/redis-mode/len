@@ -1,0 +1,4 @@
+# name : len Return the number of items in a hash.
+# (link "~/local/src/redis/doc/LenCommand.txt" 1)
+# --
+len ${1:key}

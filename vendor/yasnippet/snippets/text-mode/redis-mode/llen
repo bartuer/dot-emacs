@@ -1,0 +1,4 @@
+# name : llen Return the length of the List value at key
+# (link "~/local/src/redis/doc/LlenCommand.txt" 1)
+# --
+llen ${1:key}

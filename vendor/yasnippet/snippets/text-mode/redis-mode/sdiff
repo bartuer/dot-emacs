@@ -1,0 +1,4 @@
+# name : sdiff Return the difference between the Set stored at key1  and all the Sets key2 ... keyN
+# (link "~/local/src/redis/doc/SdiffCommand.txt" 1)
+# --
+sdiff ${1:key1} ${2:key2} ${3:keyn}

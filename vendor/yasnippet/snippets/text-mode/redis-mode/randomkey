@@ -1,0 +1,4 @@
+# name : randomkey return a random key from the key space
+# (link "~/local/src/redis/doc/RandomkeyCommand.txt" 1)
+# --
+randomkey 

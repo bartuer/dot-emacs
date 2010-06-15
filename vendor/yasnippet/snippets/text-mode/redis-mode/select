@@ -1,0 +1,4 @@
+# name : select select the db having the specified index
+# (link "~/local/src/redis/doc/SelectCommand.txt" 1)
+# --
+select ${1:index}

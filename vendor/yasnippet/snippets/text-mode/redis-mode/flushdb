@@ -1,0 +1,4 @@
+# name : flushdb remove all the keys of the currently selected db
+# (link "~/local/src/redis/doc/FlushdbCommand.txt" 1)
+# --
+flushdb 

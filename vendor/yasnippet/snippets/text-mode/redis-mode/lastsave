@@ -1,0 +1,4 @@
+# name : lastsave Return the UNIX time stamp of the last successfully saving of the  dataset on disk
+# (link "~/local/src/redis/doc/LastsaveCommand.txt" 1)
+# --
+lastsave 

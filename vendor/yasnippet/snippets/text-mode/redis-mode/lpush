@@ -1,0 +1,4 @@
+# name : lpush Append an element to the head of the List value at key
+# (link "~/local/src/redis/doc/LpushCommand.txt" 1)
+# --
+lpush ${1:key} ${2:value}

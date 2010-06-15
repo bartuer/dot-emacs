@@ -1,0 +1,4 @@
+# name : zcard Return the cardinality (number of elements) of the sorted set at  key
+# (link "~/local/src/redis/doc/ZcardCommand.txt" 1)
+# --
+zcard ${1:key}

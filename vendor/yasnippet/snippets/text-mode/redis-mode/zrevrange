@@ -1,0 +1,4 @@
+# name : zrevrange Return a range of elements from the sorted set at  key exactly like ZRANGE but the sorted
+# (link "~/local/src/redis/doc/ZrevrangeCommand.txt" 1)
+# --
+zrevrange ${1:key} ${2:start} ${3:end}

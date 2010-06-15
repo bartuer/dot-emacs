@@ -1,0 +1,4 @@
+# name : setnx set the specified hash field to th sepcified value, if field do not exist
+# (link "~/local/src/redis/doc/SetnxCommand.txt" 1)
+# --
+setnx ${1:key} ${2:field} ${3:value}

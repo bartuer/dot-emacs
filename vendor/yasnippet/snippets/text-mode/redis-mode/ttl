@@ -1,0 +1,4 @@
+# name : ttl get the time to live in seconds of a key
+# (link "~/local/src/redis/doc/TtlCommand.txt" 1)
+# --
+ttl 

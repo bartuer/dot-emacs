@@ -1,0 +1,4 @@
+# name : incr increment the integer value of key
+# (link "~/local/src/redis/doc/IncrCommand.txt" 1)
+# --
+incr ${1:key}

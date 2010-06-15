@@ -1,0 +1,4 @@
+# name : sismember Test if the specified value is a member of the Set at  key
+# (link "~/local/src/redis/doc/SismemberCommand.txt" 1)
+# --
+sismember ${1:key} ${2:member}

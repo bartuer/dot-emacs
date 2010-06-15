@@ -1,0 +1,4 @@
+# name : zunionstore Perform a union over a number of sorted sets with  optional weight and aggregate on hashes
+# (link "~/local/src/redis/doc/ZunionstoreCommand.txt" 1)
+# --
+zunionstore ${1:dstkey} ${2:n} ${3:key1} ${4:keyn} ${5:weights} ${6:w1} ${7:wn} ${8:aggregate} ${9:sum} ${10:min} ${11:max}

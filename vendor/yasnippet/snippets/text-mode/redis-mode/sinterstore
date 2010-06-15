@@ -1,0 +1,4 @@
+# name : sinterstore Compute the intersection between the  Sets stored at key1 key2 ... keyN and store the resulting Set at dstkey
+# (link "~/local/src/redis/doc/SinterstoreCommand.txt" 1)
+# --
+sinterstore ${1:dstkey} ${2:key1} ${3:key2} ${4:keyn}

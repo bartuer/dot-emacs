@@ -1,0 +1,4 @@
+# name : rpoplpush Return and remove (atomically) the last element of the source List stored at _srckey_ and push the same element to the destination List stored at _dstkey_
+# (link "~/local/src/redis/doc/RpoplpushCommand.txt" 1)
+# --
+rpoplpush ${1:srckey} ${2:dstkey}

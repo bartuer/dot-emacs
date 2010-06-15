@@ -1,0 +1,4 @@
+# name : zremrangebyrank Remove all the elements with rank >= min and rank  <= max from the sorted set
+# (link "~/local/src/redis/doc/ZremrangebyrankCommand.txt" 1)
+# --
+zremrangebyrank ${1:key} ${2:min} ${3:max}
