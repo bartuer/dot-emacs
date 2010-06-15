@@ -403,7 +403,6 @@ it is suitable to browse OO hierarchy"
           (ido-completing-read
            "TAGS location:"
            (list "~/local/src/rails-2.3.4/actionpack"
-                 "~/local/src/rails-2.3.4/activemodel"
                  "~/local/src/rails-2.3.4/activerecord"
                  "~/local/src/rails-2.3.4/rails"
                  "~/local/src/rails-2.3.4/actionmailer"
