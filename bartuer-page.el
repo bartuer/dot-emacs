@@ -1,4 +1,5 @@
 (defun page-reload ()
+  (shell-command "~/scripts/update_cache_manifest")
   (unless (eq 0 (shell-command (concat
                                 "push "
                                 "'window.location.reload(true)'") nil))
@@ -11,14 +12,17 @@
   :type '(choice string (const :tag "None" nil))
   )
 
+
+
 (defun page-reload-save ()
   (interactive)
+  (shell-command "~/scripts/update_cache_manifest")
   (unless (buffer-modified-p)
     (shell-command (concat
                     "push "
                     "'window.location.reload(true)'") nil))
   (save-buffer))
-                    
+
 (define-minor-mode reload-mode
   "Minor mode to reload browser"
   :lighter reload-minor-mode-string
