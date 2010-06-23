@@ -1,5 +1,5 @@
 # name: each 
 # --
-$$('${1:selector}').each(function (e) {
+each(function (e) {
   $0
 });

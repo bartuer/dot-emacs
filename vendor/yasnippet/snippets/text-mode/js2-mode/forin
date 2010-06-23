@@ -1,6 +1,6 @@
 #name : for in
 # --
-for (${1:prop} in ${2:obj}) {
+for (var ${1:prop} in ${2:obj}) {
   if ( $2.hasOwnProperty($1)) {
     $0;
   }
