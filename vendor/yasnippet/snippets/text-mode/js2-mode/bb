@@ -1,0 +1,5 @@
+# name : log iphone debug bubble msg message array
+# it is more possible setup for debug than user feedback, given true
+# as default
+# --
+bubble_msg([${1:fir},${2:sec}].join(','), true);
