@@ -36,6 +36,7 @@
                                 "~/local/src/baza/features/step_definitions"
                                 "~/local/src/baza/features/support"
                                 "~/local/src/baza/lib"
+                                "~/local/src/baza/lib/thin"
                                 "~/local/src/baza/log"
                                 "~/local/src/baza/public"
                                 "~/local/src/baza/public/javascripts"

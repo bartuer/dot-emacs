@@ -410,6 +410,8 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/shopify/active_merchant/lib"
                  "~/local/src/thin"
                  "~/local/src/em"
+                 "~/local/src/rack"
+                 "~/local/src/redis-rb/lib"
                  "~/local/src/authlogic/lib/authlogic"))))
   (anything-etags-select))
 
