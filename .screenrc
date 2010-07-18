@@ -7,9 +7,6 @@ bindkey -t "\033[1;3B" stuff "\033\033OB"
 bindkey -t "\033[1;3C" stuff "\033\033OC"
 bindkey -t "\033[1;3D" stuff "\033\033OD"
 
-screen -t "fastri" 6
-stuff "fastri-server &\012"
-
 screen -t "shell" 7
 
 screen -t "ec-1 main" 1
