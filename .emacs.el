@@ -482,6 +482,11 @@ If give a negative ARG, will undo the last mark action, thus the
   (interactive)
   (shell-command-on-region (point-min) (point-max) "html2text -nobs -style pretty"
                            (get-buffer-create "html-text"))
+  (with-current-buffer "html-text"
+    (replace-regexp "" "'" nil (point-min) (point-max))
+    (replace-regexp "" "\"" nil (point-min) (point-max))
+    (replace-regexp "" "\"" nil (point-min) (point-max))
+    )
   )
 
 (defalias 'u (lambda (url-content-insert-location)
