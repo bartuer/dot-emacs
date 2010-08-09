@@ -23,13 +23,13 @@ borrowed from google-define.el"
 
 (define-minor-mode fast-wiki-minor-mode
   "Minor mode query word under cursor from wikipedia"
-  :lighter fast-wiki--minor-mode-string
+  :lighter fast-wiki-minor-mode-string
   (cond
    (fast-wiki-minor-mode
-    (setq fast-wiki-timer (run-with-idle-timer 0.8 t 'fast-wiki)
+    (add-hook 'post-command-hook 'fast-wiki nil t)
     )
    (t
-    (cancel-timer fast-wiki-timer ))
+    (remove-hook 'post-command-hook 'fast-wiki t)
   )))
 
 (provide 'fast-wiki)
