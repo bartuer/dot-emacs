@@ -7,14 +7,17 @@ borrowed from google-define.el"
            "wiki: "
            (thing-at-point 'word)))
          )
-    (message (shell-command-to-string (concat "wiki " search-word)))
-    ))
+    (shell-command (concat "wiki " search-word ) ))
+    )
 (defalias 'wk 'wiki-this)
 
 (defun fast-wiki ()
   (let ((word (thing-at-point 'word)))
         (when word
-          (message (shell-command-to-string (concat "wiki " word))))))
+          (shell-command
+           (concat "dig +short txt " word ".wp.dg.cx")
+           ))
+          ))
 
 (defcustom fast-wiki-minor-mode-string " wk" 
   "String to display in mode line when fast-wiki mode is enabled; nil for none."
