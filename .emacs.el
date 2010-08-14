@@ -870,6 +870,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-co" 'org-open-at-point-global)
 (add-hook 'org-mode-hook 'bartuer-org-load)
 
+(autoload 'bartuer-calendar-load "bartuer-calendar.el" "for calendar mode" t)
+(add-hook 'calendar-mode-hook 'bartuer-calendar-load)
+
 (autoload 'textile-minor-mode "textile-minor-mode.el" "for org mode" t)
 (require 'textile-minor-mode nil t)
 
