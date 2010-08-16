@@ -268,6 +268,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'gd 'google-define)
 (require 'fast-wiki nil t)
 (require 'bartuer-buddy nil t)
+(defalias 'bd 'buddy-minor-mode)
 
 (if (fboundp 'server-start)
     (server-start))
