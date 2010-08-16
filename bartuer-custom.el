@@ -97,6 +97,7 @@
  '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org" "~/local/src/baza/sbs.org" "~/org/note.org")))
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
+ '(org-tag-alist (quote (("bug" . 98) ("report" . 114) ("finding" . 102) ("data" . 100) ("push" . 112) ("summary" . 115))))
  '(org-use-speed-commands t)
  '(ps-multibyte-buffer (quote bdf-font))
  '(push-minor-mode-string " Pu")
