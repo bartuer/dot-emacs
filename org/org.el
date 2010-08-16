@@ -14256,16 +14256,16 @@ user."
 	    (org-defkey map (kbd "RET") 'org-calendar-select)
 	    (org-defkey map [mouse-1] 'org-calendar-select-mouse)
 	    (org-defkey map [mouse-2] 'org-calendar-select-mouse)
-	    (org-defkey minibuffer-local-map [(meta shift left)]
+	    (org-defkey minibuffer-local-map "\M-b"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-backward-month 1))))
-	    (org-defkey minibuffer-local-map [(meta shift right)]
+	    (org-defkey minibuffer-local-map "\M-f"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-forward-month 1))))
-	    (org-defkey minibuffer-local-map [(meta shift up)]
+	    (org-defkey minibuffer-local-map "\C-\M-b"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-backward-year 1))))
-	    (org-defkey minibuffer-local-map [(meta shift down)]
+	    (org-defkey minibuffer-local-map "\C-\M-f"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-forward-year 1))))
 	    (org-defkey minibuffer-local-map [?\e (shift left)]
@@ -14280,16 +14280,16 @@ user."
 	    (org-defkey minibuffer-local-map [?\e (shift down)]
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-forward-year 1))))
-	    (org-defkey minibuffer-local-map [(shift up)]
+	    (org-defkey minibuffer-local-map "\C-p"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-backward-week 1))))
-	    (org-defkey minibuffer-local-map [(shift down)]
+	    (org-defkey minibuffer-local-map "\C-n"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-forward-week 1))))
-	    (org-defkey minibuffer-local-map [(shift left)]
+	    (org-defkey minibuffer-local-map "\C-b"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-backward-day 1))))
-	    (org-defkey minibuffer-local-map [(shift right)]
+	    (org-defkey minibuffer-local-map "\C-f"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(calendar-forward-day 1))))
 	    (org-defkey minibuffer-local-map ">"
@@ -14298,11 +14298,11 @@ user."
 	    (org-defkey minibuffer-local-map "<"
 			(lambda () (interactive)
 			  (org-eval-in-calendar '(scroll-calendar-right 1))))
-	    (org-defkey minibuffer-local-map "\C-v"
+	    (org-defkey minibuffer-local-map "\M-n"
 			(lambda () (interactive)
 			  (org-eval-in-calendar
 			   '(calendar-scroll-left-three-months 1))))
-	    (org-defkey minibuffer-local-map "\M-v"
+	    (org-defkey minibuffer-local-map "\M-p"
 			(lambda () (interactive)
 			  (org-eval-in-calendar
 			   '(calendar-scroll-right-three-months 1))))
