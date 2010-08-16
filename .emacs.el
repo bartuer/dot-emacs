@@ -811,9 +811,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
 
-(autoload 'bartuer-clearcase-load "bartuer-clearcase.el" "for clearcase" t)
-(defalias 'cc 'bartuer-clearcase-load)
-
 (autoload 'bartuer-gdb-load "bartuer-gdb.el" "for gdb" t)
 (add-hook 'gud-mode-hook 'bartuer-gdb-load)
 (add-to-list 'auto-mode-alist
