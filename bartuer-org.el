@@ -21,7 +21,7 @@
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
                                  (insert "[ ] ")))
-  (define-key org-mode-map "0" (lambda ()
+  (define-key org-mode-map "]" (lambda ()
                                  (interactive)
                                  (insert " [0/0]")))
   (define-key org-mode-map "<backtab>" 'org-shifttab)
