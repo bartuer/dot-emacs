@@ -99,7 +99,7 @@
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
  '(org-outline-path-complete-in-steps nil)
- '(org-tag-alist (quote (("bug" . 98) ("report" . 114) ("finding" . 102) ("data" . 100) ("push" . 112) ("summary" . 115))))
+ '(org-tag-alist (quote (("bug" . 98) ("finding" . 102) ("data" . 100) ("push" . 112) ("summary" . 115) ("research" . 114) ("fix" . 120) ("meeting" . 109) ("trip" . 116) ("build" . 117) ("buy" . 36))))
  '(org-use-speed-commands t)
  '(ps-multibyte-buffer (quote bdf-font))
  '(push-minor-mode-string " Pu")

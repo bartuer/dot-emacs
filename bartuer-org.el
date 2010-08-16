@@ -4,6 +4,13 @@
   (org-insert-heading-after-current)
   (org-do-demote))
 
+(defun org-effort-allowed-property-values (property)
+  "Supply allowed values for Effort properties."
+  (cond
+   ((equal property "Effort")
+    '("0:05" "0:10" "0:15" "0:20" "0:30" "0:45" "1:00" "1:30" "2:00" "3:00" "4:00" "5:00" "6:00" "8:00"))
+   (t nil)))
+
 (defun bartuer-org-load ()
   "for org mode"
   (global-set-key "\C-cl" 'org-store-link)
@@ -32,4 +39,5 @@
         '(("gfcn" . "http://www.google.com/finance?fstype=ii&q=%s&gl=cn")
           ("gf" . "http://www.google.com/finance?q=%s")
           ("rt" . "http://www.reuters.com/finance/stocks/overview?symbol=%s")))
+  (add-to-list 'org-property-allowed-value-functions 'org-effort-allowed-property-values)
 )
