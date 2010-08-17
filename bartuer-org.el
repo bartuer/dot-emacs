@@ -34,7 +34,7 @@
         ("b" "Build" entry (file+headline "~/org/next.org" "Building")
              "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
         ("h" "Hack" entry (file+headline "~/org/next.org" "Hacking")
-             "* TODO %?\n %a %^{SCHEDULED}p\n  %i\n")
+             "* TODO %?\n  %^{SCHEDULED}p\n  %a\n  %i\n")
         ("m" "Meet" entry (file+headline "~/org/next.org" "Meeting")
              "* TODO %?\n %a %^{SCHEDULED}p\n  %i\n")
         ("s" "Research" entry (file+headline "~/org/next.org" "Researching")
