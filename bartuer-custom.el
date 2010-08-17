@@ -96,6 +96,7 @@
  '(next-screen-context-lines 0)
  '(org-agenda-files (quote ("~/org/task.org" "~/org/plan.org" "~/org/emacs.org" "~/org/linux.org" "~/org/mac.org" "~/local/src/baza/sbs.org" "~/org/note.org")))
  '(org-completion-use-ido t)
+ '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . default) ("\\.x?html?\\'" . default) ("\\.pdf\\'" . default) ("m4v" . "/usr/bin/qlmanage -p %s") ("png" . "qlmanage -p %s") ("mov" . "qlmanage -p %s"))))
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
  '(org-outline-path-complete-in-steps nil)
