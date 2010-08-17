@@ -8674,10 +8674,10 @@ Use TAB to complete link prefixes, then RET for type-specific completion support
 		     (append
 		      (mapcar (lambda (x) (list (concat x ":")))
 			      all-prefixes)
-		      (mapcar 'car org-stored-links))
+		      (list (mapcar 'car org-stored-links)))
 		     nil nil nil
 		     'tmphist
-		     (car (car org-stored-links)))))
+		     (list (car (car org-stored-links))))))
 	    (if (not (string-match "\\S-" link))
 		(error "No link selected"))
 	    (if (or (member link all-prefixes)
