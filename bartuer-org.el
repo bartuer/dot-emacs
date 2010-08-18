@@ -72,33 +72,37 @@
 (setq org-timestamp-format "%Y-%m-%d %a %H:%M")
 (setq org-auto-schedule-break (* 60 15))
 (setq last-deadline nil)
+(setq org-todo-matcher "+TODO=\"TODO\"")
 
 (defun set-schedule ()
-  (setq new-day-time-or-last-deadline (seconds-to-time
-   (+
-    (org-time-string-to-seconds
-     (let ((deadline-time (decode-time (org-time-string-to-time last-deadline))))
-       (setq new-day-time nil)
-       (if (>= (nth 2 deadline-time) 21)
-           (progn
-             (setq new-day-time
-                   (list
-                    (nth 0 deadline-time)
-                    0
-                    2
-                    (+ 1 (nth 3 deadline-time))
-                    (nth 4 deadline-time)
-                    (nth 5 deadline-time)
-                    (nth 6 deadline-time)
-                    (nth 7 deadline-time)
-                    (nth 8 deadline-time)))
-             (format-time-string
-              org-timestamp-format
-              (apply 'encode-time new-day-time))
-             )
-         last-deadline)))
-    org-auto-schedule-break
-    ))))
+  (setq new-day-time-or-last-deadline
+        (seconds-to-time
+         (+
+          (org-time-string-to-seconds
+           (let ((deadline-time
+                  (decode-time
+                   (org-time-string-to-time last-deadline))))
+             (setq new-day-time nil)
+             (if (>= (nth 2 deadline-time) 21)
+                 (progn
+                   (setq new-day-time
+                         (list
+                          (nth 0 deadline-time)
+                          0
+                          2
+                          (+ 1 (nth 3 deadline-time))
+                          (nth 4 deadline-time)
+                          (nth 5 deadline-time)
+                          (nth 6 deadline-time)
+                          (nth 7 deadline-time)
+                          (nth 8 deadline-time)))
+                   (format-time-string
+                    org-timestamp-format
+                    (apply 'encode-time new-day-time))
+                   )
+               last-deadline)))
+          org-auto-schedule-break
+          ))))
 
 (defun add-effort-schedule ()
   (let* ((e ((lambda ()
@@ -122,12 +126,18 @@
       )))
   (setq last-deadline (org-entry-get (point) "DEADLINE"))
   )
-                 
+
+(defun schedule-tree ()
+  (interactive)
+  (org-map-entries 'add-effort-schedule org-todo-matcher 'tree 'archive 'comment)
+)
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-ci" 'org-clock-goto)
   (global-set-key "\C-cb" 'org-sparse-tree)
   (global-set-key "\C-cu" 'org-insert-link-global)
   (global-set-key "\C-co" 'org-open-at-point-global)

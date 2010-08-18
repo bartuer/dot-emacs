@@ -206,6 +206,7 @@ If give a negative ARG, will undo the last mark action, thus the
           (progn
             (gud-refresh)
             (goto-char (point-max)))))))
+(defalias 'rf 'restore-frames)
 
 (defun meta-space-dwim()
   "multiple bindings for M-SPC"
@@ -289,7 +290,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (bartuer-setup-capture)
 (add-hook 'remember-mode-hook (lambda ()
                                 (setq remember-annotation-functions nil)))
-(defalias 'rf 'restore-frames)
 
 (require 'auto-install nil t)
 
