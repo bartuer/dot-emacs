@@ -289,7 +289,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (bartuer-setup-capture)
 (add-hook 'remember-mode-hook (lambda ()
                                 (setq remember-annotation-functions nil)))
-(defalias 'rr 'org-remember)
+(defalias 'rf 'restore-frames)
 
 (require 'auto-install nil t)
 
