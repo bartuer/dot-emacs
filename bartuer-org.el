@@ -55,6 +55,74 @@
   (interactive)
   (find-file (org-extract-archive-file)))
 
+(defun effort->secs (timestring)
+  "convert org Effort string to seconds"
+  (setq effort-minutes nil)
+  (if (numberp (string-match "\\([0-9]+\\.[0-9]+\\)$" timestring))
+      (setq effort-minutes
+            (* 3600
+               (string-to-number
+                (match-string-no-properties 1 timestring))))
+    (if (numberp (string-match "\\([0-9]+\\:[0-9]+$\\)" timestring))
+        (setq effort-minutes
+              (* 60
+                 (org-hh:mm-string-to-minutes
+                  (match-string-no-properties 1 timestring)))))))
+
+(setq org-timestamp-format "%Y-%m-%d %a %H:%M")
+(setq org-auto-schedule-break (* 60 15))
+(setq last-deadline nil)
+
+(defun set-schedule ()
+  (setq new-day-time-or-last-deadline (seconds-to-time
+   (+
+    (org-time-string-to-seconds
+     (let ((deadline-time (decode-time (org-time-string-to-time last-deadline))))
+       (setq new-day-time nil)
+       (if (>= (nth 2 deadline-time) 21)
+           (progn
+             (setq new-day-time
+                   (list
+                    (nth 0 deadline-time)
+                    0
+                    2
+                    (+ 1 (nth 3 deadline-time))
+                    (nth 4 deadline-time)
+                    (nth 5 deadline-time)
+                    (nth 6 deadline-time)
+                    (nth 7 deadline-time)
+                    (nth 8 deadline-time)))
+             (format-time-string
+              org-timestamp-format
+              (apply 'encode-time new-day-time))
+             )
+         last-deadline)))
+    org-auto-schedule-break
+    ))))
+
+(defun add-effort-schedule ()
+  (let* ((e ((lambda ()
+               (unless (org-entry-get (point) "Effort")
+                 (org-entry-put (point) "Effort" "02:00"))
+               (org-entry-get (point) "Effort"))))
+         (s ((lambda ()
+               (if last-deadline
+                   (progn
+                     (org-schedule
+                      nil
+                      (set-schedule)))
+                 (org-schedule nil (current-time)))
+               (org-entry-get (point) "SCHEDULED")))))
+    (org-deadline
+     nil
+     (seconds-to-time
+      (+
+       (org-time-string-to-seconds s)
+       (effort->secs e))
+      )))
+  (setq last-deadline (org-entry-get (point) "DEADLINE"))
+  )
+                 
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)

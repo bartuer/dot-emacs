@@ -11652,8 +11652,8 @@ be removed."
 		 (member what '(scheduled deadline)))
 	(insert
 	 (if (eq what 'scheduled) org-scheduled-string org-deadline-string) " ")
-	(org-insert-time-stamp time org-time-was-given
-			       nil nil nil (list org-end-time-was-given))
+	(org-insert-time-stamp (current-time) t)
+			       ;; nil nil nil (list org-end-time-was-given))
 	(setq what nil))
       (save-excursion
 	(save-restriction
