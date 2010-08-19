@@ -58,7 +58,7 @@
 
 (setq org-timestamp-format "%Y-%m-%d %a %H:%M")
 (setq org-auto-schedule-break (* 60 15))
-(setq last-scheduled nil)
+(setq next-time-slot nil)
 (setq org-todo-matcher "+TODO=\"TODO\"")
 (setq org-default-effort "02:00")
 
@@ -83,7 +83,7 @@
           (org-time-string-to-seconds
            (let ((last-schedule-time
                   (decode-time
-                   (org-time-string-to-time last-scheduled))))
+                   (org-time-string-to-time next-time-slot))))
              (setq new-day-time nil)
              (if (>= (nth 2 last-schedule-time) 21)
                  (progn
@@ -102,7 +102,7 @@
                     org-timestamp-format
                     (apply 'encode-time new-day-time))
                    )
-               last-scheduled)))
+               next-time-slot)))
           org-auto-schedule-break
           ))))
 
@@ -112,14 +112,14 @@
                  (org-entry-put (point) "Effort" org-default-effort))
                (org-entry-get (point) "Effort"))))
          (s ((lambda ()
-               (if last-scheduled
+               (if next-time-slot
                    (progn
                      (org-schedule
                       nil
                       (set-schedule)))
                  (org-schedule nil (current-time)))
                (org-entry-get (point) "SCHEDULED")))))
-    (setq last-scheduled
+    (setq next-time-slot
           (format-time-string
            org-timestamp-format
            (seconds-to-time
@@ -137,13 +137,19 @@
    'archive 'comment)
 )
 
+(defun bartuer-focus ()
+  (interactive)  
+  (org-clock-goto)
+  (org-occur (replace-regexp-in-string "\\[.*\\]" "" org-clock-current-task))
+  (org-clock-goto))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
   (defalias 'clk 'org-clock-goto)
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-ci" 'org-clock-goto)
+  (global-set-key "\C-ci" 'bartuer-focus)
   (global-set-key "\C-cb" 'org-sparse-tree)
   (global-set-key "\C-cu" 'org-insert-link-global)
   (global-set-key "\C-co" 'org-open-at-point-global)
