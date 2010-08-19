@@ -62,6 +62,21 @@
 (setq org-todo-matcher "+TODO=\"TODO\"")
 (setq org-default-effort "02:00")
 
+(defun extract-clock-time (str)
+  (interactive)
+  (string-match org-tr-regexp-both str)
+  (let ((ts1 (match-string-no-properties 1 str))
+        (ts2 (match-string-no-properties 2 str)))
+    (cond ((and ts1 ts2)
+           (cons ts1 ts2
+            ))
+          ((and ts1 (eq ts2 nil))
+           (cons
+            ts1 nil)
+            nil)
+          (t
+           (cons nil nil)))))
+
 (defun effort->secs (timestring)
   "convert org Effort string to seconds"
   (setq effort-minutes nil)
@@ -122,11 +137,26 @@
     (setq next-time-slot
           (format-time-string
            org-timestamp-format
-           (seconds-to-time
-            (+
-             (org-time-string-to-seconds s)
-             (effort->secs e))
-            )))))
+           (let ((clockout
+                  (cdr
+                   (extract-clock-time
+                    (org-entry-get (point) "CLOCK")))
+                  ))
+             (if (stringp clockout)
+                 (seconds-to-time
+                  (org-time-string-to-seconds clockout)
+                  )
+               (seconds-to-time
+                (+
+                 (org-time-string-to-seconds s)
+                 (effort->secs e))
+                )
+               )
+             )
+           )
+          )
+    )
+  )
 
 (defun schedule-tree ()
   (interactive)
