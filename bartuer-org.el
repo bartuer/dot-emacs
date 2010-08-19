@@ -13,6 +13,7 @@
 
 
 (defun bartuer-capture-insert-link ()
+  "for insert current stored link when capturing"
   (interactive)
   (with-current-buffer (get-buffer-create "*org-link-temp*")
     (org-insert-link)
@@ -52,6 +53,7 @@
         )))
 
 (defun bartuer-jump-to-archive ()
+  "jump from org to it's archive file"
   (interactive)
   (find-file (org-extract-archive-file)))
 
@@ -63,6 +65,7 @@
 (setq org-default-effort "02:00")
 
 (defun extract-clock-time (str)
+  "get (clock-in-string . clock-out-string)"
   (interactive)
   (string-match org-tr-regexp-both str)
   (let ((ts1 (match-string-no-properties 1 str))
@@ -92,6 +95,7 @@
                   (match-string-no-properties 1 timestring)))))))
 
 (defun set-schedule ()
+  "if next schedule time slot is too late, move it to next day morning"
   (setq new-day-time-or-last-schedule
         (seconds-to-time
          (+
@@ -122,6 +126,8 @@
           ))))
 
 (defun add-effort-schedule ()
+  "schedule according to effort, next schedule time will be last
+clock out time, if there is no clock time, next schedule time will be last schedule time plus effort time"
   (let* ((e ((lambda ()
                (unless (org-entry-get (point) "Effort")
                  (org-entry-put (point) "Effort" org-default-effort))
@@ -159,6 +165,7 @@
   )
 
 (defun schedule-tree ()
+  "apply schedule policy to current subtree, skip non TODO item"
   (interactive)
   (org-map-entries
    'add-effort-schedule
@@ -168,6 +175,7 @@
 )
 
 (defun bartuer-focus ()
+  "jump to current in clock task entry"
   (interactive)  
   (org-clock-goto)
   (org-occur (replace-regexp-in-string "\\[.*\\]" "" org-clock-current-task))
