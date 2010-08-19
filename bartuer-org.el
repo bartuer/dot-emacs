@@ -181,6 +181,24 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (org-occur (replace-regexp-in-string "\\[.*\\]" "" org-clock-current-task))
   (org-clock-goto))
 
+(defun magit-org-commit ()
+  "when one task under clock check in, also insert commit information to task entry"
+  (interactive)
+  (when org-clock-has-been-used
+    (let ((clock-task-string (replace-regexp-in-string " *\\[.*\\]" "" org-clock-current-task))
+          (commit-string (shell-command-to-string "git log HEAD -1 --pretty=format:'%s'"))
+          )
+      (when (string-equal clock-task-string commit-string)
+        (save-excursion
+          (bartuer-focus)
+          (org-entry-put
+           (point) "Commit"
+           (shell-command-to-string (concat "tag-head " clock-task-string)))
+          (org-clock-out)
+          (org-todo 'done)
+          ))
+      )))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
@@ -214,3 +232,5 @@ clock out time, if there is no clock time, next schedule time will be last sched
           ("rt" . "http://www.reuters.com/finance/stocks/overview?symbol=%s")))
   (add-to-list 'org-property-allowed-value-functions 'org-effort-allowed-property-values)
 )
+
+(provide 'bartuer-org)
