@@ -186,13 +186,13 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (when org-clock-has-been-used
     (let ((clock-task-string (replace-regexp-in-string " *\\[.*\\]" "" org-clock-current-task))
           (commit-string (shell-command-to-string "git log HEAD -1 --pretty=format:'%s'"))
-          )
+          (git-link-string (shell-command-to-string (concat "tag-head " clock-task-string))))
       (when (string-equal clock-task-string commit-string)
         (save-excursion
           (bartuer-focus)
           (org-entry-put
            (point) "Commit"
-           (shell-command-to-string (concat "tag-head " clock-task-string)))
+           git-link-string)
           (org-clock-out)
           (org-todo 'done)
           ))
