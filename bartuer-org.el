@@ -8,9 +8,8 @@
   "Supply allowed values for Effort properties."
   (cond
    ((equal property "Effort")
-    '("0:05" "0:10" "0:15" "0:20" "0:30" "0:45" "1:00" "1:30" "2:00" "3:00" "4:00" "5:00" "6:00" "8:00"))
+    '("2:00" "2:30" "1:30" "3:00" "1:00" "0:20" "0:30" "0:45" "4:00" "0:10" "0:15" "0:05" "5:00" "6:00" "8:00"))
    (t nil)))
-
 
 (defun bartuer-capture-insert-link ()
   "for insert current stored link when capturing"
@@ -216,6 +215,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (define-key org-mode-map "\C-j" 'org-meta-return)
   (define-key org-mode-map "\C-c\C-a" 'org-archive-subtree)
   (define-key org-mode-map "\C-\M-i" 'org-table-previous-field)
+  (define-key org-mode-map "\C-c\C-k" 'kill-region)
   (define-key org-mode-map "\C-\M-h" 'outline-mark-subtree)
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
