@@ -14337,7 +14337,6 @@ user."
 		  (add-hook 'post-command-hook 'org-read-date-display)
 		  (setq org-ans0 (concat (read-string prompt default-input nil nil) " "
                                          (unless (or with-time default-time)
-                                           (debug)
                                            (ido-completing-read "time: " possible-time-in-day))
                         ))
 		  ;; org-ans0: from prompt
