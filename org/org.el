@@ -14336,7 +14336,9 @@ user."
 		  (use-local-map map)
 		  (add-hook 'post-command-hook 'org-read-date-display)
 		  (setq org-ans0 (concat (read-string prompt default-input nil nil) " "
-                                         (ido-completing-read "time: " possible-time-in-day)
+                                         (unless (or with-time default-time)
+                                           (debug)
+                                           (ido-completing-read "time: " possible-time-in-day))
                         ))
 		  ;; org-ans0: from prompt
 		  ;; org-ans1: from mouse click
