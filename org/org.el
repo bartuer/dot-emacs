@@ -11652,8 +11652,8 @@ be removed."
 		 (member what '(scheduled deadline)))
 	(insert
 	 (if (eq what 'scheduled) org-scheduled-string org-deadline-string) " ")
-	(org-insert-time-stamp (current-time) t)
-			       ;; nil nil nil (list org-end-time-was-given))
+	(org-insert-time-stamp (current-time) schedule-start-time
+			       nil nil nil (list org-end-time-was-given))
 	(setq what nil))
       (save-excursion
 	(save-restriction
@@ -11705,7 +11705,8 @@ be removed."
 	       " ")
 	      (setq ts (org-insert-time-stamp
 			time
-			(or org-time-was-given
+			(or schedule-start-time
+                            org-time-was-given
 			    (and (eq what 'closed) org-log-done-with-time))
 			(eq what 'closed)
 			nil nil (list org-end-time-was-given)))
@@ -14065,6 +14066,7 @@ Return the position where this entry starts, or nil if there is no such entry."
 
 ;;;; Timestamps
 
+(defvar schedule-start-time nil)
 (defvar org-last-changed-timestamp nil)
 (defvar org-last-inserted-timestamp nil
   "The last time stamp inserted with `org-insert-time-stamp'.")

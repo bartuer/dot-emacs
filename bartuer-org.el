@@ -59,7 +59,6 @@
 
 (setq org-timestamp-format "%Y-%m-%d %a %H:%M")
 (setq org-auto-schedule-break (* 60 15))
-(setq next-time-slot nil)
 (setq org-todo-matcher "+TODO=\"TODO\"")
 (setq org-default-effort "02:00")
 
@@ -137,15 +136,18 @@ clock out time, if there is no clock time, next schedule time will be last sched
                      (org-schedule
                       nil
                       (set-schedule)))
-                 (org-schedule nil (current-time)))
-               (org-entry-get (point) "SCHEDULED")))))
+                 (org-schedule nil schedule-start-time))
+               (org-entry-get (point) "SCHEDULED"))))
+         (c (org-entry-get (point) "CLOCK")))
     (setq next-time-slot
           (format-time-string
            org-timestamp-format
            (let ((clockout
-                  (cdr
-                   (extract-clock-time
-                    (org-entry-get (point) "CLOCK")))
+                  (if c
+                      (cdr
+                       (extract-clock-time
+                        (org-entry-get (point) "CLOCK")))
+                    nil)
                   ))
              (if (stringp clockout)
                  (seconds-to-time
@@ -166,12 +168,15 @@ clock out time, if there is no clock time, next schedule time will be last sched
 (defun schedule-tree ()
   "apply schedule policy to current subtree, skip non TODO item"
   (interactive)
+  (setq next-time-slot nil)
+  (setq schedule-start-time
+        (org-read-date t 'totime))
   (org-map-entries
    'add-effort-schedule
    org-todo-matcher
    'tree
    'archive 'comment)
-)
+  )
 
 (defun bartuer-focus ()
   "jump to current in clock task entry"
