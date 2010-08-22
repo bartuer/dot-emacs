@@ -474,7 +474,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defun git-link (repos commit)
   "insert link can jump to diff"
   (interactive)
-  (shell-command (concat "cd " repos ";git-diff " commit " " commit "~") "*git link output*")
+  (shell-command (concat "cd " repos ";git-diff " commit "~" " " commit) "*git link output*")
   (pop-to-buffer "*git link output*")
   (diff-mode)
   (diff-refine-hunk))
