@@ -832,6 +832,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (define-key view-mode-map "j" 'bartuer-read-mark)
 (define-key view-mode-map "k" 'google-define)
 
+(require 'video nil t)
+
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))

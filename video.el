@@ -1,5 +1,5 @@
 (defun video-note ()
-  "write down video comment:"
+  "write down video comment"
   (interactive)
   (org-timer-pause-or-continue)
   (if org-timer-pause-time
