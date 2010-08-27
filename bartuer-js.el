@@ -107,6 +107,7 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/js-functional"
                  "~/local/src/scriptaculous/src"
                  "~/etc/el/js/jscore"
+                 "~/local/src/uki/src"
                  ))))
   (anything-etags-select))
 
