@@ -291,6 +291,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'remember-mode-hook (lambda ()
                                 (setq remember-annotation-functions nil)))
 
+(defun postfix ()
+  (interactive)
+  (find-file "~/local/share/doc/postfix")
+  (occur "*[12]"))
+
 (require 'auto-install nil t)
 
 (require 'ispell nil t)
