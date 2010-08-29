@@ -106,6 +106,8 @@
  '(org-outline-path-complete-in-steps nil)
  '(org-refile-targets (quote (("~/local/src/baza/sbs.org" :tag . "research") ("~/local/src/baza/sbs.org" :tag . "design") ("~/local/src/baza/sbs.org" :tag . "checklist") ("~/local/src/baza/sbs.org" :tag . "bug") ("~/local/src/baza/sbs.org" :tag . "feature") ("~/local/src/baza/sbs.org" :tag . "tool") ("~/local/src/baza/sbs.org" :tag . "lib") ("~/local/src/baza/sbs.org" :tag . "deployment") ("~/local/src/baza/sbs.org" :tag . "beta") ("~/local/src/baza/sbs.org" :tag . "alpha"))))
  '(org-tag-alist (quote (("bug" . 98) ("finding" . 102) ("data" . 100) ("push" . 112) ("summary" . 115) ("research" . 114) ("fix" . 120) ("meeting" . 109) ("trip" . 116) ("build" . 117) ("buy" . 36) ("baza" . 106) ("hack" . 104) ("feature" . 110) ("deployment" . 101))))
+ '(org-todo-keyword-faces (quote (("ABORT" . "white"))))
+ '(org-todo-keywords (quote ((sequence "TODO" "HALT" "ABORT" "DONE"))))
  '(org-use-speed-commands t)
  '(ps-multibyte-buffer (quote bdf-font))
  '(push-minor-mode-string " Pu")
