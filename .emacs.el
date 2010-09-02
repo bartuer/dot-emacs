@@ -296,6 +296,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (find-file "~/local/share/doc/postfix")
   (occur "*[12]"))
 
+
 (require 'auto-install nil t)
 
 (require 'ispell nil t)
@@ -528,6 +529,9 @@ If give a negative ARG, will undo the last mark action, thus the
                (pop-to-buffer "preview-url" t)
                (pop-to-buffer "html-text" t)
                ))
+
+(defun macman (name)
+  (u (concat "http://developer.apple.com/mac/library/documentation/Darwin/Reference/ManPages/10.5/man3/" name ".3.html?useVersion=10.5")))
 
 (require 'cheat nil t)            
 (require 'gist nil t)
