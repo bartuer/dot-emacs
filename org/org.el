@@ -16443,6 +16443,20 @@ BEG and END default to the buffer boundaries."
 (when (featurep 'xemacs)
   (org-defkey org-mode-map 'button3   'popup-mode-menu))
 
+(defun org-dwim ()
+  "if there is no mark, mark the node"
+  (interactive)
+  (if mark-active
+      (org-export-as-mail)
+    (outline-mark-subtree)))
+
+(defun org-export-as-mail ()
+  "send marked node out"
+  (setq org-mail-subject (org-get-heading))
+  (setq org-mail-body (org-export-as-ascii nil nil nil 'string nil nil))
+  (compose-mail "g"  org-mail-subject (list (cons "CC" "m")) nil nil nil)
+    (with-current-buffer "*mail*"
+      (insert org-mail-body)))
 
 (defconst org-speed-commands-default
   '(
@@ -16471,7 +16485,7 @@ BEG and END default to the buffer boundaries."
     ("^" . org-sort)
     ("w" . org-refile)
     ("a" . org-archive-subtree-default-with-confirmation)
-    ("." . outline-mark-subtree)
+    ("." . org-dwim)
     ("Clock Commands")
     ("i" . org-clock-in)
     ("o" . org-clock-out)
