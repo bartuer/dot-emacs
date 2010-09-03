@@ -477,10 +477,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
 (add-hook 'magit-mode-hook 'bartuer-magit-load)
 
-(defun git-link (repos commit)
+(defun git-link (repos commit &optional graph)
   "insert link can jump to diff"
   (interactive)
-  (shell-command (concat "cd " repos ";git-diff " commit "~" " " commit) "*git link output*")
+  (if graph
+      (shell-command (concat "cd " repos ";git1.7 difftool " commit "~" " " commit))
+    (shell-command (concat "cd " repos ";git-diff " commit "~" " " commit) "*git link output*"))
   (pop-to-buffer "*git link output*")
   (diff-mode)
   (diff-refine-hunk))
