@@ -5139,7 +5139,7 @@ loop:   for (;;) {
         print("Usage: jslint.js file.js");
         quit(1);
     }
-    var input = os.system('cat', [a[0]]);
+    var input = read(a[0]);
     if (!input) {
         print("jslint: Couldn't open file '" + a[0] + "'.");
         quit(1);

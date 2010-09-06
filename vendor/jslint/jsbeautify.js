@@ -1497,13 +1497,13 @@ function parse_opts(args) {
 
 function do_js_beautify() {
     var js_source = '';
-    js_source = os.system('cat', [options.source]);
+    js_source =  read(options.source);
     js_source = js_source.replace(/^\s+/, '');
     var indent_size = options.indent ? options.indent : 2;
     var preserve_newlines = options.preserve_newlines ? options.preserve_newlines : false;
     var indent_char = ' ';
     var result;
-    if (indent_size == 1) {
+    if (indent_size === 1) {
         indent_char = '\t';
     }
     if (js_source && js_source[0] === '<') {
