@@ -69,7 +69,7 @@ class RubyToggleFile
   
   def test_file_05_rails_lib(implementation, basedir, dir, node)
     if basedir and File.directory?( File.join(basedir, "app") )
-      "#{basedir}test/unit/test_#{node}.rb"
+      "#{basedir}test/#{dir}/test_#{node}.rb"
     end
   end
 
