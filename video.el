@@ -1,5 +1,6 @@
 (defun subtitle-timer (&optional restart)
-  "Insert a H:MM:SRT string from the timer into the buffer.
+  "Insert a H:MM:SS SRT string from the timer into the buffer.
+http://www.matroska.org/technical/specs/subtitles/srt.html
 1
 00:00:03,001 --> 00:00:07,001
 三国演义
