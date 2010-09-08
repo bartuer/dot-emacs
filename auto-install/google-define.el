@@ -199,6 +199,7 @@ If we have a current region use it's value as the default."
                            "/search?num=100&hl=en&defl=all&q=define%3A%22"
                            (replace-regexp-in-string " +" "\+" search-word)
                  "%22&btnG=Search"))))
+    (shell-command (concat "curl http://localhost:3721/word/" search-word " >/dev/null &"))
     (google-define-parse-buffer search-word data-buffer)
     (kill-buffer data-buffer)))
 
