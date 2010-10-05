@@ -1,0 +1,10 @@
+# name: rack app
+# --
+class ${1:name}App
+  @@mime = { 'Content-Type' => 'text/plain' }
+
+  def call(env)
+    req = Rack::Request.new(env)
+    [200, @@mime, 'hi']
+  end
+end
