@@ -228,7 +228,8 @@ clock out time, if there is no clock time, next schedule time will be last sched
                                  (org-update-statistics-cookies t)))
   (define-key org-mode-map "]" (lambda ()
                                  (interactive)
-                                 (insert " [0/0]")))
+                                 (insert " [0/0]")
+                                 (org-update-statistics-cookies t)))
   (define-key org-mode-map "<backtab>" 'org-shifttab)
   (define-key org-mode-map "\C-\M-c" 'bartuer-org-insert-child)
   ;; add a hook when saving also export to a html
