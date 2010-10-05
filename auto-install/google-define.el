@@ -193,13 +193,14 @@ If we have a current region use it's value as the default."
   (let* ((search-word
           (read-from-minibuffer "Define: "
                                 (thing-at-point 'word)))
-        (data-buffer
-         (google-define-get-command "www.google.com.hk"
-                          (concat
-                           "/search?num=100&hl=en&defl=all&q=define%3A%22"
-                           (replace-regexp-in-string " +" "\+" search-word)
-                 "%22&btnG=Search"))))
-    (shell-command (concat "curl http://localhost:3721/word/" search-word " >/dev/null &"))
+         (buddy (shell-command (concat "curl http://localhost:3721/word/" search-word " >/dev/null &")))
+         (data-buffer
+          (google-define-get-command "www.google.com.hk"
+                                     (concat
+                                      "/search?num=100&hl=en&defl=all&q=define%3A%22"
+                                      (replace-regexp-in-string " +" "\+" search-word)
+                                      "%22&btnG=Search"))))
+    
     (google-define-parse-buffer search-word data-buffer)
     (kill-buffer data-buffer)))
 
