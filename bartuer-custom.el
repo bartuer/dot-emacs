@@ -95,7 +95,7 @@
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(org-agenda-columns-add-appointments-to-effort-sum t)
- '(org-agenda-files (quote ("~/local/src/baza/sbs.org" "~/org/next.org" "~/org/next.org_archive" "~/local/src/busy/busy.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org")))
+ '(org-agenda-files (quote ("~/local/src/baza/sbs.org" "~/org/next.org" "~/org/next.org_archive" "~/local/src/busy/busy.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org" "~/local/src/bla/zaphinx.org")))
  '(org-archive-save-context-info (quote (time file category todo itags olpath ltags)))
  '(org-clock-idle-time 30)
  '(org-columns-default-format "%40ITEM(Task) %15Effort(EFFORT){:} %SCHEDULED(SCHEDULE) %22DEADLINE(DEADLINE) %CLOCK(CLOCK)")

@@ -412,7 +412,10 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/em"
                  "~/local/src/rack"
                  "~/local/src/redis-rb/lib"
-                 "~/local/src/authlogic/lib/authlogic"))))
+                 "~/local/src/authlogic/lib/authlogic"
+                 "~/local/src/bla/lib/sphinx"
+                 "~/local/src/topsphinx/vendor/sphinx-han"
+                 "~/local/src/sequel/lib"))))
   (anything-etags-select))
 
 
