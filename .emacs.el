@@ -828,6 +828,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-c0" 'mac-right)
 
 
+(require 'paredit nil t)
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for emacs lisp" t)
 (add-hook 'emacs-lisp-mode-hook 'bartuer-elisp-load)
 
