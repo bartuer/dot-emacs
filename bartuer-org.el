@@ -203,6 +203,63 @@ clock out time, if there is no clock time, next schedule time will be last sched
           ))
       )))
 
+(defun org-export-table-to-mail-html ()
+  "export to mail content"
+  (interactive)
+  (quoted-printable-encode-string
+   (orgtbl-to-html
+    (org-table-to-lisp)
+    nil)))
+
+
+(defun org-export-table-to-mail-csv ()
+  "export to mail content"
+  (interactive)
+   (orgtbl-to-csv
+    (org-table-to-lisp)
+    nil))
+
+
+(defun org-export-table-to-mail-txt ()
+  "export to mail content"
+  (interactive)
+   (buffer-substring-no-properties
+    (org-table-begin)
+    (org-table-end)
+    ))
+
+
+(defun org-export-table-to-mail ()
+  "send marked node out"
+  (setq org-mail-body
+        (let ((multipart-head "--bartuer-emacs-org-table-mail-1\n--bartuer-emacs-org-table-mail-1\nContent-Type: multipart/mixed; boundary=bartuer-emacs-org-table-mail-2\n\n\n\n")
+              (attachment-head "--bartuer-emacs-org-table-mail-2\nContent-Disposition: attachment; filename=data.csv\nContent-Type: application/octet-stream; x-unix-mode=0644; name=\"data.csv\"\nContent-Transfer-Encoding: 7bit\n\n")
+              (text-head "--bartuer-emacs-org-table-mail-2\nContent-Type: text/plain; charset=utf-8;\nContent-Transfer-Encoding: 7bit\n\n\n\n")
+              (html-head "--bartuer-emacs-org-table-mail-2\nContent-Type: text/html; charset=utf-8\nContent-Transfer-Encoding: quoted-printable\n\n\n\n<html><body><br></br>")
+              (html-tail  "</body></html>\n")
+              (tail "--bartuer-emacs-org-table-mail-2--\n--bartuer-emacs-org-table-mail-1--")
+              )
+          (concat
+           multipart-head
+           attachment-head
+           (org-export-table-to-mail-csv)
+           "\n\n"
+           text-head
+           (org-export-table-to-mail-txt)
+           "\n"
+           html-head
+           (org-export-table-to-mail-html)
+           html-tail
+           tail)
+          ))
+  (setq org-mail-subject (org-get-heading))
+  (compose-mail "m"  org-mail-subject
+                (list
+                 (cons "CC" "me")
+                 (cons "Content-Type" "multipart/alternative; boundary=bartuer-emacs-org-table-mail-1")) nil nil nil)
+  (with-current-buffer "*mail*"
+    (insert org-mail-body)))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
