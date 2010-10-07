@@ -4749,7 +4749,7 @@ The following commands are available:
 (require 'font-lock)
 
 (defconst org-non-link-chars "]\t\n\r<>")
-(defvar org-link-types '("http" "https" "ftp" "mailto" "file" "news"
+(defvar org-link-types '("http" "https" "ftp" "mailto" "feed" "file" "news"
 			   "shell" "elisp" "doi"))
 (defvar org-link-types-re nil
    "Matches a link that has a url-like prefix like \"http:\"")
@@ -9117,8 +9117,8 @@ application the system uses for this file type."
 		      (setq a (replace-match subject t t a)))
 		  (push a args1))))
 	    (apply cmd (nreverse args1))))
-
-	 ((member type '("http" "https" "ftp" "news"))
+            
+	 ((member type '("http" "https" "ftp" "news" "feed"))
 	  (browse-url (concat type ":" (org-link-escape
 					path org-link-escape-chars-browser))))
 
