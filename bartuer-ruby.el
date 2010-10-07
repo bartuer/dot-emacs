@@ -71,9 +71,10 @@ lisp, really need add one.
   (list
    (let ((option (or rct-option-local "")))
      (if current-prefix-arg
-         (let ((compact-rct-option (ido-completing-read "(describe-variable 'rct-option-local)"
-                                               (list "actionpack" "activerecord" "baza"))))(actionpack-rct-option)
-           (setq rct-option-local (apply (intern (concat compact-rct-option "-rct-option")) nil)))
+         (let ((compact-rct-option
+                (ido-completing-read "(describe-variable 'rct-option-local)"
+                                     (list "actionpack" "activerecord" "baza"))))(actionpack-rct-option)
+                                     (setq rct-option-local (apply (intern (concat compact-rct-option "-rct-option")) nil)))
        option))))
 
 (defun bartuer-xmp (&optional option)
@@ -119,15 +120,12 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
   (interactive)
   (find-file "/private/var/log/apache2/error_log")
   (find-file "/private/var/log/apache2/access_log")
-  (find-file "~/local/src/baza/log/development.log")
-  (find-file "~/local/src/baza/log/mongrel.log")
   (find-file "/opt/local/var/log/rabbitmq/rabbit.log")
   (find-file "/Users/bartuer/local/src/pusher/log/thin.5000.log")
   (find-file "/Users/bartuer/local/src/pusher/log/thin.5001.log")
   (find-file "/Users/bartuer/local/src/pusher/log/thin.5002.log")
   (find-file "/opt/nginx/logs/access.log")
   (find-file "/opt/nginx/logs/error.log")
-  (find-file "~/Sites/baza/current/log/production.log")
   (pop-to-buffer "*Ibuffer*")
   (ibuffer-update nil)
   (ibuffer-jump-to-filter-group "log"))
