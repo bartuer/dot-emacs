@@ -1,5 +1,6 @@
 (defun bartuer-sgml-load ()
   "html mode modification"
+  (setq indent-line-function nil)
   (define-key html-mode-map "\C-cj" 'js-smart-toggle)
   (define-key sgml-mode-map "\C-cj" 'js-smart-toggle)
   (define-key html-mode-map "\C-c\C-j" 'js-toggle)
