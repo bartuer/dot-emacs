@@ -1519,7 +1519,7 @@ LCON is the lexical context, if any."
       (if savep
 	  (save-excursion (indent-line-to indent-col))
 	(indent-line-to indent-col))))
-  (dom-tree))
+  )
 
 (defun sgml-guess-indent ()
   "Guess an appropriate value for `sgml-basic-offset'.
