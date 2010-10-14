@@ -832,6 +832,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for emacs lisp" t)
 (add-hook 'emacs-lisp-mode-hook 'bartuer-elisp-load)
 
+(autoload 'bartuer-lua-load "bartuer-lua.el" "for lua language" t)
+(add-to-list 'auto-mode-alist
+             '("\\.lua$" . lua-mode))
+
 (autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
 (add-hook 'c-mode-common-hook 'bartuer-c-common)
 
