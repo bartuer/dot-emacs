@@ -54,6 +54,7 @@
  '(grep-highlight-matches t)
  '(gud-gdb-command-name (concat "gdb-darwin -annotate=3 -silent -x ~/etc/el/gdb/init.gdb  -x " (expand-file-name "~/local/src/chromium/src/v8/dbg_agent.gdb")))
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
+ '(gud-rdebug-command-name "rdebug --emacs 3 rackup -- -s thin -E deployment config.ru")
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(hippie-expand-verbose t)
