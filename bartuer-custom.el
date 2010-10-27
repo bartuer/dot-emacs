@@ -11,6 +11,8 @@
  '(blink-cursor-mode t)
  '(bookmark-default-file "~/etc/el/bookmark/.emacs.bmk")
  '(bookmark-save-flag 1)
+ '(calendar-latitude 40)
+ '(calendar-longitude 116)
  '(case-fold-search t)
  '(case-replace t)
  '(colon-double-space t)
