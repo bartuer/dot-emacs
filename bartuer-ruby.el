@@ -413,6 +413,12 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/authlogic/lib/authlogic"
                  "~/local/src/bla/lib/sphinx"
                  "~/local/src/topsphinx/vendor/sphinx-han"
+                 "~/local/src/rails/activerecord/test"
+                 "~/local/src/oauth-provider-sample"
+                 "~/local/src/oauth-provider-sample/test"
+                 "~/local/src/oauth-provider-sample/warden"
+                 "~/local/src/dm/dm-core-1.0.2/lib"
+                 "~/local/src/dm"
                  "~/local/src/sequel/lib"))))
   (anything-etags-select))
 

@@ -231,6 +231,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
 
 (defun org-export-table-to-mail ()
   "send marked node out"
+  (interactive)
   (setq org-mail-body
         (let ((multipart-head "--bartuer-emacs-org-table-mail-1\n--bartuer-emacs-org-table-mail-1\nContent-Type: multipart/mixed; boundary=bartuer-emacs-org-table-mail-2\n\n\n\n")
               (attachment-head "--bartuer-emacs-org-table-mail-2\nContent-Disposition: attachment; filename=data.csv\nContent-Type: application/octet-stream; x-unix-mode=0644; name=\"data.csv\"\nContent-Transfer-Encoding: 7bit\n\n")

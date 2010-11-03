@@ -1,0 +1,5 @@
+# -*- mode: org; require-final-newline: nil; backup-inhibited: t -*-
+#name: test how to howto
+# --
+:Test:   $0
+
