@@ -242,9 +242,9 @@ behavior."
   "find suite name for current buffer"
   (let ((filename (file-name-nondirectory (buffer-file-name)))
         suite-name)
-    (cond ((string-match "\\(app.*\\|dev.*\\|lib.*\\).spec.js" filename)
+    (cond ((string-match "\\(app.*\\|dev.*\\|lib.*\\|.*\\).spec.js" filename)
            (setq suite-name (match-string 1 filename)))
-          ((string-match "\\(app.*\\|dev.*\\|lib.*\\).js" filename)
+          ((string-match "\\(app.*\\|dev.*\\|lib.*\\|.*\\).js" filename)
            (setq suite-name (match-string 1 filename))))
     (add-to-list 'suite-list suite-name)
 ))
