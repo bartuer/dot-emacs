@@ -22,6 +22,7 @@
   (send-region-jsh beg end))
 
 (defvar prototype-root "~/local/src/prototype/")
+(defvar mui-root "~/local/src/mui/")
 
 (defun unit-test-js ()
   "for unittest_js"
@@ -107,7 +108,7 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/js-functional"
                  "~/local/src/scriptaculous/src"
                  "~/etc/el/js/jscore"
-                 "~/local/src/uki/src"
+                 "~/local/src/mui/frameworks/uki/src"
                  ))))
   (anything-etags-select))
 
@@ -117,6 +118,11 @@ it is suitable to browse OO hierarchy"
                 (expand-file-name prototype-root)
                 (expand-file-name (buffer-file-name))))
          (expand-file-name prototype-root))
+        ((eq 0 (string-match
+                (expand-file-name mui-root)
+                (expand-file-name (buffer-file-name))))
+         (expand-file-name (concat mui-root "/aqua") )
+         )
         ((or
           (eq 0 (string-match
                  "\\(.*\\)/spec/"
