@@ -506,6 +506,7 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
+  (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
 
