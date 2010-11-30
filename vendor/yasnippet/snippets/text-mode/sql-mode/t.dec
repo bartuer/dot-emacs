@@ -1,0 +1,3 @@
+# name: sql data type dec
+# --
+decimal(${1:length}) default NULL,

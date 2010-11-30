@@ -1,0 +1,3 @@
+# name: count c  sql console
+# --
+select count(*) from ${1:table};

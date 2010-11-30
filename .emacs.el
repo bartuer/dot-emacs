@@ -854,8 +854,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
-(autoload 'bartuer-js-load "bartuer-js" nil t)
+(autoload 'bartuer-js-load "bartuer-js.el" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
+
+(add-to-list 'auto-mode-alist '("\\.sql$" . sql-mode))
+(autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
+(add-hook 'sql-mode-hook 'bartuer-sql-load)
 
 (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
 (add-hook 'sgml-mode-hook 'bartuer-sgml-load)

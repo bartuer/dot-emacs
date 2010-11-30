@@ -1,0 +1,3 @@
+# name: sql data type id
+# --
+`id` int(11) NOT NULL ,

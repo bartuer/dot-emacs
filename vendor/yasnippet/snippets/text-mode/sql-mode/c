@@ -1,3 +1,4 @@
-# name: count c  sql console
+#name : sql column c
 # --
-select count(*) from ${1:table};
+'${1:name}' t$0
+c
