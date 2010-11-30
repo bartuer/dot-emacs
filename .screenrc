@@ -9,19 +9,22 @@ bindkey -t "\033[1;3D" stuff "\033\033OD"
 
 screen -t "shell" 7
 
-screen -t "ec-1 main" 1
+screen -t "ec-1 schedule" 1
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-2 vice" 2
+screen -t "ec-2 daemon" 2
 stuff "~/local/bin/emacsclient -t"
 
 screen -t "ec-3 test" 3
 stuff "~/local/bin/emacsclient -t"
 
-screen -t "ec-4 cheat sheat" 4
+screen -t "ec-4 cheat sheet" 4
 stuff "~/local/bin/emacsclient -t"
 
 screen -t "ec-5 log" 5
+stuff "~/local/bin/emacsclient -t"
+
+screen -t "ec-6 commit" 6
 stuff "~/local/bin/emacsclient -t"
 
 screen -t "ec-0 task" 0
