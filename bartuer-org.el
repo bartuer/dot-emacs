@@ -236,7 +236,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
                (org-combine-plists
                 '(:sep ", "
                   :fmt (lambda (s)
-                         (if (string-match "[0-9\.]" s)
+                         (if (string-match "^[0-9\.]+$" s)
                              s
                            (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
                          )
