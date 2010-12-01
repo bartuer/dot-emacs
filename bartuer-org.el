@@ -228,6 +228,30 @@ clock out time, if there is no clock time, next schedule time will be last sched
     (org-table-end)
     ))
 
+(defun org-export-table-to-sql (&optional params)
+  "export table region to sql insert clause"
+  (interactive)
+  (let ((data (orgtbl-to-generic
+               (org-table-to-lisp) (org-combine-plists
+                                    '(:sep ", "
+                                      :fmt (lambda (s)
+                                             (if (string-match "[0-9\.]" s)
+                                                 s
+                                                 (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
+                                             )
+                                      :lstart "INSERT INTO replace_me_with_table_name VALUES("
+                                      :lend ");") 
+                                    params)))
+        )
+    (with-current-buffer (get-buffer-create "*orgtbl2sql*")
+      (kill-region (point-min) (point-max))
+      (insert data)
+      (sql-mode)
+      )    
+    )
+  (pop-to-buffer "*orgtbl2sql*")
+  )
+
 
 (defun org-export-table-to-mail ()
   "send marked node out"
