@@ -232,16 +232,17 @@ clock out time, if there is no clock time, next schedule time will be last sched
   "export table region to sql insert clause"
   (interactive)
   (let ((data (orgtbl-to-generic
-               (org-table-to-lisp) (org-combine-plists
-                                    '(:sep ", "
-                                      :fmt (lambda (s)
-                                             (if (string-match "[0-9\.]" s)
-                                                 s
-                                                 (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
-                                             )
-                                      :lstart "INSERT INTO replace_me_with_table_name VALUES("
-                                      :lend ");") 
-                                    params)))
+               (org-table-to-lisp)
+               (org-combine-plists
+                '(:sep ", "
+                  :fmt (lambda (s)
+                         (if (string-match "[0-9\.]" s)
+                             s
+                           (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
+                         )
+                  :lstart "INSERT INTO replace_me_with_table_name VALUES("
+                  :lend ");") 
+                params)))
         )
     (with-current-buffer (get-buffer-create "*orgtbl2sql*")
       (kill-region (point-min) (point-max))
@@ -303,6 +304,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (define-key org-mode-map "\C-c\C-a" 'org-archive-subtree)
   (define-key org-mode-map "\C-\M-i" 'org-table-previous-field)
   (define-key org-mode-map "\C-c\C-k" 'kill-region)
+  (define-key org-mode-map "\C-c\C-q" 'org-export-table-to-sql))
   (define-key org-mode-map "\C-\M-h" 'outline-mark-subtree)
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
