@@ -304,7 +304,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (define-key org-mode-map "\C-c\C-a" 'org-archive-subtree)
   (define-key org-mode-map "\C-\M-i" 'org-table-previous-field)
   (define-key org-mode-map "\C-c\C-k" 'kill-region)
-  (define-key org-mode-map "\C-c\C-q" 'org-export-table-to-sql))
+  (define-key org-mode-map "\C-c\C-q" 'org-export-table-to-sql)
   (define-key org-mode-map "\C-\M-h" 'outline-mark-subtree)
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
