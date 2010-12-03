@@ -892,7 +892,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
 (add-hook 'ess-mode-hook 'bartuer-ess-load)
 
-
+(require 'org-ascii nil t)
+(require 'bartuer-mail nil t)
 (autoload 'bartuer-org-load "bartuer-org.el" "for org mode" t)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
