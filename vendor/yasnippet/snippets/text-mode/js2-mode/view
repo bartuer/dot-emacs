@@ -1,0 +1,8 @@
+# name: uki view
+# --
+{
+  view: '${1:view}',
+  rect: '${2:l} ${3:t} ${4:w} ${5:h}',
+  anchors: 'left top right bottom'
+  $0
+}
