@@ -10794,10 +10794,12 @@ This ensures that the counts and `next-error' are correct."
       (if js2-indent-on-enter-key
           (let ((js2-bounce-indent-flag nil))
             (js2-indent-line)))
-      (insert "\n")
+      (newline)
       (if js2-enter-indents-newline
           (let ((js2-bounce-indent-flag nil))
-            (js2-indent-line)))))))
+            (js2-indent-line))
+        (indent-relative)
+        )))))
 
 (defun js2-mode-extend-comment ()
   "When inside a comment block, add comment prefix."
