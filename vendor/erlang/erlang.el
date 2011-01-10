@@ -904,7 +904,7 @@ behaviour.")
    Or define your own and set the variable to that file.")
 
 ;; Tempo skeleton templates:
-;; (load erlang-skel-file)
+(load erlang-skel-file)
 
 ;; Font-lock variables
 
@@ -1254,8 +1254,8 @@ Other commands:
   (erlang-man-init)
   (erlang-tags-init)
   (erlang-font-lock-init)
-  (erlang-skel-init)
-  (tempo-use-tag-list 'erlang-tempo-tags)
+  ;; (erlang-skel-init)
+  ;; (tempo-use-tag-list 'erlang-tempo-tags)
   (run-hooks 'erlang-mode-hook)
   (if (zerop (buffer-size))
       (run-hooks 'erlang-new-file-hook))
