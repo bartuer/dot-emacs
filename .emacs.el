@@ -629,7 +629,6 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for ruby mode" t nil)
 (add-hook 'ruby-mode-hook 'bartuer-ruby-load)
 
-
 (add-to-list 'auto-mode-alist '("\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.ru$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\.rjs$" . ruby-mode))
@@ -648,6 +647,13 @@ If give a negative ARG, will undo the last mark action, thus the
 (defadvice inf-ruby-completions (before icicle-ri-help activate)
     "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)) 
+
+(require 'bartuer-erlang nil t)
+(autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
+  "mode for erlang mode" t nil)
+(add-hook 'erlang-mode-hook 'bartuer-erlang-load)
+(add-to-list 'auto-mode-alist '("\.erl$" . erlang-mode))
+
 
 (require 'redis nil t)
 (require 'css-mode nil t)
