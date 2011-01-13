@@ -52,4 +52,6 @@
                                 "~/local/src/baza/test/selenium"
                                 "~/local/src/baza/test/unit"
                                 "~/local/src/baza/test/unit/helpers"
+                                "~/etc/el/vendor/erlang/share/distel/src"
+                                "~/etc/el/vendor/erlang/share/distel/elisp"
                                 ))
