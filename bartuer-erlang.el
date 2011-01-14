@@ -14,6 +14,7 @@
                                       (define-key erlang-shell-mode-map "\M-," 'erl-find-source_unwind)
                                       ))
   (define-key erlang-mode-map "\C-c\C-e" 'erl-eval-expression)
+  (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
   )
 
 

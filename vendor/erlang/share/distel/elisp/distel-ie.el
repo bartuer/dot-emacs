@@ -226,7 +226,7 @@ for debugging a file without ruining the content by mistake."
 (define-minor-mode erl-session-minor-mode
   "Minor mode for Distel Interactive Sessions."
   nil
-  nil
+  :lighter " ie"
   '(("\C-j"    . erl-ie-eval-expression)
     ("\C-\M-x" . erl-ie-eval-defun)))
 
