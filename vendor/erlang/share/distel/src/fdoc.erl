@@ -45,7 +45,7 @@ apropos(Regexp) ->
 
 get_apropos(Regexp) ->
     ensure_started(),
-    case regexp:parse(Regexp) of
+    case re:parse(Regexp) of
 	{ok, RE} ->
 	    fdoc ! {apropos, self(), RE},
 	    receive
@@ -148,7 +148,7 @@ loop() ->
 	{apropos, From, RE} ->
 	    Matches = [{M,F,A,D} || {M,F,A,D} <- ets:tab2list(?MODULE),
 				    any(fun(S) ->
-						regexp:match(S, RE) /= nomatch
+						re:match(S, RE) /= nomatch
 					end,
 					[D,
 					 atom_to_list(M),
