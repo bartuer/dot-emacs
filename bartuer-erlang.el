@@ -15,6 +15,9 @@
                                       ))
   (define-key erlang-mode-map "\C-c\C-e" 'erl-eval-expression)
   (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
+  (define-key erlang-mode-map "\M--" (lambda ()
+                                       (interactive)
+                                       (insert " -> ")) )
   )
 
 

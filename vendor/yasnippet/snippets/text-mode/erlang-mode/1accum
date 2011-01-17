@@ -1,0 +1,9 @@
+# name: 1 accumulators function
+# --
+
+${1:name} (${2:para}) -> $1($2, ${3:0}).
+
+$1 ([H|T], ${4:Accum}) ->
+    $1(T, $4 + 1);
+$1 ([], $4) ->
+    ${5:result}.

@@ -3,5 +3,6 @@
 # --
 -module(${1:$(file-name-nondirectory 
                (file-name-sans-extension (buffer-file-name)))}).
-$0
+-export([${2:start/0}]).
+
 
