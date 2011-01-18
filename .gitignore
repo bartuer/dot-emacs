@@ -49,4 +49,8 @@
 /vendor/textile-minor-mode/.svn/format
 /vendor/textile-minor-mode/.svn/text-base/textile-minor-mode.el.svn-base
 /jquery-1.3.2.js
-/vendor/erlang/share/distel/ebin
+/vendor/erlang/share/distel/src/distel_ie.beam
+/vendor/erlang/share/distel/ebin/distel.beam
+/vendor/erlang/share/distel/ebin/distel_ie.beam
+/vendor/erlang/share/distel/ebin/fdoc.beam
+/vendor/erlang/share/distel/ebin/otp_doc.beam
