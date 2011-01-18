@@ -1,0 +1,3 @@
+# name: shell loaded_application application
+# --
+application:loaded_applications().
