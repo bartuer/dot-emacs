@@ -1,0 +1,3 @@
+# name: signature : invoke
+# --
+${1:module}:${2:function}(${3:arg1}, ${4:arg2})

@@ -1,5 +1,5 @@
-#name : receive ... -> ... end
+#name : receive 
 # --
 receive
-    $1 -> $0
+    pattern$0
 end

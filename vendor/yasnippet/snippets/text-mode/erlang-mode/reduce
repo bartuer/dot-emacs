@@ -1,4 +1,4 @@
 # name: reduce function
 # --
-${1:name} ([H|T]) -> H ${2:expr} $1(T);
-$1 ([]) -> ${3:init}.
+${1:name}([H|T]) -> H ${2:expr} $1(T);
+$1([]) -> ${3:init}.

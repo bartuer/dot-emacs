@@ -1,4 +1,4 @@
-# name: snippet
+# name: cmd
 # --
 # name: shell ${1:`(file-name-nondirectory (buffer-file-name))`} ${2:describe_name}
 # --
