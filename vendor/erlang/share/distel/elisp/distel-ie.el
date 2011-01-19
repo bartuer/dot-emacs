@@ -124,19 +124,9 @@ call or an expression."
 		  (message "")
 	      
 		  (let ((my-point (point)))
-                    (unless (looking-at "^")
-                      (end-of-line)
-                      (insert "\n"))
-
-                    (let ((beg (point)))
-		    ;; Insert value, indent all lines of it 4 places,
-		    ;; then draw a " => " at the start.
-                      (insert value)
-                      (save-excursion (indent-rigidly beg (point) 5)
-                                      (goto-char beg)
-                                      (delete-region (point) (+ (point) 5))
-                                      (insert " -:-> ")))
-                    (insert "\n")
+                    (insert " %#=> ")
+                    (insert value)
+                    (comment-indent)
                     (goto-char my-point)
                     (push-mark (point) t)))
 	      (display-message-or-view (format "Result: %s" value)
