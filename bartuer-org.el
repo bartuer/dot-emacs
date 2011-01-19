@@ -4,6 +4,10 @@
   (org-insert-heading-after-current)
   (org-do-demote))
 
+(defun convert-time-to-minutes (str)
+  (eval (read (replace-regexp-in-string ".*?=> *\\([0-9]+\\):\\([0-9]+\\)" "(+ (* 60 \\1) \\2)" str)))
+  )
+
 (defun org-effort-allowed-property-values (property)
   "Supply allowed values for Effort properties."
   (cond
