@@ -18,6 +18,7 @@
   (define-key erlang-mode-map "\M--" (lambda ()
                                        (interactive)
                                        (insert " -> ")) )
+  (flymake-mode t)
   )
 
 
