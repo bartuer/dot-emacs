@@ -4,6 +4,41 @@
 (require 'distel nil t)
 (distel-setup)
 
+(defun has-ect-in-region-p (beg end)
+  "search %# => in region beg end
+"
+  (goto-char beg)
+  (if (search-forward-regexp "%#=>" end t)
+      t
+    nil)
+)
+
+(defun ect-dwim ()
+  "if there is %# =>, remove it, otherwise insert it
+
+2 + 3 %
+docstring as fixture, try above line.
+"
+  (setq current-pos (point))
+  (setq beg (progn (beginning-of-line) (point)))
+  (setq end (progn (end-of-line) (point)))
+  (if (has-ect-in-region-p beg end)
+      (progn
+        (goto-char beg)
+        (search-forward "%")
+        (kill-line))
+    (goto-char current-pos)
+    (insert "#=>"))
+  )
+
+(defadvice comment-dwim (around jct-hack activate)
+  "If comment-dwim is successively called, add //#=> mark."
+  (if (and (eq major-mode 'erlang-mode)
+           (eq last-command 'comment-dwim)
+           )
+      (ect-dwim)
+    ad-do-it))
+
 (defun bartuer-erlang-load ()
   "for erlang language"
   (setq erlang-root-dir "/usr/local/otp")
