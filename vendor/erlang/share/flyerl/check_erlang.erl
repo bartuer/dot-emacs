@@ -50,7 +50,7 @@ dia(FileName)->
           end,
     OTP_PLT = filename:join(os:getenv(Var),PLTName),
     % # takes a few hours:
-    % nice dialyzer --build-plt \
+    % nice dialyzer --build_plt \
     %  --output_plt ~/.dialyzer_otp.plt \
     %  -r /usr/lib/erlang/lib/*/ebin
     % # takes much less time, but still considerable:
