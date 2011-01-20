@@ -5,6 +5,7 @@
   (org-do-demote))
 
 (defun convert-time-to-minutes (str)
+  "convert time span string like \"[2011-01-20 Thu 02:27]--[2011-01-20 Thu 04:19] =>  1:52\" to 112 (minutes)"
   (eval (read (replace-regexp-in-string ".*?=> *\\([0-9]+\\):\\([0-9]+\\)" "(+ (* 60 \\1) \\2)" str)))
   )
 
