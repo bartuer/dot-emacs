@@ -60,6 +60,7 @@
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(hippie-expand-verbose t)
+ '(htmlize-html-charset "utf-8")
  '(htmlize-hyperlink-style "
       a {
         color: inherit;
@@ -113,6 +114,7 @@
  '(org-todo-keyword-faces (quote (("ABORT" . "white"))))
  '(org-todo-keywords (quote ((sequence "TODO" "HALT" "ABORT" "DONE"))))
  '(org-use-speed-commands t)
+ '(ps-lpr-command "lp")
  '(ps-multibyte-buffer (quote bdf-font))
  '(push-minor-mode-string " Pu")
  '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")))))
