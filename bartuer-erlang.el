@@ -26,6 +26,7 @@ docstring as fixture, try above line.
       (progn
         (goto-char beg)
         (search-forward "%")
+        (backward-char)
         (kill-line))
     (goto-char current-pos)
     (insert "#=>"))
