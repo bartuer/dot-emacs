@@ -195,7 +195,7 @@ If give a negative ARG, will undo the last mark action, thus the
                              (define-key dired-mode-map " " 'do-ql-dwim)
                              (load "dired-x")))
 
-(defun want-to-print ()
+(defun color-print ()
   (interactive)
   (require 'htmlize nil t)
   (require 'color-theme nil t)
