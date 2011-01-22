@@ -179,8 +179,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
 (global-set-key "\M-5" 'comint-previous-matching-input)
+(defun do-ql()
+  (interactive)
+  (dired-do-async-shell-command "qlmanage -p 2>/dev/null" "" (dired-get-marked-files))
+  )
+(add-hook 'dired-load-hook (lambda ()
+                             (define-key dired-mode-map " " 'do-ql)
+                             (load "dired-x")))
 
-(add-hook 'dired-load-hook (lambda () (load "dired-x")))
 (global-set-key "\M-8" 'find-file)
 (defalias 'ff 'find-file-at-point)
 
