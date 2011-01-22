@@ -195,6 +195,14 @@ If give a negative ARG, will undo the last mark action, thus the
                              (define-key dired-mode-map " " 'do-ql-dwim)
                              (load "dired-x")))
 
+(defun want-to-print ()
+  (interactive)
+  (require 'htmlize nil t)
+  (require 'color-theme nil t)
+  (load "~/etc/el/auto-install/bartuer-theme.el")
+  (color-theme-select)
+  )
+
 (global-set-key "\M-8" 'find-file)
 (defalias 'ff 'find-file-at-point)
 
