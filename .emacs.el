@@ -676,6 +676,17 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'erlang-mode-hook 'bartuer-erlang-load)
 (add-to-list 'auto-mode-alist '("\.erl$" . erlang-mode))
 
+(require 'bartuer-lua nil t)
+(autoload 'bartuer-lua-load "~/etc/el/bartuer-lua.el"
+  "mode for lua mode" t nil)
+(add-hook 'lua-mode-hook 'bartuer-lua-load)
+(add-to-list 'auto-mode-alist '("\.lua$" . lua-mode))
+
+(require 'bartuer-python nil t)
+(autoload 'bartuer-python-load "~/etc/el/bartuer-python.el"
+  "mode for python mode" t nil)
+(add-hook 'python-mode-hook 'bartuer-python-load)
+(add-to-list 'auto-mode-alist '("\.py$" . python-mode))
 
 (require 'redis nil t)
 (require 'css-mode nil t)
