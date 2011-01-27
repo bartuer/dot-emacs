@@ -191,10 +191,16 @@ If give a negative ARG, will undo the last mark action, thus the
       ))
   )
 
-(add-hook 'dired-load-hook (lambda ()
-                             (define-key dired-mode-map " " 'do-ql-dwim)
-                             (load "dired-x")))
+(require 'bartuer-dired nil t)
 
+(add-hook 'dired-load-hook (lambda ()
+                             (load "dired-x")
+                             ))
+
+(add-hook 'dired-mode-hook (lambda ()
+                             (define-key dired-mode-map " " 'do-ql-dwim)
+                             (define-key dired-mode-map "w" 'dired-copy-filename-as-kill-fix)
+                             ))
 (defun color-print ()
   (interactive)
   (require 'htmlize nil t)
