@@ -1,0 +1,3 @@
+# name: loop shell 
+# --
+for i in *; do $0 $i ; done
