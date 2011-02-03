@@ -2,7 +2,7 @@
   (interactive)
   (with-current-buffer (get-buffer-create "*sql2orgtbl*")
     (kill-region (point-min) (point-max)))
-  (shell-command-on-region (point-min) (point-max) "sqlite3 --csv /tmp/sqlite-org-convert.db"
+  (shell-command-on-region (point-min) (point-max) "sqlite3 -csv /tmp/sqlite-org-convert.db"
                            "*sql2orgtbl*" nil (get-buffer-create "*sql2orgtbl-error"))
   (with-current-buffer "*sql2orgtbl*"
     (org-table-convert-region (point-min) (point-max) '(4))
@@ -32,4 +32,4 @@
   (define-key sql-mode-map "\C-c\C-e" 'sql-send-string)
   (define-key sql-mode-map "\C-c\C-t" 'sql-to-orgtbl)
   (define-key sql-mode-map "\C-c\C-b" 'sql-send-buffer-dwim))
-)
+
