@@ -1,8 +1,9 @@
 (defun sql-to-orgtbl ()
   (interactive)
+  (message "has insert select clause at end of sql-mode buffer?")
   (with-current-buffer (get-buffer-create "*sql2orgtbl*")
     (kill-region (point-min) (point-max)))
-  (shell-command-on-region (point-min) (point-max) "sqlite3 -csv /tmp/sqlite-org-convert.db"
+  (shell-command-on-region (point-min) (point-max) "rm -f /tmp/sqlite-org-convert.db && sqlite3 -csv /tmp/sqlite-org-convert.db"
                            "*sql2orgtbl*" nil (get-buffer-create "*sql2orgtbl-error"))
   (with-current-buffer "*sql2orgtbl*"
     (org-table-convert-region (point-min) (point-max) '(4))
