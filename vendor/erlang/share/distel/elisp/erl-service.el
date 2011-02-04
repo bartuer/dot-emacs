@@ -945,6 +945,24 @@ want to cancel the operation."
     (cons (buffer-modified-tick)
 	  (point))))
 
+(defun anything-erlang-complete  (pair)
+  (save-excursion
+    (set-buffer anything-current-buffer)
+    (search-backward pattern)
+    (delete-char (length pattern)))
+  (insert (car (split-string pair "\t"))))
+
+(setq erlang-completion-table nil)
+
+(setq anything-c-source-complete-erlang
+  '((name . "erlang Completion")
+    (candidates . (lambda () erlang-completion-table))
+    (action
+     ("Completion" . anything-erlang-complete)
+     )
+    (volatile)
+    (persistent-action . anything-erlang-complete)))
+
 (defun erl-complete-thing (what scrollable beg end pattern completions sole)
   "Complete a string in the buffer.
 WHAT is a string that says what we're completing.
@@ -965,20 +983,18 @@ SOLE is a function which is called when a single completion is selected."
 	       (message "Sole completion")
 	       (apply sole '()))
 	      ((null completion))
-;	       (message "Can't find completion for %s \"%s\"" what pattern)
-;	       (ding))
 	      ((not (string= pattern completion))
 	       (delete-region beg end)
 	       (insert completion)
 	       (if (eq t (try-completion completion completions))
 		   (apply sole '())))
 	      (t
-	       (message "Making completion list...")
 	       (let ((list (all-completions pattern completions)))
-		 (setq list (sort list 'string<))
-		 (with-output-to-temp-buffer "*Completions*"
-		   (display-completion-list list)))
-	       (message "Making completion list...%s" "done"))))))
+		 (setq erlang-completion-table (sort list 'string<))
+                 (let ((anything-sources (list anything-c-source-complete-erlang)))
+                   (anything))
+		 )
+	       )))))
 
 (defun erl-complete-sole-module ()
   (insert ":"))
