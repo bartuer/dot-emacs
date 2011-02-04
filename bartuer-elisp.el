@@ -4,6 +4,8 @@
   (turn-on-eldoc-mode)
   (flyspell-prog-mode)
   (paredit-mode t)
+  (define-key paredit-mode-map "\M-(" 'paredit-wrap-round)
+  (define-key paredit-mode-map "\M-)" 'paredit-splice-sexp)
   (define-key emacs-lisp-mode-map "\C-c\C-i" (lambda ()
                                                (interactive)
                                                (insert "(interactive)")))

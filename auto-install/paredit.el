@@ -415,10 +415,10 @@ Deprecated: use `paredit-mode' instead."
    ("M-("       paredit-wrap-round
                 ("(foo |bar baz)"
                  "(foo (|bar) baz)"))
-   ("M-s"       paredit-splice-sexp
+   ("M-)"       paredit-splice-sexp
                 ("(foo (bar| baz) quux)"
                  "(foo bar| baz quux)"))
-   (("M-<up>" "ESC <up>")
+   ("M-r"
                 paredit-splice-sexp-killing-backward
                 ("(foo (let ((x 5)) |(sqrt n)) bar)"
                  "(foo (sqrt n) bar)"))
@@ -426,19 +426,19 @@ Deprecated: use `paredit-mode' instead."
                 paredit-splice-sexp-killing-forward
                 ("(a (b c| d e) f)"
                  "(a b c f)"))
-   ("M-r"       paredit-raise-sexp
+   (("M-<up>" "ESC <up>")       paredit-raise-sexp
                 ("(dynamic-wind in (lambda () |body) out)"
                  "(dynamic-wind in |body out)"
                  "|body"))
 
    "Barfage & Slurpage"
-   (("C-)" "C-<right>")
+   (("C-)" "C-<right>" "M-<right>" "ESC <right>")
                 paredit-forward-slurp-sexp
                 ("(foo (bar |baz) quux zot)"
                  "(foo (bar |baz quux) zot)")
                 ("(a b ((c| d)) e f)"
                  "(a b ((c| d) e) f)"))
-   (("C-}" "C-<left>")
+   (("C-}" "C-<left>" "M-<left>" "ESC <left>")
                 paredit-forward-barf-sexp
                 ("(foo (bar |baz quux) zot)"
                  "(foo (bar |baz) quux zot)"))
