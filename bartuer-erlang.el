@@ -63,6 +63,7 @@ docstring as fixture, try above line.
 			 (concat name-string
 				 "@" (erl-determine-hostname))))))
     (setq erl-nodename-cache name)
+    (pushnew erl-nodename-cache erl-nodes) 
     (setq distel-modeline-node name-string)
     (force-mode-line-update))
   erl-nodename-cache)

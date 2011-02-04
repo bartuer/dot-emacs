@@ -1237,7 +1237,7 @@ The match positions are erl-mfa-regexp-{module,function,arity}-match.")
 		 (['rex arglists]
 		  (let ((argss (erl-format-arglists arglists)))
 		    (if ins-buffer
-			(with-current-buffer ins-buffer (insert argss))
+			(with-current-buffer ins-buffer (yasnippet-complete-erlang argss))
 		      (message "%s:%s%s"  call-mod fun argss))))))))))))
 
 (defun erl-format-arglists (arglists)

@@ -126,6 +126,21 @@
   (message (format "js-complete:%s" msg))
   (yas/expand))
 
+(defun yasnippet-complete-erlang (arglist)
+  "constructure an snippet according to the erlang signature string"
+  (setq signature-template (replace-regexp-in-string
+                            "\\([^(),]+\\)"
+                            "${\\&}"
+                            arglist))
+  (insert " anythingerlang")
+  (yas/define 'erlang-mode
+              "anythingerlang"
+              signature-template)
+  (yas/expand)
+  (save-excursion
+    (search-backward "(")
+   (backward-delete-char 1))
+)
 
 (defvar anything-js-message-re "\\(\\(.*\\)\177\\(.*\\)\001.*$\\)"
   "1:occurence\177 2:message\001")
