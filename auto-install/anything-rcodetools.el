@@ -150,6 +150,7 @@
   (let ((anything-sources (list
                            anything-c-source-complete-ruby
                            anything-c-source-ri-completion
+                           anything-c-source-complete-ruby-all
                            )))
     (anything)))
 
