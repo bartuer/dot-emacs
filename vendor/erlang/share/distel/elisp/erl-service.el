@@ -954,9 +954,14 @@ want to cancel the operation."
   (insert (car (split-string pair "\t")))
   )
 
-(setq erlang-doc-service "http://localhost:21119/")
+(setq erlang-doc-service "http://localhost:2222/")
 (defun anything-erlang-doc (pair)
-  (let ((module (let ((end (- (point) 1))
+  (let ((module (let ((end ((lambda ()
+                              (save-excursion
+                                (search-backward ":")
+                                (forward-char 1)
+                                (- (point) 1))
+                              )))
                       (beg ((lambda ()
                               (save-excursion
                                 (search-backward " ")
@@ -968,8 +973,8 @@ want to cancel the operation."
         (get-buffer-create "*erlang-doc-quicklook*")
       (if (buffer-size)
             (erase-buffer))
-      (insert (shell-command-to-string
-               (concat "curl 2>/dev/null " erlang-doc-service module "/" pair)))
+      (insert (shell-command-to-string 
+               (concat "curl 2>/dev/null " erlang-doc-service module "/"  pair)))
       (shell-command  (concat "/Users/bartuer/scripts/push 'window.location=\"" erlang-doc-service module ":" pair "\"'"))
       ))
   )
