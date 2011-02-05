@@ -46,7 +46,7 @@ docstring as fixture, try above line.
    (progn
      (grep-compute-defaults)
      (list (read-shell-command "grep otp docs: "
-                               "find ~/local/share/doc/erlang/OTP13B04 -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
+                               "find ~/local/share/doc/erlang/OTP13B04_TEXT -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
   (when command-args              
     (let ((null-device nil))		; see grep
       (grep command-args))))
