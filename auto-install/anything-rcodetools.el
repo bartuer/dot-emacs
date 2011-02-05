@@ -105,6 +105,21 @@
     (volatile)
     (persistent-action . anything-rct-ri)))
 
+(setq anything-c-source-ri-completion
+      '((name . "completion's ri")
+        (candidates . (lambda ()
+                        (list
+                         (shell-command-to-string
+                          (concat "qri -f plain \""
+                                  (replace-regexp-in-string
+                                   "\\[\\(.*\\)\\]" "\\1"
+                                   (cadr (split-string anything-current-candidate "\t"))
+                                   )
+                                  "\"")))))
+        (multiline)
+        (volatile))
+      )
+
 (defvar rct-get-all-methods-command "PAGER=cat fri -l")
 (defun rct-get-all-methods ()
   (interactive)
@@ -132,7 +147,10 @@
 
 (defun rct-complete-symbol--anything ()
   (interactive)
-  (let ((anything-sources (list anything-c-source-complete-ruby anything-c-source-complete-ruby-all)))
+  (let ((anything-sources (list
+                           anything-c-source-complete-ruby
+                           anything-c-source-ri-completion
+                           )))
     (anything)))
 
 (provide 'anything-rcodetools)
