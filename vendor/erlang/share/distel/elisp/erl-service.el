@@ -946,11 +946,32 @@ want to cancel the operation."
 	  (point))))
 
 (defun anything-erlang-complete  (pair)
+  (anything-erlang-doc pair)
   (save-excursion
     (set-buffer anything-current-buffer)
     (search-backward pattern)
     (delete-char (length pattern)))
-  (insert (car (split-string pair "\t"))))
+  (insert (car (split-string pair "\t")))
+  )
+
+(setq erlang-doc-service "http://localhost:21119/")
+(defun anything-erlang-doc (pair)
+  (let ((module (let ((end (- (point) 1))
+                      (beg ((lambda ()
+                              (save-excursion
+                                (search-backward " ")
+                                (forward-char 1)
+                                (point))
+                              ))))
+                  (buffer-substring-no-properties beg end))))
+    (with-current-buffer
+        (get-buffer-create "*erlang-doc-quicklook*")
+      (if (buffer-size)
+            (erase-buffer))
+      (insert (shell-command-to-string
+               (concat "curl 2>/dev/null " erlang-doc-service module "/" pair)))
+      ))
+  )
 
 (setq erlang-completion-table nil)
 
@@ -959,6 +980,7 @@ want to cancel the operation."
     (candidates . (lambda () erlang-completion-table))
     (action
      ("Completion" . anything-erlang-complete)
+     ("Doc" . anything-erlang-doc)
      )
     (volatile)
     (persistent-action . anything-erlang-complete)))
