@@ -888,7 +888,7 @@ prompts for an mfa."
       (intern s))))
 
 ;;;; Completion
-
+(defvar current-erlang-completion-module "")
 (defun erl-complete (node)
   "Complete the module or remote function name at point."
   (interactive (list (erl-target-node)))
@@ -911,6 +911,7 @@ prompts for an mfa."
 	    (let ((mod (intern (match-string 1 str)))
 		  (pref (match-string 2 str))
 		  (beg (+ beg (match-beginning 2))))
+                  (setq current-erlang-completion-module (match-string 1 str))
 	      (erl-spawn
 		(erl-send-rpc node 'distel 'functions (list mod pref))
 		(&erl-receive-completions "function" beg end pref buf
@@ -980,16 +981,27 @@ want to cancel the operation."
   )
 
 (setq erlang-completion-table nil)
-
 (setq anything-c-source-complete-erlang
-  '((name . "erlang Completion")
-    (candidates . (lambda () erlang-completion-table))
-    (action
-     ("Completion" . anything-erlang-complete)
-     ("Doc" . anything-erlang-doc)
-     )
-    (volatile)
-    (persistent-action . anything-erlang-complete)))
+      '((name . "erlang Completion")
+        (candidates . (lambda () erlang-completion-table))
+        (action
+         ("Completion" . anything-erlang-complete)
+         ("Doc" . anything-erlang-doc)
+         )
+        (volatile)
+        (persistent-action . anything-erlang-complete)))
+
+(setq anything-c-source-doc-erlang
+      '((name . "erlang document string")
+        (candidates . (lambda ()
+                        (list (shell-command-to-string 
+                               (concat "curl 2>/dev/null "
+                                       erlang-doc-service current-erlang-completion-module
+                                       "/"
+                                       anything-current-candidate)))))
+        (multiline)
+        (volatile)
+        ))
 
 (defun erl-complete-thing (what scrollable beg end pattern completions sole)
   "Complete a string in the buffer.
@@ -1019,7 +1031,7 @@ SOLE is a function which is called when a single completion is selected."
 	      (t
 	       (let ((list (all-completions pattern completions)))
 		 (setq erlang-completion-table (sort list 'string<))
-                 (let ((anything-sources (list anything-c-source-complete-erlang)))
+                 (let ((anything-sources (list anything-c-source-complete-erlang anything-c-source-doc-erlang)))
                    (anything))
 		 )
 	       )))))

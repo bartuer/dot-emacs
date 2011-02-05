@@ -1242,8 +1242,8 @@ See also `anything-set-source-filter'.")
     (define-key map (kbd "<next>") 'anything-next-page)
     (define-key map (kbd "M-v")     'anything-previous-page)
     (define-key map (kbd "C-v")     'anything-next-page)
-    (define-key map (kbd "<right>") 'anything-next-source)
-    (define-key map (kbd "<left>") 'anything-previous-source)
+    (define-key map (kbd "C-M-n") 'anything-next-source)
+    (define-key map (kbd "C-M-p") 'anything-previous-source)
     (define-key map (kbd "<RET>") 'anything-exit-minibuffer)
     (define-key map (kbd "C-1") 'anything-select-with-digit-shortcut)
     (define-key map (kbd "C-2") 'anything-select-with-digit-shortcut)
@@ -2540,11 +2540,11 @@ UNIT and DIRECTION."
       (anything-mark-current-line))))
 
 
+(setq anything-current-candidate "")
 (defun anything-mark-current-line ()
   "Move selection overlay to current line."
-  (move-overlay anything-selection-overlay
-                (line-beginning-position)
-                (if (anything-pos-multiline-p)
+  (let* ((beg (line-beginning-position))
+        (end (if (anything-pos-multiline-p)
                     (let ((header-pos (anything-get-next-header-pos))
                           (candidate-pos (anything-get-next-candidate-separator-pos)))
                       (or (and (null header-pos) candidate-pos candidate-pos)
@@ -2552,6 +2552,12 @@ UNIT and DIRECTION."
                           header-pos
                           (point-max)))
                   (1+ (line-end-position)))))
+    (move-overlay anything-selection-overlay
+                beg
+                end
+                )
+    (setq anything-current-candidate ( buffer-substring-no-properties beg end)))
+  )
 
 
 (defun anything-select-with-digit-shortcut ()
