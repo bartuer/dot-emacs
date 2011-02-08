@@ -916,7 +916,7 @@ prompts for an mfa."
 		(erl-send-rpc node 'distel 'functions (list mod pref))
 		(&erl-receive-completions "function" beg end pref buf
 					  continuing
-					  #'erl-complete-sole-function)))
+					  #'erl-openparent)))
 	  ;; completing just a module
 	  (erl-spawn
 	    (erl-send-rpc node 'distel 'modules (list str))
@@ -1038,12 +1038,6 @@ SOLE is a function which is called when a single completion is selected."
 
 (defun erl-complete-sole-module ()
   (insert ":"))
-
-(defun erl-complete-sole-function ()
-  (let ((call (erlang-get-function-under-point)))
-    (insert "(")
-    (erl-print-arglist call (erl-target-node))))
-
 
 (defun erl-make-completion-alist (list)
   "Make an alist out of list.
@@ -1249,13 +1243,13 @@ The match positions are erl-mfa-regexp-{module,function,arity}-match.")
   "Insert a '(' character and arglist."
   (interactive)
   (let ((call (erlang-get-function-under-point)))
+    (insert "(")
     (erl-print-arglist call erl-nodename-cache (current-buffer))))
 
 (defun erl-openparen (node)
   "Insert a '(' character and show arglist information."
   (interactive (list erl-nodename-cache))
   (let ((call (erlang-get-function-under-point)))
-    (insert "(")
     (erl-print-arglist call node)))
 
 (defun erl-print-arglist (call node &optional ins-buffer)
