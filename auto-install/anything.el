@@ -2540,7 +2540,7 @@ UNIT and DIRECTION."
       (anything-mark-current-line))))
 
 
-(setq anything-current-candidate "")
+(defvar anything-current-candidate "")
 (defun anything-mark-current-line ()
   "Move selection overlay to current line."
   (let* ((beg (line-beginning-position))
