@@ -6,6 +6,8 @@
   (paredit-mode t)
   (define-key paredit-mode-map "\M-(" 'paredit-wrap-round)
   (define-key paredit-mode-map "\M-)" 'paredit-splice-sexp)
+  (define-key paredit-mode-map "\M-J" 'paredit-join-sexps)
+  (define-key paredit-mode-map "\M-S" 'paredit-split-sexp)
   (define-key emacs-lisp-mode-map "\C-c\C-i" (lambda ()
                                                (interactive)
                                                (insert "(interactive)")))
