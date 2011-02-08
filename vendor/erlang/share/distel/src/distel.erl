@@ -808,32 +808,25 @@ get_arglists(ModName, FunName) when is_list(ModName), is_list(FunName) ->
     arglists(to_atom(ModName), FunName).
 
 arglists(Mod, Fun) ->
-    case get_abst_from_debuginfo(Mod) of
-	{ok, Abst} ->
-	    case fdecls(to_atom(Fun), Abst) of
-		[] -> error;
-		Fdecls -> map(fun derive_arglist/1, Fdecls)
-	    end;
-	error ->
-	    case beamfile(Mod) of
-		{ok, BeamFile} ->
-		    case get_exports(BeamFile) of
-			{ok, Exports} ->
-			    Funs = [{Fun0, Arity0} || {Fun0, Arity0} <- Exports,
-						      Fun0 == Fun],
-			    case get_forms_from_src(Mod) of
-				{ok, Forms} ->
-				    get_arglist_from_forms(Funs, Forms);
-				_ ->
-				    error
-			    end;
-			_ ->
-			    error
-		    end;
-		_ ->
-		    error
-	    end
+    case beamfile(Mod) of
+        {ok, BeamFile} ->
+            case get_exports(BeamFile) of
+                {ok, Exports} ->
+                    Funs = [{Fun0, Arity0} || {Fun0, Arity0} <- Exports,
+                                              Fun0 == Fun],
+                    case get_forms_from_src(Mod) of
+                        {ok, Forms} ->
+                            get_arglist_from_forms(Funs, Forms);
+                        _ ->
+                            error
+                    end;
+                _ ->
+                    error
+            end;
+        _ ->
+            error
     end.
+
 
 %% Find the {function, ...} entry for the named function in the
 %% abstract syntax tree.
