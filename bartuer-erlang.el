@@ -4,6 +4,174 @@
 (require 'distel nil t)
 (distel-setup)
 
+(eval-and-compile
+  (defconst erlang-block-beg-regexp "[ (\[{]\\(begin\\|case\\|fun *(\\|if\\|receive\\|try\\)"
+    ))
+
+(eval-and-compile
+  (defconst erlang-block-keyword-regexp "[ (\[{]\\(begin\\|case\\|fun *(\\|if\\|end\\|receive\\|try\\)"
+    ))
+
+(eval-and-compile (defconst erlang-block-end-regexp "\\(\\ end\\)[^_a-zA-Z0-9]"
+   ))
+
+;;; erlang-partial-parse
+(setq erlang-pattern-match-line-regexp "^[^%] *.* ->.*$")
+(setq erlang-pattern-match-operator-regexp " \(->\|=\) ")
+
+(defun erlang-at-comment-p ()
+  (interactive)
+  (let* ((form (point))
+         (bol (save-excursion
+                (beginning-of-line)
+                (point)))
+         (in-comment (search-backward-regexp "% " bol t)))
+    (goto-char org)
+    (integerp in-comment))
+  )
+
+(defun erlang-at-string-p ()
+  (interactive)
+  (let* ((from (point))
+         (bol (save-excursion
+                (beginning-of-line)
+                (point)))
+         (eol (save-excursion
+                (end-of-line)
+                (point)))
+         (string-head (search-backward-regexp "['\"]" bol t))
+         (string-tail (progn
+                        (goto-char from)
+                        (search-forward-regexp "['\"]" eol t)
+                        )))
+    (goto-char from)
+    (and (integerp string-head)
+         (integerp string-tail)))
+  )
+
+(defun erlang-keyword-at-point ()
+    (let ((bounds (bounds-of-thing-at-point 'word)))
+      (if bounds
+          (buffer-substring-no-properties (car bounds) (cdr bounds))))
+    )
+
+(defun erlang-skip-blank-and-brace ()
+  (interactive)
+  (erlang-skip-blank)
+  (when (or
+         (= (following-char) 91)             ;[
+         (= (following-char) 40)             ;(
+         (= (following-char) 123)            ;{
+         )
+    (forward-char 1))
+  )
+
+(defun erlang-find-block-beg ()
+  (interactive)
+  (setq erlang-current-block-beg nil)
+  (setq case-setting case-fold-search)
+  (setq case-fold-search nil)
+  (let ((beg (save-excursion
+               (search-backward-regexp erlang-block-beg-regexp)
+               (while (or
+                       (erlang-at-comment-p)
+                       (erlang-at-string-p)
+                       )
+                (search-backward-regexp erlang-block-beg-regexp))
+                (erlang-skip-blank-and-brace)
+                (point)
+               ))
+        (end (point)))
+    (setq erlang-mode-overlay
+        (make-overlay
+         beg end))
+    (overlay-put erlang-mode-overlay 'face 'highlight)
+    (setq erlang-current-block-beg beg)
+  )
+  (setq case-fold-search case-setting)
+  erlang-current-block-beg)
+
+(defun erlang-backdelete-invoke-brace ()
+  (interactive) 
+  (when (= (following-char) 40)
+    (backward-char)
+    (while (= (following-char) 32)
+      (backward-char)))
+  )
+
+(defun erlang-find-block-keyword ()
+  (interactive)
+  (setq case-setting case-fold-search)
+  (setq case-fold-search nil)
+  (let ((beg (point))
+        (end (save-excursion
+               (search-forward-regexp erlang-block-keyword-regexp)
+               (while (or
+                       (erlang-at-comment-p)
+                       (erlang-at-string-p)
+                       )
+                (search-forward-regexp erlang-block-keyword-regexp))
+                (erlang-backdelete-invoke-brace)
+                (point)
+               )))
+    (goto-char end))
+  (setq case-fold-search case-setting)
+  )
+
+(defun erlang-find-block-end ()
+  (erlang-find-block-beg)
+  (setq erlang-current-block-end nil)
+  (when erlang-current-block-beg
+    (goto-char erlang-current-block-beg)
+    (let ((stack nil))
+      (while (null erlang-current-block-end)
+        (erlang-find-block-keyword)
+        (if (string-equal "end" (erlang-keyword-at-point))
+            (if (null stack)
+                (setq erlang-current-block-end (point))
+              (erlang-pop stack))
+          (erlang-push (erlang-keyword-at-point) stack)
+          ))
+      )
+    )
+  erlang-current-block-end
+  )
+
+(defun erlang-mark-block ()
+  (interactive)
+  (setq erlang-mode-overlay
+        (make-overlay
+         (erlang-find-block-beg) (erlang-find-block-end)))
+  (overlay-put erlang-mode-overlay 'face 'highlight)
+  )
+
+
+(defun erlang-forward-block (&optional arg)
+  (interactive "p")
+  )
+
+(defun erlang-backward-block (&optional arg)
+  (interactive "p")
+  )
+
+(defun erlang-find-pattern-match-beg ()
+  )
+
+(defun erlang-find-pattern-match-end ()
+  )
+
+(defun erlang-forward-pattern-match (&optional arg)
+  (interactive "p")
+  )
+
+(defun erlang-backward-pattern-match (&optional arg)
+  (interactive "p")
+  )
+
+(defun erlang-mark-pattern-match ()
+  (interactive)
+  )
+
 (defun has-ect-in-region-p (beg end)
   "search %# => in region beg end
 "
@@ -125,7 +293,6 @@ editing control characters:
     (erl-ping erl-nodename-cache))  
   )
 
-
 (defun bartuer-erlang-load ()
   "for erlang language"
   (setq erlang-root-dir "/usr/local/otp")
@@ -137,9 +304,19 @@ editing control characters:
                                       ))
   (define-key erlang-mode-map "\C-c\C-e" 'erl-eval-expression)
   (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
+  (define-key erlang-mode-map "\M-a" 'erlang-beginning-of-clause)
+  (define-key erlang-mode-map "\M-e" 'erlang-end-of-clause)
+  (define-key erlang-mode-map "\M-q" (lambda ()
+                                       (erlang-indent-function)
+                                       (erlang-align-arrows)))
+  (define-key erlang-mode-map "\M-h" 'erlang-mark-clause)
+  (define-key erlang-mode-map "\C-\M-h" 'erlang-mark-function)
+  (define-key erlang-mode-map "\C-\M-e" 'erlang-end-of-function)
+  (define-key erlang-mode-map "\C-\M-a" 'erlang-beginning-of-function)
   (define-key erlang-mode-map "\M--" (lambda ()
                                        (interactive)
                                        (insert " -> ")) )
+
   (save-excursion
     (start-default-emacs-node)
     )

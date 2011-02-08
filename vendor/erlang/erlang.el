@@ -303,7 +303,8 @@ prompted.  If the value is t the source is silently changed.")
 (defvar erlang-electric-commands
   '(erlang-electric-comma
     erlang-electric-semicolon
-    erlang-electric-gt)
+    erlang-electric-gt
+    erlang-electric-newline)
   "*List of activated electric commands.
 
 The list should contain the electric commands which should be active.
@@ -3015,7 +3016,7 @@ Return t unless search stops due to end of buffer."
 	    (forward-char 1))))
   ;; The regexp matches a function header that isn't
   ;; included in a string.
-  (and (re-search-forward "\\(\\`\\|\\`\n\\|[^\\]\n\\)\\(-?[a-z]\\|'\\|-\\)"
+  (and (re-search-forward "\\(\\`\\|\\`\n\\|[^\\]\n\\)\\(-?[a-z]\\|'\\|-\\| *if\\| *case\\)"
 			  nil 'move (- arg))
        (let ((beg (match-beginning 2)))
 	 (and beg (goto-char beg))
