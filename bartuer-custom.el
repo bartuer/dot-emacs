@@ -121,6 +121,7 @@
  '(rcirc-server-alist (quote (("irc.freenode.net" :channels ("#rcirc")))))
  '(rdebug-many-windows nil)
  '(rdebug-short-key-mode nil)
+ '(reb-auto-match-limit 8000)
  '(reload-minor-mode-string " Reload")
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(rst-level-face-base-color "")
