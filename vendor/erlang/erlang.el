@@ -3016,7 +3016,7 @@ Return t unless search stops due to end of buffer."
 	    (forward-char 1))))
   ;; The regexp matches a function header that isn't
   ;; included in a string.
-  (and (re-search-forward "\\(\\`\\|\\`\n\\|[^\\]\n\\)\\(-?[a-z]\\|'\\|-\\| *if\\| *case\\)"
+  (and (re-search-forward "\\(\\`\\|\\`\n\\|[^\\]\n\\)\\(-?[a-z]\\|'\\|-\\)"
 			  nil 'move (- arg))
        (let ((beg (match-beginning 2)))
 	 (and beg (goto-char beg))
