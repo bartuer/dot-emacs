@@ -5,15 +5,8 @@
 (distel-setup)
 
 (eval-and-compile
-  (defconst erlang-block-beg-regexp "[ (\[{]\\(begin\\|case\\|fun *(\\|if\\|receive\\|try\\)"
-    ))
-
-(eval-and-compile
   (defconst erlang-block-keyword-regexp "[ (\[{]\\(begin\\|case\\|fun *(\\|if\\|end\\|receive\\|try\\)"
     ))
-
-(eval-and-compile (defconst erlang-block-end-regexp "\\(\\ end\\)[^_a-zA-Z0-9]"
-   ))
 
 ;;; erlang-partial-parse
 (setq erlang-pattern-match-line-regexp "^[^%] *.* ->.*$")
@@ -21,12 +14,12 @@
 
 (defun erlang-at-comment-p ()
   (interactive)
-  (let* ((form (point))
+  (let* ((from (point))
          (bol (save-excursion
                 (beginning-of-line)
                 (point)))
          (in-comment (search-backward-regexp "% " bol t)))
-    (goto-char org)
+    (goto-char from)
     (integerp in-comment))
   )
 
@@ -66,31 +59,6 @@
     (forward-char 1))
   )
 
-(defun erlang-find-block-beg ()
-  (interactive)
-  (setq erlang-current-block-beg nil)
-  (setq case-setting case-fold-search)
-  (setq case-fold-search nil)
-  (let ((beg (save-excursion
-               (search-backward-regexp erlang-block-beg-regexp)
-               (while (or
-                       (erlang-at-comment-p)
-                       (erlang-at-string-p)
-                       )
-                (search-backward-regexp erlang-block-beg-regexp))
-                (erlang-skip-blank-and-brace)
-                (point)
-               ))
-        (end (point)))
-    (setq erlang-mode-overlay
-        (make-overlay
-         beg end))
-    (overlay-put erlang-mode-overlay 'face 'highlight)
-    (setq erlang-current-block-beg beg)
-  )
-  (setq case-fold-search case-setting)
-  erlang-current-block-beg)
-
 (defun erlang-backdelete-invoke-brace ()
   (interactive) 
   (when (= (following-char) 40)
@@ -99,27 +67,48 @@
       (backward-char)))
   )
 
-(defun erlang-find-block-keyword ()
+(defun erlang-find-block-keyword (&optional direct)
   (interactive)
   (setq case-setting case-fold-search)
   (setq case-fold-search nil)
   (let ((beg (point))
         (end (save-excursion
-               (search-forward-regexp erlang-block-keyword-regexp)
+               (if direct
+                   (search-backward-regexp erlang-block-keyword-regexp)
+                 (search-forward-regexp erlang-block-keyword-regexp))
                (while (or
                        (erlang-at-comment-p)
                        (erlang-at-string-p)
                        )
-                (search-forward-regexp erlang-block-keyword-regexp))
-                (erlang-backdelete-invoke-brace)
-                (point)
+                 (if direct
+                     (search-backward-regexp erlang-block-keyword-regexp)
+                   (search-forward-regexp erlang-block-keyword-regexp)))
+               (if direct
+                   (erlang-skip-blank-and-brace)
+                 (erlang-backdelete-invoke-brace))
+               (point)
                )))
     (goto-char end))
   (setq case-fold-search case-setting)
   )
 
+(defun erlang-find-block-beg ()
+  (setq erlang-current-block-beg nil)
+  (save-excursion
+    (let ((stack nil))
+      (while (null erlang-current-block-beg)
+        (erlang-find-block-keyword t)
+        (if (string-equal "end" (erlang-keyword-at-point))
+            (erlang-push (erlang-keyword-at-point) stack)
+          (if (null stack)
+              (setq erlang-current-block-beg (point))
+            (erlang-pop stack))
+          ))
+      erlang-current-block-beg)
+    )
+  erlang-current-block-beg)
+
 (defun erlang-find-block-end ()
-  (erlang-find-block-beg)
   (setq erlang-current-block-end nil)
   (when erlang-current-block-beg
     (goto-char erlang-current-block-beg)
@@ -144,7 +133,6 @@
          (erlang-find-block-beg) (erlang-find-block-end)))
   (overlay-put erlang-mode-overlay 'face 'highlight)
   )
-
 
 (defun erlang-forward-block (&optional arg)
   (interactive "p")
