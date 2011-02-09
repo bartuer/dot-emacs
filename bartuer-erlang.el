@@ -8,6 +8,14 @@
   (defconst erlang-block-keyword-regexp "[ (\[{]\\(begin\\|case\\|fun *(\\|if\\|end\\|receive\\|try\\)"
     ))
 
+(eval-and-compile
+  (defconst erlang-block-beg-regexp "\\(begin\\|case\\|fun\\|if\\|end\\|receive\\|try\\)"
+    ))
+
+(eval-and-compile
+  (defconst erlang-pattern-match-end-regexp "[a-zA-Z0-9_-]"
+    ))
+
 ;;; erlang-partial-parse
 (setq erlang-pattern-match-line-regexp "^[^%] *.* ->.*$")
 (setq erlang-pattern-match-operator-regexp " \(->\|=\) ")
@@ -42,7 +50,7 @@
          (integerp string-tail)))
   )
 
-(defun erlang-keyword-at-point ()
+(defun erlang-word-at-point ()
   "return erlang block keyword under point"
     (let ((bounds (bounds-of-thing-at-point 'word)))
       (if bounds
@@ -101,8 +109,8 @@
     (let ((stack nil))
       (while (null erlang-current-block-beg)
         (erlang-find-block-keyword t)
-        (if (string-equal "end" (erlang-keyword-at-point))
-            (erlang-push (erlang-keyword-at-point) stack)
+        (if (string-equal "end" (erlang-word-at-point))
+            (erlang-push (erlang-word-at-point) stack)
           (if (null stack)
               (setq erlang-current-block-beg (point))
             (erlang-pop stack))
@@ -120,11 +128,11 @@
       (let ((stack nil))
         (while (null erlang-current-block-end)
           (erlang-find-block-keyword)
-          (if (string-equal "end" (erlang-keyword-at-point))
+          (if (string-equal "end" (erlang-word-at-point))
               (if (null stack)
                   (setq erlang-current-block-end (point))
                 (erlang-pop stack))
-            (erlang-push (erlang-keyword-at-point) stack)
+            (erlang-push (erlang-word-at-point) stack)
             ))
         )
       ))
@@ -148,9 +156,156 @@
   )
 
 (defun erlang-find-pattern-match-beg ()
+  (setq current-pattern-match-point nil)
+  (save-excursion 
+    (let ( (fun-head (save-excursion (erlang-beginning-of-function 1)
+                                     (point)))
+           (bol (save-excursion (beginning-of-line)
+                                (point))))
+      (end-of-line)
+      (search-backward-regexp " ->" fun-head)
+      (setq current-pattern-match-point (point))
+      )
+    (backward-sexp)
+    (setq erlang-pattern-match-beg (point)))
+  erlang-pattern-match-beg
+  )
+
+(defun erlang-pattern-match-data-end-p ()
+  (let ((word-at-point (erlang-word-at-point)))
+    (if (null word-at-point)
+        nil 
+      (and (stringp word-at-point)
+           (eq (string-match
+                erlang-pattern-match-end-regexp word-at-point
+                ) 0)))))
+
+;;; cases covered
+;;; YES cases
+;; atom    end.
+;;         end;
+;;         end
+;; var     Error.
+;;         Error;
+;;         Error
+;; number  0.
+;;         1;
+;;         19
+;; macro   ?MAX_INT.
+;;         ?MAX_INT;
+;;         ?MAX_INT
+;; list    [].
+;;         [];
+;;         []
+;; tuple   {}.
+;;         {};
+;;         {}
+;; call    ().
+;;         ();
+;;         ()
+;; string  "".
+;;         "";
+;;         ""
+;;         ''.
+;;         '';
+;;         ''
+;;; NO cases
+;; not end (end.)
+;; ,       end,
+(defun erlang-pattern-match-end-p ()
+  (setq erlang-current-at-pattern-match-end nil) 
+  (let* ((char-at-point (following-char))
+         (maybe-end (or
+                     (and
+                      (= (save-excursion
+                           (forward-char)
+                           (following-char))
+                         10)
+                      (= char-at-point 46)) ;.
+                     (and
+                      (= (save-excursion
+                           (forward-char)
+                           (following-char))
+                         10)
+                      (= char-at-point 59)) ;;
+                     (= char-at-point 10) ;\n
+                     )
+                    ))
+    (if maybe-end
+        (let* ((word-like-list (save-excursion
+                                 (backward-char)
+                                 (= (following-char) 93) ;]
+                                 ))
+               (word-like-tuple (save-excursion
+                                  (backward-char)
+                                  (= (following-char) 125) ;}
+                                  ))
+               (word-like-call (save-excursion
+                                 (backward-char)
+                                 (= (following-char) 41) ;)
+                                 ))
+               (word-like-string (save-excursion
+                                   (backward-char)
+                                   (or 
+                                    (= (following-char) 34)       ;"
+                                    (= (following-char) 39))      ;'
+                                   ))
+               ;; var, atom, number, macro
+               (word-like-data (erlang-pattern-match-data-end-p))
+               )
+          (setq erlang-current-at-pattern-match-end (or
+                                                     word-like-list
+                                                     word-like-tuple
+                                                     word-like-call
+                                                     word-like-string
+                                                     word-like-data
+                                                     )))
+      (setq erlang-current-at-pattern-match-end nil)
+      )
+    )
+  erlang-current-at-pattern-match-end
+  )
+
+(defun erlang-at-block-beg-p ()
+  (let ((word-at-point (erlang-word-at-point)))
+    (if (null word-at-point)
+        nil
+      (and (stringp word-at-point)
+           (eq 0
+               (string-match
+                erlang-block-beg-regexp
+                word-at-point))
+           (not (string-equal "Fun" word-at-point)))))
   )
 
 (defun erlang-find-pattern-match-end ()
+  (setq erlang-pattern-match-edn nil)
+  (save-excursion
+    (when current-pattern-match-point
+      (goto-char current-pattern-match-point)
+      (while (not (erlang-pattern-match-end-p))
+        (forward-sexp)
+        (when (erlang-at-block-beg-p)
+          (goto-char (erlang-find-block-beg))
+          (goto-char (erlang-find-block-end))
+          )
+        )
+      (setq erlang-pattern-match-end (point))
+      ))
+  erlang-pattern-match-end
+  )
+
+(defun erlang-mark-pattern-match ()
+  (interactive)
+
+  (let ((beg (erlang-find-pattern-match-beg))
+        (end (erlang-find-pattern-match-end)))
+    (when (and beg end)
+      (setq erlang-mode-overlay
+          (make-overlay
+           beg end))
+    (overlay-put erlang-mode-overlay 'face 'custom-changed))
+    )
   )
 
 (defun erlang-forward-pattern-match (&optional arg)
@@ -161,9 +316,6 @@
   (interactive "p")
   )
 
-(defun erlang-mark-pattern-match ()
-  (interactive)
-  )
 
 (defun has-ect-in-region-p (beg end)
   "search %# => in region beg end
