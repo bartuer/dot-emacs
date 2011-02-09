@@ -13,7 +13,7 @@
 (setq erlang-pattern-match-operator-regexp " \(->\|=\) ")
 
 (defun erlang-at-comment-p ()
-  (interactive)
+  "current point in a comment?"
   (let* ((from (point))
          (bol (save-excursion
                 (beginning-of-line)
@@ -24,7 +24,7 @@
   )
 
 (defun erlang-at-string-p ()
-  (interactive)
+  "current point in a string?"
   (let* ((from (point))
          (bol (save-excursion
                 (beginning-of-line)
@@ -43,13 +43,14 @@
   )
 
 (defun erlang-keyword-at-point ()
+  "return erlang block keyword under point"
     (let ((bounds (bounds-of-thing-at-point 'word)))
       (if bounds
           (buffer-substring-no-properties (car bounds) (cdr bounds))))
     )
 
 (defun erlang-skip-blank-and-brace ()
-  (interactive)
+  "backward search and find a keyword, remove outer brace at the point"
   (erlang-skip-blank)
   (when (or
          (= (following-char) 91)             ;[
@@ -60,14 +61,15 @@
   )
 
 (defun erlang-backdelete-invoke-brace ()
-  (interactive) 
-  (when (= (following-char) 40)
+  "forward search and find a fun keyword, back delete invoke part"
+  (when (= (following-char) 40)         ;(
     (backward-char)
-    (while (= (following-char) 32)
+    (while (= (following-char) 32)      ;SPACE
       (backward-char)))
   )
 
 (defun erlang-find-block-keyword (&optional direct)
+  "direct, if set, will search backward"
   (interactive)
   (setq case-setting case-fold-search)
   (setq case-fold-search nil)
@@ -93,6 +95,7 @@
   )
 
 (defun erlang-find-block-beg ()
+  "return begin of most inner block include current position"
   (setq erlang-current-block-beg nil)
   (save-excursion
     (let ((stack nil))
@@ -109,6 +112,7 @@
   erlang-current-block-beg)
 
 (defun erlang-find-block-end ()
+  "return end of most inner block include current position"
   (setq erlang-current-block-end nil)
   (save-excursion
     (when erlang-current-block-beg
@@ -127,6 +131,7 @@
   erlang-current-block-end)
 
 (defun erlang-mark-block ()
+  "mark most inner block include current position"
   (interactive)
   (setq erlang-mode-overlay
         (make-overlay
