@@ -20,6 +20,22 @@
 (setq erlang-pattern-match-line-regexp "^[^%] *.* ->.*$")
 (setq erlang-pattern-match-operator-regexp " \(->\|=\) ")
 
+(defun erlang-current-function-beg ()
+  "get current function beginning position"
+  (save-excursion
+    (erlang-beginning-of-function)
+    (point)
+    )
+  )
+
+(defun erlang-current-function-end ()
+  "get current function end position"
+  (save-excursion
+    (erlang-end-of-function)
+    (point)
+    )
+  )
+
 (defun erlang-at-comment-p ()
   "current point in a comment?"
   (let* ((from (point))
@@ -105,46 +121,53 @@
 (defun erlang-find-block-beg ()
   "return begin of most inner block include current position"
   (setq erlang-current-block-beg nil)
-  (save-excursion
-    (let ((stack nil))
-      (while (null erlang-current-block-beg)
-        (erlang-find-block-keyword t)
-        (if (string-equal "end" (erlang-word-at-point))
-            (erlang-push (erlang-word-at-point) stack)
-          (if (null stack)
-              (setq erlang-current-block-beg (point))
-            (erlang-pop stack))
-          ))
-      erlang-current-block-beg)
-    )
+  (let ((fun-beg (erlang-current-function-beg)))
+    (save-excursion
+      (let ((stack nil))
+        (while (and (null erlang-current-block-beg)
+                    (> (point) fun-beg))
+          (erlang-find-block-keyword t)
+          (if (string-equal "end" (erlang-word-at-point))
+              (erlang-push (erlang-word-at-point) stack)
+            (if (null stack)
+                (setq erlang-current-block-beg (point))
+              (erlang-pop stack))
+            ))
+        )))
   erlang-current-block-beg)
 
 (defun erlang-find-block-end ()
   "return end of most inner block include current position"
   (setq erlang-current-block-end nil)
-  (save-excursion
-    (when erlang-current-block-beg
-      (goto-char erlang-current-block-beg)
-      (let ((stack nil))
-        (while (null erlang-current-block-end)
-          (erlang-find-block-keyword)
-          (if (string-equal "end" (erlang-word-at-point))
-              (if (null stack)
-                  (setq erlang-current-block-end (point))
-                (erlang-pop stack))
-            (erlang-push (erlang-word-at-point) stack)
-            ))
-        )
-      ))
+  (let ((fun-end (erlang-current-function-end)))
+    (save-excursion
+      (when erlang-current-block-beg
+        (goto-char erlang-current-block-beg)
+        (let ((stack nil))
+          (while (and (null erlang-current-block-end)
+                      (< (point) fun-end))
+            (erlang-find-block-keyword)
+            (if (string-equal "end" (erlang-word-at-point))
+                (if (null stack)
+                    (setq erlang-current-block-end (point))
+                  (erlang-pop stack))
+              (erlang-push (erlang-word-at-point) stack)
+              ))
+          )
+        )))
   erlang-current-block-end)
 
 (defun erlang-mark-block ()
   "mark most inner block include current position"
   (interactive)
-  (setq erlang-mode-overlay
-        (make-overlay
-         (erlang-find-block-beg) (erlang-find-block-end)))
-  (overlay-put erlang-mode-overlay 'face 'highlight)
+  (let ((beg (erlang-find-block-beg))
+        (end (erlang-find-block-end)))
+    (when (and beg end)
+      (setq erlang-mode-overlay
+            (make-overlay
+             beg end ))
+      (overlay-put erlang-mode-overlay 'face 'highlight)
+      ))
   )
 
 (defun erlang-find-pattern-match-beg ()
@@ -279,24 +302,26 @@ see `erlang-pattern-match-end-regexp' "
 (defun erlang-find-pattern-match-end ()
   "return end of most meaningful pattern match include(or behind) current position"
   (setq erlang-pattern-match-edn nil)
-  (save-excursion
-    (when current-pattern-match-point
-      (goto-char current-pattern-match-point)
-      (while (not (erlang-pattern-match-end-p))
-        (forward-sexp)
-        (when (erlang-at-block-beg-p)
-          (goto-char (erlang-find-block-beg))
-          (goto-char (erlang-find-block-end))
+  (let ((fun-end (erlang-current-function-end)))
+    (save-excursion
+      (when current-pattern-match-point
+        (goto-char current-pattern-match-point)
+        (while (and (not (erlang-pattern-match-end-p))
+                    (> (point) fun-end)) 
+          (forward-sexp)
+          (when (erlang-at-block-beg-p)
+            (goto-char (erlang-find-block-beg))
+            (goto-char (erlang-find-block-end))
+            )
           )
-        )
-      (setq erlang-pattern-match-end (point))
-      ))
+        (setq erlang-pattern-match-end (point))
+        )))
   erlang-pattern-match-end
   )
 
 (defun erlang-mark-pattern-match ()
+  "mark current pattern match"
   (interactive)
-
   (let ((beg (erlang-find-pattern-match-beg))
         (end (erlang-find-pattern-match-end)))
     (when (and beg end)
@@ -307,20 +332,21 @@ see `erlang-pattern-match-end-regexp' "
     )
   )
 
-(defun erlang-forward-block (&optional arg)
-  (interactive "p")
+
+(defun erlang-mark-sexp (&optional arg)
+  (interactive "P")
   )
 
-(defun erlang-backward-block (&optional arg)
-  (interactive "p")
+(defun erlang-forward-sexp (&optional arg)
+  (interactive "P")
   )
 
-(defun erlang-forward-pattern-match (&optional arg)
-  (interactive "p")
+(defun erlang-backward-sexp (&optional arg)
+  (interactive "P")
   )
 
-(defun erlang-backward-pattern-match (&optional arg)
-  (interactive "p")
+(defun erlang-backward-up-list (&optional arg)
+  (interactive "P")
   )
 
 (defun has-ect-in-region-p (beg end)
@@ -457,10 +483,13 @@ editing control characters:
   (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
   (define-key erlang-mode-map "\M-a" 'erlang-beginning-of-clause)
   (define-key erlang-mode-map "\M-e" 'erlang-end-of-clause)
+  (define-key erlang-mode-map "\C-\M-f" 'forward-sexp)
+  (define-key erlang-mode-map "\C-\M-b" 'backward-sexp)
+  (define-key erlang-mode-map "\C-\M-u" 'backward-up-list)
+  (define-key erlang-mode-map "\M-h" 'erlang-mark-sexp)
   (define-key erlang-mode-map "\M-q" (lambda ()
                                        (erlang-indent-function)
                                        (erlang-align-arrows)))
-  (define-key erlang-mode-map "\M-h" 'erlang-mark-clause)
   (define-key erlang-mode-map "\C-\M-h" 'erlang-mark-function)
   (define-key erlang-mode-map "\C-\M-e" 'erlang-end-of-function)
   (define-key erlang-mode-map "\C-\M-a" 'erlang-beginning-of-function)
