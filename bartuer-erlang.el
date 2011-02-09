@@ -110,21 +110,21 @@
 
 (defun erlang-find-block-end ()
   (setq erlang-current-block-end nil)
-  (when erlang-current-block-beg
-    (goto-char erlang-current-block-beg)
-    (let ((stack nil))
-      (while (null erlang-current-block-end)
-        (erlang-find-block-keyword)
-        (if (string-equal "end" (erlang-keyword-at-point))
-            (if (null stack)
-                (setq erlang-current-block-end (point))
-              (erlang-pop stack))
-          (erlang-push (erlang-keyword-at-point) stack)
-          ))
-      )
-    )
-  erlang-current-block-end
-  )
+  (save-excursion
+    (when erlang-current-block-beg
+      (goto-char erlang-current-block-beg)
+      (let ((stack nil))
+        (while (null erlang-current-block-end)
+          (erlang-find-block-keyword)
+          (if (string-equal "end" (erlang-keyword-at-point))
+              (if (null stack)
+                  (setq erlang-current-block-end (point))
+                (erlang-pop stack))
+            (erlang-push (erlang-keyword-at-point) stack)
+            ))
+        )
+      ))
+  erlang-current-block-end)
 
 (defun erlang-mark-block ()
   (interactive)
