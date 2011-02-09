@@ -147,21 +147,15 @@
   (overlay-put erlang-mode-overlay 'face 'highlight)
   )
 
-(defun erlang-forward-block (&optional arg)
-  (interactive "p")
-  )
-
-(defun erlang-backward-block (&optional arg)
-  (interactive "p")
-  )
-
 (defun erlang-find-pattern-match-beg ()
+  "return begin of most meaningful pattern matching include(or behind) current position"
   (setq current-pattern-match-point nil)
   (save-excursion 
-    (let ( (fun-head (save-excursion (erlang-beginning-of-function 1)
-                                     (point)))
-           (bol (save-excursion (beginning-of-line)
-                                (point))))
+    (let ((fun-head
+           (save-excursion (erlang-beginning-of-function 1)
+                           (point)))
+          (bol (save-excursion (beginning-of-line)
+                               (point))))
       (end-of-line)
       (search-backward-regexp " ->" fun-head)
       (setq current-pattern-match-point (point))
@@ -172,6 +166,8 @@
   )
 
 (defun erlang-pattern-match-data-end-p ()
+  "left of current position is atom/var/number/macro?
+see `erlang-pattern-match-end-regexp' "
   (let ((word-at-point (erlang-word-at-point)))
     (if (null word-at-point)
         nil 
@@ -213,6 +209,7 @@
 ;; not end (end.)
 ;; ,       end,
 (defun erlang-pattern-match-end-p ()
+  "current position at pattern match end?"
   (setq erlang-current-at-pattern-match-end nil) 
   (let* ((char-at-point (following-char))
          (maybe-end (or
@@ -267,6 +264,7 @@
   )
 
 (defun erlang-at-block-beg-p ()
+  "current position just behind block begin keyword?"
   (let ((word-at-point (erlang-word-at-point)))
     (if (null word-at-point)
         nil
@@ -279,6 +277,7 @@
   )
 
 (defun erlang-find-pattern-match-end ()
+  "return end of most meaningful pattern match include(or behind) current position"
   (setq erlang-pattern-match-edn nil)
   (save-excursion
     (when current-pattern-match-point
@@ -308,6 +307,14 @@
     )
   )
 
+(defun erlang-forward-block (&optional arg)
+  (interactive "p")
+  )
+
+(defun erlang-backward-block (&optional arg)
+  (interactive "p")
+  )
+
 (defun erlang-forward-pattern-match (&optional arg)
   (interactive "p")
   )
@@ -315,7 +322,6 @@
 (defun erlang-backward-pattern-match (&optional arg)
   (interactive "p")
   )
-
 
 (defun has-ect-in-region-p (beg end)
   "search %# => in region beg end
