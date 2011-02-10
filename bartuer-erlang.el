@@ -16,10 +16,6 @@
   (defconst erlang-pattern-match-end-regexp "[a-zA-Z0-9_-]"
     ))
 
-;;; erlang-partial-parse
-(setq erlang-pattern-match-line-regexp "^[^%] *.* ->.*$")
-(setq erlang-pattern-match-operator-regexp " \(->\|=\) ")
-
 (defun erlang-current-function-beg ()
   "get current function beginning position"
   (save-excursion
@@ -379,11 +375,43 @@ see `erlang-pattern-match-end-regexp' "
   )
 
 (defun erlang-forward-sexp ()
+  "pick suitable unit from sexp, block and pattern matching, forward to end"
   (interactive)
-  ))
+  (cond
+   ((erlang-at-block-beg-p)
+    (forward-sexp)
+    (let ((block-beg (erlang-find-block-beg))
+          (block-end (erlang-find-block-end))
+          )
+      (goto-char block-end))
+    ) 
+   ((= (point) (erlang-find-pattern-match-beg))
+    (goto-char (erlang-find-pattern-match-end))
+    )
+   (t
+    (forward-sexp)))
+  )
 
 (defun erlang-backward-sexp ()
+  "pick suitable unit from sexp, block and pattern matching, backward to beginning"
   (interactive)
+  (cond
+   ((string-equal "end" (erlang-word-at-point))
+    (backward-sexp)
+    (let ((block-beg (erlang-find-block-beg))
+          (block-end (erlang-find-block-end))
+          )
+      (goto-char block-beg))
+    ) 
+   ((erlang-pattern-match-end-p)
+    (backward-char)
+    (let ((pattern-beg (erlang-find-pattern-match-beg))
+          (pattern-end (erlang-find-pattern-match-end)))
+      (goto-char pattern-beg)
+      )
+    )
+   (t
+    (backward-sexp)))
   )
 
 (defun erlang-backward-up-list ()
@@ -524,8 +552,8 @@ editing control characters:
   (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
   (define-key erlang-mode-map "\M-a" 'erlang-beginning-of-clause)
   (define-key erlang-mode-map "\M-e" 'erlang-end-of-clause)
-  (define-key erlang-mode-map "\C-\M-f" 'forward-sexp)
-  (define-key erlang-mode-map "\C-\M-b" 'backward-sexp)
+  (define-key erlang-mode-map "\C-\M-f" 'erlang-forward-sexp)
+  (define-key erlang-mode-map "\C-\M-b" 'erlang-backward-sexp)
   (define-key erlang-mode-map "\C-\M-u" 'backward-up-list)
   (define-key erlang-mode-map "\M-h" 'erlang-mark-sexp)
   (define-key erlang-mode-map "\M-q" (lambda ()
