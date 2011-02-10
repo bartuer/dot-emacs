@@ -338,37 +338,49 @@ see `erlang-pattern-match-end-regexp' "
         (pattern-beg (erlang-find-pattern-match-beg))
         (pattern-end (erlang-find-pattern-match-end)))
     (cond
-     ((or (and block-beg block-end (null pattern-beg) (null pattern-end))
-          (and (< block-beg (point)) (> block-end (point))
-               (or (> pattern-beg (point)) (< pattern-end (point))))
-          )
+     ((or (and block-beg
+               block-end
+               (null pattern-beg)
+               (null pattern-end))
+          (and (< block-beg (point))
+               (> block-end (point))
+               (or (> pattern-beg (point))
+                   (< pattern-end (point))))) ; block only
       (erlang-mark-block)
-      (message "mark block only point %d block(%d, %d) pattern(%d, %d)" (point) block-beg block-end pattern-beg pattern-end))
-     ((or (and pattern-beg pattern-end (null block-beg) (null block-end))
-          (and (< pattern-beg (point)) (> pattern-end (point))
-               (or (> block-beg (point)) (< block-end (point)))))
-      (erlang-mark-pattern-match)
-      (message "mark pattern match only point %d  block(%d, %d) pattern(%d, %d)" (point)  block-beg block-end pattern-beg pattern-end))
-     ((and (null block-beg) (null block-end) (null pattern-beg) (null pattern-end))
-      (erlang-mark-block)
-      (message "nothing mark point %d block(%d, %d) pattern(%d, %d)" (point)  block-beg block-end pattern-beg pattern-end))
+      )
+     ((or (and pattern-beg
+               pattern-end
+               (null block-beg)
+               (null block-end))
+          (and (< pattern-beg (point))
+               (> pattern-end (point))
+               (or (> block-beg (point))
+                   (< block-end (point))))) ; pattern match only
+      (erlang-mark-pattern-match))
+     ((and (null block-beg)
+           (null block-end)
+           (null pattern-beg)
+           (null pattern-end))
+      (message "can not find anything to mark; point: %d block: (%d, %d) pattern matching: (%d, %d)"
+               (point) block-beg block-end pattern-beg pattern-end))
      ((and (<= block-beg pattern-beg)
-           (>= block-end pattern-end))
-      (erlang-mark-pattern-match)
-      (message "select mark pattern match point %d block(%d, %d) pattern(%d, %d)" (point)  block-beg block-end pattern-beg pattern-end))
+           (>= block-end pattern-end)) ; mark pattern first, second, outer block, third, outer pattern...
+      (if (and mark-active
+               (= (point) pattern-beg))
+          (erlang-mark-block)
+        (erlang-mark-pattern-match)))
      ((and (<= pattern-beg block-beg)
-           (>= pattern-end block-end))
-      (erlang-mark-block)
-      (message "select mark block point %d block(%d, %d) pattern(%d, %d)" (point)  block-beg block-end pattern-beg pattern-end))
+           (>= pattern-end block-end)) ; press mark binding again will automatically mark outer pattern match
+      erlang-mark-block)
      (t
-      (message " point %d block(%d, %d) pattern(%d, %d)" (point)  block-beg block-end pattern-beg pattern-end))
-     )
+      (message "point: %d block: (%d, %d) pattern matching: (%d, %d)"
+               (point) block-beg block-end pattern-beg pattern-end)))
     )
   )
 
 (defun erlang-forward-sexp ()
-    (interactive)
-    )
+  (interactive)
+  ))
 
 (defun erlang-backward-sexp ()
   (interactive)
