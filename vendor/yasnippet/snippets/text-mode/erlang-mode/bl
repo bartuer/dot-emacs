@@ -1,0 +1,3 @@
+# name: l<< lisp comprehension for bit
+# --
+[ {${1:tuple as R, G, B}} || <<${2:match as R:8, G:8, B:8}>> <= ${3:stream} ]
