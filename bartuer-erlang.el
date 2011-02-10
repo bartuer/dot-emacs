@@ -588,6 +588,33 @@ editing control characters:
     (erl-ping erl-nodename-cache))  
   )
 
+(defun erdebug ()
+  "quick start debug session"
+  (interactive)
+  (save-excursion
+    ;; compile with debug info
+
+    (setq current-prefix-arg t)
+    (inferior-erlang-compile '-)
+    
+    ;; toggle interpreted
+    (edb-toggle-interpret
+     (erl-target-node)
+     (edb-module)
+     buffer-file-name)
+    ;; restart monitor
+    (when (not (null (get-buffer "*edb emacs@bartuer*"))) 
+      (with-current-buffer "*edb emacs@bartuer*"
+        (kill-buffer-and-window)))
+    (edb-monitor (erl-target-node))
+    ;; show next steps
+    (progn (find-file-other-window "~/scripts/cheat-sheet")
+           (goto-char (point-min))
+           (search-forward-regexp "redebug distel erlang"))
+    )
+  )
+
+
 (defun bartuer-erlang-load ()
   "for erlang language"
   (setq erlang-root-dir "/usr/local/otp")
