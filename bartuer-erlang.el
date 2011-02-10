@@ -367,7 +367,7 @@ see `erlang-pattern-match-end-regexp' "
         (erlang-mark-pattern-match)))
      ((and (<= pattern-beg block-beg)
            (>= pattern-end block-end)) ; press mark binding again will automatically mark outer pattern match
-      erlang-mark-block)
+      (erlang-mark-block))
      (t
       (message "point: %d block: (%d, %d) pattern matching: (%d, %d)"
                (point) block-beg block-end pattern-beg pattern-end)))
@@ -415,7 +415,56 @@ see `erlang-pattern-match-end-regexp' "
   )
 
 (defun erlang-backward-up-list ()
+  "move to outer level of pattern matching or block"
   (interactive)
+  (let ((block-beg (erlang-find-block-beg))
+        (block-end (erlang-find-block-end))
+        (pattern-beg (erlang-find-pattern-match-beg))
+        (pattern-end (erlang-find-pattern-match-end)))
+    (cond
+     ((or (and block-beg
+               block-end
+               (null pattern-beg)
+               (null pattern-end))
+          (and (< block-beg (point))
+               (> block-end (point))
+               (or (> pattern-beg (point))
+                   (< pattern-end (point))))) ; block only
+      (erlang-mark-block)
+      (deactivate-mark)
+      )
+     ((or (and pattern-beg
+               pattern-end
+               (null block-beg)
+               (null block-end))
+          (and (< pattern-beg (point))
+               (> pattern-end (point))
+               (or (> block-beg (point))
+                   (< block-end (point))))) ; pattern match only
+      (erlang-mark-pattern-match)
+      (deactivate-mark))
+     ((and (null block-beg)
+           (null block-end)
+           (null pattern-beg)
+           (null pattern-end))
+      (message "can not find anything to mark; point: %d block: (%d, %d) pattern matching: (%d, %d)"
+               (point) block-beg block-end pattern-beg pattern-end))
+     ((and (<= block-beg pattern-beg)
+           (>= block-end pattern-end)) ; mark pattern first, second, outer block, third, outer pattern...
+      (if (= (point) pattern-beg)
+          (progn (erlang-mark-block)
+                 (deactivate-mark))
+        (erlang-mark-pattern-match)
+        (deactivate-mark)))
+     ((and (<= pattern-beg block-beg)
+           (>= pattern-end block-end)) ; press mark binding again will automatically mark outer pattern match
+      (erlang-mark-block)
+      (deactivate-mark)
+      )
+     (t
+      (message "point: %d block: (%d, %d) pattern matching: (%d, %d)"
+               (point) block-beg block-end pattern-beg pattern-end)))
+    )
   )
 
 (defun has-ect-in-region-p (beg end)
@@ -550,11 +599,9 @@ editing control characters:
                                       ))
   (define-key erlang-mode-map "\C-c\C-e" 'erl-eval-expression)
   (define-key erlang-mode-map "\C-c\C-i" 'erl-session-minor-mode)
-  (define-key erlang-mode-map "\M-a" 'erlang-beginning-of-clause)
-  (define-key erlang-mode-map "\M-e" 'erlang-end-of-clause)
   (define-key erlang-mode-map "\C-\M-f" 'erlang-forward-sexp)
   (define-key erlang-mode-map "\C-\M-b" 'erlang-backward-sexp)
-  (define-key erlang-mode-map "\C-\M-u" 'backward-up-list)
+  (define-key erlang-mode-map "\C-\M-u" 'erlang-backward-up-list)
   (define-key erlang-mode-map "\M-h" 'erlang-mark-sexp)
   (define-key erlang-mode-map "\M-q" (lambda ()
                                        (erlang-indent-function)
