@@ -163,10 +163,8 @@
   (let ((beg (erlang-find-block-beg))
         (end (erlang-find-block-end)))
     (when (and beg end)
-      (setq erlang-mode-overlay
-            (make-overlay
-             beg end ))
-      (overlay-put erlang-mode-overlay 'face 'highlight)
+      (set-mark end)
+      (goto-char beg)
       ))
   )
 
@@ -325,10 +323,9 @@ see `erlang-pattern-match-end-regexp' "
   (let ((beg (erlang-find-pattern-match-beg))
         (end (erlang-find-pattern-match-end)))
     (when (and beg end)
-      (setq erlang-mode-overlay
-          (make-overlay
-           beg end))
-    (overlay-put erlang-mode-overlay 'face 'custom-changed))
+      (set-mark end)
+      (goto-char beg)
+      )
     )
   )
 
