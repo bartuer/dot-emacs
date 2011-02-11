@@ -25,6 +25,7 @@
  '(default-input-method "chinese-py-punct")
  '(describe-char-unidata-list (quote (name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored old-name iso-10646-comment uppercase lowercase titlecase)))
  '(desktop-path (quote ("~/etc/el/session" "~" ".")))
+ '(dired-guess-shell-alist-user (quote (("\\.[0-9]$" (progn (require (quote man)) (if (Man-support-local-filenames) "man -l" "cat * | groff -man -T utf8 | ul"))) ("\\.[0-9].gz$" (progn (require (quote man)) (if (Man-support-local-filenames) "man -l" "gunzip -qc * | groff -man -T utf8 | ul"))))))
  '(dired-omit-files "^\\.#.*$\\|^#.*#$\\|^\\.$\\|^\\.DS_Store$\\|^\\.\\.$")
  '(django-test-setting "vote.tests.settings")
  '(edebug-trace t)
