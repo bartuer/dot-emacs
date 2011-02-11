@@ -167,7 +167,7 @@
 (defun erlang-find-pattern-match-beg ()
   "return begin of most meaningful pattern matching include(or behind) current position"
   (setq current-pattern-match-point nil)
-  (save-excursion 
+  (save-excursion
     (let ((fun-head
            (save-excursion (erlang-beginning-of-function 1)
                            (point)))
@@ -187,7 +187,7 @@
 see `erlang-pattern-match-end-regexp' "
   (let ((word-at-point (erlang-word-at-point)))
     (if (null word-at-point)
-        nil 
+        nil
       (and (stringp word-at-point)
            (eq (string-match
                 erlang-pattern-match-end-regexp word-at-point
@@ -227,7 +227,7 @@ see `erlang-pattern-match-end-regexp' "
 ;; ,       end,
 (defun erlang-pattern-match-end-p ()
   "current position at pattern match end?"
-  (setq erlang-current-at-pattern-match-end nil) 
+  (setq erlang-current-at-pattern-match-end nil)
   (let* ((char-at-point (following-char))
          (maybe-end (or
                      (and
@@ -260,7 +260,7 @@ see `erlang-pattern-match-end-regexp' "
                                  ))
                (word-like-string (save-excursion
                                    (backward-char)
-                                   (or 
+                                   (or
                                     (= (following-char) 34)       ;"
                                     (= (following-char) 39))      ;'
                                    ))
@@ -301,7 +301,7 @@ see `erlang-pattern-match-end-regexp' "
       (when current-pattern-match-point
         (goto-char current-pattern-match-point)
         (while (and (not (erlang-pattern-match-end-p))
-                    (< (point) fun-end)) 
+                    (< (point) fun-end))
           (forward-sexp)
           (when (erlang-at-block-beg-p)
             (goto-char (erlang-find-block-beg))
@@ -384,7 +384,7 @@ see `erlang-pattern-match-end-regexp' "
           (block-end (erlang-find-block-end))
           )
       (goto-char block-end))
-    ) 
+    )
    ((= (point) (erlang-find-pattern-match-beg))
     (goto-char (erlang-find-pattern-match-end))
     )
@@ -402,7 +402,7 @@ see `erlang-pattern-match-end-regexp' "
           (block-end (erlang-find-block-end))
           )
       (goto-char block-beg))
-    ) 
+    )
    ((erlang-pattern-match-end-p)
     (backward-char)
     (let ((pattern-beg (erlang-find-pattern-match-beg))
@@ -510,7 +510,7 @@ docstring as fixture, try above line.
      (grep-compute-defaults)
      (list (read-shell-command "grep otp docs: "
                                "find ~/local/share/doc/erlang/OTP13B04_TEXT -type f  |grep -vE \"BROWSE|TAGS|.svn|drw|Binary|.bzr|svn-base|*.pyc\" |xargs grep -niHE " 'grep-find-history))))
-  (when command-args              
+  (when command-args
     (let ((null-device nil))		; see grep
       (grep command-args))))
 
@@ -526,7 +526,7 @@ docstring as fixture, try above line.
 			 (concat name-string
 				 "@" (erl-determine-hostname))))))
     (setq erl-nodename-cache name)
-    (pushnew erl-nodename-cache erl-nodes) 
+    (pushnew erl-nodename-cache erl-nodes)
     (setq distel-modeline-node name-string)
     (force-mode-line-update))
   erl-nodename-cache)
@@ -535,84 +535,148 @@ docstring as fixture, try above line.
   "Run an inferior Erlang.
 
 This is just like running Erlang in a normal shell, except that
-an Emacs buffer is used for input and output.
-\\<comint-mode-map>
+an Emacs buffer is used for input and output.          
+\\<comint-mode-map>                                    
 The command line history can be accessed with  \\[comint-previous-input]  and  \\[comint-next-input].
-The history is saved between sessions.
-
+The history is saved between sessions.                 
+                                                       
 Entry to this mode calls the functions in the variables
 `comint-mode-hook' and `erlang-shell-mode-hook' with no arguments.
-
+                                                       
 The following commands imitate the usual Unix interrupt and
-editing control characters:
-\\{erlang-shell-mode-map}"
-  (interactive)
-  (require 'comint)
-  (let ((opts inferior-erlang-machine-options))
-    (cond ((eq inferior-erlang-shell-type 'oldshell)
-	   (setq opts (cons "-oldshell" opts)))
-	  ((eq inferior-erlang-shell-type 'newshell)
+editing control characters:                            
+\\{erlang-shell-mode-map}"                             
+  (interactive)                                        
+  (require 'comint)                                    
+  (let ((opts inferior-erlang-machine-options))        
+    (cond ((eq inferior-erlang-shell-type 'oldshell)   
+	   (setq opts (cons "-oldshell" opts)))        
+	  ((eq inferior-erlang-shell-type 'newshell)   
 	   (setq opts (append '("-newshell" "-env" "TERM" "vt100") opts))))
-    (setq inferior-erlang-buffer
-	  (apply 'make-comint
+    (setq inferior-erlang-buffer                       
+	  (apply 'make-comint                          
 		 inferior-erlang-process-name inferior-erlang-machine
-		 nil opts)))
-  (setq inferior-erlang-process
-	(get-buffer-process inferior-erlang-buffer))
+		 nil opts)))                           
+  (setq inferior-erlang-process                        
+	(get-buffer-process inferior-erlang-buffer))   
   (if (> 21 erlang-emacs-major-version)	; funcalls to avoid compiler warnings
-      (funcall (symbol-function 'set-process-query-on-exit-flag) 
-	       inferior-erlang-process nil)
+      (funcall (symbol-function 'set-process-query-on-exit-flag)
+	       inferior-erlang-process nil)            
     (funcall (symbol-function 'process-kill-without-query) inferior-erlang-process))
-  (with-current-buffer inferior-erlang-buffer
-
-    (if (and (not (eq system-type 'windows-nt))
+  (with-current-buffer inferior-erlang-buffer          
+                                                       
+    (if (and (not (eq system-type 'windows-nt))        
              (eq inferior-erlang-shell-type 'newshell))
-        (setq comint-process-echoes t))
+        (setq comint-process-echoes t))                
     ;; `rename-buffer' takes only one argument in Emacs 18.
-    (condition-case nil
-        (rename-buffer inferior-erlang-buffer-name t)
+    (condition-case nil                                
+        (rename-buffer inferior-erlang-buffer-name t)  
       (error (rename-buffer inferior-erlang-buffer-name)))
-    (erlang-shell-mode))
-  )
-
-(defun start-default-emacs-node ()
-  "start node for distel"
+    (erlang-shell-mode))                               
+  )                                                    
+                                                       
+(defun start-default-emacs-node ()                     
+  "start node for distel"                              
+  (interactive)                                        
+  (if (null (inferior-erlang-running-p))               
+      (progn                                           
+        (inferior-erlang-without-switch-buffer)        
+        (sleep-for 0.5)                                
+        (erl-choose-emacs-node)                        
+        (erl-ping erl-nodename-cache)                  
+        )                                              
+    (erl-ping erl-nodename-cache))                     
+  )                                                    
+                                                       
+(defun erl-prepare-debugger (node module file)         
+  "Toggle debug-interpreting of the current buffer's module."
+  (remove-hook 'erl-backend-loaded 'erl-prepare-debugger)
+  (when (edb-ensure-monitoring node)                   
+    (erl-spawn                                         
+      (erl-set-name "EDB RPC to toggle interpretation of %S on %S"
+                    module node)                       
+      (erl-send-rpc node 'distel 'debug_toggle (list module file))
+      (erl-receive (module file)
+          ((['rex 'interpreted]                        
+            (progn                                     
+              ;; restart monitor                       
+              (kill-buffer edb-monitor-buffer)         
+              (edb-monitor erl-nodename-cache)         
+              ;; show next steps                       
+              (progn (find-file-other-window "~/scripts/cheat-sheet")
+                     (goto-char (point-min))
+                     (search-forward-regexp "redebug distel erlang")
+                     (recenter-top-bottom 0)
+                     (split-window-vertically)
+                     (find-file-other-window file))    
+              (message "Interpreting: %S" module)))    
+           (['rex 'uninterpreted]                      
+            (message "Stopped interpreting: %S" module))
+           (['rex ['badrpc reason]]                    
+            (message "Failed to interpret-toggle: %S" reason))))))
+  )                                                    
+                                                       
+                                                       
+(defun erdebug ()                                      
+  "quick start debug session                           
+                                                       
+    emacs                                            erlang
+                                                       |
+     compile------------------------------------------>|
+                                                       |
+     distel load .                                     |
+                  .                                    |
+              code:ensure_load(distel)---------------->|
+                    .                                  |
+                     .                                 |
+                    .                                  |
+                   .<-------module distel--------------|
+                  .                                    |
+                 .                                     |
+                erl_backend_loaded .                   |
+                                    .                  |
+                               distel:debug_toggle---->|
+                                      .                |
+                                       .               |
+                                      .                |
+                                     <--interpreted----|
+                                    .                  |
+                                   .                   |
+                                   restart monitor     |
+                                                       
+"                                                      
   (interactive)
-  (if (null (inferior-erlang-running-p))
-      (progn
-        (inferior-erlang-without-switch-buffer) 
-        (sleep-for 0.5)
-        (erl-choose-emacs-node)
-        (erl-ping erl-nodename-cache)
-        )
-    (erl-ping erl-nodename-cache))  
-  )
+  (setq erl-current-debug-module (intern (erlang-get-module)))
+  (setq erl-current-debug-file (buffer-file-name))
+  ;; will clean the hook in `erl-prepare-debugger`
+  (add-hook 'erl-backend-loaded 'erl-prepare-debugger)
 
-(defun erdebug ()
-  "quick start debug session"
-  (interactive)
   (save-excursion
     ;; compile with debug info
-
-    (setq current-prefix-arg t)
-    (inferior-erlang-compile '-)
-    
-    ;; toggle interpreted
-    (edb-toggle-interpret
-     (erl-target-node)
-     (edb-module)
-     buffer-file-name)
-    ;; restart monitor
-    (when (not (null (get-buffer "*edb emacs@bartuer*"))) 
-      (with-current-buffer "*edb emacs@bartuer*"
-        (kill-buffer-and-window)))
-    (edb-monitor (erl-target-node))
-    ;; show next steps
-    (progn (find-file-other-window "~/scripts/cheat-sheet")
-           (goto-char (point-min))
-           (search-forward-regexp "redebug distel erlang"))
+    (let ((prefix-setting current-prefix-arg))
+      ;; compile with debug info
+      (setq current-prefix-arg t)
+      (inferior-erlang-compile '-)
+      (setq current-prefix-arg prefix-setting))
     )
-  )
+
+  ;; check distel loaded
+    (let ((node erl-nodename-cache)
+          (module erl-current-debug-module)
+          (file erl-current-debug-file)
+          )
+    (unless distel-inhibit-backend-check
+      (erl-spawn       ; first point maybe invoke hook erl-backend-loaded
+        (erl-send `[rex ,node]
+                  `[,erl-self [call
+                               code ensure_loaded (distel)
+                               ,(erl-group-leader)]])
+        ;; ensure distel loaded
+        (erl-receive (node module file)
+            ((['rex ['error _]]
+              (&erl-load-backend node)) ; second point maybe invoke hook erl-backend-loaded
+             (_ (erl-prepare-debugger node module file))) ; third point maybe invoke hook erl-backend-loaded
+          )))))
 
 
 (defun bartuer-erlang-load ()

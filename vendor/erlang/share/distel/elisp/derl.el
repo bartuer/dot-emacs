@@ -20,6 +20,8 @@
 (defvar erl-nodedown-hook nil
   "Called with one arg, NODE, a string of the form \"mynode@cockatoo\"")
 
+(defvar erl-backend-loaded nil)
+
 (defcustom derl-use-trace-buffer t
   "*Store erlang message communication in a trace buffer."
   :type 'boolean

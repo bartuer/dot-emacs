@@ -192,7 +192,13 @@ If not then try to send the module over as a binary and load it in."
 (defun &erl-load-backend-modules (node modules)
   (message "loading = %S" (car modules))
   (if (null modules)
-      (message "(Successfully uploaded backend modules into node)")
+      (progn 
+        (message "(Successfully uploaded backend modules into node)")
+        (when (and node erl-current-debug-module erl-current-debug-module)
+            (run-hook-with-args 'erl-backend-loaded
+                                node
+                                erl-current-debug-module
+                                erl-current-debug-file)))
     (let* ((module (caar modules))
 	   (filename (cadar modules))
 	   (content (erl-file-to-string filename))
