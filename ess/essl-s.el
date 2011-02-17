@@ -214,16 +214,23 @@
 ;; R
 (defconst ess-help-R-sec-keys-alist
   '((?a . "\\s *Arguments:")
+    (?A . "\\s *Arguments:")
     (?d . "\\s *Description:")
     (?D . "\\s *Details:")
     (?e . "\\s *Examples:")
+    (?E . "\\s *Examples:")
     (?n . "\\s *Note:")
+    (?N . "\\s *Note:")
     (?r . "\\s *References:")
+    (?R . "\\s *References:")
     (?s . "\\s *See Also:")
+    (?S . "\\s *See Also:")
     (?u . "\\s *Usage:")
-    (?v . "\\s *Value[s]?")	;
-    )
-  "Alist of (key . string) pairs for use in help section searching.")
+    (?U . "\\s *Usage:")
+    (?v . "\\s *Value[s]?")             ;
+    (?V . "\\s *Value[s]?"))             ;
+    
+  "Alist of (key . string) pairs for use in help section searching."))
 
 
 (defconst ess-help-S+-sec-regex "^[A-Z. ---]+:$"

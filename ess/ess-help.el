@@ -254,7 +254,7 @@ emacs buffer) the GUI help window is used."
 	    (if curr-help-syntax-table
 		(set-syntax-table curr-help-syntax-table))
 	    (set-buffer-modified-p 'nil)
-	    (toggle-read-only t)))))))
+	    ))))))
 
 (defvar ess-help-frame nil
   "Stores the frame used for displaying R help buffers.")

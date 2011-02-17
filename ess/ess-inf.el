@@ -1898,6 +1898,25 @@ before you quit.  It is run automatically by \\[ess-quit]."
 
 ;;*;; Object name completion
 
+(defun anything-ess-complete  (pair)
+  (save-excursion
+    (set-buffer anything-current-buffer)
+    (search-backward pattern)
+    (delete-char (length pattern)))
+  (insert (car (split-string pair "\t")))
+  )
+
+(setq ess-completion-table nil)
+(setq anything-c-source-complete-ess
+      '((name . "ess Completion")
+        (candidates . (lambda ()  ess-completion-table))
+        (action
+         ("Completion" . anything-ess-complete)
+         ("Doc" . ess-display-help-on-object)
+         )
+        (volatile)
+        (persistent-action . anything-ess-complete)))
+
 ;;;*;;; The user completion command
 (defun ess-complete-object-name (&optional listcomp)
   "Perform completion on `ess-language' object preceding point.
@@ -1960,8 +1979,11 @@ completions are listed [__UNIMPLEMENTED__]."
 			   (if classname
 			       (ess-slot-names classname)
 			     (ess-get-object-list ess-current-process-name)))))
+        (setq ess-completion-table (all-completions pattern components))
 	;; always return a non-nil value to prevent history expansions
-	(or (comint-dynamic-simple-complete  pattern components) 'none))))
+	(or (let ((anything-sources (list anything-c-source-complete-ess)))
+                   (anything))
+            'none))))
 
 (defun ess-list-object-completions nil
   "List all possible completions of the object name at point."

@@ -936,6 +936,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
 (add-hook 'ess-mode-hook 'bartuer-ess-load)
+(add-hook 'ess-help-mode-hook 'bartuer-ess-help-load)
 
 (require 'org-ascii nil t)
 (require 'bartuer-mail nil t)
