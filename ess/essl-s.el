@@ -230,7 +230,7 @@
     (?v . "\\s *Value[s]?")             ;
     (?V . "\\s *Value[s]?"))             ;
     
-  "Alist of (key . string) pairs for use in help section searching."))
+  "Alist of (key . string) pairs for use in help section searching.")
 
 
 (defconst ess-help-S+-sec-regex "^[A-Z. ---]+:$"

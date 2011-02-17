@@ -6,6 +6,7 @@
 (defun bartuer-ess-load ()
   "for statistic language
 "
+  (interactive)
   (require 'ess-site nil t)
   ;; match three part (function keyword, the arglist, beginning of
   ;; clauses) of a function define at the functin begin line
@@ -51,3 +52,4 @@
   (define-key ess-help-mode-map "\C-\M-x" 'ess-eval-region)
   (define-key ess-help-mode-map "\C-u\C-\M-x" 'ess-eval-region-and-go)
   )
+
