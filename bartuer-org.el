@@ -54,6 +54,8 @@
              "* %?\n%U\n%c\n%i\n")
         ("j" "Journey" plain (file+datetree "~/org/diary.org")
              "      - %?\n       %U\n  %i\n")
+        ("l" "Sleeping" plain (file+datetree "~/org/sleep.org") 
+             "******* TODO \n  " :clock-in t)
         )))
 
 (defun bartuer-jump-to-archive ()
