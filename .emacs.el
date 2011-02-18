@@ -953,8 +953,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-calendar-load "bartuer-calendar.el" "for calendar mode" t)
 (add-hook 'calendar-mode-hook 'bartuer-calendar-load)
 
-(autoload 'textile-minor-mode "textile-minor-mode.el" "for org mode" t)
-(require 'textile-minor-mode nil t)
+(autoload 'php-mode "php-mode.el" "for php mode" t)
+(require 'php-mode)
+(add-to-list 'auto-mode-alist '("\\.php" . php-mode))
 
 (autoload 'markdown-mode "markdown-mode.el"
      "Major mode for editing Markdown files" t)
