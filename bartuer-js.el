@@ -358,6 +358,23 @@ wrap block add semicolon correct plus and equal"
     )
   )
 
+(defun js-to-json (&optional start end)
+  "convert region to json string"
+  (interactive)
+  (when (eq start nil)
+    (setq start (region-beginning))
+    (setq end (region-end)))
+  (write-region start end "/tmp/d8-temp.js")
+  (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/tojson.js --  /tmp/d8-temp.js" "*json*" nil)
+  (with-current-buffer "*json*"
+    (goto-char (point-min))
+    (json-read-object)
+    )
+  (pop-to-buffer "*json*")
+  (pop-to-buffer "*Pp Eval Output*")
+  )
+
+
 (defvar js2-parse-mode nil)
 
 (defcustom js2-parse-minor-mode-string " Js2-parse"
