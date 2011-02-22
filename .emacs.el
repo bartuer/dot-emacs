@@ -212,6 +212,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-8" 'find-file)
 (defalias 'ff 'find-file-at-point)
 
+(defun clean-thing-at-point ()
+  (let ((bounds (bounds-of-thing-at-point 'word)))
+      (if bounds
+          (buffer-substring-no-properties (car bounds) (cdr bounds)))))
+
 (require 'ibuffer nil t)
 (when (fboundp 'ibuffer)
   (defalias 'j 'ibuffer))

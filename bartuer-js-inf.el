@@ -109,11 +109,6 @@
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
 
-(defun clean-thing-at-point ()
-  (let ((bounds (bounds-of-thing-at-point 'word)))
-      (if bounds
-          (buffer-substring-no-properties (car bounds) (cdr bounds)))))
-
 (defun what-object-at-point ()
   (interactive)
   (let ((id (thing-at-point 'word)))
