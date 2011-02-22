@@ -7,18 +7,24 @@
 (defun rhino ()
   (unless (setq rhino-process (get-buffer-process "*rhino*"))
     (progn
-      (setq rhino-process (make-comint "rhino"  "rhino"))
+      (setq rhino-process (get-buffer-process (make-comint "rhino"  "rhino")))
       (process-send-string rhino-process (concat "load('" (expand-file-name rhino-navigator-env) "');\n")))
     )
   rhino-process)
+
 
 (defun MozRepl ()
   (setq mozrepel-jsh-process (inferior-moz-process)))
 
 (defun v8 ()
   (unless (setq v8-process (get-buffer-process "*v8*"))
-    (setq v8-process (make-comint "v8" "v8_shell")))
+    (setq v8-process (get-buffer-process (make-comint "v8" "v8_shell"))))
   v8-process)
+
+(defun node ()
+  (unless (setq node-process (get-buffer-process "*node*"))
+    (setq node-process (get-buffer-process (make-comint "node" "node"))))
+  node-process)
 
 (defun d8r ()
   (unless (setq d8r-process (get-buffer-process "*d8r*"))
@@ -29,19 +35,19 @@
 
 (defun squirrelfish ()
   (unless (setq squirrelfish-process (get-buffer-process "*squirrelfish*"))
-    (setq squirrelfish-process (make-comint "squirrelfish" "squirrelfish")))
+    (setq squirrelfish-process (get-buffer-process (make-comint "squirrelfish" "squirrelfish"))))
   squirrelfish-process)
     
 (defun spidermonkey ()
   (unless (setq spidermonkey-process (get-buffer-process "*spidermonkey*"))
-    (setq spidermonkey-process (make-comint "spidermonkey" "spidermonkey-nanojit")))
+    (setq spidermonkey-process (get-buffer-process (make-comint "spidermonkey" "spidermonkey-nanojit"))))
   spidermonkey-process)
 
 (defun connect-jsh ()
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "d8r" "MozRepl" "v8" "rhino"  "squirrelfish" "spidermonkey"  ) nil t)))
+                                   (list  "d8r" "MozRepl" "node" "v8" "rhino"  "squirrelfish" "spidermonkey"  ) nil t)))
     (setq js-process (apply (intern jsh) nil))
     (pop-to-buffer (concat "*" jsh "*"))
     ))
@@ -102,5 +108,21 @@
   (d8r-head)
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
+
+(defun clean-thing-at-point ()
+  (let ((bounds (bounds-of-thing-at-point 'word)))
+      (if bounds
+          (buffer-substring-no-properties (car bounds) (cdr bounds)))))
+
+(defun what-object-at-point ()
+  (interactive)
+  (let ((id (thing-at-point 'word)))
+    (process-send-string (get-buffer-process (current-buffer))
+                         (concat "dir #" id "#" "\n") )
+    (save-excursion
+      (search-backward "dbg"))
+    (recenter-top-bottom 14))
+  )
+
 
 (provide 'bartuer-js-inf)
