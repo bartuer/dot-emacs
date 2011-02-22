@@ -111,7 +111,7 @@
 
 (defun what-object-at-point ()
   (interactive)
-  (let ((id (thing-at-point 'word)))
+  (let ((id (clean-thing-at-point 'word)))
     (process-send-string (get-buffer-process (current-buffer))
                          (concat "dir #" id "#" "\n") )
     (save-excursion
