@@ -26,12 +26,43 @@
     (setq node-process (get-buffer-process (make-comint "node" "node"))))
   node-process)
 
+(defun woap ()
+  (interactive)
+  (let ((current-char (following-char)))
+    (when (and (<= 48 current-char)
+               (>= 57 current-char))
+      (let  ((id (clean-thing-at-point)))
+        (message (concat "inspect #" id "#\n"))
+        (process-send-string (get-buffer-process (current-buffer))
+                             (concat "dir #" id "#" "\n"))
+        (save-excursion
+          (search-backward "dbg"))
+          (recenter-top-bottom 14)
+        ))
+    )
+  )
+
 (defun d8r ()
   (unless (setq d8r-process (get-buffer-process "*d8r*"))
     (progn
       (make-comint "d8r" "d8r")
-      (setq d8r-process (get-buffer-process "*d8r*"))))
+      (setq d8r-process (get-buffer-process "*d8r*"))
+      (with-current-buffer "*d8r*"
+        (add-hook 'post-command-hook 'woap nil t)
+        )))
   d8r-process)
+
+(defun node-d8 ()
+  (unless (string-equal  (shell-command-to-string "p 5959") "yes\n")
+    (message "you need start node like this: node --debug=5959 $@"))
+  (unless (setq node-d8r-process (get-buffer-process "*node.d8r*"))
+    (progn
+      (make-comint "node.d8r" "node.d8")
+      (setq node-d8r-process (get-buffer-process "*node.d8r*"))
+      (with-current-buffer "*node.d8r*"
+        (add-hook 'post-command-hook 'woap nil t)
+        )))
+  node-d8r-process)
 
 (defun squirrelfish ()
   (unless (setq squirrelfish-process (get-buffer-process "*squirrelfish*"))
@@ -47,9 +78,11 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "d8r" "MozRepl" "node" "v8" "rhino"  "squirrelfish" "spidermonkey"  ) nil t)))
+                                   (list  "d8r" "MozRepl" "node-d8" "v8" "rhino"  "squirrelfish" "spidermonkey" "node" ) nil t)))
     (setq js-process (apply (intern jsh) nil))
-    (pop-to-buffer (concat "*" jsh "*"))
+    (if (string-equal jsh "node-d8")
+        (pop-to-buffer "*node.d8r*")
+      (pop-to-buffer (concat "*" jsh "*")))
     ))
 
 (defun d8r-head ()
@@ -108,16 +141,5 @@
   (d8r-head)
   (process-send-region js-process (point-min) (point-max))
   (process-send-string js-process "\n"))
-
-(defun what-object-at-point ()
-  (interactive)
-  (let ((id (clean-thing-at-point 'word)))
-    (process-send-string (get-buffer-process (current-buffer))
-                         (concat "dir #" id "#" "\n") )
-    (save-excursion
-      (search-backward "dbg"))
-    (recenter-top-bottom 14))
-  )
-
 
 (provide 'bartuer-js-inf)
