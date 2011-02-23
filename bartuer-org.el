@@ -61,6 +61,7 @@
 (defun bartuer-jump-to-archive ()
   "jump from org to it's archive file"
   (interactive)
+  (require 'org-archive)
   (find-file (org-extract-archive-file)))
 
 
@@ -309,7 +310,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
       )))
 
 (defun org-timeline-next-line ()
-  "Parse org in TimeLine Agenda View. \\[org-timeline]
+  "parse one entry line in TimeLine Agenda View. \\[org-timeline]
 
 Return List which head indicate type of line, \"DAY\", \"TASK\",
 \"NULL\", data included in tail:
@@ -354,6 +355,61 @@ Bind C-n of org timeline agenda view to this test the function:
            '("NULL"))
           )))
 
+(defun org-timeline-to-json ()
+"parse org in TimeLine Agenda View.
+see \\[org-timeline] and `org-timeline-next-line'"
+  (interactive)
+  (goto-char (point-min))
+  (let ((day nil)
+        (tasks nil)
+        (day-key nil)
+        (result nil))
+    (while (< (point) (point-max))
+      (let* ((info (org-timeline-next-line))
+             (type (car info))
+             (value (if type
+                        (car-safe (cdr info))
+                      nil)))
+        (cond ((string-equal type "DAY")
+               (setq day value)
+               (when tasks
+                 (let ((day-value (vconcat tasks)))
+                   (setq result (assq-delete-all day-key result))
+                   (push (cons day-key day-value) result))
+                 )
+               (setq tasks nil))
+              ((string-equal type "TASK")
+               (let* ((day-symbol
+                       (intern
+                        (format "%04d-%02d-%02d %s"
+                                (plist-get day :year)
+                                (plist-get day :month)
+                                (plist-get day :day)
+                                (nth (plist-get day :weekday)
+                                     '("Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat"))
+                                )))
+                      (has-record (assoc day-symbol result)))
+                 (if has-record
+                     (push value tasks)
+                   (setq tasks (list value))
+                   (setq day-key day-symbol)
+                   (push (cons day-symbol tasks) result)
+                   )))
+              (t
+               (when (and
+                      (= (point) (point-max))
+                      tasks)
+                   (let ((day-value (vconcat tasks)))
+                     (setq result (assq-delete-all day-key result))
+                     (push (cons day-key day-value) result)) 
+                   )
+               nil)
+              )))
+    (if (fboundp 'json-encode)
+        (json-encode result)
+      result)))
+  
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
@@ -392,6 +448,6 @@ Bind C-n of org timeline agenda view to this test the function:
           ("gf" . "http://www.google.com/finance?q=%s")
           ("rt" . "http://www.reuters.com/finance/stocks/overview?symbol=%s")))
   (add-to-list 'org-property-allowed-value-functions 'org-effort-allowed-property-values)
-)
+  )
 
 (provide 'bartuer-org)
