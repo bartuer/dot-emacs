@@ -295,6 +295,65 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (with-current-buffer "*mail*"
     (insert org-mail-body)))
 
+
+(defun get-entries-in-timeline ()
+  "return all properties entries for task under current point"
+  (save-excursion
+    (push-mark)
+    (org-agenda-switch-to)
+    (let* ((entries (org-entry-properties (point)))
+           (heading (cons "HEADING" (nth 4 (org-heading-components)))))
+      (push heading entries)
+      (pop-global-mark)
+      entries
+      )))
+
+(defun org-timeline-next-line ()
+  "Parse org in TimeLine Agenda View. \\[org-timeline]
+
+Return List which head indicate type of line, \"DAY\", \"TASK\",
+\"NULL\", data included in tail:
+
+If current line is date line, return Property List include
+keys :year, :month, :day, :week, :weekday.
+
+If current line is task line, return Association List include
+cons as (name . value).
+
+If current line is not interesting, there is no tail part.
+
+Bind C-n of org timeline agenda view to this test the function:
+
+ (defun org-timeline-next-line ()
+  (interactive)
+  (princ (org-timeline-next-line)))
+"
+  (let ((path (org-agenda-next-line)))
+    (cond ((org-get-at-bol 'org-agenda-date-header)
+           (let* ((day-info '(:year 2011))
+                  (day (org-get-at-bol 'day))
+                  (weekp (calendar-iso-from-absolute day))
+                  (normalp (calendar-gregorian-from-absolute day))
+                  )
+             (plist-put day-info :month (pop normalp))
+             (plist-put day-info :day (pop normalp))
+             (plist-put day-info :year (pop normalp))
+             (plist-put day-info :week (pop weekp))
+             (plist-put day-info :weekday (pop weekp))
+             (list "DAY" day-info) ))
+          ((org-get-at-bol 'org-hd-marker)
+           (if path
+               (let* ((entries (get-entries-in-timeline))
+                      (path (org-substring-no-properties path)))
+                 (push (cons "PATH" path) entries)
+                 (list "TASK" entries) 
+                 )
+             (list "TASK" (get-entries-in-timeline)) 
+             ))
+          (t
+           '("NULL"))
+          )))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
