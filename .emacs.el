@@ -488,7 +488,7 @@ If give a negative ARG, will undo the last mark action, thus the
                                   '(message-length))
     ))
 
-
+(require 'json nil t)
 (when (require 'anything-show-completion nil t)
   (progn
     (use-anything-show-completion 'anything-complete-js

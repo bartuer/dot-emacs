@@ -100,6 +100,20 @@
                  (org-hh:mm-string-to-minutes
                   (match-string-no-properties 1 timestring)))))))
 
+(setq timestamp-regex "[0-9]+?-[0-9]+?-[0-9]+ [A-Za-z]+ \\([0-9]+\\:[0-9]+$\\)")
+
+(defun timestamp->fraction (timestamp)
+  "convert org time stamp string to seconds"
+  (let ((fraction 0))
+    (when (numberp (string-match timestamp-regex timestamp)) 
+      (setq fraction
+            (/ (round (* 100 (/ (* 60
+                     (org-hh:mm-string-to-minutes
+                      (match-string-no-properties 1 timestamp) )) 86400.0))) 100.0)))
+    fraction)
+  )
+
+
 (defun set-schedule ()
   "if next schedule time slot is too late, move it to next day morning"
   (setq new-day-time-or-last-schedule
@@ -355,6 +369,62 @@ Bind C-n of org timeline agenda view to this test the function:
            '("NULL"))
           )))
 
+(defun org-timeline-object-bake (obj)
+  (cons
+   (intern "days")
+   (mapcar
+    (lambda (ent)
+      (let* ((day (car ent)) (tasks (cdr ent)) (effort-total 0))
+        (mapcar
+         (lambda (e)
+           (let ((effort (/ (effort->secs
+                             (cdr (assoc "Effort" e)))
+                            3600.0)))
+             (setq effort-total
+                   (+ effort-total
+                      effort))))
+         tasks)
+        (cons day
+              (vconcat
+               (mapcar
+                (lambda (e)
+                  (let ((todo (cdr (assoc "TODO" e)))
+                        clock l)
+                    (when (string-equal "DONE" todo)
+                      (setq clock (extract-clock-time
+                                   (cdr (assoc "CLOCK" e))))
+                      (push (cons (intern "path") (cdr (assoc "PATH" e))) l)
+                      (push (cons (intern "name") (cdr (assoc "HEADING" e))) l)
+                      (push (cons (intern "schedule") (cdr (assoc "SCHEDULED" e))) l)
+                      (push (cons (intern "value_v")
+                                  (/ (round
+                                      (* 100
+                                         (/ (/ (string-to-number
+                                                (cdr (assoc "Effort" e)))
+                                               1.0)
+                                            effort-total))) 100.0)) l)
+                      (push (cons (intern "effort")
+                                  (/ (effort->secs
+                                      (cdr (assoc "Effort" e)))
+                                     3600.0)) l)
+                      (push (cons (intern "beg") (car clock)) l)
+                      (push (cons (intern "end") (cdr clock)) l)
+                      (push (cons (intern "beg_v") (timestamp->fraction (car clock))) l)
+                      (push (cons (intern "end_v") (timestamp->fraction (cdr clock))) l)
+                      (let ((clockhistory (assoc "Clockhistory" e)))
+                        (when clockhistory
+                          (push (cons (intern "Clockhistory")
+                                      (string-to-number
+                                       (cdr (assoc "Clockhistory" e)))) l)))            
+                      (let ((commit (assoc "Commit" e)))
+                        (when commit
+                          (push (cons (intern "Commit") (cdr commit)) l))) 
+                      l)))
+                tasks)))
+        ))
+    obj)) 
+  )
+
 (defun org-timeline-to-json ()
 "parse org in TimeLine Agenda View.
 see \\[org-timeline] and `org-timeline-next-line'"
@@ -405,9 +475,10 @@ see \\[org-timeline] and `org-timeline-next-line'"
                    )
                nil)
               )))
-    (if (fboundp 'json-encode)
-        (json-encode result)
-      result)))
+    (if (and nil
+         (fboundp 'json-encode))
+        (json-encode (org-timeline-object-bake result))
+      (org-timeline-object-bake result))))
   
 
 (defun bartuer-org-load ()
