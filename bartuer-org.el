@@ -310,6 +310,49 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (with-current-buffer "*mail*"
     (insert org-mail-body)))
 
+;;; can set these information in symbol plist 
+(defun day-string-full-parse (s)
+  "parse time string to code friendly structure"
+  (let* ((day (org-time-string-to-absolute s))
+         (weekp (calendar-iso-from-absolute day))
+         (normalp (calendar-gregorian-from-absolute day))
+         (day-info '(:year 2011)))
+    (plist-put day-info :month (pop normalp))
+    (plist-put day-info :day (pop normalp))
+    (plist-put day-info :year (pop normalp))
+    (plist-put day-info :week (pop weekp))
+    (plist-put day-info :weekday (pop weekp))
+    day-info
+    )
+  )
+
+(defun absolute-day-to-that-week (d)
+  "give absolute day number, return that week days string list"
+  (let* ((w:wd:y (calendar-iso-from-absolute d))
+         (w (nth 0 w:wd:y))
+         (wd (nth 1 w:wd:y))
+         (Mon
+          (if (= wd 0)
+              (- d 6)
+            (- d (- wd 1)))
+          )
+         (Tue (+ Mon 1))
+         (Wed (+ Mon 2))
+         (Thu (+ Mon 3))
+         (Fri (+ Mon 4))
+         (Sat (+ Mon 5))         
+         (Sun (+ Mon 6))
+         )
+    (mapcar
+     (lambda (s)
+       (let* ((date (calendar-gregorian-from-absolute (symbol-value s)))
+              (m (nth 0 date))
+              (d (nth 1 date))
+              (y (nth 2 date)))
+              (format "%04d-%02d-%02d %s" y m d (symbol-name s))))
+     (list 'Mon 'Tue 'Wed 'Thu 'Fri 'Sat 'Sun))
+    )
+)
 
 (defun get-entries-in-timeline ()
   "return all properties entries for task under current point"
@@ -355,6 +398,7 @@ Bind C-n of org timeline agenda view to this test the function:
              (plist-put day-info :year (pop normalp))
              (plist-put day-info :week (pop weekp))
              (plist-put day-info :weekday (pop weekp))
+             (plist-put day-info :absolute day)
              (list "DAY" day-info) ))
           ((org-get-at-bol 'org-hd-marker)
            (if path
@@ -369,7 +413,7 @@ Bind C-n of org timeline agenda view to this test the function:
            '("NULL"))
           )))
 
-(defun org-timeline-object-bake (obj)
+(defun org-timeline-days-bake (obj)
   (cons
    (intern "days")
    (mapcar
@@ -396,17 +440,13 @@ Bind C-n of org timeline agenda view to this test the function:
                       (push (cons (intern "path") (cdr (assoc "PATH" e))) l)
                       (push (cons (intern "name") (cdr (assoc "HEADING" e))) l)
                       (push (cons (intern "schedule") (cdr (assoc "SCHEDULED" e))) l)
-                      (push (cons (intern "value_v")
-                                  (/ (round
-                                      (* 100
-                                         (/ (/ (string-to-number
-                                                (cdr (assoc "Effort" e)))
-                                               1.0)
-                                            effort-total))) 100.0)) l)
                       (push (cons (intern "effort")
                                   (/ (effort->secs
                                       (cdr (assoc "Effort" e)))
                                      3600.0)) l)
+                      (push (cons (intern "value_v")
+                                  (/ (cdr (assq 'effort l))
+                                     effort-total)) l)
                       (push (cons (intern "beg") (car clock)) l)
                       (push (cons (intern "end") (cdr clock)) l)
                       (push (cons (intern "beg_v") (timestamp->fraction (car clock))) l)
@@ -422,11 +462,62 @@ Bind C-n of org timeline agenda view to this test the function:
                       l)))
                 tasks)))
         ))
-    obj)) 
+    obj))
+  )
+
+(defun org-timeline-weeks-bake (days-baked)
+  (list
+   (cons
+    (intern "weeks")
+    (let ((weeks nil))
+      (mapcar
+       (lambda (day-ent)
+         (let* ((day-name (car day-ent))
+                (week (intern (format "%d" (get day-name 'w))))
+                (weekday (get day-name 'wd))
+                (index (if (= weekday 0)
+                           6
+                         (- weekday 1)))
+                (absolute (get day-name 'a)))
+           (unless (assq week weeks)
+             (push
+              (cons week
+                    (list
+                     (cons (intern "tasks_v") (make-vector 7 0))
+                     (cons (intern "values_v") (make-vector 7 0))
+                     (cons (intern "days")
+                           (vconcat
+                            (absolute-day-to-that-week absolute)))
+                     ))
+              weeks)
+             )
+           (let* ((d (cdr day-ent))
+                  (w (cdr (assq week weeks)))
+                  (ta (cdr (assq 'tasks_v w)))
+                  (v (cdr (assq 'values_v w))))
+             (aset ta index (length d))
+             (mapcar
+              (lambda (task)
+                (when task
+                  (let ((value_v (cdr (assq 'value_v task))))
+                    (if (numberp value_v)
+                        (aset v index (+  value_v (aref v index))) 
+                      0)
+                    )
+                  )
+                )
+              d)
+             )))
+       (cdr days-baked))
+      weeks))
+   days-baked))
+
+(defun org-timeline-months-bake (weeks-baked)
+  weeks-baked
   )
 
 (defun org-timeline-to-json ()
-"parse org in TimeLine Agenda View.
+  "parse org in TimeLine Agenda View.
 see \\[org-timeline] and `org-timeline-next-line'"
   (interactive)
   (goto-char (point-min))
@@ -463,24 +554,35 @@ see \\[org-timeline] and `org-timeline-next-line'"
                      (push value tasks)
                    (setq tasks (list value))
                    (setq day-key day-symbol)
+                   (let ((yv (plist-get day :year))
+                         (mv (plist-get day :month))
+                         (dv (plist-get day :day))
+                         (wv (plist-get day :week))
+                         (wday (plist-get day :weekday))
+                         (av (plist-get day :absolute)))
+                     (setplist day-key (list 'd dv 'm mv 'y yv 'w wv 'wd wday 'a av)))
                    (push (cons day-symbol tasks) result)
                    )))
               (t
                (when (and
                       (= (point) (point-max))
                       tasks)
-                   (let ((day-value (vconcat tasks)))
-                     (setq result (assq-delete-all day-key result))
-                     (push (cons day-key day-value) result)) 
-                   )
+                 (let ((day-value (vconcat tasks)))
+                   (setq result (assq-delete-all day-key result))
+                   (push (cons day-key day-value) result)) 
+                 )
                nil)
               )))
     (if (and nil
-         (fboundp 'json-encode))
-        (json-encode (org-timeline-object-bake result))
-      (org-timeline-object-bake result))))
+             (fboundp 'json-encode))
+        (json-encode
+         (org-timeline-months-bake
+          (org-timeline-weeks-bake
+           (org-timeline-days-bake result))))
+        (org-timeline-months-bake
+         (org-timeline-weeks-bake
+          (org-timeline-days-bake result))))))
   
-
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
