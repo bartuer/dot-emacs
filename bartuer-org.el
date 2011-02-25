@@ -322,7 +322,8 @@ clock out time, if there is no clock time, next schedule time will be last sched
     (plist-put day-info :year (pop normalp))
     (plist-put day-info :week (pop weekp))
     (plist-put day-info :weekday (pop weekp))
-    day-info
+    (plist-put day-info :absolute day)
+    (copy-alist  day-info)
     )
   )
 
@@ -336,12 +337,7 @@ clock out time, if there is no clock time, next schedule time will be last sched
               (- d 6)
             (- d (- wd 1)))
           )
-         (Tue (+ Mon 1))
-         (Wed (+ Mon 2))
-         (Thu (+ Mon 3))
-         (Fri (+ Mon 4))
-         (Sat (+ Mon 5))         
-         (Sun (+ Mon 6))
+         (Tue (1+ Mon)) (Wed (1+ Tue)) (Thu (1+ Wed)) (Fri (1+ Thu)) (Sat (1+ Fri)) (Sun (1+ Sat))
          )
     (mapcar
      (lambda (s)
@@ -353,6 +349,51 @@ clock out time, if there is no clock time, next schedule time will be last sched
      (list 'Mon 'Tue 'Wed 'Thu 'Fri 'Sat 'Sun))
     )
 )
+
+(eval-and-compile
+  (defconst calendar-short-month-name ["" "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]))
+
+(defun judge-week-to-month (w y)
+  "give week name in number, string or symbol, list or vector of
+that week days string is also okay, y is year number.
+
+return which month that week should belong, the return value is
+cons like (12 . Dec)"
+  (let ((weekday-list
+         (let ((week
+                (cond ((stringp w)
+                       (string-to-number w)
+                       )
+                      ((symbolp w)
+                       (symbol-value w))
+                      ((numberp w)
+                       w)
+                      (t
+                       w))))
+           (if (numberp week)
+               (progn
+                 (let ((day-in-week
+                        (+ (* 7 week)
+                           (calendar-absolute-from-iso
+                            (list 1 1 y)))))
+                   (absolute-day-to-that-week day-in-week)))
+             (if (or (listp week)
+                     (vectorp week))
+                 week
+               (error "wrong argument")
+               )
+             ))))
+    (let ((month
+           (elt
+            (mapcar
+             (lambda (day-info) (plist-get day-info :month))
+             (mapcar 'day-string-full-parse weekday-list)
+             )
+            3)))
+      (cons month (elt calendar-short-month-name month))) 
+    )
+  )
+
 
 (defun get-entries-in-timeline ()
   "return all properties entries for task under current point"
