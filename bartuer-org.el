@@ -553,8 +553,64 @@ Bind C-n of org timeline agenda view to this test the function:
       weeks))
    days-baked))
 
+(defun month-weeks (month year)
+  (let* ((month-first-day
+          (calendar-iso-from-absolute
+           (calendar-absolute-from-gregorian (list month 1 year))))
+         (month-last-day
+          (calendar-iso-from-absolute
+           (calendar-absolute-from-gregorian (list month 28 year))))
+         (first-day-week (if (and 
+                              (= (1- year)
+                                 (nth 2 month-first-day))
+                              (= (nth 0 month-first-day) 52))
+                             1
+                           (nth 0 month-first-day)
+                           ) )
+         (last-day-week (nth 0 month-last-day))
+         (first-week (if (= month
+                            (car
+                             (judge-week-to-month first-day-week year)))
+                         first-day-week
+                       (1+ first-day-week)))
+         (last-week (if (= month
+                           (car
+                            (judge-week-to-month last-day-week year)))
+                        last-day-week
+                      (1- last-day-week)))
+         (weeks (list last-week)))
+    (setq last-week (1- last-week))
+    (while (>= last-week first-week)
+      (push last-week weeks)
+      (setq last-week (1- last-week)))
+    weeks
+    )
+  )
+
 (defun org-timeline-months-bake (weeks-baked)
-  weeks-baked
+  (let ((months nil)
+        ;; do not know how to calculate the current year
+        (year 2011))
+    (mapcar
+     (lambda (week-ent)
+       (let* ((week-name (cdr (assq 'days (cdr week-ent))))
+              (month (judge-week-to-month week-name year))
+              (month-num (car month))
+              (month-name (intern (cdr month)))
+              (month-weeks (month-weeks month-num year))
+              (weeks-num (length month-weeks)))
+         (unless (assq month-name months)
+           (push
+            (cons month-name
+                  (list
+                   (cons (intern "values_v") (make-vector weeks-num 0))
+                   (cons (intern "tasks_v") (make-vector weeks-num 0))
+                   (cons (intern "weeks") month-weeks)
+                   ))
+            months))))
+     (reverse (cdr (assq 'weeks weeks-baked))))
+    months
+    )
   )
 
 (defun org-timeline-to-json ()
