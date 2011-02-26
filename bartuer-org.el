@@ -483,7 +483,7 @@ Bind C-n of org timeline agenda view to:
           )))
 
 (defun org-timeline-days-bake (obj)
-  (list
+  (cons
    (intern "days")
    (mapcar
     (lambda (ent)
@@ -497,7 +497,7 @@ Bind C-n of org timeline agenda view to:
                    (+ effort-total
                       effort))))
          tasks)
-        (list
+        (cons
          day
          (list
           (cons
@@ -547,12 +547,12 @@ Bind C-n of org timeline agenda view to:
 
 (defun org-timeline-weeks-bake (days-baked)
   (cons
-   (list
+   (cons
     (intern "weeks")
     (let ((weeks nil))
       (mapcar
-       (lambda (day-wrap)
-         (let* ((day-ent (car day-wrap))
+       (lambda (day-ent)
+         (let* (
                 (day-name (car day-ent))
                 (week (intern (format "%d %d" (get day-name 'y) (get day-name 'w))))
                 (weekday (get day-name 'wd))
@@ -563,7 +563,7 @@ Bind C-n of org timeline agenda view to:
            (unless (assq week weeks)
              (setplist week (list 'w (get day-name 'w) 'm (get day-name 'm) 'y (get day-name 'y)))
              (push
-              (list week
+              (cons week
                     (list
                      (cons (intern "tasks_v") (make-vector 7 0))
                      (cons (intern "values_v") (make-vector 7 0))
@@ -576,11 +576,9 @@ Bind C-n of org timeline agenda view to:
                      ))
               weeks)
              )
-           (let* ((d (cdr
-                      (assq 'tasks_v
-                            (car (cdr day-ent)))))
-                  (w (car
-                      (cdr (assq week weeks))))
+           (let* ((d (cdr (assq 'tasks_v
+                                (cdr day-ent))))
+                  (w (cdr (assq week weeks)))
                   (ta (cdr (assq 'tasks_v w)))
                   (v (cdr (assq 'values_v w))))
              (aset ta index (length d))
@@ -602,17 +600,16 @@ Bind C-n of org timeline agenda view to:
 
 (defun org-timeline-months-bake (weeks-baked)
   (cons
-   (list
+   (cons
     (intern "months")
     (let ((months nil)
           ;; haven't  calculate the total task
           (project-tasks 300))
       (mapcar
-       (lambda (week-wrap)
-         (let* ((week-ent (car week-wrap))
-                (week (car week-ent))
+       (lambda (week-ent)
+         (let* ((week (car week-ent))
                 (year (get week 'y))
-                (week-value (car (cdr week-ent)))
+                (week-value (cdr week-ent))
                 (month (judge-week-to-month (get week 'w) year))
                 (month-num (car month))
                 (month-name (intern (format "%d-%02d" year (car month))))
@@ -622,7 +619,7 @@ Bind C-n of org timeline agenda view to:
            (unless (assq month-name months)
              (setplist month-name (list 'm (car month) 'y year))
              (push
-              (list month-name
+              (cons month-name
                     (list
                      (cons (intern "values_v") (make-vector weeks-sum 0))
                      (cons (intern "tasks_v") (make-vector weeks-sum 0))
@@ -638,31 +635,30 @@ Bind C-n of org timeline agenda view to:
                      ))
               months))
            (let* ((tv (cdr (assq 'tasks_v
-                                 (car
-                                  (cdr
-                                   (assq month-name months))))))
+                                 (cdr
+                                  (assq month-name months)))))
                   (vv (cdr (assq 'values_v
-                                 (car
-                                  (cdr
-                                   (assq month-name months))))))
+                                 (cdr
+                                  (assq month-name months)))))
                   (ta (cdr (assq 'tasks_v week-value)))
                   (total-task 0)
-                  )
-             (mapcar
-              (lambda (task-count)
-                (setq total-task
-                      (+ total-task task-count)))
-              (append ta nil))
-             (aset tv index total-task)
-             (aset vv index (/ (/ total-task 1.0) project-tasks))
-             )
+                       )
+                  (mapcar
+                   (lambda (task-count)
+                     (setq total-task
+                           (+ total-task task-count)))
+                   (append ta nil))
+                  (aset tv index total-task)
+                  (aset vv index (/ (/ total-task 1.0) project-tasks))
            ))
-       (reverse (cdr (assq 'weeks weeks-baked))))
+       )
+       (reverse (cdr (assq 'weeks weeks-baked)))
+      )
       months
-      ))
-   weeks-baked
+      )
    )
-  )
+   weeks-baked
+  ))
 
 (defun org-timeline-to-json ()
   "parse org in TimeLine Agenda View.
@@ -728,8 +724,8 @@ see \\[org-timeline] and `org-timeline-next-line'"
           (org-timeline-weeks-bake
            (org-timeline-days-bake result))))
       (org-timeline-months-bake
-       (org-timeline-weeks-bake
-        (org-timeline-days-bake result)))
+          (org-timeline-weeks-bake
+           (org-timeline-days-bake result)))
       )))
 
 (defun bartuer-org-load ()
