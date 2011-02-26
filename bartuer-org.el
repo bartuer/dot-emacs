@@ -24,39 +24,39 @@
     (setq org-currnet-link-string (buffer-substring (point-min) (point-max)))
     (kill-region (point-min) (point-max)))
   org-currnet-link-string
-)
+  )
 
 (defun bartuer-setup-capture ()
   "capture templates"
   (interactive)
   (setq org-capture-templates
-      '(("d" "Debug" entry (file+headline "~/org/next.org" "Debuging")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %a\n  %i\n")
-        ("f" "Fix" entry (file+headline "~/org/next.org" "Fixing")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
-        ("$" "Buy" entry (file+headline "~/org/next.org" "Buying")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
-        ("b" "Build" entry (file+headline "~/org/next.org" "Building")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
-        ("h" "Hack" entry (file+headline "~/org/next.org" "Hacking")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %a\n  %i\n")
-        ("m" "Meet" entry (file+headline "~/org/next.org" "Meeting")
-             "* TODO %?\n %a %^{SCHEDULED}p\n  %i\n")
-        ("s" "Research" entry (file+headline "~/org/next.org" "Researching")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
-        ("r" "Read" entry (file+headline "~/org/next.org" "Reading")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
-        ("w" "Watch" entry (file+headline "~/org/next.org" "Watching")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
-        ("t" "Todo" entry (file+headline "~/org/next.org" "!Category")
-             "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
-        ("c" "Capture" plain (file "~/org/quote.org")
-             "* %?\n%U\n%c\n%i\n")
-        ("j" "Journey" plain (file+datetree "~/org/diary.org")
-             "      - %?\n       %U\n  %i\n")
-        ("l" "Sleeping" plain (file+datetree "~/org/sleep.org") 
-             "******* TODO \n  " :clock-in t)
-        )))
+        '(("d" "Debug" entry (file+headline "~/org/next.org" "Debuging")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %a\n  %i\n")
+          ("f" "Fix" entry (file+headline "~/org/next.org" "Fixing")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
+          ("$" "Buy" entry (file+headline "~/org/next.org" "Buying")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
+          ("b" "Build" entry (file+headline "~/org/next.org" "Building")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
+          ("h" "Hack" entry (file+headline "~/org/next.org" "Hacking")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %a\n  %i\n")
+          ("m" "Meet" entry (file+headline "~/org/next.org" "Meeting")
+           "* TODO %?\n %a %^{SCHEDULED}p\n  %i\n")
+          ("s" "Research" entry (file+headline "~/org/next.org" "Researching")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
+          ("r" "Read" entry (file+headline "~/org/next.org" "Reading")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
+          ("w" "Watch" entry (file+headline "~/org/next.org" "Watching")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %(bartuer-capture-insert-link)\n  %i\n")
+          ("t" "Todo" entry (file+headline "~/org/next.org" "!Category")
+           "* TODO %?\n  %^{SCHEDULED}p\n  %i\n")
+          ("c" "Capture" plain (file "~/org/quote.org")
+           "* %?\n%U\n%c\n%i\n")
+          ("j" "Journey" plain (file+datetree "~/org/diary.org")
+           "      - %?\n       %U\n  %i\n")
+          ("l" "Sleeping" plain (file+datetree "~/org/sleep.org") 
+           "******* TODO \n  " :clock-in t)
+          )))
 
 (defun bartuer-jump-to-archive ()
   "jump from org to it's archive file"
@@ -78,11 +78,11 @@
         (ts2 (match-string-no-properties 2 str)))
     (cond ((and ts1 ts2)
            (cons ts1 ts2
-            ))
+                 ))
           ((and ts1 (eq ts2 nil))
            (cons
             ts1 nil)
-            nil)
+           nil)
           (t
            (cons nil nil)))))
 
@@ -108,11 +108,124 @@
     (when (numberp (string-match timestamp-regex timestamp)) 
       (setq fraction
             (/ (round (* 100 (/ (* 60
-                     (org-hh:mm-string-to-minutes
-                      (match-string-no-properties 1 timestamp) )) 86400.0))) 100.0)))
+                                   (org-hh:mm-string-to-minutes
+                                    (match-string-no-properties 1 timestamp) )) 86400.0))) 100.0)))
     fraction)
   )
 
+;;; can set these information in symbol plist 
+(defun day-string-full-parse (s)
+  "parse time string to code friendly structure"
+  (let* ((day (org-time-string-to-absolute s))
+         (weekp (calendar-iso-from-absolute day))
+         (normalp (calendar-gregorian-from-absolute day))
+         (day-info '(:year 2011)))
+    (plist-put day-info :month (pop normalp))
+    (plist-put day-info :day (pop normalp))
+    (plist-put day-info :year (pop normalp))
+    (plist-put day-info :week (pop weekp))
+    (plist-put day-info :weekday (pop weekp))
+    (plist-put day-info :absolute day)
+    (copy-alist  day-info)
+    )
+  )
+
+(defun absolute-day-to-that-week (d)
+  "give absolute day number, return that week days string list"
+  (let* ((w:wd:y (calendar-iso-from-absolute d))
+         (w (nth 0 w:wd:y))
+         (wd (nth 1 w:wd:y))
+         (Mon
+          (if (= wd 0)
+              (- d 6)
+            (- d (- wd 1)))
+          )
+         (Tue (1+ Mon)) (Wed (1+ Tue)) (Thu (1+ Wed)) (Fri (1+ Thu)) (Sat (1+ Fri)) (Sun (1+ Sat))
+         )
+    (mapcar
+     (lambda (s)
+       (let* ((date (calendar-gregorian-from-absolute (symbol-value s)))
+              (m (nth 0 date))
+              (d (nth 1 date))
+              (y (nth 2 date)))
+         (format "%04d-%02d-%02d %s" y m d (symbol-name s))))
+     (list 'Mon 'Tue 'Wed 'Thu 'Fri 'Sat 'Sun))
+    )
+  )
+
+(eval-and-compile
+  (defconst calendar-short-month-name ["" "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]))
+
+(defun judge-week-to-month (w y)
+  "give week name in number, string or symbol, list or vector of
+that week days string is also okay, y is year number.
+
+return which month that week should belong, the return value is
+cons like (12 . Dec)"
+  (let ((weekday-list
+         (let ((week
+                (cond ((stringp w)
+                       (string-to-number w)
+                       )
+                      ((symbolp w)
+                       (symbol-value w))
+                      ((numberp w)
+                       w)
+                      (t
+                       w))))
+           (if (numberp week)
+               (progn
+                 (let ((day-in-week
+                        (+ (* 7 (1- week))
+                           (calendar-absolute-from-iso
+                            (list 1 1 y)))))
+                   (absolute-day-to-that-week day-in-week)))
+             (if (or (listp week)
+                     (vectorp week))
+                 week
+               (error "wrong argument")
+               )
+             ))))
+    (let ((month
+           (elt
+            (mapcar
+             (lambda (day-info) (plist-get day-info :month))
+             (mapcar 'day-string-full-parse weekday-list)
+             )
+            3)))
+      (cons month (elt calendar-short-month-name month))) 
+    )
+  )
+
+
+(defun month-weeks (month year)
+  (let* ((month-first-day
+          (calendar-iso-from-absolute
+           (calendar-absolute-from-gregorian (list month 1 year))))
+         (month-last-day
+          (calendar-iso-from-absolute
+           (calendar-absolute-from-gregorian (list month 28 year))))
+         (first-day-week (if (and 
+                              (= (1- year)
+                                 (nth 2 month-first-day))
+                              (= (nth 0 month-first-day) 52))
+                             1
+                           (nth 0 month-first-day)
+                           ) )
+         (last-day-week (nth 0 month-last-day))
+         (first-week (if (= month
+                            (car
+                             (judge-week-to-month first-day-week year)))
+                         first-day-week
+                       (1+ first-day-week)))
+         (last-week (if (= month
+                           (car
+                            (judge-week-to-month last-day-week year)))
+                        last-day-week
+                      (1- last-day-week))))
+    (number-sequence first-week last-week) 
+    )
+  )
 
 (defun set-schedule ()
   "if next schedule time slot is too late, move it to next day morning"
@@ -212,8 +325,8 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (interactive)
   (when org-clock-has-been-used
     (let* ((clock-task-string (replace-regexp-in-string " *\\[.*\\]" "" org-clock-current-task))
-          (commit-string (shell-command-to-string "git log HEAD -1 --pretty=format:'%s'"))
-          (git-link-string (org-trim (shell-command-to-string (concat "tag-head " clock-task-string)))))
+           (commit-string (shell-command-to-string "git log HEAD -1 --pretty=format:'%s'"))
+           (git-link-string (org-trim (shell-command-to-string (concat "tag-head " clock-task-string)))))
       (when (string-equal clock-task-string commit-string)
         (save-excursion
           (bartuer-focus)
@@ -237,8 +350,8 @@ clock out time, if there is no clock time, next schedule time will be last sched
 (defun org-export-table-to-mail-csv ()
   "export to mail content"
   (interactive)
-   (quoted-printable-encode-string
-    (orgtbl-to-csv
+  (quoted-printable-encode-string
+   (orgtbl-to-csv
     (org-table-to-lisp)
     nil)))
 
@@ -259,13 +372,13 @@ clock out time, if there is no clock time, next schedule time will be last sched
                (org-table-to-lisp)
                (org-combine-plists
                 '(:sep ", "
-                  :fmt (lambda (s)
-                         (if (string-match "^[0-9\.]+$" s)
-                             s
-                           (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
-                         )
-                  :lstart "INSERT INTO replace_me_with_table_name VALUES("
-                  :lend ");") 
+                       :fmt (lambda (s)
+                              (if (string-match "^[0-9\.]+$" s)
+                                  s
+                                (concat "\'" (mapconcat 'identity (split-string s "\'") "\'") "\'"))
+                              )
+                       :lstart "INSERT INTO replace_me_with_table_name VALUES("
+                       :lend ");") 
                 params)))
         )
     (with-current-buffer (get-buffer-create "*orgtbl2sql*")
@@ -310,91 +423,6 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (with-current-buffer "*mail*"
     (insert org-mail-body)))
 
-;;; can set these information in symbol plist 
-(defun day-string-full-parse (s)
-  "parse time string to code friendly structure"
-  (let* ((day (org-time-string-to-absolute s))
-         (weekp (calendar-iso-from-absolute day))
-         (normalp (calendar-gregorian-from-absolute day))
-         (day-info '(:year 2011)))
-    (plist-put day-info :month (pop normalp))
-    (plist-put day-info :day (pop normalp))
-    (plist-put day-info :year (pop normalp))
-    (plist-put day-info :week (pop weekp))
-    (plist-put day-info :weekday (pop weekp))
-    (plist-put day-info :absolute day)
-    (copy-alist  day-info)
-    )
-  )
-
-(defun absolute-day-to-that-week (d)
-  "give absolute day number, return that week days string list"
-  (let* ((w:wd:y (calendar-iso-from-absolute d))
-         (w (nth 0 w:wd:y))
-         (wd (nth 1 w:wd:y))
-         (Mon
-          (if (= wd 0)
-              (- d 6)
-            (- d (- wd 1)))
-          )
-         (Tue (1+ Mon)) (Wed (1+ Tue)) (Thu (1+ Wed)) (Fri (1+ Thu)) (Sat (1+ Fri)) (Sun (1+ Sat))
-         )
-    (mapcar
-     (lambda (s)
-       (let* ((date (calendar-gregorian-from-absolute (symbol-value s)))
-              (m (nth 0 date))
-              (d (nth 1 date))
-              (y (nth 2 date)))
-              (format "%04d-%02d-%02d %s" y m d (symbol-name s))))
-     (list 'Mon 'Tue 'Wed 'Thu 'Fri 'Sat 'Sun))
-    )
-)
-
-(eval-and-compile
-  (defconst calendar-short-month-name ["" "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]))
-
-(defun judge-week-to-month (w y)
-  "give week name in number, string or symbol, list or vector of
-that week days string is also okay, y is year number.
-
-return which month that week should belong, the return value is
-cons like (12 . Dec)"
-  (let ((weekday-list
-         (let ((week
-                (cond ((stringp w)
-                       (string-to-number w)
-                       )
-                      ((symbolp w)
-                       (symbol-value w))
-                      ((numberp w)
-                       w)
-                      (t
-                       w))))
-           (if (numberp week)
-               (progn
-                 (let ((day-in-week
-                        (+ (* 7 week)
-                           (calendar-absolute-from-iso
-                            (list 1 1 y)))))
-                   (absolute-day-to-that-week day-in-week)))
-             (if (or (listp week)
-                     (vectorp week))
-                 week
-               (error "wrong argument")
-               )
-             ))))
-    (let ((month
-           (elt
-            (mapcar
-             (lambda (day-info) (plist-get day-info :month))
-             (mapcar 'day-string-full-parse weekday-list)
-             )
-            3)))
-      (cons month (elt calendar-short-month-name month))) 
-    )
-  )
-
-
 (defun get-entries-in-timeline ()
   "return all properties entries for task under current point"
   (save-excursion
@@ -421,9 +449,9 @@ cons as (name . value).
 
 If current line is not interesting, there is no tail part.
 
-Bind C-n of org timeline agenda view to this test the function:
+Bind C-n of org timeline agenda view to:
 
- (defun org-timeline-next-line ()
+ (lambda ()
   (interactive)
   (princ (org-timeline-next-line)))
 "
@@ -455,7 +483,7 @@ Bind C-n of org timeline agenda view to this test the function:
           )))
 
 (defun org-timeline-days-bake (obj)
-  (cons
+  (list
    (intern "days")
    (mapcar
     (lambda (ent)
@@ -469,101 +497,90 @@ Bind C-n of org timeline agenda view to this test the function:
                    (+ effort-total
                       effort))))
          tasks)
-        (cons day
-              (vconcat
-               (mapcar
-                (lambda (e)
-                  (let ((todo (cdr (assoc "TODO" e)))
-                        clock l)
-                    (when (string-equal "DONE" todo)
-                      (setq clock (extract-clock-time
-                                   (cdr (assoc "CLOCK" e))))
-                      (push (cons (intern "path") (cdr (assoc "PATH" e))) l)
-                      (push (cons (intern "name") (cdr (assoc "HEADING" e))) l)
-                      (push (cons (intern "schedule") (cdr (assoc "SCHEDULED" e))) l)
-                      (push (cons (intern "effort")
-                                  (/ (effort->secs
-                                      (cdr (assoc "Effort" e)))
-                                     3600.0)) l)
-                      (push (cons (intern "value_v")
-                                  (/ (cdr (assq 'effort l))
-                                     effort-total)) l)
-                      (push (cons (intern "beg") (car clock)) l)
-                      (push (cons (intern "end") (cdr clock)) l)
-                      (push (cons (intern "beg_v") (timestamp->fraction (car clock))) l)
-                      (push (cons (intern "end_v") (timestamp->fraction (cdr clock))) l)
-                      (let ((clockhistory (assoc "Clockhistory" e)))
-                        (when clockhistory
-                          (push (cons (intern "Clockhistory")
-                                      (string-to-number
-                                       (cdr (assoc "Clockhistory" e)))) l)))            
-                      (let ((commit (assoc "Commit" e)))
-                        (when commit
-                          (push (cons (intern "Commit") (cdr commit)) l))) 
-                      l)))
-                tasks)))
+        (list
+         day
+         (list
+          (cons
+           (intern "tasks_v")
+           (vconcat
+            (mapcar
+             (lambda (e)
+               (let ((todo (cdr (assoc "TODO" e)))
+                     clock l)
+                 (when (string-equal "DONE" todo)
+                   (setq clock (extract-clock-time
+                                (cdr (assoc "CLOCK" e))))
+                   (push (cons (intern "path") (cdr (assoc "PATH" e))) l)
+                   (push (cons (intern "name") (cdr (assoc "HEADING" e))) l)
+                   (push (cons (intern "schedule") (cdr (assoc "SCHEDULED" e))) l)
+                   (push (cons (intern "effort")
+                               (/ (effort->secs
+                                   (cdr (assoc "Effort" e)))
+                                  3600.0)) l)
+                   (push (cons (intern "value_v")
+                               (/ (cdr (assq 'effort l))
+                                  effort-total)) l)
+                   (push (cons (intern "beg") (car clock)) l)
+                   (push (cons (intern "end") (cdr clock)) l)
+                   (push (cons (intern "beg_v") (timestamp->fraction (car clock))) l)
+                   (push (cons (intern "end_v") (timestamp->fraction (cdr clock))) l)
+                   (let ((clockhistory (assoc "Clockhistory" e)))
+                     (when clockhistory
+                       (push (cons (intern "Clockhistory")
+                                   (string-to-number
+                                    (cdr (assoc "Clockhistory" e)))) l)))            
+                   (let ((commit (assoc "Commit" e)))
+                     (when commit
+                       (push (cons (intern "Commit") (cdr commit)) l))) 
+                   l)))
+             tasks)))
+          (cons (intern "year") (get day 'y))
+          (cons (intern "month") (get day 'm))
+          (cons (intern "week") (get day 'w))
+          (cons (intern "weekday") (get day 'wd))
+          (cons (intern "day") (get day 'd))
+          (cons (intern "absolute") (get day 'a))
+          ))
         ))
-    obj))
-  )
-
-(defun month-weeks (month year)
-  (let* ((month-first-day
-          (calendar-iso-from-absolute
-           (calendar-absolute-from-gregorian (list month 1 year))))
-         (month-last-day
-          (calendar-iso-from-absolute
-           (calendar-absolute-from-gregorian (list month 28 year))))
-         (first-day-week (if (and 
-                              (= (1- year)
-                                 (nth 2 month-first-day))
-                              (= (nth 0 month-first-day) 52))
-                             1
-                           (nth 0 month-first-day)
-                           ) )
-         (last-day-week (nth 0 month-last-day))
-         (first-week (if (= month
-                            (car
-                             (judge-week-to-month first-day-week year)))
-                         first-day-week
-                       (1+ first-day-week)))
-         (last-week (if (= month
-                           (car
-                            (judge-week-to-month last-day-week year)))
-                        last-day-week
-                      (1- last-day-week))))
-    (number-sequence first-week last-week) 
-    )
-  )
+    obj)
+   ))
 
 (defun org-timeline-weeks-bake (days-baked)
-  (list
-   (cons
+  (cons
+   (list
     (intern "weeks")
     (let ((weeks nil))
       (mapcar
-       (lambda (day-ent)
-         (let* ((day-name (car day-ent))
-                (week (intern (format "%d" (get day-name 'w))))
+       (lambda (day-wrap)
+         (let* ((day-ent (car day-wrap))
+                (day-name (car day-ent))
+                (week (intern (format "%d %d" (get day-name 'y) (get day-name 'w))))
                 (weekday (get day-name 'wd))
                 (index (if (= weekday 0)
                            6
                          (- weekday 1)))
                 (absolute (get day-name 'a)))
            (unless (assq week weeks)
-             (setplist week (list 'w (get day-name 'w)))
+             (setplist week (list 'w (get day-name 'w) 'm (get day-name 'm) 'y (get day-name 'y)))
              (push
-              (cons week
+              (list week
                     (list
                      (cons (intern "tasks_v") (make-vector 7 0))
                      (cons (intern "values_v") (make-vector 7 0))
                      (cons (intern "days")
                            (vconcat
                             (absolute-day-to-that-week absolute)))
+                     (cons (intern "month") (get day-name 'm))
+                     (cons (intern "year") (get day-name 'y))
+                     (cons (intern "week") (get day-name 'w))
                      ))
               weeks)
              )
-           (let* ((d (cdr day-ent))
-                  (w (cdr (assq week weeks)))
+           (let* ((d (cdr
+                      (assq 'tasks_v
+                            (car (cdr day-ent)))))
+                  (w (car
+                      (cdr (assq week weeks))))
                   (ta (cdr (assq 'tasks_v w)))
                   (v (cdr (assq 'values_v w))))
              (aset ta index (length d))
@@ -581,58 +598,70 @@ Bind C-n of org timeline agenda view to this test the function:
              )))
        (cdr days-baked))
       weeks))
-   days-baked))
+   (list days-baked)))
 
 (defun org-timeline-months-bake (weeks-baked)
-  (list (cons
-         (intern "months")
-         (let ((months nil)
-               ;; do not know how to calculate the current year
-               (year 2011)
-               (project-tasks 300))
-           (mapcar
-            (lambda (week-ent)
-              (let* ((week (car week-ent))
-                     (week-value (cdr week-ent))
-                     (week-days (cdr (assq 'days week-value)))
-                     (month (judge-week-to-month week-days year))
-                     (month-num (car month))
-                     (month-name (intern (cdr month)))
-                     (month-weeks (vconcat (month-weeks month-num year)))
-                     (index (- (get week 'w) (elt month-weeks 0)))
-                     (weeks-sum (length month-weeks)))
-                (unless (assq month-name months)
-                  (push
-                   (cons month-name
-                         (list
-                          (cons (intern "values_v") (make-vector weeks-sum 0))
-                          (cons (intern "tasks_v") (make-vector weeks-sum 0))
-                          (cons (intern "weeks") month-weeks)
-                          ))
-                   months))
-                (let* ((tv (cdr (assq 'tasks_v
-                                      (cdr
-                                       (assq month-name months)))))
-                       (vv (cdr (assq 'values_v
-                                      (cdr
-                                       (assq month-name months)))))
-                       (ta (cdr (assq 'tasks_v week-value)))
-                       (total-task 0)
-                       )
-                  (mapcar
-                   (lambda (task-count)
-                     (setq total-task
-                           (+ total-task task-count)))
-                   (append ta nil))
-                  (aset tv index total-task)
-                  (aset vv index (/ (/ total-task 1.0) project-tasks))
+  (cons
+   (list
+    (intern "months")
+    (let ((months nil)
+          ;; haven't  calculate the total task
+          (project-tasks 300))
+      (mapcar
+       (lambda (week-wrap)
+         (let* ((week-ent (car week-wrap))
+                (week (car week-ent))
+                (year (get week 'y))
+                (week-value (car (cdr week-ent)))
+                (month (judge-week-to-month (get week 'w) year))
+                (month-num (car month))
+                (month-name (intern (format "%d-%02d" year (car month))))
+                (month-weeks (vconcat (month-weeks month-num year)))
+                (index (- (get week 'w) (elt month-weeks 0)))
+                (weeks-sum (length month-weeks)))
+           (unless (assq month-name months)
+             (setplist month-name (list 'm (car month) 'y year))
+             (push
+              (list month-name
+                    (list
+                     (cons (intern "values_v") (make-vector weeks-sum 0))
+                     (cons (intern "tasks_v") (make-vector weeks-sum 0))
+                     (cons (intern "weeks")
+                           (vconcat
+                            (mapcar
+                             (lambda (w)
+                               (format "%d %d" year w)
+                               )
+                             (append month-weeks nil))) )
+                     (cons (intern "year") year)
+                     (cons (intern "month") (car month))
+                     ))
+              months))
+           (let* ((tv (cdr (assq 'tasks_v
+                                 (car
+                                  (cdr
+                                   (assq month-name months))))))
+                  (vv (cdr (assq 'values_v
+                                 (car
+                                  (cdr
+                                   (assq month-name months))))))
+                  (ta (cdr (assq 'tasks_v week-value)))
+                  (total-task 0)
                   )
-                ))
-            (reverse (cdr (assq 'weeks weeks-baked))))
-           months
+             (mapcar
+              (lambda (task-count)
+                (setq total-task
+                      (+ total-task task-count)))
+              (append ta nil))
+             (aset tv index total-task)
+             (aset vv index (/ (/ total-task 1.0) project-tasks))
+             )
            ))
-        weeks-baked
-        )
+       (reverse (cdr (assq 'weeks weeks-baked))))
+      months
+      ))
+   weeks-baked
+   )
   )
 
 (defun org-timeline-to-json ()
@@ -694,14 +723,15 @@ see \\[org-timeline] and `org-timeline-next-line'"
               )))
     (if (and nil
              (fboundp 'json-encode))
-        (json-encode
+        (json-encode                    ; hard to create recursive dict use alist/plist/hash
          (org-timeline-months-bake
           (org-timeline-weeks-bake
            (org-timeline-days-bake result))))
-        (org-timeline-months-bake
-         (org-timeline-weeks-bake
-          (org-timeline-days-bake result))))))
-  
+      (org-timeline-months-bake
+       (org-timeline-weeks-bake
+        (org-timeline-days-bake result)))
+      )))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
