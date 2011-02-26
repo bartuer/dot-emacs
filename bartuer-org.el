@@ -88,17 +88,21 @@
 
 (defun effort->secs (timestring)
   "convert org Effort string to seconds"
-  (setq effort-minutes nil)
-  (if (numberp (string-match "\\([0-9]+\\.[0-9]+\\)$" timestring))
-      (setq effort-minutes
-            (* 3600
-               (string-to-number
-                (match-string-no-properties 1 timestring))))
-    (if (numberp (string-match "\\([0-9]+\\:[0-9]+$\\)" timestring))
+  (if (not (stringp timestring))
+      7200
+    (setq effort-minutes nil)
+    (if (numberp (string-match "\\([0-9]+\\.[0-9]+\\)$" timestring))
         (setq effort-minutes
-              (* 60
-                 (org-hh:mm-string-to-minutes
-                  (match-string-no-properties 1 timestring)))))))
+              (* 3600
+                 (string-to-number
+                  (match-string-no-properties 1 timestring))))
+      (if (numberp (string-match "\\([0-9]+\\:[0-9]+$\\)" timestring))
+          (setq effort-minutes
+                (* 60
+                   (org-hh:mm-string-to-minutes
+                    (match-string-no-properties 1 timestring)))))))
+  ) 
+  
 
 (setq timestamp-regex "[0-9]+?-[0-9]+?-[0-9]+ [A-Za-z]+ \\([0-9]+\\:[0-9]+$\\)")
 
@@ -506,10 +510,11 @@ Bind C-n of org timeline agenda view to:
             (mapcar
              (lambda (e)
                (let ((todo (cdr (assoc "TODO" e)))
-                     clock l)
-                 (when (string-equal "DONE" todo)
-                   (setq clock (extract-clock-time
-                                (cdr (assoc "CLOCK" e))))
+                      clock l)
+                 (when (and
+                        (assoc "CLOCK" e)
+                        (assoc "SCHEDULED" e)
+                        (string-equal "DONE" todo))
                    (push (cons (intern "path") (cdr (assoc "PATH" e))) l)
                    (push (cons (intern "name") (cdr (assoc "HEADING" e))) l)
                    (push (cons (intern "schedule") (cdr (assoc "SCHEDULED" e))) l)
@@ -520,6 +525,8 @@ Bind C-n of org timeline agenda view to:
                    (push (cons (intern "value_v")
                                (/ (cdr (assq 'effort l))
                                   effort-total)) l)
+                   (setq clock (extract-clock-time
+                                (cdr (assoc "CLOCK" e))))
                    (push (cons (intern "beg") (car clock)) l)
                    (push (cons (intern "end") (cdr clock)) l)
                    (push (cons (intern "beg_v") (timestamp->fraction (car clock))) l)
