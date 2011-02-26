@@ -584,7 +584,7 @@ Bind C-n of org timeline agenda view to this test the function:
    days-baked))
 
 (defun org-timeline-months-bake (weeks-baked)
-  (list (cons
+  (cons (cons
          (intern "months")
          (let ((months nil)
                ;; do not know how to calculate the current year
