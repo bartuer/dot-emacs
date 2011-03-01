@@ -735,6 +735,14 @@ see \\[org-timeline] and `org-timeline-next-line'"
            (org-timeline-days-bake result)))
       )))
 
+(defun occur-all-org (regexp &optional nlines)
+  (interactive (occur-read-primary-args))
+  (let ((bufs (cons (get-file-buffer "~/org/note.org")
+                    (cons (get-file-buffer "~/org/note.org_archive")
+                          (mapcar 'get-file-buffer org-agenda-files)))))
+    (occur-1 regexp nlines bufs))
+  )
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
