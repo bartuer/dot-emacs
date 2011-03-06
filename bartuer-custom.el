@@ -102,7 +102,7 @@
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(org-agenda-columns-add-appointments-to-effort-sum t)
- '(org-agenda-files (quote ("~/local/src/bartuer.github.com/progress_bar.org" "~/local/src/baza/sbs.org" "~/org/next.org" "~/local/src/busy/busy.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org" "~/local/src/bla/zaphinx.org" "~/local/src/pass/pass.org" "~/local/src/3wk/3wk.org" "/Users/bartuer/local/src/uki-imageCutter/file_input_in_runtime.org" "/Users/bartuer/local/src/uki-imageCutter/imagecutter.org")))
+ '(org-agenda-files (quote ("~/local/src/baza/sbs.org" "~/org/next.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org" "~/local/src/bla/zaphinx.org" "~/local/src/pass/pass.org" "~/local/src/uki-imageCutter/file_input_in_runtime.org" "~/local/src/uki-imageCutter/imagecutter.org" "~/org/demo.org" "~/local/src/deal/deal.org")))
  '(org-archive-save-context-info (quote (time file category todo itags olpath ltags)))
  '(org-clock-idle-time 30)
  '(org-columns-default-format "%40ITEM(Task) %15Effort(EFFORT){:} %SCHEDULED(SCHEDULE) %22DEADLINE(DEADLINE) %CLOCK(CLOCK)")

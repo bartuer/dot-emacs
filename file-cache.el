@@ -1,4 +1,5 @@
 (file-cache-add-directory-list (list    
+                                "~/local/share/doc/state_machine"
                                 "~/Movies/kids"
                                 "~/local/src/chromium/src/chrome/app"
                                 "~/local/src/chromium/src/chrome/common"

@@ -933,6 +933,11 @@ If give a negative ARG, will undo the last mark action, thus the
         (start-scheme buffer-name))
     (start-scheme buffer-name)))
 
+(require 'ragel-mode nil t)
+(add-to-list 'auto-mode-alist '("\\.rl$" . ragel-mode))
+(autoload 'bartuer-ragel-load "bartuer-ragel.el" "for ragel-mode" t)
+(add-hook 'ragel-mode-hook 'bartuer-ragel-load)
+
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for edit elisp" t)
 (add-hook 'elisp-mode-hook 'bartuer-elisp-load)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
