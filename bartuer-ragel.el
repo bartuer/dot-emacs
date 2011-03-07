@@ -14,10 +14,9 @@
 (defun bartuer-ragel-load ()
   "mode hooks for ragel"
 
-  ;; (set (make-local-variable 'ruby-block-beg-keywords) (cons "%%{" ruby-block-beg-keywords))
-  ;; (set (make-local-variable 'ruby-block-beg-re) (regexp-opt ruby-block-beg-keywords))
-  ;; (set (make-local-variable 'ruby-block-end-re) "\\<end\\|%%}\\>")
-  ;; (set (make-local-variable 'font-lock-defaults) '((ruby-font-lock-keywords) nil nil))
+  (set (make-local-variable 'ruby-block-beg-keywords) (cons "%%{" ruby-block-beg-keywords))
+  (set (make-local-variable 'ruby-block-beg-re) (regexp-opt ruby-block-beg-keywords))
+  (set (make-local-variable 'ruby-block-end-re) "\\<end\\|%%}\\>")
 
   (font-lock-add-keywords
    nil
@@ -25,7 +24,7 @@
 
      ("\\(\\#.*$\\)" . font-lock-comment-face)
      ("\\<\\(fhold\\|fgoto\\|fcall\\|fret\\|fentry\\|fnext\\|fexec\\|fbreak\\)\\>" . font-lock-builtin-face)
-     ("\\<\\(any\\|ascii\\|extend\\|alpha\\|digit\\|alnum\\|lower\\|uper\\|xdigit\\|cntrl\\|graph\\|print\\|punct\\|space\\|nul\\|empty\\)\\>" . font-lock-variable-name-face)
+     ("\\<\\(any\\|ascii\\|extend\\|alpha\\|digit\\|alnum\\|lower\\|uper\\|xdigit\\|cntrl\\|graph\\|print\\|punct\\|space\\|null\\|zlen\\|empty\\)\\>" . font-lock-variable-name-face)
      ("\\<\\(machine\\|action\\|context\\|include\\|range\\|import\\|export\\|prepush\\|postpop\\)\\>" . font-lock-function-name-face)
      ("\\<\\(write\\) +\\(init\\|data\\|exec\\|exports\\|start\\|error\\|first_final\\|contained\\)\\>"
       (1 font-lock-function-name-face nil t)
@@ -36,7 +35,12 @@
      ("\\<\\(noerror\\|nofinal\\|noprefix\\|noend\\|nocs\\|contained\\)\\>" . font-lock-constant-face)
      ("\\([a-zA-Z\\)]\\|]\\)\\([*+]+\\)" 
       (2 font-lock-keyword-face))
-     ("\\( \\. \\|\\*\\*\\|[>$%@|-]\\|->\\|:>\\|:>>\\|<:\\|=>\\|<[!\\*~]\\|:=\\|%%{\\|}%%\\|%%\\)" . font-lock-keyword-face)
+     ("\\([a-zA-Z]+\\)\\(:\\)"
+      (2 font-lock-keyword-face))
+     ("\\([>$@*%<]>?\\)\\([~^~*/]\\|!\\)"
+      (1 font-lock-keyword-face)
+      (2 font-lock-keyword-face))
+      ("\\( \\. \\| \\.\\. \\|\\*\\*\\|[+^>$%@&|?\\!]\\|->\\|:>\\|:>>\\|<:\\|=>\\|:=\\|%%\\)" . font-lock-keyword-face)
      ) 
    (font-lock-fontify-buffer))
 
