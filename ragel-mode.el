@@ -10,16 +10,22 @@
   (shell-command (concat "rlr " (file-name-nondirectory (buffer-file-name))))
   )
 
+(defun compile-xml ()
+  "compile to xml"
+  (interactive)
+  (let ((name (file-name-nondirectory (buffer-file-name))))
+    (shell-command (concat "rlx " name))
+    (find-file-other-window (concat (buffer-file-name) ".xml"))
+    )
+  )
+
 (define-derived-mode ragel-mode
-  ruby-mode "Ragel"
+  c-mode "Ragel"
   "Major mode for ragel+ruby.
             \\{ragel-mode-map}"
   )
 
 (define-key ragel-mode-map
-  "\C-j" 'compile-ruby)
-
-(define-key ragel-mode-map
-  "\C-c\C-j" 'show-graph)
+  "\C-j" 'compile)
 
 (provide 'ragel-mode)
