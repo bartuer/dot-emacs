@@ -17,7 +17,7 @@ class RubyToggleFile
   end
 
   LIB_RE = %r!/lib/(.+)\.rb$!
-  TEST_RE = %r!/test/(.+/)?test_(.+)\.rb$!
+  TEST_RE = %r!/test(s)?/(.+/)?test_(.+)\.rb$!
 
   def test_file(implementation)
     if m = LIB_RE.match(implementation)
@@ -79,6 +79,12 @@ class RubyToggleFile
     end
   end
 
+  def test_file_06_tradem(implementation, basedir, dir, node)
+    if m = %r!site/(.+)\.rb$!.match(implementation)
+      "%stests/%s_test.rb" % [ m.pre_match, m[1]]
+    end
+  end
+
   
   def test_file_10_no_match(implementation, basedir, dir, node)
     if [basedir, dir, node].all?{|x| x.nil?}
@@ -121,7 +127,13 @@ class RubyToggleFile
       "%slib/authlogic/%s/%s.rb" % [ m.pre_match, m[1], m[2]]
     end
   end
-  
+
+  def implementation_file_06_tradem(test, basedir, dir, node)
+    if m = %r!tests/(.+)_test\.rb$!.match(test)
+      "%ssite/%s.rb" % [ m.pre_match, m[1]]
+    end
+  end
+
   def implementation_file_10_no_match(test, basename, dir, node)
     if dir == nil and node == nil and test =~ %r!/test_(.+)\.rb$!
       test.sub("/test_", "/")
