@@ -21,9 +21,13 @@
   (font-lock-add-keywords
    nil
    '(
-
-     ("\\(\\#.*$\\)" . font-lock-comment-face)
-     ("\\<\\(fhold\\|fgoto\\|fcall\\|fret\\|fentry\\|fnext\\|fexec\\|fbreak\\)\\>" . font-lock-builtin-face)
+     ("^ *\\(#.*\\)$" . font-lock-variable-name-face)
+     (">=" . font-lock-negation-char-face)
+     ("\\(fsm\\)\\(->\\)"
+      (1 font-lock-variable-name-face)
+      (2 font-lock-negation-char-face)
+      )
+     ("\\<\\(\\|fhold\\|fgoto\\|fcall\\|fret\\|fentry\\|fnext\\|fexec\\|fbreak\\)\\>" . font-lock-builtin-face)
      ("\\<\\(any\\|ascii\\|extend\\|alpha\\|digit\\|alnum\\|lower\\|uper\\|xdigit\\|cntrl\\|graph\\|print\\|punct\\|space\\|null\\|zlen\\|empty\\)\\>" . font-lock-variable-name-face)
      ("\\<\\(machine\\|action\\|context\\|include\\|range\\|import\\|export\\|prepush\\|postpop\\)\\>" . font-lock-function-name-face)
      ("\\<\\(write\\) +\\(init\\|data\\|exec\\|exports\\|start\\|error\\|first_final\\|contained\\)\\>"
@@ -37,10 +41,13 @@
       (2 font-lock-keyword-face))
      ("\\([a-zA-Z]+\\)\\(:\\)"
       (2 font-lock-keyword-face))
+     ("\\([*|][*|]\\)" . font-lock-keyword-face)
      ("\\([>$@*%<]>?\\)\\([~^~*/]\\|!\\)"
       (1 font-lock-keyword-face)
       (2 font-lock-keyword-face))
-      ("\\( \\. \\| \\.\\. \\|\\*\\*\\|[+^>$%@&|?\\!]\\|->\\|:>\\|:>>\\|<:\\|=>\\|:=\\|%%\\)" . font-lock-keyword-face)
+     ("[^ ]\\([+?*]\\)"
+      (1 font-lock-keyword-face))
+      ("\\( \\. \\| \\.\\. \\|\\*\\*\\|[>^$%@&|\\!-]\\| ->\\|:>\\|:>>\\|<:\\|=>\\|:=\\|%%\\)" . font-lock-keyword-face)
      ) 
    (font-lock-fontify-buffer))
 
