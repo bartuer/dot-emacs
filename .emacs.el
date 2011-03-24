@@ -938,10 +938,20 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-ragel-load "bartuer-ragel.el" "for ragel-mode" t)
 (add-hook 'ragel-mode-hook 'bartuer-ragel-load)
 
+(require 'tuareg nil t)
+(autoload 'bartuer-ocaml-load "bartuer-ocaml.el" "for edit ocaml" t)
+(add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+(dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
+  (add-to-list 'completion-ignored-extensions ext))
+(add-hook 'tuareg-mode-hook 'bartuer-ocaml-load)
+
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for edit elisp" t)
 (add-hook 'elisp-mode-hook 'bartuer-elisp-load)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
 
 (require 'ess-site nil t)
 (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
