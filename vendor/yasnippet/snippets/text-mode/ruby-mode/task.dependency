@@ -1,3 +1,0 @@
-# name: rake task dependency
-# --
-task :${1:task} => [:${2:subtask}]
