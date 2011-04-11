@@ -1,0 +1,2 @@
+#! /usr/bin/env sh
+java -jar /Users/bartuer/etc/el/vendor/closure/compiler/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS  --js $1 --js_output_file $2
