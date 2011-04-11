@@ -729,7 +729,12 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (defadvice auto-revert-handler (before ansi-color activate)
   "also show ansi color in log ."
-  (ansi-color-apply-on-region (point-min) (point-max)))
+  (goto-char (point-max))
+  (forward-line -100)
+  (ansi-color-apply-on-region (point) (point-max))
+  (goto-char (point))
+  (recenter-top-bottom 0)
+  )
 
 (add-to-list 'auto-mode-alist '("\\log$" . auto-revert-tail-mode))
 (add-to-list 'auto-mode-alist '("cheat-sheet" . follow-mode))
