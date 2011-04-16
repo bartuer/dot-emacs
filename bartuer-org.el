@@ -743,6 +743,24 @@ see \\[org-timeline] and `org-timeline-next-line'"
     (occur-1 regexp nlines bufs))
   )
 
+(defun clock-sum-line ()
+  (let ((clockhistory (read (cdr (assoc "Clockhistory" enta)))))
+    (concat "#+TBLFM: $4='(convert-time-to-minutes $2)::@"
+            (format "%d" (+ clockhistory 1))
+            "$4=vsum(@1..@"
+            (format "%d" clockhistory)
+            ")/60;%.2f"
+            ))
+  )
+
+(fset 'insert-clock-sum
+        "\C-c\C-p\C-shis\C-m\C-n\C-e|\C-i\C-send\C-m\C-a\C-o\C-i|\C-i\C-e\C-m\C-i\C-[:(insert (clock-sum-line))\C-m")
+
+(defun org-clockhistory-sum ()
+  (interactive)
+  (execute-kbd-macro 'insert-clock-sum
+  ))
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
