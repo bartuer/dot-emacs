@@ -1,0 +1,25 @@
+# name: rails middleware
+# --
+class ${1:$
+         (let ((fn (capitalize (file-name-nondirectory
+                                 (file-name-sans-extension
+                                   (buffer-file-name))))))
+           (cond
+             ((string-match "_" fn) (replace-match "" nil nil fn))
+              (t fn)))}
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    @status, @headers, @response = @app.call(env)
+    [@status, @headers, self]
+  end
+
+  def each(&block)
+    @response.each(&block)
+  end
+  
+end
+
