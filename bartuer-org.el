@@ -761,6 +761,30 @@ see \\[org-timeline] and `org-timeline-next-line'"
   (execute-kbd-macro 'insert-clock-sum
   ))
 
+(defun org-clockhistory-insert ()
+  (interactive)
+  (let* ((his (org-entry-get (point) "Clockhistory"))
+         (his-num (read his))
+         (clock (org-entry-get (point) "CLOCK")))
+    (outline-previous-visible-heading 1)
+    (search-forward "Clockhistory")
+    (forward-line his-num)
+    (end-of-line)
+    (newline)
+    (insert (concat
+             "| "
+             ":Clock"
+             (format "%d" (+ 1 his-num))
+             ": | "
+             clock
+             "|"
+             ))
+    (yas/expand)
+    (org-entry-put (point) "Clockhistory" (format "%d" (+ 1 his-num)) )
+    )
+  (message "%s" (clock-sum-line))
+  )
+
 (defun bartuer-org-load ()
   "for org mode"
   (defalias 'ar 'bartuer-jump-to-archive)
