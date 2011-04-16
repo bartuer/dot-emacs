@@ -744,7 +744,7 @@ see \\[org-timeline] and `org-timeline-next-line'"
   )
 
 (defun clock-sum-line ()
-  (let ((clockhistory (read (cdr (assoc "Clockhistory" enta)))))
+  (let ((clockhistory (read (org-entry-get (point) "Clockhistory"))))
     (concat "#+TBLFM: $4='(convert-time-to-minutes $2)::@"
             (format "%d" (+ clockhistory 1))
             "$4=vsum(@1..@"
