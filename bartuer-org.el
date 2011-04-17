@@ -782,7 +782,13 @@ see \\[org-timeline] and `org-timeline-next-line'"
     (yas/expand)
     (org-entry-put (point) "Clockhistory" (format "%d" (+ 1 his-num)) )
     )
-  (message "%s" (clock-sum-line))
+  (let ((end-pos (save-excursion 
+                    (search-forward ":END:" nil t 1)
+                    (point)))
+        )
+    (unless (query-replace-regexp-eval "#\\+TBLFM:.*$" (clock-sum-line) nil (point) end-pos)
+      (message "%s" (clock-sum-line))
+      ))
   )
 
 (defun bartuer-org-load ()
