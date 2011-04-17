@@ -757,11 +757,13 @@ see \\[org-timeline] and `org-timeline-next-line'"
         "\C-c\C-p\C-shis\C-m\C-n\C-e|\C-i\C-send\C-m\C-a\C-o\C-i|\C-i\C-e\C-m\C-i\C-[:(insert (clock-sum-line))\C-m")
 
 (defun org-clockhistory-sum ()
+  "insert sum line to calculate clock history sum"
   (interactive)
   (execute-kbd-macro 'insert-clock-sum
   ))
 
 (defun org-clockhistory-insert ()
+  "insert current clock record to history table"
   (interactive)
   (let* ((his (org-entry-get (point) "Clockhistory"))
          (his-num (read his))
