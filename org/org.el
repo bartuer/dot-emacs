@@ -16489,6 +16489,8 @@ BEG and END default to the buffer boundaries."
     ("Clock Commands")
     ("i" . org-clock-in)
     ("o" . org-clock-out)
+    ("h" . org-clockhistory-insert)
+    ("s" . org-clockhistory-sum)
     ("Meta Data Editing")
     ("t" . org-todo)
     ("0" . (org-priority ?\ ))
