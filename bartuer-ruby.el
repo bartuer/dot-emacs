@@ -155,7 +155,7 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
                (setq mongrel_pid pid))
       (shell-command (concat "rm -f " (rinari-root) "log/mongrel.pid"))
       (shell-command (concat "mongrel_rails start -C "
-                             (rinari-root) "config/mongrel_rails.rb"))
+                             (rinari-root) "config/mongrel-dev.yml"))
       (sleep-for 3)
       (find-file (concat (rinari-root) "log/mongrel.log"))
       (message (format "dev-server start as pid:%s"
