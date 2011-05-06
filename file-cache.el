@@ -48,6 +48,10 @@
                                 "~/local/src/pass/test/performance"
                                 "~/local/src/pass/test/profile"
                                 "~/local/src/pass/test/unit"
+                                "~/local/src/baza/config"
+                                "~/local/src/baza/lib"
+                                "~/local/src/tradeM/site"
                                 "~/etc/el/vendor/erlang/share/distel/src"
                                 "~/etc/el/vendor/erlang/share/distel/elisp"
+                                "/Library/Ruby/Gems/1.8/gems/sinatra-1.1.2/test"
                                 ))
