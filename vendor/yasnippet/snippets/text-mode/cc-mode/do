@@ -2,5 +2,5 @@
 # --
 do
 {
-    $0
+  $0
 } while (${1:condition});

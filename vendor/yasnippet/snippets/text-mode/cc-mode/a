@@ -1,0 +1,3 @@
+# name: action
+# --
+action  ${1:name}{printf("$1\n");}
