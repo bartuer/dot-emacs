@@ -51,6 +51,7 @@
                                 "~/local/src/baza/config"
                                 "~/local/src/baza/lib"
                                 "~/local/src/tradeM/site"
+                                "~/local/src/tradeM/tests"
                                 "~/etc/el/vendor/erlang/share/distel/src"
                                 "~/etc/el/vendor/erlang/share/distel/elisp"
                                 "/Library/Ruby/Gems/1.8/gems/sinatra-1.1.2/test"

@@ -419,7 +419,8 @@ it is suitable to browse OO hierarchy"
                  "~/local/src/oauth-provider-sample/warden"
                  "~/local/src/dm/dm-core-1.0.2/lib"
                  "~/local/src/dm"
-                 "~/local/src/sequel/lib"))))
+                 "~/local/src/sequel/lib"
+                 "~/local/src/sinatra-1.1.2/lib"))))
   (anything-etags-select))
 
 
