@@ -1,0 +1,8 @@
+# name: variable name space
+# --
+var ${1:Name} = (function (){
+  $0
+  return {
+    ${2:member} : $2
+  };
+})();

@@ -10,16 +10,6 @@
 <title></title>
 </head>
 <body id="main">
-      
-<script src="/javascripts/$0.cjs"></script>
-<script src="/javascripts/dev.cjs"></script>
-<script type="text/javascript">
-function loaded() {
-  alert('load');
-}
-document.addEventListener('DOMContentLoaded', loaded);
-</script>
+<script src="http://bartuer.baza.com/javascripts/dev.package.js"></script>
 </body>
 </html>
-
-
