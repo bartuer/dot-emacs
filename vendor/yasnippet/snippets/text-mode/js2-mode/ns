@@ -1,4 +1,4 @@
-# name: variable name space
+# name: module name space
 # --
 var ${1:Name} = (function (){
   $0

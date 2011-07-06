@@ -1,0 +1,5 @@
+# name: foreach 
+# --
+forEach(function (e) {
+  $0
+});
