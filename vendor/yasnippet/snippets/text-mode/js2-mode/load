@@ -1,0 +1,8 @@
+# name: request prototype javascript load
+# --
+var ${1:feature} = false;
+try {${2:test};} catch (e) {}
+if(!$1){
+var t = document.createElement('script');
+t.src = "/javascripts/${3:filename}.js";
+document.getElementsByTagName("body")[0].appendChild(t);
