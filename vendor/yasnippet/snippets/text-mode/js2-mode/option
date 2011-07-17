@@ -7,7 +7,3 @@ encoding: 'UTF-8',
 method: 'post',
 parameters: llit,
 postBody: 'content',
-requestHeaders: llit,
-evalJS: true,
-evalJSON: true,
-sanitizeJSON: true

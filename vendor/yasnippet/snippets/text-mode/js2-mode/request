@@ -3,7 +3,7 @@
 # (link "~/local/src/prototype/src/ajax/request.js" 2979)
 # (link "~/local/src/prototype/src/ajax/updater.js" 19)
 # --
-new Ajax.Request(${1:'url'}, {
+var req = new Ajax.Request(${1:'url'}, {
   opt,
   cb
 });

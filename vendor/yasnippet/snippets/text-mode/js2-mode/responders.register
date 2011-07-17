@@ -1,7 +1,0 @@
-# name: register responders prototype ajax
-# (link "~/local/src/prototype/src/ajax/responders.js" 19)
-# (link "~/local/src/prototype/src/ajax/responders.js" 3479)
-# --
-Ajax.Responders.register({
-  cbr$0        
-});

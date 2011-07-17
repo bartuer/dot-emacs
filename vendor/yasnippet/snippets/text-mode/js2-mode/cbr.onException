@@ -1,3 +1,0 @@
-# name: onException responders callback prototype ajax
-# --
-onException: ${1:func} ${2:function(ajaxr, r, header){ }$0}

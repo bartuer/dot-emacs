@@ -1,7 +1,0 @@
-# name: unregister responders prototype ajax
-# (link "~/local/src/prototype/src/ajax/responders.js" 19)
-# (link "~/local/src/prototype/src/ajax/responders.js" 3834)
-# --
-Ajax.Responders.unregister({
-  cbr$0
-});

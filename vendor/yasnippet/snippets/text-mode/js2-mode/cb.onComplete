@@ -1,3 +1,3 @@
 # name: onComplete callback prototype ajax
 # --
-onComplete: ${1:func} ${2:function(r, header) { }$0}
+onComplete: ${1:function(r) { }$0}
