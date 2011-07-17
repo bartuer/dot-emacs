@@ -41,6 +41,7 @@ var JSLINT = (function() {
         newcap: true,
         nomen: true,
         on: true,
+        dotNotation: true,
         onevar: true,
         passfail: true,
         plusplus: true,
@@ -3485,7 +3486,7 @@ var JSLINT = (function() {
             countMember(e.value);
             if (!option.sub && ix.test(e.value)) {
                 s = syntax[e.value];
-                if (!s || !s.reserved) {
+                if ((!s || !s.reserved) && option.dotNotation ) {
                     warning("['{a}'] is better written in dot notation.", e, e.value);
                 }
             }
