@@ -20,3 +20,25 @@
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-j" 'recompile))
 
+(defun that-line-end (n)
+  "track region end"
+  (save-excursion
+    (goto-char 0)
+    (forward-line n)
+    (end-of-line)
+    (point)
+    )
+  )
+
+(defun c-var-table ()
+  "try to align variant table"
+  (interactive)
+  (let  ((s (region-beginning))
+         (l (line-number-at-pos (region-end))))
+    (replace-regexp "[ 	]+" " " nil  s (region-end))
+    (org-table-convert-region s (that-line-end l))
+    (replace-regexp "^|" "" nil s (that-line-end l))
+    (replace-regexp "|$" "" nil s (that-line-end l))
+    (replace-regexp " | " "    " nil s (that-line-end l))
+    )
+  )
