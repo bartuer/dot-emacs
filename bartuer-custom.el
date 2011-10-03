@@ -102,7 +102,7 @@
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(org-agenda-columns-add-appointments-to-effort-sum t)
- '(org-agenda-files (quote ("~/local/src/baza/sbs.org" "~/org/next.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org" "~/local/src/bla/zaphinx.org" "~/local/src/pass/pass.org" "~/local/src/uki-imageCutter/file_input_in_runtime.org" "~/local/src/uki-imageCutter/imagecutter.org" "~/org/demo.org" "~/local/src/deal/deal.org" "~/local/src/buddy/plan.org" "~/local/src/widget/card/card.org" "~/local/src/widget/sense/sense.org" "~/local/src/frototype/frototype.org")))
+ '(org-agenda-files (quote ("~/local/src/baza/sbs.org" "~/org/next.org" "~/local/src/morus/morus.org" "~/local/src/pullee/pullee.org" "~/local/src/bla/zaphinx.org" "~/local/src/pass/pass.org" "~/local/src/uki-imageCutter/file_input_in_runtime.org" "~/local/src/uki-imageCutter/imagecutter.org" "~/org/demo.org" "~/local/src/deal/deal.org" "~/local/src/buddy/plan.org" "~/local/src/widget/card/card.org" "~/local/src/widget/sense/sense.org" "~/local/src/frototype/frototype.org" "~/local/src/widget/card/image.org" "~/local/src/widget/card/application.org" "~/local/src/widget/card/audio.org")))
  '(org-archive-save-context-info (quote (time file category todo itags olpath ltags)))
  '(org-clock-idle-time 30)
  '(org-columns-default-format "%40ITEM(Task) %15Effort(EFFORT){:} %SCHEDULED(SCHEDULE) %22DEADLINE(DEADLINE) %CLOCK(CLOCK)")

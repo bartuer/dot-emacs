@@ -3,8 +3,24 @@
 #! /usr/bin/env ruby
 require 'rubygems'
 require 'sinatra'
+require 'sinatra/reloader'
 require 'uki/routes'
-use UkiRoutes
-get '/' do
- 'hi'
+$KCODE = 'u'
+
+UkiRoutes.class_eval do
+  register Sinatra::Reloader
+  set :views, File.dirname(__FILE__) + '/views'
+  get '/' do
+    [200, 'text/plain', '早']
+  end
+
+  get '/nokogiri' do
+    nokogiri :hello
+  end
+
+  get '/erubis' do
+    data  = { :kiss => 'me'}
+    erubis :hello, :layout => :wrapper, :locals => data
+  end
+
 end

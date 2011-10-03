@@ -718,6 +718,7 @@ If give a negative ARG, will undo the last mark action, thus the
             (bartuer-rhtml-load)))
 (add-to-list 'auto-mode-alist '("\\.rhtml" . rhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.erb" . rhtml-mode))
+(add-to-list 'auto-mode-alist '("\\.erubis" . rhtml-mode))
 
 ;; (require 'mumamo-fun)
 ;; (setq mumamo-chunk-coloring 'submode-colored)
