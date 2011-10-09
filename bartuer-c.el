@@ -5,6 +5,29 @@
             (t (indent-relative-maybe))
             (t (indent-for-comment)))))
 
+(defun c-load-etags (reset)
+  (interactive "P")
+  (setq anything-etags-enable-tag-file-dir-cache t)
+  (if reset
+      (setq anything-etags-cache-tag-file-dir nil))
+  (unless anything-etags-cache-tag-file-dir
+    (setq anything-etags-cache-tag-file-dir
+          (concat (file-name-directory (buffer-file-name))
+                  (ido-completing-read
+                   "TAGS location:"
+                   (list "."
+                         "../src/"
+                         "../../src"
+                         "../../src"
+                         "../../../src"
+                         ".."
+                         "../.."
+                         "../../.."
+                         ))) )
+    )
+  (anything-etags-select)
+  )
+
 (defun bartuer-c-common ()
   "for c and C++ language
 "
@@ -18,7 +41,9 @@
   (define-key makefile-mode-map "\C-j" 'recompile)
   (define-key c-mode-base-map "\C-c\C-c" 'anything-etags-select)
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
-  (define-key c-mode-base-map "\C-j" 'recompile))
+  (define-key c-mode-base-map "\C-j" 'recompile)
+  (define-key c-mode-base-map "\C-c\C-c" 'c-load-etags)
+  )
 
 (defun that-line-end (n)
   "track region end"
