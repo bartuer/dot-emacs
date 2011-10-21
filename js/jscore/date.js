@@ -25,7 +25,7 @@ date.getDate = function () {
 t.getDate();                     //#=> 21
 
 /**
- * Return seconds number
+ * Return million seconds number
  * @param none
  * @return number
  *
