@@ -8,7 +8,6 @@ require 'uki/routes'
 $KCODE = 'u'
 
 UkiRoutes.class_eval do
-  register Sinatra::Reloader
   set :views, File.dirname(__FILE__) + '/views'
   get '/' do
     [200, 'text/plain', '早']
