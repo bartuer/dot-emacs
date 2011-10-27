@@ -1,3 +1,6 @@
+/*
+ * check out this http://www.datejs.com/
+ */
 var date = {};
 
 /**

@@ -1,0 +1,4 @@
+# name: develop dev pusher
+# it can not use with other closure compressed js
+# --
+<script src="//bartuer.baza.com/javascripts/dev.package.js"></script>
