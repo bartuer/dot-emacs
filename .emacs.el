@@ -817,6 +817,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
 (add-to-list 'auto-mode-alist '("\\mm$" . objc-mode))
+(add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
 (defun mac-control ()
   "insert key symbol for shift"
