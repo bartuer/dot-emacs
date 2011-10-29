@@ -510,6 +510,19 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
 (add-hook 'magit-mode-hook 'bartuer-magit-load)
 
+(defun accumulate-rectangle (start end &optional fill)
+  "add numbers up in rectangle"
+  (interactive "r*\nP")
+  (setq killed-rectangle (extract-rectangle start end))
+  (message "%d"
+           (reduce '+
+                   (mapcar (lambda (str)
+                             (read (substring-no-properties str)))
+                           killed-rectangle)))
+  )
+
+(global-set-key "\C-xrp" 'accumulate-rectangle)
+
 (defun git-link (repos commit &optional graph)
   "insert link can jump to diff"
   (interactive)
