@@ -841,10 +841,12 @@ see \\[org-timeline] and `org-timeline-next-line'"
 
 (defun add-to-agenda ()
   (interactive)
-  (if (eq 'org-mode major-mode)
+  (if (and (eq 'org-mode major-mode)
+           (not (eq nil (buffer-file-name)))
+           )
       (
        (add-to-list 'org-agenda-files (buffer-file-name))
        (customize-save-variable 'org-agenda-files org-agenda-files)))
-)
+  )
 
 (provide 'bartuer-org)
