@@ -833,8 +833,18 @@ see \\[org-timeline] and `org-timeline-next-line'"
           ("gf" . "http://www.google.com/finance?q=%s")
           ("rt" . "http://www.reuters.com/finance/stocks/overview?symbol=%s")))
   (add-to-list 'org-property-allowed-value-functions 'org-effort-allowed-property-values)
+
   (add-to-list 'org-agenda-files (buffer-file-name))
   (customize-save-variable 'org-agenda-files org-agenda-files)
+
   )
+
+(defun add-to-agenda ()
+  (interactive)
+  (if (eq 'org-mode major-mode)
+      (
+       (add-to-list 'org-agenda-files (buffer-file-name))
+       (customize-save-variable 'org-agenda-files org-agenda-files)))
+)
 
 (provide 'bartuer-org)
