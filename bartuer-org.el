@@ -753,46 +753,64 @@ see \\[org-timeline] and `org-timeline-next-line'"
             ))
   )
 
-(fset 'insert-clock-sum
-        "\C-c\C-p\C-shis\C-m\C-n\C-e|\C-i\C-send\C-m\C-a\C-o\C-i|\C-i\C-e\C-m\C-i\C-[:(insert (clock-sum-line))\C-m")
-
-(defun org-clockhistory-sum ()
-  "insert sum line to calculate clock history sum"
+(defun clockhistory-init ()
   (interactive)
-  (execute-kbd-macro 'insert-clock-sum
-  ))
-
+  (org-entry-put (point) "Clockhistory" "1")
+  (org-entry-put (point) "Clock1" (concat "|" (org-entry-get (point) "CLOCK") "|init|"))
+  (search-forward ":Clock1:")
+  (back-to-indentation)
+  (insert "|")
+  (end-of-line)
+  (open-line 1)
+  (forward-line)
+  (insert "|||")
+  (back-to-indentation)
+  (indent-relative-maybe)
+  (end-of-line)
+  (open-line 1)
+  (forward-line)
+  (insert (clock-sum-line))
+  (back-to-indentation)
+  (indent-relative-maybe)
+  (end-of-line)
+  )
+  
 (defun org-clockhistory-insert ()
   "insert current clock record to history table"
   (interactive)
-  (let* ((his (org-entry-get (point) "Clockhistory"))
-         (his-num (read his))
-         (clock (org-entry-get (point) "CLOCK")))
+  (if (org-entry-get (point) "Clockhistory")
+      (progn
+        (let* ((his (org-entry-get (point) "Clockhistory"))
+               (his-num (read his))
+               (clock (org-entry-get (point) "CLOCK")))
 
-    (unless (org-at-heading-p)
-      (outline-previous-visible-heading 1))
-    (search-forward "Clockhistory")
-    (forward-line his-num)
-    (end-of-line)
-    (newline)
-    (insert (concat
-             "| "
-             ":Clock"
-             (format "%d" (+ 1 his-num))
-             ": | "
-             clock
-             "|"
-             ))
-    (yas/expand)
-    (org-entry-put (point) "Clockhistory" (format "%d" (+ 1 his-num)) )
-    )
-  (let ((end-pos (save-excursion 
-                    (search-forward ":END:" nil t 1)
-                    (point)))
+          (unless (org-at-heading-p)
+            (outline-previous-visible-heading 1))
+          (search-forward "Clockhistory")
+          (forward-line his-num)
+          (end-of-line)
+          (newline)
+          (insert (concat
+                   "| "
+                   ":Clock"
+                   (format "%d" (+ 1 his-num))
+                   ": | "
+                   clock
+                   "|"
+                   ))
+          (yas/expand)
+          (org-entry-put (point) "Clockhistory" (format "%d" (+ 1 his-num)) )
+          )
+        (let ((end-pos (save-excursion 
+                         (search-forward ":END:" nil t 1)
+                         (point)))
+              )
+          (unless (replace-regexp "#\\+TBLFM:.*$" (clock-sum-line) nil (point) end-pos)
+            (message "%s" (clock-sum-line))
+            ))  
         )
-    (unless (replace-regexp "#\\+TBLFM:.*$" (clock-sum-line) nil (point) end-pos)
-      (message "%s" (clock-sum-line))
-      ))
+    (clockhistory-init)
+    )
   )
 
 (defun bartuer-org-load ()
@@ -840,9 +858,8 @@ see \\[org-timeline] and `org-timeline-next-line'"
   (if (and (eq 'org-mode major-mode)
            (not (eq nil (buffer-file-name)))
            )
-      (
-       (add-to-list 'org-agenda-files (buffer-file-name))
-       (customize-save-variable 'org-agenda-files org-agenda-files)))
+      (progn  (add-to-list 'org-agenda-files (buffer-file-name))
+             (customize-save-variable 'org-agenda-files org-agenda-files)))
   )
 
 (provide 'bartuer-org)
