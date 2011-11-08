@@ -286,7 +286,34 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-7" 'find-dired)
 (global-set-key "\M-9" 'grep-find)
 (global-set-key [(f9)] 'grep-find)
-(global-set-key "\M-0" 'list-matching-lines)
+(defun match-lines (&optional arg)
+  (interactive "P")
+  (if (eq arg nil)
+      (progn
+        (let ((regexp (occur-read-primary-args))
+              )
+          (list-matching-lines (car regexp))
+          )
+        )
+    (let ((bufregexp
+           (let* ((default (car regexp-history))
+                  (input
+                   (read-from-minibuffer
+                    (if current-prefix-arg
+                        "List lines in buffers whose names match regexp: "
+                      "List lines in buffers whose filenames match regexp: ")
+                    nil
+                    nil
+                    nil
+                    'regexp-history)))
+             (if (equal input "")
+                 default
+               input))
+           )
+          (regexp (occur-read-primary-args)))
+      (multi-occur-in-matching-buffers bufregexp (car regexp)))
+    ))
+(global-set-key "\M-0" 'match-lines)
 (global-set-key "\C-\M-s" 'isearch-forward)
 (global-set-key "\C-\M-r" 'isearch-backward)
 (global-set-key "\C-s" 'isearch-forward-regexp)
