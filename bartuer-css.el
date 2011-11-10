@@ -17,7 +17,6 @@ css imenu build see `css-extract-keyword-list'
 "
   (interactive)
   (flymake-mode t)
-  (add-hook 'after-save-hook 'css-min nil t)
   (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
   )
 
