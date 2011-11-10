@@ -1,0 +1,1 @@
+csslint --format=compilation $1
