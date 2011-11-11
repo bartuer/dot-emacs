@@ -97,7 +97,7 @@
 (defun css3-extract-props-and-vals ()
   "did not found same table on w3.org, use validator code instead
   /Users/bartuer/etc/el/vendor/css-validate/css-validator.jar:CSS3Properties.properties
-  and 
+  it is not only properties, but rules and queries
 "
    ;  refer (link "~/local/lib/node_modules/csslint/lib/csslint-node.js" 112673)
   )
