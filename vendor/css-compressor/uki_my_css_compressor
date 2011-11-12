@@ -1,0 +1,2 @@
+#! /usr/bin/env sh
+d8 /Users/bartuer/etc/el/vendor/css-compressor/cssMin.u.js -- $1 > $2
