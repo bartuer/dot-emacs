@@ -16,15 +16,10 @@
 (defun MozRepl ()
   (setq mozrepel-jsh-process (inferior-moz-process)))
 
-(defun v8 ()
-  (unless (setq v8-process (get-buffer-process "*v8*"))
-    (setq v8-process (get-buffer-process (make-comint "v8" "v8_shell"))))
+(defun iv8 ()
+  (unless (setq v8-process (get-buffer-process "*iv8*"))
+    (setq v8-process (get-buffer-process (make-comint "iv8" "v8_evaluator"))))
   v8-process)
-
-(defun node ()
-  (unless (setq node-process (get-buffer-process "*node*"))
-    (setq node-process (get-buffer-process (make-comint "node" "node"))))
-  node-process)
 
 (defun woap ()
   (interactive)
@@ -54,7 +49,11 @@
 
 (defun node-d8 ()
   (unless (string-equal  (shell-command-to-string "p 5959") "yes\n")
-    (message "you need start node like this: node --debug=5959 $@"))
+    (progn
+      (make-comint "node.eval:4242.debug:5959.console" "noded")
+      (setq node-dev-process (get-buffer-process "*node.eval:4242.debug:5959.console*"))
+      )
+    )
   (unless (setq node-d8r-process (get-buffer-process "*node.d8r*"))
     (progn
       (make-comint "node.d8r" "node.d8")
@@ -78,10 +77,12 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "d8r" "MozRepl" "node-d8" "v8" "rhino"  "squirrelfish" "spidermonkey" "node" ) nil t)))
+                                   (list  "node-d8" "d8r" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t)))
     (setq js-process (apply (intern jsh) nil))
     (if (string-equal jsh "node-d8")
-        (pop-to-buffer "*node.d8r*")
+        (progn
+          (pop-to-buffer "*node.eval:4242.debug:5959.console*")
+          (pop-to-buffer "*node.d8r*"))
       (pop-to-buffer (concat "*" jsh "*")))
     ))
 
