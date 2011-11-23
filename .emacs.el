@@ -1034,6 +1034,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (ibuffer)
 (ibuffer-switch-to-saved-filter-groups "normal")
 
+;;; clipboard kill for mac (need fix screen, see http://www.opensource.apple.com/source/screen/screen-11/patches/)
+
+(defun clipboard-paste ()
+  (interactive)
+  (shell-command-on-region (point) (+ (point) 1) "pbpaste" nil t)
+  )
+(global-set-key "\M-v" 'clipboard-paste)
+
 (defun interprogram-cut-function (string &optional push)
   (get-buffer-create "*pbcopy*")
   (with-current-buffer "*pbcopy*"
