@@ -1034,7 +1034,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (ibuffer)
 (ibuffer-switch-to-saved-filter-groups "normal")
 
-(setq interprogram-cut-function (intern "interprogram-cut-function"))
 (defun interprogram-cut-function (string &optional push)
   (get-buffer-create "*pbcopy*")
   (with-current-buffer "*pbcopy*"
@@ -1043,3 +1042,4 @@ If give a negative ARG, will undo the last mark action, thus the
     (call-process-region (point-min) (point-max) "pbcopy")
     )
   )
+(setq interprogram-cut-function (intern "interprogram-cut-function"))
