@@ -37,12 +37,12 @@
     )
   )
 
-(defun d8r ()
-  (unless (setq d8r-process (get-buffer-process "*d8r*"))
+(defun chromium ()
+  (unless (setq d8r-process (get-buffer-process "*chromium**"))
     (progn
-      (make-comint "d8r" "d8r")
-      (setq d8r-process (get-buffer-process "*d8r*"))
-      (with-current-buffer "*d8r*"
+      (make-comint "chromium" "d8r")
+      (setq d8r-process (get-buffer-process "*chromium*"))
+      (with-current-buffer "*chromium*"
         (add-hook 'post-command-hook 'woap nil t)
         )))
   d8r-process)
@@ -77,7 +77,7 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "node-d8" "d8r" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t)))
+                                   (list  "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t)))
     (setq js-process (apply (intern jsh) nil))
     (if (string-equal jsh "node-d8")
         (progn
