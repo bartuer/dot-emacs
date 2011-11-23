@@ -1726,11 +1726,6 @@ These are all of the minibuffer bindings during completion:
   (unless (lookup-key dired-mode-map [(control ?\))]) ; Dired `C-)'
     (define-key dired-mode-map [(control ?\))] 'icicle-candidate-set-dired-marked-save-more))
 
-  ;; Bind `S-TAB' in major maps, for key completion.
-  (when (fboundp 'map-keymap)           ; Emacs 22.
-    (icicle-bind-S-TAB-in-keymaps-from (current-global-map))
-    (mapcar #'icicle-bind-S-TAB-for-map-variable icicle-keymaps-for-key-completion))
-
   ;; Prevent `this-command' from being set to `handle-switch-frame'.
   (define-key global-map [handle-switch-frame] 'icicle-skip-this-command)
   (define-key global-map [switch-frame] 'icicle-handle-switch-frame))
