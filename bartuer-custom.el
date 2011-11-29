@@ -31,6 +31,7 @@
  '(edebug-trace t)
  '(emms-player-list (quote (emms-player-mplayer)))
  '(emms-stream-default-action "play")
+ '(enable-local-eval t)
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
  '(fast-wiki-minor-mode-string " wk")
@@ -102,7 +103,7 @@
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
  '(org-agenda-columns-add-appointments-to-effort-sum t)
- '(org-agenda-files (quote ("/Users/bartuer/local/src/re2c_hw_bench/css.org" "/Users/bartuer/local/src/bartuer.github.com/progress_bar.org" "/Users/bartuer/org/quote.org" "/Users/bartuer/org/diary.org" "/Users/bartuer/org/note.org_archive" "/Users/bartuer/org/note.org" "/Users/bartuer/local/src/ccdv/ccdv.org" "/Users/bartuer/local/src/widget/sense/audio.org" "/Users/bartuer/local/src/realtime/realtime.org" "/Users/bartuer/local/src/widget/card/application.org" "/Users/bartuer/local/src/widget/card/image.org" "/Users/bartuer/local/src/frototype/frototype.org" "/Users/bartuer/local/src/widget/sense/sense.org" "/Users/bartuer/local/src/widget/card/card.org" "/Users/bartuer/local/src/buddy/plan.org" "/Users/bartuer/local/src/deal/deal.org" "/Users/bartuer/org/demo.org" "/Users/bartuer/local/src/uki-imageCutter/imagecutter.org" "/Users/bartuer/local/src/uki-imageCutter/file_input_in_runtime.org" "/Users/bartuer/local/src/pass/pass.org" "/Users/bartuer/local/src/bla/zaphinx.org" "/Users/bartuer/local/src/pullee/pullee.org" "/Users/bartuer/local/src/morus/morus.org" "/Users/bartuer/org/next.org" "/Users/bartuer/local/src/baza/sbs.org" "/Users/bartuer/local/src/widget/collectionview/collectionview.org")))
+ '(org-agenda-files (quote ("/Users/bartuer/local/src/cells/cells.txt" "/Users/bartuer/local/src/re2c_hw_bench/css.org" "/Users/bartuer/local/src/bartuer.github.com/progress_bar.org" "/Users/bartuer/org/quote.org" "/Users/bartuer/org/diary.org" "/Users/bartuer/org/note.org_archive" "/Users/bartuer/org/note.org" "/Users/bartuer/local/src/ccdv/ccdv.org" "/Users/bartuer/local/src/widget/sense/audio.org" "/Users/bartuer/local/src/realtime/realtime.org" "/Users/bartuer/local/src/widget/card/application.org" "/Users/bartuer/local/src/widget/card/image.org" "/Users/bartuer/local/src/frototype/frototype.org" "/Users/bartuer/local/src/widget/sense/sense.org" "/Users/bartuer/local/src/widget/card/card.org" "/Users/bartuer/local/src/buddy/plan.org" "/Users/bartuer/local/src/deal/deal.org" "/Users/bartuer/org/demo.org" "/Users/bartuer/local/src/uki-imageCutter/imagecutter.org" "/Users/bartuer/local/src/uki-imageCutter/file_input_in_runtime.org" "/Users/bartuer/local/src/pass/pass.org" "/Users/bartuer/local/src/bla/zaphinx.org" "/Users/bartuer/local/src/pullee/pullee.org" "/Users/bartuer/local/src/morus/morus.org" "/Users/bartuer/org/next.org" "/Users/bartuer/local/src/baza/sbs.org" "/Users/bartuer/local/src/widget/collectionview/collectionview.org")))
  '(org-archive-save-context-info (quote (time file category todo itags olpath ltags)))
  '(org-clock-idle-time 30)
  '(org-columns-default-format "%40ITEM(Task) %15Effort(EFFORT){:} %SCHEDULED(SCHEDULE) %22DEADLINE(DEADLINE) %CLOCK(CLOCK)")
@@ -126,7 +127,8 @@
  '(reload-minor-mode-string " Reload")
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(rst-level-face-base-color "")
- '(safe-local-variable-values (quote ((erlang-indent-level . 4) (erlang-indent-level . 2) (require-final-newline) (backup-inhibited . t) (ruby-compilation-executable . "ruby") (ruby-compilation-executable . "ruby1.8") (ruby-compilation-executable . "ruby1.9") (ruby-compilation-executable . "rbx") (ruby-compilation-executable . "jruby") (minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
+ '(safe-local-eval-forms (quote ((add-hook (quote write-file-hooks) (quote time-stamp)) (add-hook (quote after-save-hook) (lambda nil (org-export-as-html 3))) (lambda nil (org-export-as-html 3)))))
+ '(safe-local-variable-values (quote ((save-as-html lambda nil (org-export-as-html 3)) (write-contents-files lambda nil (org-export-as-html 3)) (erlang-indent-level . 4) (erlang-indent-level . 2) (require-final-newline) (backup-inhibited . t) (ruby-compilation-executable . "ruby") (ruby-compilation-executable . "ruby1.8") (ruby-compilation-executable . "ruby1.9") (ruby-compilation-executable . "rbx") (ruby-compilation-executable . "jruby") (minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX") (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader") (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer") (TeX-command-default . "CLaTeX") (TeX-master . t))))
  '(scroll-conservatively 10)
  '(search-whitespace-regexp "[ 	
 ]+")
