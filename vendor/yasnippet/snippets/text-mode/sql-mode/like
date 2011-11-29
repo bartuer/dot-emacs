@@ -1,0 +1,3 @@
+# name: select like sql console
+# --
+select * from data where link LIKE '%${1:str}';
