@@ -35,6 +35,15 @@
   (define-key sql-mode-map "\C-c\C-t" 'sql-to-orgtbl)
   (define-key sql-mode-map "\C-c\C-b" 'sql-send-buffer-dwim))
 
+(defun sqlite3-migrate-package (database_name)
+  (let ((table_name (file-name-sans-extension (file-name-nondirectory database_name)))
+        (dir (file-name-directory database_name)))
+    (shell-command
+     (message "%s" (format "echo '.dump' | sqlite3 %s | gzip -c > %s.sql.gz" database_name (concat dir table_name)))
+     nil "*Messages*")
+    )
+  )
+
 (defun convert-csv-to-sqlite3 (filename)
   (with-current-buffer (get-buffer-create (find-file filename))
     (let* ((table_name (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))
@@ -64,9 +73,6 @@
         (write-region (point) (point-max) tmp)
         (shell-command
          (message (format "echo '.import %s %s' | sqlite3 -list %s" tmp table_name (concat dir database_name))) nil "*Messages*")
-        (shell-command
-         (message (format "echo '.dump' | sqlite3 %s | gzip -c > %s.sql.gz" (concat dir database_name) (concat dir table_name)))
-        )
       ))))
   
 (defun convert-csv-to-list (&optional filename query)
@@ -88,19 +94,21 @@
       (shell-command-on-region
        (point-min)
        (point-max)
-       (message (format "sqlite3 -line %s 'select %s from %s %s;'"
-                        (concat dir database_name)
-                        (if query
-                            (progn
-                              (setq convert-csv-where (read-from-minibuffer "where : " ""))
-                              (read-from-minibuffer "select (fields seperate by ,) : " "*"))
-                          "*")
-                        table_name
+       (message "%s" (concat (format "sqlite3 -line %s 'select %s from %s "
+                                 (concat dir database_name)
+                                 (if query
+                                     (progn
+                                       (setq convert-csv-where (read-from-minibuffer "where (field like \"%str\"): " ""))
+                                       (read-from-minibuffer "select (fields seperate by ,) : " "*"))
+                                   "*")
+                                 table_name
+                                 )
                         (if (string-equal convert-csv-where "")
                             ""
-                          (concat "where " convert-csv-where)
+                          (concat "where " convert-csv-where) 
                           )
-                        )) nil t)
+                        ";'")
+                ) nil t)
       (let* ((beg (point-min))
              (end (point-max))
              (txt (buffer-substring-no-properties beg end))
@@ -125,8 +133,7 @@
                        (insert column_name)
                        (insert "|")
                        ) table_head)
-             (insert "\n")
-             (insert "|-\n")
+             (insert "\n|-\n")
              (mapcar (lambda (record)
                        (insert "|")
                        (mapcar (lambda (value)
