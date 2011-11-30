@@ -74,8 +74,20 @@
         (shell-command
          (message (format "echo '.import %s %s' | sqlite3 -csv %s" tmp table_name (concat dir database_name))) nil "*Messages*")
       ))))
-  
-(defun convert-csv-to-list (&optional filename query)
+
+(defun convert-csv-to-org-lisp (&optional filename)
+  (interactive)
+  (with-current-buffer (find-file (if filename
+                                      filename
+                                    (buffer-file-name)))
+
+    (save-excursion
+      (goto-char (point-min))
+      (org-table-convert-region (point-min) (point-max) '(4))
+      (org-table-to-lisp)))
+  )
+
+(defun convert-csv-to-record-list (&optional filename query)
   (interactive "P")
   (setq convert-csv-where "")
   (let* ((query (if (or query (eq 4 (prefix-numeric-value filename)))
@@ -150,6 +162,49 @@
              data_view
       ))))
 
-(defun save-to-csv (filename)
-  (orgtbl-to-generic (org-table-to-lisp) '(:sep "|"))
+(defun convert-org-table-to-csv (&optional filename)
+  (interactive)
+  (with-current-buffer (find-file (if filename
+                                      filename
+                                    (buffer-file-name)))
+
+    (save-excursion
+      (let ((content (orgtbl-to-csv
+                      (org-table-to-lisp)
+                      nil)))
+        (kill-region (point-min) (point-max))
+        (goto-char (point-min))
+        (insert content))))
   )
+
+(defun convert-sqlite3-to-org-lisp (database_name)
+  (let* ((table_name (file-name-sans-extension (file-name-nondirectory database_name)))
+         (dump_lines (shell-command-to-string
+                      (message "%s" (format "sqlite3 -line %s 'select * from %s'" database_name table_name))
+                      ))
+         (paras (nthcdr 0 (org-split-string dump_lines "\n\n")))
+         (table_head ((lambda (para)
+                         (let ((record (list))
+                               (lines (org-split-string para "\n")))
+                           (mapcar (lambda (line)
+                                     (when (string-match "\\([a-zA-Z0-9-_]+\\)\s=\s\\(.*\\)" line)
+                                       (push (match-string-no-properties 1 line) record))          
+                                     ) lines)
+                           (reverse record))
+                         ) (car paras))))
+    (cons table_head (mapcar (lambda (para)
+                               (let ((record (list))
+                                     (lines (org-split-string para "\n")))
+                                 (mapcar (lambda (line)
+                                           (when (string-match "\\([a-zA-Z0-9-_]+\\)\s=\s\\(.*\\)" line)
+                                             (push (match-string-no-properties 2 line) record))          
+                                           ) lines)
+                                 (reverse record)))
+                             paras))
+    )
+  )
+
+(defun convert-sqlite3-to-csv (database_name)
+  (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
+  )
+
