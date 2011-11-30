@@ -55,7 +55,7 @@
                                                           (beginning-of-line 1) (point))
                                                         (save-excursion
                                                           (end-of-line) (point)))))
-           (fields (nthcdr 0 (org-split-string head_line "|"))))
+           (fields (nthcdr 0 (org-split-string head_line ","))))
       (shell-command (message
                       (if (file-exists-p database_name)
                           (format "sqlite3 %s 'drop table %s;create table %s(%s);'"
@@ -72,7 +72,7 @@
       (let ((tmp (make-temp-file nil)))
         (write-region (point) (point-max) tmp)
         (shell-command
-         (message (format "echo '.import %s %s' | sqlite3 -list %s" tmp table_name (concat dir database_name))) nil "*Messages*")
+         (message (format "echo '.import %s %s' | sqlite3 -csv %s" tmp table_name (concat dir database_name))) nil "*Messages*")
       ))))
   
 (defun convert-csv-to-list (&optional filename query)
@@ -149,3 +149,7 @@
              (org-mode)
              data_view
       ))))
+
+(defun save-to-csv (filename)
+  (orgtbl-to-generic (org-table-to-lisp) '(:sep "|"))
+  )
