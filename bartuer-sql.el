@@ -208,3 +208,77 @@
   (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
   )
 
+(defun convert-org-table-to-record-list (&optional txt)
+  (interactive)
+  (unless (org-at-table-p)
+    (error "No table at point"))
+  (let* ((txt (or txt
+                  (buffer-substring-no-properties (org-table-begin)
+                                                  (org-table-end))))
+         (lines (org-split-string txt "[ \t]*\n[ \t]*"))
+         (table_head (org-split-string (org-trim (car lines)) "\\s-*|\\s-*"))
+         (it (number-sequence 0 (- (safe-length table_head) 1)))
+         (data_area (if (not (equal (string-match org-table-hline-regexp (cadr lines)) nil))
+                        (cddr lines)
+                      (cdr lines))))
+    (mapcar
+     (lambda (x)
+       (unless (string-match org-table-hline-regexp x)
+         (let ((values (org-split-string (org-trim x) "\\s-*|\\s-*"))
+               (keys table_head)
+               )
+           (mapcar (lambda (i)
+                     (cons
+                      (nth i keys)
+                      (nth i values))
+                     ) it)
+           )
+         ))
+     data_area))
+  )
+
+
+(defvar sqlite3-db-record)
+(defvar org-line-record)
+
+(add-text-properties (point) (+ 1 (point)) '(sqlite3-db-record (("id" . 1) ("version" . 0))))
+(remove-text-properties (point)  (+ 1 (point)) '(org-line-record))
+
+(defface sqlite-sync-change
+  '((((class color)) (:background "magenta"))
+    (t (:bold t)))
+  "Face used for marking sqlite-sync-change."
+  :group 'sqlite-sync)
+
+(defface sqlite-sync-insert
+  '((((class color)) (:background "green"))
+    (t (:bold t)))
+  "Face used for marking sqlite-sync-insert."
+  :group 'sqlite-sync)
+
+
+(defun sqlite-sync-mark-as-change ()
+  (interactive)
+    (let ((ov (make-overlay (point) (+ (point) 1) nil t t)))
+      (overlay-put ov 'face 'sqlite-sync-change)
+      (overlay-put ov 'sqlite-sync-overlay t)
+      ov)
+  )
+
+(defun sqlite-sync-mark-as-insert ()
+  (interactive)
+    (let ((ov (make-overlay (point) (+ (point) 1) nil t t)))
+      (overlay-put ov 'face 'sqlite-sync-insert)
+      (overlay-put ov 'sqlite-sync-overlay t)
+   ov)
+  )
+
+(defun sqlite-sync-mark-as-unchange ()
+  (interactive)
+  (dolist (ol (overlays-in (point) (+ (point) 1)))
+  (delete-overlay ol)))
+
+(defun exe-record-list-as-sql-insert ()
+  
+  )
+
