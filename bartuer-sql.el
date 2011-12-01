@@ -106,7 +106,6 @@
     (setq data_view (mapcar (lambda (para)
                               (let ((record (list))
                                     (lines (org-split-string para "\n")))
-                                (message "%s" (format-time-string "%M:%S"))
                                 (mapcar (lambda (line)
                                           (when (string-match "\\([a-zA-Z0-9-_]+\\)\s=\s\\(.*\\)" line)
                                             (push (cons (match-string-no-properties 1 line)
@@ -115,11 +114,7 @@
                                 (reverse record)))
                             paras)
           )
-    (setq table_head (mapcar
-                      (lambda (r)
-                        (message "%s" (format-time-string ">%M:%S"))
-                        (car r))
-                      (car data_view)))
+    (setq table_head (mapcar 'car (car data_view)))
     (setq content (mapconcat (lambda (record)
                                (let ((first "|")) 
                                  (add-text-properties 0 1 (cons 'sqlite3-db-record (list (copy-alist record))) first)
@@ -131,13 +126,18 @@
       (kill-region (point-min) (point-max))
       (goto-char (point-min))
       (save-excursion
-        (insert (concat
-                 "|"
-                 (mapconcat (lambda (x)
-                             x
-                             ) table_head "|")
-                 )
-                "\n|-\n")
+        (let ((table-head-record "|"))
+          (add-text-properties 0 1 (cons 'sqlite3-table-head (list table_head)) table-head-record)
+          (insert (concat
+                   table-head-record
+                   (mapconcat (lambda (x)
+                                x
+                                ) table_head "|")
+                   )
+                  "\n|-\n")
+          (setq sqlite3-table-head table_head)
+          )
+        
         (insert content)
         (org-table-align-patched)
         )
@@ -278,6 +278,8 @@
   (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
   )
 
+
+
 (defun query-org-table-line-record-list (&optional x)
   (interactive)
   (let ((line (if x
@@ -286,37 +288,13 @@
                     (error "Not at a table"))
                 (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
     (unless (string-match org-table-hline-regexp line)
-      (let* ((values (org-split-string (org-trim line) "\\s-*|\\s-*"))
-            (keys
-             (if (get-text-property (org-table-begin) 'sqlite3-table-head)
-                 (get-text-property (org-table-begin) 'sqlite3-table-head)
-               (add-text-properties (org-table-begin) (+ (org-table-begin) 1)
-                                    (cons 'sqlite3-table-head (list
-                                                               (org-split-string
-                                                                (org-trim
-                                                                 (save-excursion
-                                                                   (goto-char (org-table-begin))
-                                                                   (goto-char (line-end-position))
-                                                                   (buffer-substring-no-properties (org-table-begin) (point))
-                                                                   )) "\\s-*|\\s-*"))))
-               (get-text-property (org-table-begin) 'sqlite3-table-head)
-               )
-             )
-            (it
-             (if (get-text-property (org-table-begin) 'sqlite3-table-head-it)
-                 (get-text-property (org-table-begin) 'sqlite3-table-head-it)
-               (add-text-properties (org-table-begin) (+ (org-table-begin) 1)
-                                    (cons 'sqlite3-table-head-it (list (number-sequence 0 (- (safe-length keys) 1)))))
-               (get-text-property (org-table-begin) 'sqlite3-table-head-it)
-               )
-             
-             )
-            )
+      (let ((values (org-split-string (org-trim line) "\\s-*|\\s-*")))
         (mapcar (lambda (i)
                   (cons
-                   (nth i keys)
+                   (nth i sqlite3-table-head)
                    (nth i values))
-                  ) it)
+                  )
+                (number-sequence 0 (- (safe-length sqlite3-table-head) 1)))
         )
       )
     )
@@ -338,19 +316,17 @@
                 (unchanged t)
                 )
             (if database
-                (progn
-                  (mapcar (lambda (entry)
-                            (unless (equal (cdr (assoc (car entry) database))
-                                           (cdr entry))
-                              (sqlite-sync-mark-as-change bol)
-                              (setq unchanged nil)
-                              )
-                            ) current)
-                  (when unchanged
-                    (sqlite-sync-mark-as-unchange bol)
-                    )
+                (unless (equal database current)
+                  (sqlite-sync-mark-as-change bol)
+                  (setq unchanged nil)
                   )
-              (sqlite-sync-mark-as-insert bol)
+              (progn
+                (sqlite-sync-mark-as-insert bol)
+                (setq unchanged nil)
+                )
+              )
+            (when unchanged
+              (sqlite-sync-mark-as-unchange bol)
               )
             )
           )
