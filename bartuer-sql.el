@@ -127,7 +127,7 @@
              (mapcar (lambda (record)
                        (insert "|")
                        (let ((bol (line-beginning-position)))
-                         (add-text-properties bol (+ 1 bol) (copy-alist record))  
+                         (add-text-properties bol (+ 1 bol) (cons 'sqlite3-db-record (list (copy-alist record))))
                          )
                        (mapcar (lambda (value)
                                  (insert value)
@@ -144,8 +144,13 @@
   )
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
-(defun p ()
-  (text-properties-at (point))
+
+(defun sqlite3-inspect (&optional field)
+  (interactive)
+  (message "%s" (mapconcat (lambda (entry)
+                             (format "%s : %s" (car entry) (cdr entry))
+                             )
+                           (get-text-property (line-beginning-position) 'sqlite3-db-record) "\n"))
   )
 
 (defun convert-csv-to-record-list (&optional filename query)
@@ -269,40 +274,94 @@
   (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
   )
 
-(defun convert-org-table-to-record-list (&optional txt)
+(defun query-org-table-line-record-list (&optional x)
+  (interactive)
+  (let ((line (if x
+                  x
+                (if (not (org-at-table-p))
+                    (error "Not at a table"))
+                (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
+    (unless (string-match org-table-hline-regexp line)
+      (let* ((values (org-split-string (org-trim line) "\\s-*|\\s-*"))
+            (keys
+             (if (get-text-property (org-table-begin) 'sqlite3-table-head)
+                 (get-text-property (org-table-begin) 'sqlite3-table-head)
+               (add-text-properties (org-table-begin) (+ (org-table-begin) 1)
+                                    (cons 'sqlite3-table-head (list
+                                                               (org-split-string
+                                                                (org-trim
+                                                                 (save-excursion
+                                                                   (goto-char (org-table-begin))
+                                                                   (goto-char (line-end-position))
+                                                                   (buffer-substring-no-properties (org-table-begin) (point))
+                                                                   )) "\\s-*|\\s-*"))))
+               (get-text-property (org-table-begin) 'sqlite3-table-head)
+               )
+             )
+            (it
+             (if (get-text-property (org-table-begin) 'sqlite3-table-head-it)
+                 (get-text-property (org-table-begin) 'sqlite3-table-head-it)
+               (add-text-properties (org-table-begin) (+ (org-table-begin) 1)
+                                    (cons 'sqlite3-table-head-it (list (number-sequence 0 (- (safe-length keys) 1)))))
+               (get-text-property (org-table-begin) 'sqlite3-table-head-it)
+               )
+             
+             )
+            )
+        (mapcar (lambda (i)
+                  (cons
+                   (nth i keys)
+                   (nth i values))
+                  ) it)
+        )
+      )
+    )
+  )
+
+(defun compare-org-table-with-record-list-and-mark ()
   (interactive)
   (unless (org-at-table-p)
     (error "No table at point"))
-  (let* ((txt (or txt
-                  (buffer-substring-no-properties (org-table-begin)
-                                                  (org-table-end))))
-         (lines (org-split-string txt "[ \t]*\n[ \t]*"))
-         (table_head (org-split-string (org-trim (car lines)) "\\s-*|\\s-*"))
-         (it (number-sequence 0 (- (safe-length table_head) 1)))
-         (data_area (if (not (equal (string-match org-table-hline-regexp (cadr lines)) nil))
-                        (cddr lines)
-                      (cdr lines))))
-    (mapcar
-     (lambda (x)
-       (unless (string-match org-table-hline-regexp x)
-         (let ((values (org-split-string (org-trim x) "\\s-*|\\s-*"))
-               (keys table_head)
-               )
-           (mapcar (lambda (i)
-                     (cons
-                      (nth i keys)
-                      (nth i values))
-                     ) it)
-           )
-         ))
-     data_area))
+  (save-excursion
+    (goto-char (org-table-begin))
+    (while (org-at-table-p)
+      (let ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+        (unless (or (string-match org-table-hline-regexp line) ; row separator
+                    (equal 1 (org-table-current-dline))) ; table head
+          (let* ((bol (line-beginning-position))
+                (current (query-org-table-line-record-list line))
+                (database (get-text-property bol 'sqlite3-db-record))
+                (unchanged t)
+                )
+            (if database
+                (progn
+                  (mapcar (lambda (entry)
+                            (unless (equal (cdr (assoc (car entry) database))
+                                           (cdr entry))
+                              (sqlite-sync-mark-as-change bol)
+                              (setq unchanged nil)
+                              )
+                            ) current)
+                  (when unchanged
+                    (sqlite-sync-mark-as-unchange bol)
+                    )
+                  )
+              (sqlite-sync-mark-as-insert bol)
+              )
+            )
+          )
+        )
+      (forward-line)
+      )
+    )
   )
 
 
+(defvar sqlite3-table-head-it)
+(defvar sqlite3-table-head)
 (defvar sqlite3-db-record)
 (defvar org-line-record)
 
-;; (remove-text-properties (point)  (+ 1 (point)) '(org-line-record))
 
 (defface sqlite-sync-change
   '((((class color)) (:background "magenta"))
@@ -316,27 +375,38 @@
   "Face used for marking sqlite-sync-insert."
   :group 'sqlite-sync)
 
-
-(defun sqlite-sync-mark-as-change ()
+(defun sqlite-sync-mark-as-change (&optional pos)
   (interactive)
-    (let ((ov (make-overlay (point) (+ (point) 1) nil t t)))
-      (overlay-put ov 'face 'sqlite-sync-change)
-      (overlay-put ov 'sqlite-sync-overlay t)
-      ov)
+  (let* ((pos (if pos
+                 pos
+               (point)))
+         (ov (make-overlay pos (+ pos 1) nil t t))
+        )
+    (overlay-put ov 'face 'sqlite-sync-change)
+    (overlay-put ov 'sqlite-sync-overlay t)
+    ov)
   )
 
-(defun sqlite-sync-mark-as-insert ()
+(defun sqlite-sync-mark-as-insert (&optional pos)
   (interactive)
-    (let ((ov (make-overlay (point) (+ (point) 1) nil t t)))
-      (overlay-put ov 'face 'sqlite-sync-insert)
-      (overlay-put ov 'sqlite-sync-overlay t)
-   ov)
+  (let* ((pos (if pos
+                 pos
+               (point)))
+         (ov (make-overlay pos (+ pos 1) nil t t))
+        )
+    (overlay-put ov 'face 'sqlite-sync-insert)
+    (overlay-put ov 'sqlite-sync-overlay t)
+    ov)
   )
 
-(defun sqlite-sync-mark-as-unchange ()
+(defun sqlite-sync-mark-as-unchange (&optional pos)
   (interactive)
-  (dolist (ol (overlays-in (point) (+ (point) 1)))
-  (delete-overlay ol)))
+  (let ((pos (if pos
+                 pos
+               (point))))
+    (dolist (ol (overlays-in pos (+ pos 1)))
+        (delete-overlay ol))
+    ))
 
 (defun exe-record-list-as-sql-insert ()
   
