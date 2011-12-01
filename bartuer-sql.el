@@ -278,12 +278,10 @@
   (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
   )
 
+
+
 (defun query-org-table-line-record-list (&optional x)
   (interactive)
-  (setq query_beg (current-time))
-  (setq query_beg_num (+ (* 65535 (nth 0 query_beg)) (nth 1 query_beg) (* 0.000001 (nth 2 query_beg))))
-  
-  
   (let ((line (if x
                   x
                 (if (not (org-at-table-p))
@@ -300,78 +298,26 @@
         )
       )
     )
-
-    (setq query_end (current-time))
-    (setq query_end_num (+ (* 65535 (nth 0 query_end)) (nth 1 query_end) (* 0.000001 (nth 2 query_end))))
-    (message "%10s time %f" "query"  (- query_end_num  query_beg_num ))
-
   )
 
 (defun compare-org-table-with-record-list-and-mark ()
   (interactive)
+  (setq compare_beg (current-time))
+  (setq compare_beg_num (+ (* 65535 (nth 0 compare_beg)) (nth 1 compare_beg) (* 0.000001 (nth 2 compare_beg))))
+  
   (unless (org-at-table-p)
     (error "No table at point"))
   (save-excursion
     (goto-char (org-table-begin))
+    (forward-line)
     (while (org-at-table-p)
-      (setq whole_beg (current-time))
-      (setq whole_beg_num (+ (* 65535 (nth 0 whole_beg)) (nth 1 whole_beg) (* 0.000001 (nth 2 whole_beg))))
-      
-      
       (let ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-        (unless
-            ((lambda ()
-               (setq check_beg (current-time))
-               (setq check_beg_num (+ (* 65535 (nth 0 check_beg)) (nth 1 check_beg) (* 0.000001 (nth 2 check_beg))))
-
-               (setq row_check_beg (current-time))
-               (setq row_check_beg_num (+ (* 65535 (nth 0 row_check_beg)) (nth 1 row_check_beg) (* 0.000001 (nth 2 row_check_beg))))
-               (setq row_check (string-match org-table-hline-regexp line))
-               (setq row_check_end (current-time))
-               (setq row_check_end_num (+ (* 65535 (nth 0 row_check_end)) (nth 1 row_check_end) (* 0.000001 (nth 2 row_check_end))))
-               (message "%10s time %f" "row_check" (- row_check_end_num  row_check_beg_num ))
-
-               (setq head_check_beg (current-time))
-               (setq head_check_beg_num (+ (* 65535 (nth 0 head_check_beg)) (nth 1 head_check_beg) (* 0.000001 (nth 2 head_check_beg))))
-               (setq head_check (equal 1 (org-table-current-dline)))
-               (setq head_check_end (current-time))
-               (setq head_check_end_num (+ (* 65535 (nth 0 head_check_end)) (nth 1 head_check_end) (* 0.000001 (nth 2 head_check_end))))
-               (message "%10s time %f" "head_check" (- head_check_end_num  head_check_beg_num ))
-               
-               (setq check_result (or  row_check head_check; row separator
-                    ))
-
-               (setq check_end (current-time))
-               (setq check_end_num (+ (* 65535 (nth 0 check_end)) (nth 1 check_end) (* 0.000001 (nth 2 check_end))))
-               (message "%10s time %f" "check" (- check_end_num  check_beg_num ))
-               check_result
-               )
-             )
-             ; table head
+        (unless (string-match org-table-hline-regexp line)
           (let* ((bol (line-beginning-position))
-                 (current (query-org-table-line-record-list line))
-                 (database
-                  ((lambda ()
-                     (setq query_db_beg (current-time))
-                     (setq query_db_beg_num (+ (* 65535 (nth 0 query_db_beg)) (nth 1 query_db_beg) (* 0.000001 (nth 2 query_db_beg))))
-                     
-                     (get-text-property bol 'sqlite3-db-record)
-
-                     (setq query_db_end (current-time))
-                     (setq query_db_end_num (+ (* 65535 (nth 0 query_db_end)) (nth 1 query_db_end) (* 0.000001 (nth 2 query_db_end))))
-                     (message "%10s time %f" "query_db" (- query_db_end_num  query_db_beg_num ))
-                     
-                     )
-                   )
-                  
-                  )
-                 (unchanged t)
-                 )
-
-            (setq compare_beg (current-time))
-            (setq compare_beg_num (+ (* 65535 (nth 0 compare_beg)) (nth 1 compare_beg) (* 0.000001 (nth 2 compare_beg))))
-            
-            
+                (current (query-org-table-line-record-list line))
+                (database (get-text-property bol 'sqlite3-db-record))
+                (unchanged t)
+                )
             (if database
                 (unless (equal database current)
                   (sqlite-sync-mark-as-change bol)
@@ -382,28 +328,19 @@
                 (setq unchanged nil)
                 )
               )
-
-            (setq compare_end (current-time))
-            (setq compare_end_num (+ (* 65535 (nth 0 compare_end)) (nth 1 compare_end) (* 0.000001 (nth 2 compare_end))))
-            (message "%10s time %f" "compare" (- compare_end_num  compare_beg_num ))
-
-            
             (when unchanged
               (sqlite-sync-mark-as-unchange bol)
               )
             )
           )
         )
-      (setq whole_end (current-time))
-      (setq whole_end_num (+ (* 65535 (nth 0 whole_end)) (nth 1 whole_end) (* 0.000001 (nth 2 whole_end))))
-      (message "%10s time %f" "whole" (- whole_end_num  whole_beg_num ))
-
-
       (forward-line)
       )
     )
+    (setq compare_end (current-time))
+  (setq compare_end_num (+ (* 65535 (nth 0 compare_end)) (nth 1 compare_end) (* 0.000001 (nth 2 compare_end))))
+  (message "%10s time %f" "compare" (- compare_end_num  compare_beg_num ))
   )
-
 
 (defvar sqlite3-table-head-it)
 (defvar sqlite3-table-head)
@@ -460,9 +397,11 @@
   
   )
 
+
 (defun org-table-align-patched ()
   "Align the table at point by aligning all vertical bars."
   (interactive)
+  (message "org table align\n")
   (let* (
 	 ;; Limits of table
 	 (beg (org-table-begin))
