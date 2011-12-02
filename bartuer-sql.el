@@ -397,11 +397,12 @@
   
   )
 
-
-(defun org-table-align-patched ()
+(defalias  'org-table-align-patched 'org-table-align)
+(defun org-table-align ()
   "Align the table at point by aligning all vertical bars."
   (interactive)
   (message "org table align\n")
+  
   (let* (
 	 ;; Limits of table
 	 (beg (org-table-begin))
@@ -597,4 +598,6 @@
     (org-table-goto-column colpos)
     (and org-table-overlay-coordinates (org-table-overlay-coordinates))
     (setq org-table-may-need-update nil)
-    ))
+    )
+  (compare-org-table-with-record-list-and-mark)
+  )
