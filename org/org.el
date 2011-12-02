@@ -16577,6 +16577,7 @@ overwritten, and the table is not marked as requiring realignment."
      (t (let (org-use-speed-commands)
 	  (call-interactively 'org-self-insert-command)))))
    ((and
+     (not (equal "view" (file-name-extension (buffer-name))))
      (org-table-p)
      (progn
        ;; check if we blank the field, and if that triggers align
@@ -16594,6 +16595,7 @@ overwritten, and the table is not marked as requiring realignment."
     (let (org-table-may-need-update)
       (goto-char (1- (match-end 0)))
       (delete-backward-char 1)
+      (a (message "goto %d" (match-beginning 0)))
       (goto-char (match-beginning 0))
       (self-insert-command N)))
    (t
@@ -16659,6 +16661,7 @@ because, in this case the deletion might narrow the column."
 	    (replace-match (concat
 			    (substring (match-string 0) 1 -1)
 			    " |"))
+
 	    (goto-char pos)
 	    ;; noalign: if there were two spaces at the end, this field
 	    ;; does not determine the width of the column.

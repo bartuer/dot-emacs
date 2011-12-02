@@ -284,8 +284,6 @@
   (interactive)
   (let ((line (if x
                   x
-                (if (not (org-at-table-p))
-                    (error "Not at a table"))
                 (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
     (unless (string-match org-table-hline-regexp line)
       (let ((values (org-split-string (org-trim line) "\\s-*|\\s-*")))
@@ -302,44 +300,16 @@
 
 (defun compare-org-table-with-record-list-and-mark ()
   (interactive)
-  (setq compare_beg (current-time))
-  (setq compare_beg_num (+ (* 65535 (nth 0 compare_beg)) (nth 1 compare_beg) (* 0.000001 (nth 2 compare_beg))))
-  
   (unless (org-at-table-p)
     (error "No table at point"))
   (save-excursion
     (goto-char (org-table-begin))
     (forward-line)
     (while (org-at-table-p)
-      (let ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-        (unless (string-match org-table-hline-regexp line)
-          (let* ((bol (line-beginning-position))
-                (current (query-org-table-line-record-list line))
-                (database (get-text-property bol 'sqlite3-db-record))
-                (unchanged t)
-                )
-            (if database
-                (unless (equal database current)
-                  (sqlite-sync-mark-as-change bol)
-                  (setq unchanged nil)
-                  )
-              (progn
-                (sqlite-sync-mark-as-insert bol)
-                (setq unchanged nil)
-                )
-              )
-            (when unchanged
-              (sqlite-sync-mark-as-unchange bol)
-              )
-            )
-          )
-        )
+      (check-org-table-line-with-record-list)
       (forward-line)
       )
     )
-    (setq compare_end (current-time))
-  (setq compare_end_num (+ (* 65535 (nth 0 compare_end)) (nth 1 compare_end) (* 0.000001 (nth 2 compare_end))))
-  (message "%10s time %f" "compare" (- compare_end_num  compare_beg_num ))
   )
 
 (defvar sqlite3-table-head-it)
@@ -362,14 +332,16 @@
 
 (defun sqlite-sync-mark-as-change (&optional pos)
   (interactive)
-  (let* ((pos (if pos
-                 pos
-               (point)))
-         (ov (make-overlay pos (+ pos 1) nil t t))
-        )
-    (overlay-put ov 'face 'sqlite-sync-change)
-    (overlay-put ov 'sqlite-sync-overlay t)
-    ov)
+  (save-excursion
+    (let* ((pos (if pos
+                    pos
+                  (point)))
+           (ov (make-overlay pos (+ pos 1) nil t t))
+           )
+      (overlay-put ov 'face 'sqlite-sync-change)
+      (overlay-put ov 'sqlite-sync-overlay t)
+      ov))
+  
   )
 
 (defun sqlite-sync-mark-as-insert (&optional pos)
@@ -393,11 +365,86 @@
         (delete-overlay ol))
     ))
 
-(defun exe-record-list-as-sql-insert ()
-  
+(defun check-org-table-line-with-record-list (&optional line)
+  (let ((line (if line
+                  line
+                (buffer-substring (line-beginning-position) (line-end-position))) ))
+    (unless (string-match org-table-hline-regexp line)
+      (let* ((bol (line-beginning-position))
+             (current (query-org-table-line-record-list line))
+             (database (get-text-property 0 'sqlite3-db-record line))
+             (unchanged t)
+             )
+        (if t
+            (unless (equal database current)
+              (sqlite-sync-mark-as-change bol)
+              (setq unchanged nil)
+              )
+          (progn
+            (sqlite-sync-mark-as-insert bol)
+            (setq unchanged nil)
+            )
+          )
+        (when unchanged
+          (sqlite-sync-mark-as-unchange bol)
+          )
+        )
+      )
+    )
   )
 
+(defun mark-different-with-sqlite3-record (start end len)
+  (message "start %d, end %d, len %d" start end len)
+  (let (
+        (check_start (save-excursion
+                       (goto-char start)
+                       (line-beginning-position)
+                       ))
+        (check_end (save-excursion
+                     (goto-char end)
+                     (line-end-position)
+                     ))
+        )
+    (goto-char check_start)
+    (while (and (<= (point) check_end) (org-at-table-p)) 
+      (check-org-table-line-with-record-list (buffer-substring (line-beginning-position) (line-end-position)))
+      (forward-line 1)
+      )
+    )
+  )
+
+(defvar database-view-mode-map
+  (let ((map (make-sparse-keymap)))
+    map)
+  "Minor mode keymap for database-view-mode")
+
+
+(define-minor-mode database-view-mode
+  :group 'org :lighter " db-view " :keymap database-view-mode-map
+  (cond (database-view-mode
+         (add-hook 'after-change-functions 'mark-different-with-sqlite3-record t t)
+         (compare-org-table-with-record-list-and-mark)
+         (remove-hook 'before-change-functions 'org-before-change-function t)
+         )
+        (t
+         (remove-hook 'after-change-functions 'mark-different-with-sqlite3-record t)
+         (dolist (ol (overlays-in (point-min) (point-max)))
+           (when (overlay-get ol 'sqlite-sync-overlay)
+             (delete-overlay ol)
+             ))
+         (add-hook 'before-change-functions 'org-before-change-function nil t)
+         ))
+  )
+
+(setq database-view-mode nil)
+(defun exe-record-list-as-sql-insert ()
+                                        ; need guess field data type
+                                        ; need insert Unique ID if unavailable
+                                        ; need generate SQL and execute it as transaction
+    )
+
 (defalias  'org-table-align-patched 'org-table-align)
+
 (defun org-table-align ()
   "Align the table at point by aligning all vertical bars."
   (interactive)
@@ -599,5 +646,7 @@
     (and org-table-overlay-coordinates (org-table-overlay-coordinates))
     (setq org-table-may-need-update nil)
     )
-  (compare-org-table-with-record-list-and-mark)
+  (when (equal "view" (file-name-extension (buffer-name)))
+        (compare-org-table-with-record-list-and-mark))
   )
+
