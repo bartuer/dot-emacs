@@ -1,0 +1,3 @@
+# name: timer delay execute delay after some time
+# --
+(run-at-time "${1:3 sec}" nil '${2:functionname} ${3:para})
