@@ -69,7 +69,7 @@
                                                                 (end-of-line) (point)))))
            (samples (nthcdr 0 (org-split-string first_data_line ",")))
            (schemas (mapcar (lambda (field_pair)
-                              (let ((default "NUMERIC")
+                              (let ((default "TEXT")
                                     (f (cdr field_pair))
                                     (n (car field_pair)))
                                 (cond ((numberp (string-match ".*ID\\|_id\\|^id" (org-trim n)))
@@ -143,80 +143,7 @@
    )
   )
 
-(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient for debug, remove option later
-  (interactive)
-  (let* ((database_name (if (stringp database_name)
-                            database_name
-                          "/tmp/orgsql/data.db"))
-         (table_name (file-name-sans-extension (file-name-nondirectory database_name)))
-         (txt (shell-command-to-string
-               (message "%s"
-                        (format "sqlite3 -line %s '%s'"
-                                database_name
-                                (setq sqlite3-select-clause
-                                      (read-from-minibuffer " SQL : "
-                                                            (format "select * from %s;" table_name))))
-                        )))
-         (schema (parse-schema (shell-command-to-string
-                                (message "%s"
-                                         (format "echo '.schema %s'| sqlite3  %s"
-                                                 table_name database_name 
-                                                 )
-                                         ))))
-         (paras (nthcdr 0 (org-split-string txt "\n\n")))
-         )
-    (setq content "")
-    (setq data_view (mapcar (lambda (para)
-                              (let ((record (list))
-                                    (lines (org-split-string para "\n")))
-                                (mapcar (lambda (line)
-                                          (when (string-match "\\([a-zA-Z0-9-_]+\\)\s=\s\\(.*\\)" line)
-                                            (push (cons (match-string-no-properties 1 line)
-                                                        (match-string-no-properties 2 line)) record))          
-                                          ) lines)
-                                (reverse record)))
-                            paras)
-          )
-    (setq table_head (mapcar 'car (car data_view)))
-    (setq content (mapconcat (lambda (record)
-                               (let ((first "|")) 
-                                 (add-text-properties 0 1 (cons 'sqlite3-db-record (list (copy-alist record))) first)
-                                 (concat first (mapconcat 'cdr record "|"))
-                                 )
-                               ) data_view "\n"))
 
-    (with-current-buffer (get-buffer-create (concat table_name ".view"))
-      (kill-region (point-min) (point-max))
-      (goto-char (point-min))
-      (save-excursion
-        (let ((table-head-record "|"))
-          (add-text-properties 0 1
-                               (cons
-                                'sqlite3-table-head
-                                (list
-                                 (append
-                                  schema
-                                  (list
-                                   (cons "selection" sqlite3-select-clause))))) table-head-record)
-          (insert (concat
-                   table-head-record
-                   (mapconcat (lambda (x)
-                                x
-                                ) table_head "|")
-                   )
-                  "\n|-\n")
-          (setq sqlite3-table-head table_head)
-          )
-        
-        (insert content)
-        (org-table-align-patched)
-        )
-      (pop-to-buffer (concat table_name ".view"))
-      (org-mode)
-      ;; (database-view-mode t) TODO this will mess convert
-      )
-    )
-  )
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
 
@@ -315,6 +242,18 @@
              data_view
       ))))
 
+(defun convert-csv-to-org-table (&optional filename)
+  (interactive)
+  (with-current-buffer (find-file (if filename
+                                      filename
+                                    (buffer-file-name)))
+
+    (save-excursion
+      (goto-char (point-min))
+      (org-table-convert-region (point-min) (point-max) '(4))
+      ))
+  )
+
 (defun convert-org-table-to-csv (&optional filename)
   (interactive)
   (with-current-buffer (find-file (if filename
@@ -330,7 +269,91 @@
         (insert content))))
   )
 
-(defun convert-sqlite3-minor-modeto-org-lisp (database_name)
+(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient for debug, remove option later
+  (interactive)
+  (let* ((database_name (if (stringp database_name)
+                            database_name
+                          "/tmp/orgsql/data.db"))
+         (table_name (file-name-sans-extension (file-name-nondirectory database_name)))
+         (txt (shell-command-to-string
+               (message "%s"
+                        (format "sqlite3 -line %s '%s'"
+                                database_name
+                                (setq sqlite3-select-clause
+                                      (read-from-minibuffer " SQL : "
+                                                            (format "select * from %s;" table_name))))
+                        )))
+         (schema (parse-schema (shell-command-to-string
+                                (message "%s"
+                                         (format "echo '.schema %s'| sqlite3  %s"
+                                                 table_name database_name 
+                                                 )
+                                         ))))
+         (count (org-trim (shell-command-to-string
+                           (message "%s"
+                                    (format "sqlite3  %s 'select count(*) from %s;'"
+                                            database_name table_name
+                                            )
+                                    ))))
+         (paras (nthcdr 0 (org-split-string txt "\n\n")))
+         )
+    (setq content "")
+    (setq data_view (mapcar (lambda (para)
+                              (let ((record (list))
+                                    (lines (org-split-string para "\n")))
+                                (mapcar (lambda (line)
+                                          (when (string-match "\\([a-zA-Z0-9-_]+\\)\s=\s\\(.*\\)" line)
+                                            (push (cons (match-string-no-properties 1 line)
+                                                        (match-string-no-properties 2 line)) record))          
+                                          ) lines)
+                                (reverse record)))
+                            paras)
+          )
+    (setq table_head (mapcar 'car (car data_view)))
+    (setq content (mapconcat (lambda (record)
+                               (let ((first "|")) 
+                                 (add-text-properties 0 1 (cons 'sqlite3-db-record (list (copy-alist record))) first)
+                                 (concat first (mapconcat 'cdr record "|"))
+                                 )
+                               ) data_view "\n"))
+
+    (with-current-buffer (get-buffer-create (concat table_name ".view"))
+      (kill-region (point-min) (point-max))
+      (goto-char (point-min))
+      (save-excursion
+        (let ((table-head-record "|"))
+          (add-text-properties 0 1
+                               (cons
+                                'sqlite3-table-head
+                                (list
+                                 (append
+                                  schema
+                                  (list
+                                   (cons "query" sqlite3-select-clause)
+                                   (cons "count" count)
+                                   (cons "database" database_name)
+                                   )))) table-head-record)
+          (insert (concat
+                   table-head-record
+                   (mapconcat (lambda (x)
+                                x
+                                ) table_head "|")
+                   )
+                  "\n|-\n")
+          (setq sqlite3-table-head table_head)
+          )
+        
+        (insert content)
+        (org-table-align-patched)
+        )
+      (pop-to-buffer (concat table_name ".view"))
+      (org-mode)
+      ;; (database-view-mode t) TODO this will mess convert
+      )
+    )
+  )
+
+(defun convert-sqlite3-to-org-lisp (database_name)
   (let* ((table_name (file-name-sans-extension (file-name-nondirectory database_name)))
          (dump_lines (shell-command-to-string
                       (message "%s" (format "sqlite3 -line %s 'select * from %s'" database_name table_name))
@@ -360,8 +383,6 @@
 (defun convert-sqlite3-to-csv (database_name)
   (orgtbl-to-generic (convert-sqlite3-to-org-lisp database_name) '(:sep ","))
   )
-
-
 
 (defun query-org-table-line-record-list (&optional x)
   (interactive)
@@ -522,16 +543,34 @@
          ))
   )
 
+(defun quote-value (field, field_types)
+  (cond
+   ((and
+     (equal
+      (cdr
+       (assoc
+        (car c)
+        head_record))
+      "TEXT")
+     (not (eq ?\" (string-to-char (cdr c)))))
+    (concat "\"" (cdr c) "\"")
+    )
+   (t
+    (cdr c)
+    )
+   )
+  )
+
 (defun export-change-to-sql-clause ()
   (interactive)
   (goto-char (org-table-begin))
-  (let ((clause '("BEGIN TRANSACTION;"))
-        (table_name (file-name-sans-extension (file-name-nondirectory (buffer-name))))
+  (setq clause "BEGIN TRANSACTION;")
+  (let ((table_name (file-name-sans-extension (file-name-nondirectory (buffer-name))))
         (id_field_name (car (rassoc
                              "INTEGER PRIMARY KEY"
                              (get-text-property (line-beginning-position) 'sqlite3-table-head))))
         )
-    (while (and (<= (point) (org-table-end)) (org-at-table-p))
+    (while (and (< (point) (org-table-end)) (org-at-table-p))
       (let* ((bol (line-beginning-position))
              (line (buffer-substring (line-beginning-position) (line-end-position)))
              (current (query-org-table-line-record-list line))
@@ -543,45 +582,71 @@
               (unless (equal database current)
                 (let* ((id (cdr (assoc id_field_name current)))
                        (update_clause (format
-                                       "UPDATE %s SET (%s) WHERE %s = %s;"
+                                       "UPDATE %s SET %s WHERE %s = %s;"
                                        table_name
                                        (mapconcat (lambda (c)
                                                     (format "%s = %s"
                                                             (car c)
-                                                            (cdr c))
+                                                            (quote-value c head_record)
+                                                            )
                                                     )
                                                   current ",")
                                        id_field_name
                                        id
                                        )))
-                  (nconc clause (list (substring-no-properties update_clause)))
+                  (setq clause (concat clause (substring-no-properties update_clause)))
                   )
                 )
-            (unless head
+            (if  head
+                (setq head_record head)
               (let ((insert_clause (format
-                                  "INSERT INTO %s (%s) VALUES(%s);"
-                                  table_name
-                                  (mapconcat (lambda (c)
-                                               (car c)
-                                               ) current ",")
-                                  (mapconcat (lambda (c)
-                                               (cdr c)
-                                               ) current ",")
-                                  )))
-              (nconc clause (list (substring-no-properties insert_clause)))
+                                    "INSERT INTO %s (%s) VALUES(%s);"
+                                    table_name
+                                    (mapconcat (lambda (c)
+                                                 (car c)
+                                                 ) current ",")
+                                    (mapconcat (lambda (c)
+                                                 (quote-value c head_record)
+                                                 ) current ",")
+                                    )))
+                (setq clause (concat clause (substring-no-properties insert_clause)))
+                )
               )
-              )
-            
             )
           )
         )
-      (forward-line 1)
+      (forward-line)
       )
-    (if (> (length clause) 1)
-        (progn (nconc clause '("COMMIT;"))
-               (message "%s" (mapconcat (lambda (x) x) clause "\n"))
+    (if (> (length clause) 18)
+        (progn (setq clause (concat clause "COMMIT;"))
+               (message clause )
                )
       nil
+      )
+    )
+  )
+
+(defun commit-data-view-to-sqlite3 ()
+  (interactive)
+  (let ((commit (export-change-to-sql-clause))
+        (buffer (current-buffer))
+        (database_name (save-excursion
+                         (goto-char (org-table-begin))
+                         (cdr
+                          (assoc
+                           "database"
+                           (get-text-property
+                            (line-beginning-position)
+                            'sqlite3-table-head))))))
+
+    (if (and (comint-check-proc "*SQL*")
+             (equal 'sqlite sql-interactive-product)
+             (equal database_name sql-database)
+             )
+        (progn
+          (sql-send-string commit)
+          )
+      (sql-sqlite)
       )
     )
   )
