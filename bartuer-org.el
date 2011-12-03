@@ -104,12 +104,16 @@
   ) 
   
 
-(setq timestamp-regex "[0-9]+?-[0-9]+?-[0-9]+ [A-Za-z]+ \\([0-9]+\\:[0-9]+$\\)")
+(defvar timestamp-regexp
+  "[0-9]+?-[0-9]+?-[0-9]+ [A-Za-z]+ \\([0-9]+\\:[0-9]+$\\)"
+  "timestamp regexp"
+  )
+
 
 (defun timestamp->fraction (timestamp)
   "convert org time stamp string to seconds"
   (let ((fraction 0))
-    (when (numberp (string-match timestamp-regex timestamp)) 
+    (when (numberp (string-match timestamp-regexp timestamp)) 
       (setq fraction
             (/ (round (* 100 (/ (* 60
                                    (org-hh:mm-string-to-minutes

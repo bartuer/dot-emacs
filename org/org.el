@@ -16595,7 +16595,6 @@ overwritten, and the table is not marked as requiring realignment."
     (let (org-table-may-need-update)
       (goto-char (1- (match-end 0)))
       (delete-backward-char 1)
-      (a (message "goto %d" (match-beginning 0)))
       (goto-char (match-beginning 0))
       (self-insert-command N)))
    (t
