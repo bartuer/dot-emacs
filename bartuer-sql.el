@@ -101,13 +101,11 @@
                              guess_result
                            (concat "id INTEGER PRIMARY KEY," guess_result))
                          )))
-      (shell-command (message
-                      (if (file-exists-p database_name)
-                          (format "sqlite3 %s 'drop table %s;create table %s(%s);'"
-                                  database_name table_name table_name schema-str)
-                        (format "sqlite3 %s 'create table %s(%s);'"
+      (shell-command (message "echo drop table exit code %d; %s"
+                              (shell-command (format "sqlite3 %s 'drop table %s;'" database_name table_name))
+                              (format "sqlite3 %s 'create table %s(%s);'"
                                 database_name table_name schema-str)
-                        )))
+                      ))
       (goto-char (point-min))
       (forward-line)
       (let ((tmp (make-temp-file nil)))
