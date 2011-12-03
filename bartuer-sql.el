@@ -69,7 +69,7 @@
                                                                 (end-of-line) (point)))))
            (samples (nthcdr 0 (org-split-string first_data_line ",")))
            (schemas (mapcar (lambda (field_pair)
-                              (let ((default "TEXT")
+                              (let ((default "NUMERIC")
                                     (f (cdr field_pair))
                                     (n (car field_pair)))
                                 (cond ((numberp (string-match ".*ID\\|_id\\|^id" (org-trim n)))
