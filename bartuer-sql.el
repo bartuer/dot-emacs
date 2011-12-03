@@ -142,12 +142,24 @@
         (org-table-align-patched)
         )
       (pop-to-buffer (concat table_name ".view"))
-      (org-mode)
+      ;; (org-mode)
+      (save-excursion
+        (goto-char (org-table-begin))
+        (while (and (<= (point) (org-table-end)) (org-at-table-p))
+        (let ((bol (line-beginning-position)))
+          (put-text-property bol (+ 1 bol) 'keymap database-view-row-map)
+          )
+        (forward-line 1)
+        )
+        )
+      ;; (database-view-mode t) this will mess convert
       )
     )
   )
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
+
+
 
 (defun sqlite3-inspect (&optional field)
   (interactive)
@@ -156,6 +168,13 @@
                              )
                            (get-text-property (line-beginning-position) 'sqlite3-db-record) "\n"))
   )
+
+(defvar database-view-row-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "i" 'sqlite3-inspect)
+    map)
+  "keymap for row beginning")
+
 
 (defun convert-csv-to-record-list (&optional filename query)
   (interactive "P")
@@ -247,7 +266,7 @@
         (insert content))))
   )
 
-(defun convert-sqlite3-to-org-lisp (database_name)
+(defun convert-sqlite3-minor-modeto-org-lisp (database_name)
   (let* ((table_name (file-name-sans-extension (file-name-nondirectory database_name)))
          (dump_lines (shell-command-to-string
                       (message "%s" (format "sqlite3 -line %s 'select * from %s'" database_name table_name))
@@ -375,7 +394,7 @@
              (database (get-text-property 0 'sqlite3-db-record line))
              (unchanged t)
              )
-        (if t
+        (if database
             (unless (equal database current)
               (sqlite-sync-mark-as-change bol)
               (setq unchanged nil)
@@ -394,7 +413,6 @@
   )
 
 (defun mark-different-with-sqlite3-record (start end len)
-  (message "start %d, end %d, len %d" start end len)
   (let (
         (check_start (save-excursion
                        (goto-char start)
@@ -405,10 +423,12 @@
                      (line-end-position)
                      ))
         )
-    (goto-char check_start)
-    (while (and (<= (point) check_end) (org-at-table-p)) 
-      (check-org-table-line-with-record-list (buffer-substring (line-beginning-position) (line-end-position)))
-      (forward-line 1)
+    (save-excursion
+      (goto-char check_start)
+      (while (and (<= (point) check_end) (org-at-table-p)) 
+        (check-org-table-line-with-record-list (buffer-substring (line-beginning-position) (line-end-position)))
+        (forward-line 1)
+        )
       )
     )
   )
@@ -420,7 +440,7 @@
 
 
 (define-minor-mode database-view-mode
-  :group 'org :lighter " db-view " :keymap database-view-mode-map
+  :group 'fundamental :lighter " db-view " :keymap database-view-mode-map
   (cond (database-view-mode
          (add-hook 'after-change-functions 'mark-different-with-sqlite3-record t t)
          (compare-org-table-with-record-list-and-mark)
@@ -482,7 +502,7 @@
 		    (re-search-forward org-emph-re end t)))
     (goto-char beg)
     (setq raise (and org-use-sub-superscripts
-		    (re-search-forward org-match-substring-regexp end t)))
+                     (re-search-forward org-match-substring-regexp end t)))
     (goto-char beg)
     (setq dates (and org-display-custom-times
 		     (re-search-forward org-ts-regexp-both end t)))
@@ -519,7 +539,7 @@
     ;; Get the data fields by splitting the lines.
     (setq fields (mapcar
 		  (lambda (l)
-		      (org-split-string l " *| *"))
+                    (org-split-string l " *| *"))
 		  (delq nil (copy-sequence lines))))
     ;; How many fields in the longest line?
     (condition-case nil
@@ -612,9 +632,9 @@
 	       (lambda (l)
 		 (if l
                      (progn (let ((formatted_line (apply 'format rfmt (append (pop fields) emptystrings))))
-                               (add-text-properties 0 1 (text-properties-at 0 l) formatted_line)
-                               formatted_line
-                               )
+                              (add-text-properties 0 1 (text-properties-at 0 l) formatted_line)
+                              formatted_line
+                              )
                             )
 		   hfmt))
 	       lines ""))
@@ -647,6 +667,7 @@
     (setq org-table-may-need-update nil)
     )
   (when (equal "view" (file-name-extension (buffer-name)))
-        (compare-org-table-with-record-list-and-mark))
+    (compare-org-table-with-record-list-and-mark)
+    )
   )
 
