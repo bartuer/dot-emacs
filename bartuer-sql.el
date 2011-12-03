@@ -142,16 +142,7 @@
         (org-table-align-patched)
         )
       (pop-to-buffer (concat table_name ".view"))
-      ;; (org-mode)
-      (save-excursion
-        (goto-char (org-table-begin))
-        (while (and (<= (point) (org-table-end)) (org-at-table-p))
-        (let ((bol (line-beginning-position)))
-          (put-text-property bol (+ 1 bol) 'keymap database-view-row-map)
-          )
-        (forward-line 1)
-        )
-        )
+      (org-mode)
       ;; (database-view-mode t) this will mess convert
       )
     )
@@ -159,21 +150,20 @@
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
 
-
-
 (defun sqlite3-inspect (&optional field)
   (interactive)
-  (message "%s" (mapconcat (lambda (entry)
-                             (format "%s : %s" (car entry) (cdr entry))
-                             )
-                           (get-text-property (line-beginning-position) 'sqlite3-db-record) "\n"))
-  )
-
-(defvar database-view-row-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "i" 'sqlite3-inspect)
-    map)
-  "keymap for row beginning")
+  (let ((max_field_name (reduce 'max
+                                (mapcar 'length
+                                        (mapcar 'car
+                                                (get-text-property
+                                                 (line-beginning-position)
+                                                 'sqlite3-db-record))))))
+    
+    (message "%s" (mapconcat (lambda (entry)
+                               (format (concat  "%" (format "%d" max_field_name) "s : %s") (car entry) (cdr entry))
+                               )
+                             (get-text-property (line-beginning-position) 'sqlite3-db-record) "\n"))  
+    ))
 
 
 (defun convert-csv-to-record-list (&optional filename query)
@@ -435,9 +425,9 @@
 
 (defvar database-view-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map "\M-?" 'sqlite3-inspect)
     map)
   "Minor mode keymap for database-view-mode")
-
 
 (define-minor-mode database-view-mode
   :group 'fundamental :lighter " db-view " :keymap database-view-mode-map
