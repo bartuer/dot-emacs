@@ -1,0 +1,3 @@
+# name: select like match regex sql console
+# --
+${1:column} LIKE '%${2:str}'
