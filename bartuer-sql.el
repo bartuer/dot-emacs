@@ -143,7 +143,7 @@
    )
   )
 
-(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient debug, remove option later
+(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient for debug, remove option later
   (interactive)
   (let* ((database_name (if (stringp database_name)
                             database_name
@@ -190,10 +190,14 @@
       (goto-char (point-min))
       (save-excursion
         (let ((table-head-record "|"))
-          (add-text-properties 0 1 (cons 'sqlite3-table-head (list (append
-                                                                    schema
-                                                                    (list
-                                                                     (cons "selection" sqlite3-select-clause))))) table-head-record)
+          (add-text-properties 0 1
+                               (cons
+                                'sqlite3-table-head
+                                (list
+                                 (append
+                                  schema
+                                  (list
+                                   (cons "selection" sqlite3-select-clause))))) table-head-record)
           (insert (concat
                    table-head-record
                    (mapconcat (lambda (x)
@@ -209,16 +213,16 @@
         )
       (pop-to-buffer (concat table_name ".view"))
       (org-mode)
-      ;; (database-view-mode t) this will mess convert
+      ;; (database-view-mode t) TODO this will mess convert
       )
     )
   )
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
 
-(defun sqlite3-inspect (&optional field) ; TODO should support table head inspect
+(defun sqlite3-inspect (&optional field)
   (interactive)
-  (let* ((property_name (if (equal (line-beginning-position) (org-table-begin))
+  (let* ((property_sym (if (equal (line-beginning-position) (org-table-begin))
                             'sqlite3-table-head
                           'sqlite3-db-record
                           ))
@@ -227,12 +231,12 @@
                                          (mapcar 'car
                                                  (get-text-property
                                                   (line-beginning-position)
-                                                  property_name))))))
+                                                  property_sym))))))
     
     (message "%s" (mapconcat (lambda (entry)
                                (format (concat  "%" (format "%d" max_field_name) "s : %s") (car entry) (cdr entry))
                                )
-                             (get-text-property (line-beginning-position) property_name) "\n"))  
+                             (get-text-property (line-beginning-position) property_sym) "\n"))  
     ))
 
 
@@ -516,12 +520,63 @@
          ))
   )
 
-(setq database-view-mode nil)
-(defun exe-record-list-as-sql-insert ()
-                                        ; need guess field data type
-                                        ; need insert Unique ID if unavailable
-                                        ; need generate SQL and execute it as transaction
+(defun export-change-to-sql-clause ()
+  (interactive)
+  (goto-char (org-table-begin))
+  (let ((clause '("BEGIN TRANSACTION;"))
+        (table_name (file-name-sans-extension (file-name-nondirectory (buffer-name))))
+        (id_field_name "id")
+        )
+    (while (and (<= (point) (org-table-end)) (org-at-table-p))
+      (let* ((bol (line-beginning-position))
+             (line (buffer-substring (line-beginning-position) (line-end-position)))
+             (current (query-org-table-line-record-list line))
+             (database (get-text-property 0 'sqlite3-db-record line))
+             )
+        (unless (string-match org-table-hline-regexp line)
+          (if database
+              (unless (equal database current)
+                (let* ((id (cdr (assoc id_field_name current)))
+                       (update_clause (format
+                                       "UPDATE %s SET (%s) WHERE %s = %s;"
+                                       table_name
+                                       (mapconcat (lambda (c)
+                                                    (format "%s = %s"
+                                                            (car c)
+                                                            (cdr c))
+                                                    )
+                                                  current ",")
+                                       id_field_name
+                                       id
+                                       )))
+                  (nconc clause (list (substring-no-properties update_clause)))
+                  )
+                )
+            (let ((insert_clause (format
+                                  "INSERT INTO %s (%s) VALUES(%s);"
+                                  table_name
+                                  (mapconcat (lambda (c)
+                                               (car c)
+                                               ) current ",")
+                                  (mapconcat (lambda (c)
+                                               (cdr c)
+                                               ) current ",")
+                                  )))
+              (nconc clause (list (substring-no-properties insert_clause)))
+              )
+            )
+          )
+        )
+      (forward-line 1)
+      )
+    (if (> (length clause) 1)
+        (progn (nconc clause '("COMMIT;"))
+               (message "%s" (mapconcat (lambda (x) x) clause "\n"))
+               )
+      nil
+      )
     )
+  )
 
 (defalias  'org-table-align-patched 'org-table-align)
 
