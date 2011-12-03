@@ -114,8 +114,9 @@
                (message "%s"
                         (format "sqlite3 -line %s '%s'"
                                 database_name
-                                (read-from-minibuffer " SQL : "
-                                                      (format "select * from %s;" table_name)))
+                                (setq sqlite3-select-clause
+                                      (read-from-minibuffer " SQL : "
+                                                            (format "select * from %s;" table_name))))
                         )))
          (schema (parse-schema (shell-command-to-string
                                 (message "%s"
@@ -150,7 +151,10 @@
       (goto-char (point-min))
       (save-excursion
         (let ((table-head-record "|"))
-          (add-text-properties 0 1 (cons 'sqlite3-table-head (list schema)) table-head-record)
+          (add-text-properties 0 1 (cons 'sqlite3-table-head (list (append
+                                                                    schema
+                                                                    (list
+                                                                     (cons "selection" sqlite3-select-clause))))) table-head-record)
           (insert (concat
                    table-head-record
                    (mapconcat (lambda (x)
@@ -485,8 +489,6 @@
 (defun org-table-align ()
   "Align the table at point by aligning all vertical bars."
   (interactive)
-  (message "org table align\n")
-  
   (let* (
 	 ;; Limits of table
 	 (beg (org-table-begin))
