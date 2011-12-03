@@ -87,6 +87,23 @@
       (org-table-to-lisp)))
   )
 
+(defun parse-schema (str)
+  (mapcar
+   (lambda (field)
+     (let* ((name_and_type (org-split-string field " "))
+            (name (car name_and_type))
+            (type (cadr name_and_type))
+            )
+       (cons name type)
+       )
+     )
+   (progn
+     (string-match "\\.*(\\(.*)\\)" str)
+     (org-split-string (substring (match-string 0 str) 1 -1)  ",")
+     )
+   )
+  )
+
 (defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient debug, remove option later
   (interactive)
   (let* ((database_name (if (stringp database_name)
@@ -100,6 +117,12 @@
                                 (read-from-minibuffer " SQL : "
                                                       (format "select * from %s;" table_name)))
                         )))
+         (schema (parse-schema (shell-command-to-string
+                                (message "%s"
+                                         (format "echo '.schema %s'| sqlite3  %s"
+                                                 table_name database_name 
+                                                 )
+                                         ))))
          (paras (nthcdr 0 (org-split-string txt "\n\n")))
          )
     (setq content "")
@@ -127,7 +150,7 @@
       (goto-char (point-min))
       (save-excursion
         (let ((table-head-record "|"))
-          (add-text-properties 0 1 (cons 'sqlite3-table-head (list table_head)) table-head-record)
+          (add-text-properties 0 1 (cons 'sqlite3-table-head (list schema)) table-head-record)
           (insert (concat
                    table-head-record
                    (mapconcat (lambda (x)
@@ -150,19 +173,23 @@
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
 
-(defun sqlite3-inspect (&optional field)
+(defun sqlite3-inspect (&optional field) ; TODO should support table head inspect
   (interactive)
-  (let ((max_field_name (reduce 'max
-                                (mapcar 'length
-                                        (mapcar 'car
-                                                (get-text-property
-                                                 (line-beginning-position)
-                                                 'sqlite3-db-record))))))
+  (let* ((property_name (if (equal (line-beginning-position) (org-table-begin))
+                            'sqlite3-table-head
+                          'sqlite3-db-record
+                          ))
+         (max_field_name (reduce 'max
+                                 (mapcar 'length
+                                         (mapcar 'car
+                                                 (get-text-property
+                                                  (line-beginning-position)
+                                                  property_name))))))
     
     (message "%s" (mapconcat (lambda (entry)
                                (format (concat  "%" (format "%d" max_field_name) "s : %s") (car entry) (cdr entry))
                                )
-                             (get-text-property (line-beginning-position) 'sqlite3-db-record) "\n"))  
+                             (get-text-property (line-beginning-position) property_name) "\n"))  
     ))
 
 
