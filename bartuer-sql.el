@@ -55,17 +55,19 @@
                                                           (beginning-of-line 1) (point))
                                                         (save-excursion
                                                           (end-of-line) (point)))))
-           (fields (nthcdr 0 (org-split-string head_line ","))))
+           (fields (nthcdr 0 (org-split-string head_line ",")))
+           (schemas (mapcar (lambda (f)
+                              (cons f " TEXT")
+                              ) fields))
+           (schema-str (mapconcat (lambda (entry)
+                                (concat (car entry) (cdr entry))
+                                ) schemas ",")))
       (shell-command (message
                       (if (file-exists-p database_name)
                           (format "sqlite3 %s 'drop table %s;create table %s(%s);'"
-                                  database_name table_name table_name (mapconcat (lambda (f)
-                                                                                   (concat f " TEXT")
-                                                                                   ) fields ","))
+                                  database_name table_name table_name schema-str)
                         (format "sqlite3 %s 'create table %s(%s);'"
-                                database_name table_name (mapconcat (lambda (f)
-                                                                      (concat f " TEXT")
-                                                                      ) fields ","))
+                                database_name table_name schema-str)
                         )))
       (goto-char (point-min))
       (forward-line)
@@ -73,7 +75,7 @@
         (write-region (point) (point-max) tmp)
         (shell-command
          (message (format "echo '.import %s %s' | sqlite3 -csv %s" tmp table_name (concat dir database_name))) nil "*Messages*")
-      ))))
+        ))))
 
 (defun convert-csv-to-org-lisp (&optional filename)
   (interactive)
