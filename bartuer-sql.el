@@ -456,6 +456,7 @@
       (let* ((bol (line-beginning-position))
              (current (query-org-table-line-record-list line))
              (database (get-text-property 0 'sqlite3-db-record line))
+             (head (get-text-property 0 'sqlite3-table-head line))
              (unchanged t)
              )
         (if database
@@ -463,10 +464,11 @@
               (sqlite-sync-mark-as-change bol)
               (setq unchanged nil)
               )
-          (progn
+          (unless head
             (sqlite-sync-mark-as-insert bol)
             (setq unchanged nil)
             )
+          
           )
         (when unchanged
           (sqlite-sync-mark-as-unchange bol)
@@ -525,13 +527,16 @@
   (goto-char (org-table-begin))
   (let ((clause '("BEGIN TRANSACTION;"))
         (table_name (file-name-sans-extension (file-name-nondirectory (buffer-name))))
-        (id_field_name "id")
+        (id_field_name (car (rassoc
+                             "INTEGER PRIMARY KEY"
+                             (get-text-property (line-beginning-position) 'sqlite3-table-head))))
         )
     (while (and (<= (point) (org-table-end)) (org-at-table-p))
       (let* ((bol (line-beginning-position))
              (line (buffer-substring (line-beginning-position) (line-end-position)))
              (current (query-org-table-line-record-list line))
              (database (get-text-property 0 'sqlite3-db-record line))
+             (head (get-text-property 0 'sqlite3-table-head line))
              )
         (unless (string-match org-table-hline-regexp line)
           (if database
@@ -552,7 +557,8 @@
                   (nconc clause (list (substring-no-properties update_clause)))
                   )
                 )
-            (let ((insert_clause (format
+            (unless head
+              (let ((insert_clause (format
                                   "INSERT INTO %s (%s) VALUES(%s);"
                                   table_name
                                   (mapconcat (lambda (c)
@@ -564,6 +570,8 @@
                                   )))
               (nconc clause (list (substring-no-properties insert_clause)))
               )
+              )
+            
             )
           )
         )
