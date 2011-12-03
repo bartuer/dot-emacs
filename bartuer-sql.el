@@ -90,9 +90,9 @@
 (defun parse-schema (str)
   (mapcar
    (lambda (field)
-     (let* ((name_and_type (org-split-string field " "))
+     (let* ((name_and_type (org-split-string (org-trim field)  " "))
             (name (car name_and_type))
-            (type (cadr name_and_type))
+            (type (mapconcat (lambda (x) x) (cdr name_and_type) " "))
             )
        (cons name type)
        )
