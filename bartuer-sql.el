@@ -44,6 +44,11 @@
     )
   )
 
+(defvar data-field-timestamp-regexp
+  "[0-9]+?-[0-9]+?-[0-9]+ [A-Za-z]* \\([0-9]+\\:[0-9]+\\(:[0-9]+)*$\\)"
+  "timestamp regexp"
+  )
+
 (defun convert-csv-to-sqlite3 (filename)
   (with-current-buffer (get-buffer-create (find-file filename))
     (let* ((table_name (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))
@@ -56,12 +61,41 @@
                                                         (save-excursion
                                                           (end-of-line) (point)))))
            (fields (nthcdr 0 (org-split-string head_line ",")))
-           (schemas (mapcar (lambda (f)
-                              (cons f " TEXT")
-                              ) fields))
+           (first_data_line (save-excursion
+                              (goto-line 2)
+                              (buffer-substring-no-properties (save-excursion
+                                                                (beginning-of-line 1) (point))
+                                                              (save-excursion
+                                                                (end-of-line) (point)))))
+           (samples (nthcdr 0 (org-split-string first_data_line ",")))
+           (schemas (mapcar (lambda (field_pair)
+                              (let ((default "TEXT")
+                                    (f (cdr field_pair))
+                                    (n (car field_pair)))
+                                (cond ((numberp (string-match ".*ID\\|_id\\|^id" (org-trim n)))
+                                       (cons n "INTEGER PRIMARY KEY")
+                                       )
+                                      ((numberp (string-match org-table-number-regexp (org-trim f)))
+                                       (cons n "NUMERIC")
+                                       )
+                                      ((numberp (string-match "<?xml\\|^{\\|^\\[\\|data:image/" (org-trim f))) 
+                                       (cons n "BLOB")
+                                       )
+                                      (t
+                                       (cons n default)
+                                       ))
+                                )
+                              )
+                            (mapcar (lambda (i)
+                                      (cons (nth i fields)
+                                            (nth i samples)
+                                            )
+                                      ) (number-sequence 0 (- (length fields) 1)))
+                            ))
+                                        ; TODO add primary ID here
            (schema-str (mapconcat (lambda (entry)
-                                (concat (car entry) (cdr entry))
-                                ) schemas ",")))
+                                    (concat (car entry) " " (cdr entry))
+                                    ) schemas ",")))
       (shell-command (message
                       (if (file-exists-p database_name)
                           (format "sqlite3 %s 'drop table %s;create table %s(%s);'"
