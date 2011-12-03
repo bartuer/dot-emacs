@@ -92,10 +92,15 @@
                                             )
                                       ) (number-sequence 0 (- (length fields) 1)))
                             ))
-                                        ; TODO add primary ID here
-           (schema-str (mapconcat (lambda (entry)
-                                    (concat (car entry) " " (cdr entry))
-                                    ) schemas ",")))
+           (schema-str (let ((guess_result
+                              (mapconcat
+                               (lambda (entry)
+                                 (concat (car entry) " " (cdr entry))
+                                 ) schemas ",")))
+                         (if (numberp (string-match ".*PRIMARY KEY" guess_result))
+                             guess_result
+                           (concat "id INTEGER PRIMARY KEY," guess_result))
+                         )))
       (shell-command (message
                       (if (file-exists-p database_name)
                           (format "sqlite3 %s 'drop table %s;create table %s(%s);'"
