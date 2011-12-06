@@ -251,6 +251,10 @@
     (save-excursion
       (goto-char (point-min))
       (org-table-convert-region (point-min) (point-max) '(4))
+      (forward-line)
+      (open-line 1)
+      (insert "|-")
+      (org-table-align)
       ))
   )
 
@@ -857,3 +861,4 @@
     )
   )
 
+(provide 'bartuer-sql)

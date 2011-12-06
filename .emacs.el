@@ -351,6 +351,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'remember-mode-hook (lambda ()
                                 (setq remember-annotation-functions nil)))
 
+
+(require 'bartuer-sql nil t)
+
+(require 'csv-mode nil t)
+(add-to-list 'auto-mode-alist '("\.csv" . csv-mode))
+(add-hook 'csv-mode-hook 'bartuer-csv-load)
+
+
 (defun postfix ()
   (interactive)
   (find-file "~/local/share/doc/postfix")
