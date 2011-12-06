@@ -8,7 +8,11 @@
   "Major mode for csv"
   (interactive)
   (kill-all-local-variables)
-  (add-hook 'before-save-hook 'convert-org-table-to-csv nil t)
+  (add-hook 'before-save-hook (lambda ()
+                                (interactive)
+                                (goto-char (point-min))
+                                (convert-org-table-to-csv)
+                                ) nil t)
   (setq mode-name "csv")
   (run-hooks 'csv-mode-hook))
 
