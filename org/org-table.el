@@ -641,7 +641,7 @@ When nil, simply write \"#ERROR\" in corrupted fields.")
 		    (re-search-forward org-emph-re end t)))
     (goto-char beg)
     (setq raise (and org-use-sub-superscripts
-		    (re-search-forward org-match-substring-regexp end t)))
+                     (re-search-forward org-match-substring-regexp end t)))
     (goto-char beg)
     (setq dates (and org-display-custom-times
 		     (re-search-forward org-ts-regexp-both end t)))
@@ -678,7 +678,7 @@ When nil, simply write \"#ERROR\" in corrupted fields.")
     ;; Get the data fields by splitting the lines.
     (setq fields (mapcar
 		  (lambda (l)
-		      (org-split-string l " *| *"))
+                    (org-split-string l " *| *"))
 		  (delq nil (copy-sequence lines))))
     ;; How many fields in the longest line?
     (condition-case nil
@@ -769,8 +769,12 @@ When nil, simply write \"#ERROR\" in corrupted fields.")
 
     (setq new (mapconcat
 	       (lambda (l)
-		 (if l (apply 'format rfmt
-			      (append (pop fields) emptystrings))
+		 (if l
+                     (progn (let ((formatted_line (apply 'format rfmt (append (pop fields) emptystrings))))
+                              (add-text-properties 0 1 (text-properties-at 0 l) formatted_line)
+                              formatted_line
+                              )
+                            )
 		   hfmt))
 	       lines ""))
     (if (equal (char-before) ?\n)
@@ -800,7 +804,11 @@ When nil, simply write \"#ERROR\" in corrupted fields.")
     (org-table-goto-column colpos)
     (and org-table-overlay-coordinates (org-table-overlay-coordinates))
     (setq org-table-may-need-update nil)
-    ))
+    )
+  (when (equal "view" (file-name-extension (buffer-name)))
+    (compare-org-table-with-record-list-and-mark)
+    )
+  )
 
 (defun org-table-begin (&optional table-type)
   "Find the beginning of the table and return its position.
