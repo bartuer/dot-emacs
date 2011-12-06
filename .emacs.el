@@ -358,6 +358,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.csv" . csv-mode))
 (add-hook 'csv-mode-hook 'bartuer-csv-load)
 
+(require 'sqlite-mode nil t)
+(add-to-list 'auto-mode-alist '("\.db" . sqlite-mode))
+(add-hook 'sqlite-mode-hook 'bartuer-sqlite-load)
 
 (defun postfix ()
   (interactive)
@@ -803,7 +806,8 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; open proper mode according to the implement file types for head file
 (defun bartuer-choose-header-mode ()
   (interactive)
-  (if (string-equal (substring (buffer-file-name) -2) ".h")
+  (if (and (buffer-file-name)
+           (string-equal (substring (buffer-file-name) -2) ".h"))
       (progn
         (let ((dot-m-file (list
                            (concat (substring (buffer-file-name) 0 -1) "m")

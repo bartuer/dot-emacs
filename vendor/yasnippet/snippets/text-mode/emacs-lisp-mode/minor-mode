@@ -1,4 +1,4 @@
-#name : measure time
+#name : minor mode
 #contributor : Bartuer
 # --
 (defvar ${1:name}-mode-map
@@ -7,7 +7,7 @@
   "Minor mode keymap for $1-mode")
 
 (define-minor-mode $1-mode
-  :group 'org :lighter " ${2:mode-line} " :keymap $1-mode-map
+  nil :lighter " ${2:mode-line} " :keymap $1-mode-map
   (cond ($1-mode
           $0(add-hook 'after-change-functions '${3:function} nil t)
          )

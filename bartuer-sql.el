@@ -352,7 +352,6 @@
         )
       (pop-to-buffer (concat table_name ".view"))
       (org-mode)
-      ;; (database-view-mode t) TODO this will mess convert
       )
     )
   )
@@ -524,18 +523,18 @@
     )
   )
 
-(defvar database-view-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "\M-?" 'sqlite3-inspect)
-    map)
-  "Minor mode keymap for database-view-mode")
+(defvar dbview-mode-map (make-keymap)
+  "Minor mode keymap for `dbview-mode'")
 
-(define-minor-mode database-view-mode
-  :group 'fundamental :lighter " db-view " :keymap database-view-mode-map
-  (cond (database-view-mode
+(define-minor-mode dbview-mode 
+  "minor mode for view sqlite database rows"
+  nil :lighter " db-view" :keymap dbview-mode-map
+  (cond (dbview-mode
          (add-hook 'after-change-functions 'mark-different-with-sqlite3-record t t)
          (compare-org-table-with-record-list-and-mark)
          (remove-hook 'before-change-functions 'org-before-change-function t)
+         (define-key dbview-mode-map "\C-\M-j" 'commit-data-view-to-sqlite3)
+         (define-key dbview-mode-map "\M-?" 'sqlite3-inspect)
          )
         (t
          (remove-hook 'after-change-functions 'mark-different-with-sqlite3-record t)
@@ -649,6 +648,7 @@
              )
         (progn
           (sql-send-string commit)
+          (convert-sqlite3-to-org-table-annoted-by-record-list)
           )
       (sql-sqlite)
       )
