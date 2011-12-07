@@ -235,7 +235,7 @@
                        (insert "\n")
                        ) data_view)
              (goto-char (point-min))
-             (org-table-align-patched)
+             (org-table-align)
              (pop-to-buffer (concat filename ".view"))
              (deactivate-mark)
              (org-mode)
@@ -321,7 +321,8 @@
                                  )
                                ) data_view "\n"))
 
-    (with-current-buffer (get-buffer-create (concat table_name ".view"))
+    (with-current-buffer (or (get-buffer (concat table_name ".view"))
+                             (get-buffer-create (concat table_name ".view")))
       (kill-region (point-min) (point-max))
       (goto-char (point-min))
       (save-excursion
@@ -342,16 +343,19 @@
                    (mapconcat (lambda (x)
                                 x
                                 ) table_head "|")
-                   )
-                  "\n|-\n")
+                   "\n|-\n"
+                   ))
           (setq sqlite3-table-head table_head)
           )
-        
         (insert content)
-        (org-table-align-patched)
         )
-      (pop-to-buffer (concat table_name ".view"))
+        (unless (eq (current-buffer)
+                  (get-buffer (concat table_name ".view")))
+          (pop-to-buffer (concat table_name ".view"))
+        )
       (org-mode)
+      (org-table-align)
+      (dbview-mode t)
       )
     )
   )
@@ -632,31 +636,28 @@
 (defun commit-data-view-to-sqlite3 ()
   (interactive)
   (let ((commit (export-change-to-sql-clause))
-        (buffer (current-buffer))
-        (database_name (save-excursion
-                         (goto-char (org-table-begin))
-                         (cdr
-                          (assoc
-                           "database"
-                           (get-text-property
-                            (line-beginning-position)
-                            'sqlite3-table-head))))))
+          (buffer (current-buffer))
+          (database_name (save-excursion
+                           (goto-char (org-table-begin))
+                           (cdr
+                            (assoc
+                             "database"
+                             (get-text-property
+                              (line-beginning-position)
+                              'sqlite3-table-head))))))
 
-    (if (and (comint-check-proc "*SQL*")
-             (equal 'sqlite sql-interactive-product)
-             (equal database_name sql-database)
-             )
-        (progn
-          (sql-send-string commit)
-          (convert-sqlite3-to-org-table-annoted-by-record-list)
-          )
-      (sql-sqlite)
+      (if (and (comint-check-proc "*SQL*")
+               (equal 'sqlite sql-interactive-product)
+               (equal database_name sql-database)
+               )
+          (progn
+            (sql-send-string commit)
+            (dbview-mode nil)
+            (convert-sqlite3-to-org-table-annoted-by-record-list database_name)
+            )
+        (sql-sqlite)
+        )
       )
-    )
   )
-
-(defalias  'org-table-align-patched 'org-table-align)
-
-
 
 (provide 'bartuer-sql)
