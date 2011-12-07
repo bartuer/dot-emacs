@@ -325,6 +325,9 @@
                                  )
                                ) data_view "\n"))
 
+    (when (bufferp view_name) 
+      (kill-buffer view_name)
+      )
     (with-current-buffer (or (get-buffer (concat table_name ".view"))
                              (get-buffer-create (concat table_name ".view")))
       (kill-region (point-min) (point-max))
