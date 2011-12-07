@@ -838,6 +838,7 @@ see \\[org-timeline] and `org-timeline-next-line'"
   (define-key org-mode-map "\C-c\C-q" 'org-export-table-to-sql)
   (define-key org-mode-map "\C-\M-h" 'outline-mark-subtree)
   (define-key org-mode-map "\C-xm" 'mail-dwim)
+  (define-key org-mode-map "\M-/" 'org-table-sort-lines)
   (define-key org-mode-map "[" (lambda ()
                                  (interactive)
                                  (insert "[ ] ")
