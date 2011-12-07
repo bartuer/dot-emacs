@@ -355,11 +355,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'bartuer-sql nil t)
 
 (require 'csv-mode nil t)
-(add-to-list 'auto-mode-alist '("\.csv" . csv-mode))
+(add-to-list 'auto-mode-alist '("\.csv$" . csv-mode))
 (add-hook 'csv-mode-hook 'bartuer-csv-load)
 
 (require 'sqlite-mode nil t)
-(add-to-list 'auto-mode-alist '("\.db" . sqlite-mode))
+(add-to-list 'auto-mode-alist '("\.db$" . sqlite-mode))
 (add-hook 'sqlite-mode-hook 'bartuer-sqlite-load)
 
 (defun postfix ()

@@ -3608,6 +3608,7 @@ to execute outside of tables."
     ;; Special treatment needed for TAB and RET
     (org-defkey orgtbl-mode-map [(return)]
       (orgtbl-make-binding 'orgtbl-ret 100 [(return)] "\C-m"))
+    (org-defkey orgtbl-mode-map "\M-/" 'org-table-sort-lines)
     (org-defkey orgtbl-mode-map "\C-m"
       (orgtbl-make-binding 'orgtbl-ret 101 "\C-m" [(return)]))
 

@@ -434,9 +434,8 @@ clock out time, if there is no clock time, next schedule time will be last sched
     (define-key map "c" 'org-export-table-to-csv)
     (define-key map "s" 'org-export-table-to-sql)
     map)
+  "convert org table to variant format"
     )
-   )
-  "convert org table to variant format")
 
 (defun mount-org-table-export-map ()
   "apply `org-table-export-map' to org-table-begin"
