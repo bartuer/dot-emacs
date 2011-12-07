@@ -273,7 +273,7 @@
         (insert content))))
   )
 
-(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name) ; TODO convenient for debug, remove option later
+(defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name update) ; TODO convenient for debug, remove option later
   (interactive)
   (let* ((database_name (if (stringp database_name)
                             database_name
@@ -283,9 +283,13 @@
                (message "%s"
                         (format "sqlite3 -line %s '%s'"
                                 database_name
-                                (setq sqlite3-select-clause
-                                      (read-from-minibuffer " SQL : "
-                                                            (format "select * from %s;" table_name))))
+                                (if update
+                                    sqlite3-select-clause
+                                  (setq sqlite3-select-clause
+                                        (read-from-minibuffer " SQL : "
+                                                              (format "select * from %s;" table_name)))
+                                  )
+                                )
                         )))
          (schema (parse-schema (shell-command-to-string
                                 (message "%s"
@@ -349,9 +353,9 @@
           )
         (insert content)
         )
-        (unless (eq (current-buffer)
+      (unless (eq (current-buffer)
                   (get-buffer (concat table_name ".view")))
-          (pop-to-buffer (concat table_name ".view"))
+        (pop-to-buffer (concat table_name ".view"))
         )
       (org-mode)
       (org-table-align)
