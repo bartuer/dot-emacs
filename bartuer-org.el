@@ -346,6 +346,36 @@ clock out time, if there is no clock time, next schedule time will be last sched
           ))
       )))
 
+(defun org-export-table-to-html ()
+  "export org table to html"
+  (interactive)
+  (let ((html-content (orgtbl-to-html
+                       (org-table-to-lisp)
+                       nil)))
+    (with-current-buffer (get-buffer-create (format "%s-%s" "html-of" (buffer-name)))
+      (goto-char (point-min))
+      (kill-region (point-min) (point-max))
+      (insert html-content)
+      (pop-to-buffer (current-buffer))
+      )
+    )
+  )
+
+(defun org-export-table-to-csv ()
+  "export org table to csv"
+  (interactive)
+  (let ((csv-content (orgtbl-to-csv
+                      (org-table-to-lisp)
+                      nil)))
+    (with-current-buffer (get-buffer-create (format "%s-%s" "csv-of" (buffer-name)))
+      (goto-char (point-min))
+      (kill-region (point-min) (point-max))
+      (insert csv-content)
+      (pop-to-buffer (current-buffer))
+      )
+    )
+  )
+
 (defun org-export-table-to-mail-html ()
   "export to mail content"
   (interactive)
@@ -398,6 +428,30 @@ clock out time, if there is no clock time, next schedule time will be last sched
   (pop-to-buffer "*orgtbl2sql*")
   )
 
+(defvar org-table-export-map
+  (let ((map (make-keymap)))
+    (define-key map "h" 'org-export-table-to-html)
+    (define-key map "c" 'org-export-table-to-csv)
+    (define-key map "s" 'org-export-table-to-sql)
+    map)
+    )
+   )
+  "convert org table to variant format")
+
+(defun mount-org-table-export-map ()
+  "apply `org-table-export-map' to org-table-begin"
+  (interactive)
+  (when (org-at-table-p)
+    (save-excursion
+      (goto-char (org-table-begin))
+      (put-text-property
+       (org-table-begin)
+       (+ 1 (org-table-begin))
+       'keymap
+       org-table-export-map
+       ))
+    )
+  )
 
 (defun org-export-table-to-mail ()
   "send marked node out"
