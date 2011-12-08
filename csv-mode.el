@@ -33,11 +33,18 @@
           (file-name-sans-extension
            (file-name-nondirectory
             (buffer-file-name))))
-         (database_name (concat (file-name-directory
-                                 (buffer-file-name))
-                                table_name ".db")))
-    (if (file-exists-p database_name)
-        (convert-sqlite3-to-csv database_name)
+         (database_name
+          (concat
+           (file-name-directory
+            (buffer-file-name))
+            table_name ".db"))
+         )
+    ;; maybe modified both in view and csv buffer, how to resolve conflict ?
+    ;; should save through when save db
+    (if (file-exists-p
+         database_name)   
+        (convert-sqlite3-to-csv
+         database_name)
       (progn
         (goto-char (point-min))      
         (convert-org-table-to-csv)
