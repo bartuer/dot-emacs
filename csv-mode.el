@@ -13,7 +13,13 @@
          (file-name-sans-extension
           (file-name-nondirectory
            (buffer-file-name))))
-         (database_name (concat table_name ".db"))
+         (dir_name
+          (file-name-directory
+           (buffer-file-name)))
+         (database_name (concat
+                         dir_name
+                         table_name
+                         ".db"))
          (view_name (concat table_name ".view")))
     (convert-sqlite3-to-org-table-annoted-by-record-list database_name)
     (pop-to-buffer view_name))
@@ -40,16 +46,10 @@
             table_name ".db"))
          )
     ;; maybe modified both in view and csv buffer, how to resolve conflict ?
-    ;; should save through when save db
-    (if (file-exists-p
-         database_name)   
-        (convert-sqlite3-to-csv
-         database_name)
-      (progn
-        (goto-char (point-min))      
-        (convert-org-table-to-csv)
-        )
-      )
+    ;; should save through to csv when save db
+    (goto-char (point-min))
+    (when (org-at-table-p (point))
+      (convert-org-table-to-csv))
     )
   )
 

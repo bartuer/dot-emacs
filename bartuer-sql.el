@@ -654,6 +654,7 @@
                               (line-beginning-position)
                               'sqlite3-table-head))))))
 
+
       (if (and (comint-check-proc "*SQL*")
                (equal 'sqlite sql-interactive-product)
                (equal database_name sql-database)
@@ -662,6 +663,32 @@
             (sql-send-string commit)
             (dbview-mode nil)
             (convert-sqlite3-to-org-table-annoted-by-record-list database_name)
+            (let* ((dir_name (file-name-directory database_name))
+                   (table_name (file-name-sans-extension
+                               (file-name-nondirectory
+                                database_name)))
+                   (csv_name
+                    (concat
+                     dir_name
+                     table_name
+                     ".csv"
+                     ))
+                   (csv_buffer_name
+                    (concat
+                     table_name
+                     ".csv")))
+              (when (file-exists-p
+                     csv_name)
+                (find-file-other-window csv_name)
+                (with-current-buffer (get-buffer csv_buffer_name)
+                  (kill-region (point-min) (point-max))
+                  (insert-string
+                   (convert-sqlite3-to-csv
+                    database_name))
+                  (save-buffer)
+                  )
+                )
+              )
             )
         (sql-sqlite)
         )
