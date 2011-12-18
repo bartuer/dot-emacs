@@ -250,7 +250,15 @@ If give a negative ARG, will undo the last mark action, thus the
     (delete-other-windows)))
 (global-set-key "\M- " 'meta-space-dwim)
 
+
 (global-set-key "\M-k" 'other-window)
+(defvar calc-mode-hook nil
+  "Hook run when entering calc-mode.")
+(add-hook 'calc-mode-hook (lambda ()
+                            (interactive)
+                            (define-key calc-mode-map "\M-k" 'other-window)
+                            ))
+
 (if (require 'diff-mode nil t)
     (add-hook 'diff-mode-hook
               (lambda ()
@@ -360,6 +368,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'sqlite-mode nil t)
 (add-to-list 'auto-mode-alist '("\.db$" . sqlite-mode))
+(add-to-list 'auto-mode-alist '("\.sqlite$" . sqlite-mode))
 (add-hook 'sqlite-mode-hook 'bartuer-sqlite-load)
 
 (defun postfix ()
@@ -552,11 +561,25 @@ If give a negative ARG, will undo the last mark action, thus the
   "add numbers up in rectangle"
   (interactive "r*\nP")
   (setq killed-rectangle (extract-rectangle start end))
-  (message "%d"
-           (reduce '+
-                   (mapcar (lambda (str)
-                             (read (substring-no-properties str)))
-                           killed-rectangle)))
+  (message
+   (let*
+       ((formulas '("vsum" "vmin" "vmax" "vmean" "vgmean" "vcount" "vsdev" "vmeane"))
+        (args (mapconcat
+               (lambda (n)
+                 (format "%d" n)
+                 )
+               (mapcar
+                (lambda (str)
+                  (read (substring-no-properties str)))
+                killed-rectangle) ",")))
+     (mapconcat
+      (lambda (formula)
+        (format "%6s:%s"
+                formula
+                (calc-eval (format "%s(%s)" formula args)))          
+        ) formulas "\n")
+     
+     ))
   )
 
 (global-set-key "\C-xrp" 'accumulate-rectangle)
