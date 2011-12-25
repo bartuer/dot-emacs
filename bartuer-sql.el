@@ -127,22 +127,30 @@
   )
 
 (defun parse-schema (str)
-  (mapcar
-   (lambda (field)
-     (let* ((name_and_type (org-split-string (org-trim field)  " "))
-            (name (car name_and_type))
-            (type (mapconcat (lambda (x) x) (cdr name_and_type) " "))
-            )
-       (cons name type)
+  (let ((schemas_maybe_with_index
+          (org-split-string
+           str "CREATE INDEX"))
+         )
+    (mapcar
+     (lambda (field)
+       (let* ((name_and_type (org-split-string (org-trim field)  " "))
+              (name (car name_and_type))
+              (type (mapconcat (lambda (x) x) (cdr name_and_type) " "))
+              )
+         (cons name type)
+         )
        )
-     )
-   (progn
-     (string-match "\\.*(\\(.*)\\)" str)
-     (org-split-string (substring (match-string 0 str) 1 -1)  ",")
-     )
-   )
+     (progn
+       (string-match "\\.*(\\(.*)\\)" (car schemas_maybe_with_index))
+       (org-split-string
+        (replace-regexp-in-string
+         "`"
+         ""
+         (substring
+          (match-string 0 (car schemas_maybe_with_index)) 1 -1)) ",")
+       )
+     )) 
   )
-
 
 
 (defalias 'sql 'convert-sqlite3-to-org-table-annoted-by-record-list)
@@ -273,12 +281,66 @@
         (insert content))))
   )
 
+(defun list-table-name (database_name)
+  (interactive)
+    (let* ((schemas_maybe_with_index
+            (org-split-string
+             (shell-command-to-string
+              (message
+               "%s"
+               (format "echo '.schema'| sqlite3  %s|tr '\n' ' '" database_name)
+               )) "CREATE INDEX"))
+           (schemas
+            (org-split-string
+             (car schemas_maybe_with_index)
+             "CREATE TABLE"))
+         (tables
+          (mapcar
+           (lambda (str)
+             (let ((table
+                    (replace-regexp-in-string
+                      "`"
+                      ""
+                      (progn
+                      (string-match "\\(.*?\\)(.*" str)
+                      (org-trim (match-string 1 str))
+                      ))
+                    )
+                   (column
+                    (parse-schema str)
+                    )
+                   )
+               (cons table column)
+               )
+             )
+           schemas))
+         )
+    tables)
+  )
+
 (defun convert-sqlite3-to-org-table-annoted-by-record-list (&optional database_name update) ; TODO convenient for debug, remove option later
   (interactive)
   (let* ((database_name (if (stringp database_name)
                             database_name
                           "/tmp/orgsql/data.db"))
-         (table_name (file-name-sans-extension (file-name-nondirectory database_name)))
+         (tables (list-table-name database_name))
+         (table_name (if (eq (length tables) 1)
+                         (caar tables)
+                       (ido-completing-read
+                        "select table:" 
+                        (mapcar 'car tables) nil t)
+                       ))
+         (column (org-trim
+                  (mapconcat
+                  (lambda (table)
+                    (if (eq (car table) table_name)
+                      (mapconcat
+                       'car
+                       (cdr table) ",")
+                      ""
+                      )
+                    )
+                  tables  " ")))
          (txt (shell-command-to-string
                (message "%s"
                         (format "sqlite3 -line %s '%s'"
@@ -286,14 +348,15 @@
                                 (if update
                                     sqlite3-select-clause
                                   (setq sqlite3-select-clause
-                                        (read-from-minibuffer " SQL : "
-                                                              (format "select * from %s;" table_name)))
+                                        (read-from-minibuffer
+                                         (format " SQL column(%s) : " column) 
+                                         (format "select * from %s;" table_name)))
                                   )
                                 )
                         )))
          (schema (parse-schema (shell-command-to-string
                                 (message "%s"
-                                         (format "echo '.schema %s'| sqlite3  %s"
+                                         (format "echo '.schema %s'| sqlite3  %s|tr '\n' ' '"
                                                  table_name database_name 
                                                  )
                                          ))))
@@ -304,8 +367,11 @@
                                             )
                                     ))))
          (paras (nthcdr 0 (org-split-string txt "\n\n")))
+         (view_name (concat database_name "." table_name ".view"))
          )
-    (setq content "")
+   (setq sqlite-mode-database-name database_name)
+   (setq sqlite-mode-table-name table_name)
+   (setq content "")
     (setq data_view (mapcar (lambda (para)
                               (let ((record (list))
                                     (lines (org-split-string para "\n")))
@@ -329,8 +395,8 @@
         (kill-buffer view_name)
         )
       ) 
-    (with-current-buffer (or (get-buffer (concat table_name ".view"))
-                             (get-buffer-create (concat table_name ".view")))
+    (with-current-buffer (or (get-buffer view_name)
+                             (get-buffer-create view_name))
       (kill-region (point-min) (point-max))
       (goto-char (point-min))
       (save-excursion
@@ -358,8 +424,8 @@
         (insert content)
         )
       (unless (eq (current-buffer)
-                  (get-buffer (concat table_name ".view")))
-        (pop-to-buffer (concat table_name ".view"))
+                  (get-buffer view_name))
+        (pop-to-buffer view_name)
         )
       (org-mode)
       (org-table-align)

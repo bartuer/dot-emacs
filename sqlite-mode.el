@@ -11,7 +11,11 @@
   (let ((db-buffer (current-buffer))
         (db-name (buffer-file-name)))
     (convert-sqlite3-to-org-table-annoted-by-record-list (buffer-file-name))
-    (pop-to-buffer (concat (file-name-sans-extension (file-name-nondirectory (buffer-file-name))) ".view"))
+    (pop-to-buffer (concat
+                    sqlite-mode-database-name
+                    "."
+                    sqlite-mode-table-name
+                    ".view"))
     (kill-buffer db-buffer)
     )
   (dbview-mode t)
