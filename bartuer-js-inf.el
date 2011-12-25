@@ -48,6 +48,7 @@
   d8r-process)
 
 (defun node-d8 ()
+  (interactive)
   (unless (string-equal  (shell-command-to-string "p 5959") "yes\n")
     (progn
       (make-comint "node.eval:4242.debug:5959.console" "noded")
@@ -61,6 +62,7 @@
       (with-current-buffer "*node.d8r*"
         (add-hook 'post-command-hook 'woap nil t)
         )))
+  (message "%s" (concat "scratch\n" "copyright\n" "require\n" "expression"))
   node-d8r-process)
 
 (defun squirrelfish ()
