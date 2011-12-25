@@ -1,0 +1,6 @@
+#name : why hpricot html xml parser
+# --
+require 'hpricot'
+
+${1:dom} = Hpricot('${2:curl -s url}')
+${3:data} = $1.search('//${4:tag}.${5:class}').innerHTML # =>
