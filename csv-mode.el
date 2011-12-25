@@ -59,6 +59,7 @@
   (kill-all-local-variables)
   (add-hook 'before-save-hook 'csv-mode-before-save nil t)
   (setq mode-name "csv")
+  (setq truncate-lines t)
   (use-local-map csv-mode-map)
   (run-hooks 'csv-mode-hook))
 
