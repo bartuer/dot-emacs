@@ -62,7 +62,7 @@
       (with-current-buffer "*node.d8r*"
         (add-hook 'post-command-hook 'woap nil t)
         )))
-  (message "%s" (concat "scratch\n" "copyright\n" "require\n" "expression"))
+  (message "%s" (concat "rename scratch\n" "remove copyright\n" "check require\n" "eval expression\n" "insert debugger;"))
   node-d8r-process)
 
 (defun squirrelfish ()
