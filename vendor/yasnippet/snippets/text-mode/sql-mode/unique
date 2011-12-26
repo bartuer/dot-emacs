@@ -1,0 +1,3 @@
+# name: select distinct unique sql console
+# --
+select DISTINCT ${1:column} FROM ${2:table};

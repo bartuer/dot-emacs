@@ -1,0 +1,3 @@
+# name: select range offset limit by sql console
+# --
+LIMIT ${1:number} OFFSET ${2:from}
