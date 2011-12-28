@@ -145,6 +145,7 @@
  '(smtpmail-starttls-credentials (quote (("smtp.gmail.com" 587 "  " ""))))
  '(transient-mark-mode t)
  '(user-mail-address "bartuer@gmail.com")
+ '(vc-handled-backends (quote (Git RCS CVS SVN SCCS Bzr Hg Mtn Arch)))
  '(view-read-only t))
  
 (custom-set-faces
