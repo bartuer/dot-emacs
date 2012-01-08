@@ -1,0 +1,5 @@
+# name: zeromq bind zbind socket 0mq
+# --
+void *${1:sockat_name} = zsocket_new (${2:context}, ${3:ztype});
+assert ($1);
+zsocket_bind ($1, "${4:address}");

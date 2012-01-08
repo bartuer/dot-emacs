@@ -1,0 +1,3 @@
+# name: zloop event loop timer install zeromq 0mq
+# --
+zloop_timer (loop, ${1:delay}, ${2:time}, ${3:timer_callback}, ${4:zsocket});

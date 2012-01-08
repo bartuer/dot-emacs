@@ -1,0 +1,9 @@
+# name: zloop event loop callback zeromq 0mq
+# --
+static int
+${1:callback} (zloop_t *loop, zmq_pollitem_t *item, void *arg) {
+  zmsg_t *msg = zmsg_recv (poller->socket);
+  zmsg_destroy (&msg);
+  /* Returns 0 if OK, -1 if there was an error */
+  return 0;
+}
