@@ -340,9 +340,11 @@ Return nil if we cannot, non-nil if we can."
 Buildfile includes Makefile, build.xml etc.
 Return its file name if found, or nil if not found."
   (or (flymake-get-buildfile-from-cache source-dir-name)
-      (let* ((file (locate-dominating-file
-                    source-dir-name
-                    (concat "\\`" (regexp-quote buildfile-name) "\\'"))))
+      (let* ((file (concat
+                    (locate-dominating-file
+                     source-dir-name
+                     build-file-name)
+                     build-file-name)))
         (if file
             (progn
               (flymake-log 3 "found buildfile at %s" file)
@@ -1676,6 +1678,7 @@ Return full-name.  Names are real, not patched."
 
 (defun flymake-init-find-buildfile-dir (source-file-name buildfile-name)
   "Find buildfile, store its dir in buffer data and return its dir, if found."
+
   (let* ((buildfile-dir
           (flymake-find-buildfile buildfile-name
                                   (file-name-directory source-file-name))))
