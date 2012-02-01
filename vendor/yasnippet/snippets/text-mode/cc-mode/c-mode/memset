@@ -1,0 +1,3 @@
+# name: memset memory 
+# --
+memset(${1:p}, ${2:v}, sizeof(${3:instance}));

@@ -1,0 +1,3 @@
+# name: malloc
+# --
+${1:pointer} = malloc(sizeof(${2:type}));

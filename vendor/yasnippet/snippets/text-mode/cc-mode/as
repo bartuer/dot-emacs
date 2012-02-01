@@ -1,0 +1,3 @@
+# name: assert as 
+# --
+assert(${1:exp});
