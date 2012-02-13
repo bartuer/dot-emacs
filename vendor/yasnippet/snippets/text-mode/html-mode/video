@@ -1,0 +1,25 @@
+# name: video video-js 
+# package: ls -l ~/local/src/video-controller/video.{swf,js,css}
+# --
+<script type="text/javascript">
+var is_safari = navigator.userAgent.match(/AppleWebKit.* Version/i) !== null;
+var is_iphone = navigator.userAgent.match(/iPhone/i) !== null;
+var is_ipad = navigator.userAgent.match(/iPad/i) !== null;
+if(is_safari || is_iphone || is_ipad) {
+} else {
+var videocss = document.createElement('link');
+videocss.setAttribute('href', 'video.css');
+videocss.setAttribute('rel', 'stylesheet');
+videocss.setAttribute('type', 'text/css');
+var videojs = document.createElement('script');
+videojs.setAttribute('src', 'video.js');
+document.head.appendChild(videocss);
+document.head.appendChild(videojs);
+}
+</script>
+<video class="video-js vjs-default-skin"
+       controls x-webkit-airplay="allow" preload="none"
+       width="640" height="264"
+       data-setup="{}">
+  <source src="${1:url}" type='video/mp4' />
+</video>
