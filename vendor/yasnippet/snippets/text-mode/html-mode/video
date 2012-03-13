@@ -1,5 +1,5 @@
 # name: video video-js 
-# package: ls -l ~/local/src/video-controller/video.{swf,js,css}
+# package: ls -l ~/local/src/widget/video-controller/video.{swf,js,css}
 # --
 <script type="text/javascript">
 var is_safari = navigator.userAgent.match(/AppleWebKit.* Version/i) !== null;
