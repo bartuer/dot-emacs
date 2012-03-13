@@ -5,7 +5,7 @@
 
     (unwind-protect
         (progn
-          (shell-command  (concat "curl http://bartuer:3721/word/" word "  2>/dev/null|html2text -nobs -style pretty")
+          (shell-command  (concat "word-define " word)
                           (get-buffer-create "html-text") (get-buffer "*Shell Command Output*"))
           (with-current-buffer "html-text"
             (goto-char (point-min))

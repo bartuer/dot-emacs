@@ -194,15 +194,12 @@ If we have a current region use it's value as the default."
           (read-from-minibuffer "Define: "
                                 (thing-at-point 'word)))
          )
-    (shell-command  (concat "curl http://bartuer:3721/word/" search-word " 2>/dev/null")
-                    (get-buffer-create "preview-url") (get-buffer "*Shell Command Output*"))
-    (with-current-buffer "preview-url"
+    (shell-command (concat "word-define " search-word)
+                    (get-buffer-create "html-text") (get-buffer "*Shell Command Output*"))
+    (with-current-buffer "html-text"
       (goto-char (point-min))
-      (if (search-forward "html" (point-max) t)
-          (html-2-txt)
-        )
       )
-    (pop-to-buffer "html-text" t)
+    (pop-to-buffer "html-text")
     ))
 
 (defun google-define ()

@@ -335,6 +335,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'google-define nil t)
 (defalias 'gd 'google-define)
+(defalias 'x 'buddy-define)
 (require 'fast-wiki nil t)
 (require 'bartuer-buddy nil t)
 (defalias 'bd 'buddy-minor-mode)
