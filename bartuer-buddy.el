@@ -1,26 +1,17 @@
 (defun buddy-get (word)
-  (let* ((timeout 180)
-         (post-cmd
-          (concat "GET /word/" word " HTTP/1.0\r\n"
-                  "Host: localhost \r\n"
-                  "User-Agent: Emacs\r\n"
-                  "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n"
-                  "Accept-Language: en-us,en;q=0.5\r\n"
-                  "\r\n"))
-         proc buf)
+  (let* ((timeout 8)
+         (buf (current-buffer))
+         )
 
     (unwind-protect
         (progn
-          (setq proc (open-network-stream "url-get-command"
-                                          "*url-get-buffer*"
-                                          "localhost"
-                                          3721)
-                buf (process-buffer proc))
-          (process-send-string proc post-cmd)
-          (while (equal (process-status proc) 'open)
-            (unless (accept-process-output proc timeout)
-              (delete-process proc)
-              (error "Server error: timed out while waiting!")))
+          (shell-command  (concat "curl http://bartuer:3721/word/" word "  2>/dev/null|html2text -nobs -style pretty")
+                          (get-buffer-create "html-text") (get-buffer "*Shell Command Output*"))
+          (with-current-buffer "html-text"
+            (goto-char (point-min))
+            )
+          (pop-to-buffer "html-text" )
+          (pop-to-buffer buf)
           ))
     buf))
 

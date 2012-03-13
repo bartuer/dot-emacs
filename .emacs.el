@@ -1096,3 +1096,4 @@ If give a negative ARG, will undo the last mark action, thus the
     )
   )
 (setq interprogram-cut-function (intern "interprogram-cut-function"))
+(require 'bartuer-page)
