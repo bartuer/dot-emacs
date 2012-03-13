@@ -1,3 +1,9 @@
+(defun bartuer-org-time-stamp ()
+  "insert inactive time stamp"
+  (interactive)
+  (org-time-stamp t t)
+  )
+
 (defun bartuer-org-insert-child ()
   "insert a child"
   (interactive)
