@@ -1,25 +1,38 @@
 (defun buddy-get (word)
-  (let* ((timeout 8)
-         (buf (current-buffer))
+  "show definition of word from buddy system"
+  (let* ((buf (current-buffer))
+         (defination (concat  "buddy-" word))
+         (process (apply 'start-process-shell-command
+                         defination
+                         (get-buffer-create defination)
+                         "word-define"
+                         (list word)))
          )
-
-    (unwind-protect
-        (progn
-          (shell-command  (concat "word-define " word)
-                          (get-buffer-create "html-text") (get-buffer "*Shell Command Output*"))
-          (with-current-buffer "html-text"
-            (goto-char (point-min))
-            )
-          (pop-to-buffer "html-text" )
-          (pop-to-buffer buf)
-          ))
-    buf))
+    (setq buddy-jump-back-buf buf)
+    (set-process-sentinel process (lambda (proc state)
+                                    (cond ((equal state "finished
+")
+                                           (let ((defination-buf (process-buffer proc)))
+                                             (with-current-buffer defination-buf
+                                               (goto-char (point-min))
+                                               (pop-to-buffer defination-buf)
+                                               (pop-to-buffer buddy-jump-back-buf)
+                                               )    
+                                             )
+                                           
+                                           )
+                                          )
+                                    ))
+    defination
+    ))
 
 (defun explain-current-in-brower ()
   (interactive)
-  (let ((w (thing-at-point 'word)))
+  (let ((w (thing-at-point 'word))
+         )
     (buddy-get w)
-    ))
+    )
+  )
 
 (defalias 'bd 'explain-current-in-brower)
 
@@ -38,7 +51,5 @@
    (t
     (remove-hook 'post-command-hook 'explain-current-in-brower t)
   )))
-
-  
 
 (provide 'bartuer-buddy)
