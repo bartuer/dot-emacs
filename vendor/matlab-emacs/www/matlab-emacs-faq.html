@@ -1,0 +1,66 @@
+<title>MATLAB&#0174;/Emacs FAQ</title>
+
+<h1>MATLAB&#0174;/Emacs FAQ</h1>
+
+<h2>1. What is MATLAB&#0174; mode for Emacs?</h1>
+<p>MATLAB mode for Emacs consists of Emacs Lisp code that implements
+a <tt>major-mode</tt> for Emacs that assists in the editing of MATLAB scripts.
+
+<p>This allows Emacs to be used in place of the MATLAB Editor for
+editing your MATLAB source code, debugging MATLAB code, and syntax/semantic
+checking of your MATLAB code with mlint.
+
+<p>The MATLAB mode for Emacs does NOT include "EmacsLink", which was a
+tool that more tightly integrated MATLAB and Emacs for purposes of
+debugging M code.
+
+<h2>2. Where can I find MATLAB mode for Emacs?</h1>
+<p>MATLAB mode for Emacs is available at SourceForge.
+
+<p>You can visit
+the <a href="http://sourceforge.net/projects/matlab-emacs/">Project
+Page</a> or
+the <a href="http://matlab-emacs.sourceforge.net/">homepage</a> of the
+matlab-emacs project.
+
+<h2>3. What is the best way to download MATLAB mode for Emacs?</h1>
+<p>MATLAB mode for Emacs is available from a CVS repository on
+SourceForge.  There are two ways to download MATLAB mode for Emacs.
+
+<p>Use <a href="https://sourceforge.net/scm/?type=cvs&group_id=154105">CVS</a>
+to download a copy.
+
+<p>Use the conenient MATLAB script
+<a href="http://matlab-emacs.cvs.sourceforge.net/viewvc/*checkout*/matlab-emacs/matlab-emacs/dl_emacs_support.m?revision=1.2&pathrev=MAIN">
+dl_emacs_support</a> to download a copy.
+
+<h2>4. What features does MATLAB mode for Emacs support?</h1>
+<p>The MATLAB/Emacs support files include the following features:
+<ul>
+<li><tt>matlab-mode</tt> - An Emacs major-mode for editing MATLAB programs.
+<ul>
+<li>Syntax highlighting
+<li>Smart Indentation engine
+<li>Smart auto-fill for comments and code
+</ul>
+<li><tt>matlab-shell</tt> - Run MATLAB inside Emacs on Unix like operating systems.
+<ul>
+<li>Syntax highlighting
+<li>Persistent command history
+<li>Command completion
+<li>Run code from <tt>matlab-mode</tt> in <tt>matlab-shell</tt>.
+<li>GUD support for debugging programs files
+</ul>
+<li><tt>mlint-mode</tt>
+<ul>
+<li>Use mlint to identify and highlight warnings and errors from mlint.
+<li>Auto-fix some common errors.
+<li>Nested function variable highlighting.
+</ul>
+<li><a href="http://cedet.sf.net">CEDET</a> support for parsing and smart completion.
+<li>Code templates.
+<li>tlc-mode (target language compiler)
+</ul>
+
+<hr>
+<p>Copyright 2009, The MathWorks, Inc.

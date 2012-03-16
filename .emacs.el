@@ -1061,6 +1061,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
 
+(autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
+(setq auto-mode-alist (cons '("\\.mt\\'" . matlab-mode) auto-mode-alist))
+(autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
@@ -1096,5 +1100,6 @@ If give a negative ARG, will undo the last mark action, thus the
     (call-process-region (point-min) (point-max) "pbcopy")
     )
   )
+;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
