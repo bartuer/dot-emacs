@@ -1093,9 +1093,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-v" 'clipboard-paste)
 
 (defun interprogram-cut-function (string &optional push)
-  (get-buffer-create " *pbcopy*")
-  (with-current-buffer " *pbcopy*"
-    (delete-region (point-min) (point-max))
+  (get-buffer-create "pbcopy")
+  (with-current-buffer "pbcopy"
     (insert string)
     (call-process-region (point-min) (point-max) "pbcopy")
     )
