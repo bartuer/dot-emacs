@@ -1,4 +1,5 @@
 (file-cache-add-directory-list (list
+                                "~/local/src/tone/doc/sample"
                                 "~/local/src/widget/video-controller"
                                 "~/local/src/pass"
                                 "~/Movies/kids"

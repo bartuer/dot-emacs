@@ -1064,6 +1064,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
 (setq auto-mode-alist (cons '("\\.mt\\'" . matlab-mode) auto-mode-alist))
 (autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
+(autoload 'bartuer-matlab-load "bartuer-matlab.el" "for matlab/octave language" t)
+(add-hook 'matlab-mode-hook 'bartuer-matlab-load)
+
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -1095,6 +1098,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defun interprogram-cut-function (string &optional push)
   (get-buffer-create "pbcopy")
   (with-current-buffer "pbcopy"
+    (delete-region (point-min) (point-max))
     (insert string)
     (call-process-region (point-min) (point-max) "pbcopy")
     )
