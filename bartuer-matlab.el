@@ -9,6 +9,11 @@
               (if (eq window-system 'x)
                   (font-lock-mode 1))))
   )
+(defun bartuer-octave-help ()
+  "search info get function document"
+  (interactive)
+  (octave-help)
+  )
 
 (defun bartuer-matlab-load ()
   "for matlab/octave language"
@@ -21,12 +26,13 @@
                                    (run-octave)
                                    )
                                  ))
+    (define-key map "\C-ch" 'bartuer-octave-help)
+    (define-key inferior-octave-mode-map "\C-ch" 'bartuer-octave-help)
     (define-key map "\C-cl" 'octave-send-line)
     (define-key map "\C-cb" 'octave-send-block)
     (define-key map "\C-cf" 'octave-send-defun)
     (define-key map "\C-cr" 'octave-send-region)
     (define-key map "\C-cs" 'octave-show-process-buffer)
-    (define-key map "\C-ch" 'octave-hide-process-buffer)
     (define-key map "\C-ck" 'octave-kill-process)
     (define-key map "\C-c\C-l" 'octave-send-line)
     (define-key map "\C-c\C-b" 'octave-send-block)
