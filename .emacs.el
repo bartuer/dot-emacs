@@ -266,6 +266,8 @@ If give a negative ARG, will undo the last mark action, thus the
                 (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
 (global-set-key "\M-o" 'kill-sentence)
 
+(require 'binary-diff)
+
 (global-set-key [(prior)] 'scroll-other-window-down)
 (global-set-key [(next)] 'scroll-other-window)
 
@@ -1103,6 +1105,13 @@ If give a negative ARG, will undo the last mark action, thus the
     (call-process-region (point-min) (point-max) "pbcopy")
     )
   )
+
+(defalias 'i (lambda ()
+               (interactive)
+              (let ((info-lookup-mode major-mode))
+                  (call-interactively 'info-lookup-symbol))
+))
+
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
