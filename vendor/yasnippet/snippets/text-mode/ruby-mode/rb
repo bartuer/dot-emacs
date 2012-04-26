@@ -1,3 +1,6 @@
 #name : /usr/bin/env ruby
 # --
 #!/usr/bin/env ruby
+require 'rubygems'
+$0
+puts $stdin.read
