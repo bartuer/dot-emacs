@@ -185,6 +185,23 @@ google, and print in a temp-buffer"
             (buffer-string))))))
    (message header)))
 
+(defun buddy-define ()
+  "Ask buddy for the definition of a word.
+
+If we have a current region use it's value as the default."
+  (interactive)
+  (let* ((search-word
+          (read-from-minibuffer "Define: "
+                                (thing-at-point 'word)))
+         )
+    (shell-command (concat "word-define " search-word)
+                    (get-buffer-create "html-text") (get-buffer "*Shell Command Output*"))
+    (with-current-buffer "html-text"
+      (goto-char (point-min))
+      )
+    (pop-to-buffer "html-text")
+    ))
+
 (defun google-define ()
   "Ask google for the definition of a word.
 
@@ -193,7 +210,6 @@ If we have a current region use it's value as the default."
   (let* ((search-word
           (read-from-minibuffer "Define: "
                                 (thing-at-point 'word)))
-         (buddy (shell-command (concat "curl http://localhost:3721/word/" search-word " >/dev/null &")))
          (data-buffer
           (google-define-get-command "www.google.com.hk"
                                      (concat

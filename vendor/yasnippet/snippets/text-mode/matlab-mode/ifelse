@@ -1,0 +1,7 @@
+# name: if
+# --
+if ${1:cond}
+  $0
+else
+  
+endif

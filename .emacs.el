@@ -266,6 +266,8 @@ If give a negative ARG, will undo the last mark action, thus the
                 (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
 (global-set-key "\M-o" 'kill-sentence)
 
+(require 'binary-diff)
+
 (global-set-key [(prior)] 'scroll-other-window-down)
 (global-set-key [(next)] 'scroll-other-window)
 
@@ -335,6 +337,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'google-define nil t)
 (defalias 'gd 'google-define)
+(defalias 'x 'buddy-define)
 (require 'fast-wiki nil t)
 (require 'bartuer-buddy nil t)
 (defalias 'bd 'buddy-minor-mode)
@@ -1060,6 +1063,13 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
 
+(autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
+(setq auto-mode-alist (cons '("\\.mt\\'" . matlab-mode) auto-mode-alist))
+(autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
+(autoload 'bartuer-matlab-load "bartuer-matlab.el" "for matlab/octave language" t)
+(add-hook 'matlab-mode-hook 'bartuer-matlab-load)
+
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
@@ -1088,11 +1098,20 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-v" 'clipboard-paste)
 
 (defun interprogram-cut-function (string &optional push)
-  (get-buffer-create " *pbcopy*")
-  (with-current-buffer " *pbcopy*"
+  (get-buffer-create "pbcopy")
+  (with-current-buffer "pbcopy"
     (delete-region (point-min) (point-max))
     (insert string)
     (call-process-region (point-min) (point-max) "pbcopy")
     )
   )
+
+(defalias 'i (lambda ()
+               (interactive)
+              (let ((info-lookup-mode major-mode))
+                  (call-interactively 'info-lookup-symbol))
+))
+
+;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 (setq interprogram-cut-function (intern "interprogram-cut-function"))
+(require 'bartuer-page)

@@ -1,5 +1,7 @@
 (file-cache-add-directory-list (list
-                                "~/local/src/baza/lib"
+                                "~/local/src/tone/doc/sample"
+                                "~/local/src/widget/video-controller"
+                                "~/local/src/pass"
                                 "~/Movies/kids"
                                 "~/local/src/bew"
                                 "~/local/src/bew/src"

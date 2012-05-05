@@ -401,7 +401,6 @@ default POS is current position."
   (dom-tree))
 
 (defun xml-augment-hook ()
-  (flymake-mode 1)
   (set (make-local-variable 'forward-sexp-function) 'xml-forward-adapt)
   ;; for html, implement indent region by indent line , will call too
   ;; much sgml-calculate-indent

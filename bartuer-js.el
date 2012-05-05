@@ -371,7 +371,10 @@ wrap block add semicolon correct plus and equal"
   (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/tojson.js --  /tmp/d8-temp.js" "*json*" nil)
   (with-current-buffer "*json*"
     (goto-char (point-min))
-    (json-read-object)
+    (if (equal (thing-at-point 'char) "{") 
+        (json-read-object)
+      (json-read-array)
+    )
     )
   (pop-to-buffer "*json*")
   (pop-to-buffer "*Pp Eval Output*")

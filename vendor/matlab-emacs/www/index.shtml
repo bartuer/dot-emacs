@@ -1,0 +1,23 @@
+<title>MATLAB/Emacs</title>
+<body bgcolor=white text=black>
+<!--#include file="style.shtml" -->
+
+<h1>MATLAB/Emacs integration</h1>
+<p>
+The MATLAB / Emacs integration project is hosted by Source Forge.
+</p>
+<ul>
+<li>
+Read the MATLAB/Emacs <a href="faq.shtml">FAQ</a> for download instructions.
+<li>
+Visit the
+<a href="http://sourceforge.net/projects/matlab-emacs">
+Project Page</a> for the latest project information.
+<li>
+Download the
+<a href="http://sourceforge.net/cvs/?group_id=154105">source</a> from CVS.</a>
+<li>Join the <a href="https://lists.sourceforge.net/lists/listinfo/matlab-emacs-discuss">
+mailing list</a> and talk to other MATLAB/Emacs users.
+</ul>
+<p>
+<!--#include file="footer.shtml" -->
