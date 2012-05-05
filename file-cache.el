@@ -1,6 +1,11 @@
 (file-cache-add-directory-list (list
                                 "~/local/src/baza/lib"
                                 "~/Movies/kids"
+                                "~/local/src/bew"
+                                "~/local/src/bew/src"
+                                "~/local/src/bew/lib/libeio"
+                                "~/local/src/bew/lib/libev"
+                                "~/local/src/zeromq-2.1.11/0bew"
                                 "~/local/src/xrb"
                                 "~/local/src/cells/"
                                 "~/local/src/yogi"
