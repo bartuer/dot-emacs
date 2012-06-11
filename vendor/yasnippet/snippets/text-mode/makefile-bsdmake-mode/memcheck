@@ -1,0 +1,2 @@
+memcheck:${1:target}
+	valgrind --leak-check=yes ./$1 

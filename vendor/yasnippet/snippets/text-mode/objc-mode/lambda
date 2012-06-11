@@ -1,0 +1,5 @@
+# name: lambda
+# --
+^(${1:parameter_type} ${2:parameter_name}) {
+  
+}
