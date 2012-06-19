@@ -1,5 +1,6 @@
 #name : for
 # --
-for (${1:var i = 0}; i < ${2:length}; ${3:i += 1}) {
+var ${1:i};
+for ($1 = 0; $1 < ${2:length}; $1 += 1) {
   $0;
 }

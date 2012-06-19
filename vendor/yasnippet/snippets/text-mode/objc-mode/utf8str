@@ -1,0 +1,4 @@
+# name: utf8string NSString cstr
+# --
+[NSString stringWithUTF8String:${1:str}]
+

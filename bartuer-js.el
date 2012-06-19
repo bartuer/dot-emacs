@@ -518,7 +518,7 @@ can bind C-j in comint buffer"
       (require 'espresso nil t)
       (setq indent-line-function 'espresso-indent-line)
       (define-key js2-mode-map "\C-m" 'newline))
-  (set (make-local-variable 'indent-region-function) 'js-beautify)
+  (set (make-local-variable 'indent-region-function) 'js-indent)
 
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)

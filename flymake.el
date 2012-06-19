@@ -1328,8 +1328,8 @@ For the format of LINE-ERR-INFO, see `flymake-ler-make-ler'."
   :group 'flymake
   :type 'boolean)
 
-(defvar flymake-objc-compiler "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0")
-(defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only" "-std=c99" "-isysroot" "/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.2.sdk"))
+(defvar flymake-objc-compiler "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc")
+(defvar flymake-objc-compile-default-options (list "-Wall" "-Wextra" "-fsyntax-only" "-std=c99" "-isysroot" "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.1.sdk"))
 (defvar flymake-last-position nil)
 ; /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0 -Wall -Wextra -fsyntax-only -std=c99 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.2.sdk
 (defcustom flymake-objc-compile-options '("-I.")
