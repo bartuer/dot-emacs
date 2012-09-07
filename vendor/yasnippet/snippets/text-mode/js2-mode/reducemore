@@ -1,0 +1,6 @@
+# name: map array
+# --
+${1:array}.reduce(
+function (memo, value, index, array) {
+  $0
+}, ${2:initial_value});

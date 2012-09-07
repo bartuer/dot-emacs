@@ -1,0 +1,3 @@
+# name: map array
+# --
+${1:array}.reduce(function (init, value) { $0 });
