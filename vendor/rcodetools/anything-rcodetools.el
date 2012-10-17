@@ -96,6 +96,7 @@
   (insert meth))
 
 (setq rct-complete-symbol-function 'rct-complete-symbol--anything)
+
 (defvar anything-c-source-complete-ruby
   '((name . "Ruby Method Completion")
     (candidates . rct-method-completion-table)
@@ -110,34 +111,35 @@
     (volatile)
     (persistent-action . anything-rct-ri)))
 
-(defvar rct-get-all-methods-command "PAGER=cat fri -l")
-(defun rct-get-all-methods ()
-  (interactive)
-  (setq rct-all-methods
-        (mapcar (lambda (fullname)
-                  (replace-regexp-in-string "^.+[:#.]\\([^:#.]+\\)$"
-                                            "\\1\t[\\&]" fullname))
-                (split-string (shell-command-to-string rct-get-all-methods-command) "\n"))))
+;; (defvar rct-get-all-methods-command "PAGER=cat fri -l")
+;; (defun rct-get-all-methods ()
+;;   (interactive)
+;;   (setq rct-all-methods
+;;         (mapcar (lambda (fullname)
+;;                   (replace-regexp-in-string "^.+[:#.]\\([^:#.]+\\)$"
+;;                                             "\\1\t[\\&]" fullname))
+;;                 (split-string (shell-command-to-string rct-get-all-methods-command) "\n"))))
 
-(defvar rct-all-methods (rct-get-all-methods))
-(defvar anything-c-source-complete-ruby-all
-  '((name . "Ruby Method Completion (ALL)")
-    (candidates
-     . (lambda ()
-        (let ((case-fold-search nil)
-              (re (format "[:#.]%s" (with-current-buffer anything-current-buffer
-                                   (symbol-at-point)))))
-          (remove-if-not
-           (lambda (meth) (string-match re meth))
-           rct-all-methods))))
-    (action
-     ("Completion" . anything-rct-complete)
-     ("RI" . anything-rct-ri))
-    (persistent-action . anything-rct-ri)))
+;; (defvar rct-all-methods (rct-get-all-methods))
+
+;; (defvar anything-c-source-complete-ruby-all
+;;   '((name . "Ruby Method Completion (ALL)")
+;;     (candidates
+;;      . (lambda ()
+;;         (let ((case-fold-search nil)
+;;               (re (format "[:#.]%s" (with-current-buffer anything-current-buffer
+;;                                    (symbol-at-point)))))
+;;           (remove-if-not
+;;            (lambda (meth) (string-match re meth))
+;;            rct-all-methods))))
+;;     (action
+;;      ("Completion" . anything-rct-complete)
+;;      ("RI" . anything-rct-ri))
+;;     (persistent-action . anything-rct-ri)))
 
 (defun rct-complete-symbol--anything ()
   (interactive)
-  (let ((anything-sources (list anything-c-source-complete-ruby anything-c-source-complete-ruby-all)))
+  (let ((anything-sources (list anything-c-source-complete-ruby)))
     (anything)))
 
 (provide 'anything-rcodetools)
