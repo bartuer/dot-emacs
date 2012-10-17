@@ -1885,7 +1885,7 @@ Use CREATE-TEMP-F for creating temp copy."
                      'flymake-create-temp-inplace))
          (local-file (file-relative-name temp-file
                                          (file-name-directory buffer-file-name))))
-    (list "/Users/bartuer/etc/el/vendor/erlang/share/flyerl/simple_check.erl" (list local-file))))
+    (list "~/etc/el/vendor/erlang/share/flyerl/simple_check.erl" (list local-file))))
 (add-to-list 'flymake-allowed-file-name-masks '("\\.erl\\'" flymake-erlang-init))
 
 (provide 'flymake)

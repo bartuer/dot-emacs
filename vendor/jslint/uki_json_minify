@@ -1,2 +1,2 @@
 #! /usr/bin/env sh
-/Users/bartuer/scripts/d8 /Users/bartuer/etc/el/vendor/jslint/minify.json.js -- $1
+d8 ~/etc/el/vendor/jslint/minify.json.js -- $1

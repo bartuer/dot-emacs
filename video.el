@@ -26,9 +26,9 @@ http://www.matroska.org/technical/specs/subtitles/srt.html
   (org-timer-pause-or-continue)
   (if org-timer-pause-time
       (progn
-        (shell-command "/Users/bartuer/scripts/pause")
+        (shell-command "~/scripts/pause")
         (subtitle-timer))
-    (shell-command "/Users/bartuer/scripts/play")
+    (shell-command "~/scripts/play")
     (insert "\n")
     )
 )
@@ -45,7 +45,7 @@ http://www.matroska.org/technical/specs/subtitles/srt.html
    (video-minor-mode
     (define-key text-mode-map "\C-j" 'video-note)
     (setq subtitle-seq 1)
-    (shell-command "/Users/bartuer/scripts/play")
+    (shell-command "~/scripts/play")
     (org-timer-start)
     )
    (t
