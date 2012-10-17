@@ -461,10 +461,8 @@ the block line three
   "mode hooks for ruby"
 
   ;; pre load to speed up
-  (when (file-exists-p "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
-      (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant"))
-  (when (file-exists-p "/Library/Ruby/Gems/1.8/gems/TAGS.rtags")
-    (visit-tags-table "/Library/Ruby/Gems/1.8/gems/TAGS.rtags"))
+  (when (file-exists-p "~/local/src/tags/gems/TAGS.exuberant")
+    (visit-tags-table "~/local/src/tags/gems/TAGS.exuberant"))
 
 
   ;; toggle these modes
