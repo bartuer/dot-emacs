@@ -1069,6 +1069,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-matlab-load "bartuer-matlab.el" "for matlab/octave language" t)
 (add-hook 'matlab-mode-hook 'bartuer-matlab-load)
 
+(autoload 'haml-mode "haml" "Enter HAML mode." t)
+(setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
+(autoload 'haml-mode "haml-mode.el" "for haml language" t)
+
 
 (put 'dired-find-alternate-file 'disabled nil)
 
