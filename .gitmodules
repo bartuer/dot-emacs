@@ -19,6 +19,3 @@
 [submodule "vendor/ri"]
 	path = vendor/ri
 	url = git://github.com/technomancy/ri.el.git
-[submodule "jcodetools"]
-	path = jcodetools
-	url = ssh://bartuer/Users/bartuer/etc/el/jcodetools
