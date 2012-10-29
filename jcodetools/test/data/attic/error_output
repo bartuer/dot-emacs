@@ -1,0 +1,2 @@
+-:2: syntax error
+-:3: uncaught JavaScript runtime exception: ReferenceError: "some" is not defined.
