@@ -1,2 +1,2 @@
 #! /usr/bin/env sh
-/Users/bartuer/scripts/d8 /Users/bartuer/etc/el/vendor/jslint/jsbeautify.js -- -a -p -n -i 2 $1 >$2
+d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -a -p -n -i 2 $1 >$2

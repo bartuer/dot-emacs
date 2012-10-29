@@ -1,4 +1,4 @@
 #!/bin/bash
-java -jar /Users/bartuer/etc/el/vendor/css-validate/css-validator.jar -output gnu -profile css3 file:$1 |sed -e 's/^file://g;s/doesn&#39;t/does not/g'
+java -jar ~/etc/el/vendor/css-validate/css-validator.jar -output gnu -profile css3 file:$1 |sed -e 's/^file://g;s/doesn&#39;t/does not/g'
 # http://csslint.net/about.html#docs
-/Users/bartuer/local/bin/csslint --format=compilation $1
+~/local/bin/csslint --format=compilation $1

@@ -57,11 +57,11 @@ lisp, really need add one.
     ))
 
 (defun actionpack-rct-option ()
-  "-I/Users/bartuer/local/src/rails/actionpack/test -I/Users/bartuer/local/src/rails/actionpack/lib")
+  "-I~/local/src/rails/actionpack/test -I~/local/src/rails/actionpack/lib")
 
 ;; (link "~/local/src/rails/activerecord/xmp-option" 1)
 (defun activerecord-rct-option ()
-  "-I/Users/bartuer/local/src/rails/activerecord/lib -I/Users/bartuer/local/src/rails/activerecord/test -I/Users/bartuer/local/src/rails/activerecord/test/connections/native_sqlite3")
+  "-I~/local/src/rails/activerecord/lib -I~/local/src/rails/activerecord/test -I~/local/src/rails/activerecord/test/connections/native_sqlite3")
 
 (defun baza-rct-option ()
   "-I~/local/src/baza/test")
@@ -116,20 +116,6 @@ REMOVE ruby binary NORMALLY IT IS THE INCLUDE PATH.
         (goto-char (point-min))
         t)))
 
-(defun rails-logs ()
-  (interactive)
-  (find-file "/private/var/log/apache2/error_log")
-  (find-file "/private/var/log/apache2/access_log")
-  (find-file "/opt/local/var/log/rabbitmq/rabbit.log")
-  (find-file "/Users/bartuer/local/src/pusher/log/thin.5000.log")
-  (find-file "/Users/bartuer/local/src/pusher/log/thin.5001.log")
-  (find-file "/Users/bartuer/local/src/pusher/log/thin.5002.log")
-  (find-file "/opt/nginx/logs/access.log")
-  (find-file "/opt/nginx/logs/error.log")
-  (pop-to-buffer "*Ibuffer*")
-  (ibuffer-update nil)
-  (ibuffer-jump-to-filter-group "log"))
-(defalias 'rinari-rails-logs 'rails-logs)
 
 (defun bartuer-rdebug-server ()
   "start server under rdebug"
@@ -475,10 +461,8 @@ the block line three
   "mode hooks for ruby"
 
   ;; pre load to speed up
-  (when (file-exists-p "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant")
-      (visit-tags-table "~/local/src/ruby/branches/ruby_1_8_6/TAGS.exuberant"))
-  (when (file-exists-p "/Library/Ruby/Gems/1.8/gems/TAGS.rtags")
-    (visit-tags-table "/Library/Ruby/Gems/1.8/gems/TAGS.rtags"))
+  (when (file-exists-p "~/local/src/tags/gems/TAGS.exuberant")
+    (visit-tags-table "~/local/src/tags/gems/TAGS.exuberant"))
 
 
   ;; toggle these modes

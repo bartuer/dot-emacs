@@ -982,7 +982,7 @@ want to cancel the operation."
             (erase-buffer))
       (insert (shell-command-to-string 
                (concat "curl 2>/dev/null " erlang-doc-service module "/"  pair)))
-      (shell-command  (concat "/Users/bartuer/scripts/push 'window.location=\"" erlang-doc-service module ":" pair "\"'"))
+      (shell-command  (concat "~/scripts/push 'window.location=\"" erlang-doc-service module ":" pair "\"'"))
       ))
   )
 

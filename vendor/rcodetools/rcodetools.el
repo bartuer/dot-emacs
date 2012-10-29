@@ -4,15 +4,15 @@
 ;;;
 ;;; Use and distribution subject to the terms of the Ruby license.
 
-(defvar xmpfilter-command-name "ruby1.8 -S xmpfilter --no-warnings --poetry --dev --fork --detect-rbtest"
+(defvar xmpfilter-command-name "ruby -S xmpfilter --no-warnings --poetry --dev --fork --detect-rbtest"
   "The xmpfilter command name.")
-(defvar rct-doc-command-name "ruby1.8 -S rct-doc --dev --fork --detect-rbtest"
+(defvar rct-doc-command-name "ruby -S rct-doc --dev --fork --detect-rbtest"
   "The rct-doc command name.")
-(defvar rct-complete-command-name "ruby1.8 -S rct-complete --dev --fork --detect-rbtest"
+(defvar rct-complete-command-name "ruby -S rct-complete --dev --fork --detect-rbtest"
   "The rct-complete command name.")
-(defvar ruby-toggle-file-command-name "ruby1.8 -S ruby-toggle-file"
+(defvar ruby-toggle-file-command-name "ruby -S ruby-toggle-file"
   "The ruby-toggle-file command name.")
-(defvar rct-fork-command-name "ruby1.8 -S rct-fork")
+(defvar rct-fork-command-name "ruby -S rct-fork")
 (defvar rct-option-history nil)                ;internal
 (defvar rct-option-local nil)     ;internal
 (make-variable-buffer-local 'rct-option-local)

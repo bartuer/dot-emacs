@@ -730,7 +730,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'flymake nil t)
 (require 'rcodetools nil t)
-(require 'anything-rcodetools)
+(require 'anything-rcodetools nil t)
 (load "~/etc/el/vendor/ruby-mode/ruby-electric.el")
 (require 'ruby-eletric-mode nil t)
 (require 'ruby-mode nil t)
@@ -1117,5 +1117,5 @@ If give a negative ARG, will undo the last mark action, thus the
 ))
 
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
-(setq interprogram-cut-function (intern "interprogram-cut-function"))
+;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)

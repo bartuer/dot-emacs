@@ -1,0 +1,14 @@
+# name: em-http-request
+# --
+EventMachine.run {
+  http = EventMachine::HttpRequest.new('http://${1:url}').get
+
+  http.errback {
+    http.response_header.status
+    EventMachine.stop
+  }
+  http.callback {
+    $0
+    EventMachine.stop
+  }
+}

@@ -1,0 +1,2 @@
+#! /usr/bin/env sh
+cat $1 |$HOME/etc/el/vendor/uglifyjs/bin/uglifyjs -nc >$2

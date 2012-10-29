@@ -1,0 +1,34 @@
+#! /usr/bin/env node
+// -*- js2 -*-
+
+global.sys = require("sys");
+var fs = require("fs");
+var jsp = require("uglifyjs/parse-js"); // symlink ~/.node_libraries/uglifyjs => /path/to/../lib/
+var pro = require("uglifyjs/process");
+
+var args = jsp.slice(process.argv, 2);
+
+var OUTPUT;
+
+
+OUTPUT = process.stdout;
+
+var filename = args[0];
+if (filename) {
+        fs.readFile(filename, "utf8", function(err, text){
+                OUTPUT.write(jsp.parse(text));
+                OUTPUT.end();
+        });
+} else {
+        var stdin = process.openStdin();
+        stdin.setEncoding("utf8");
+        var text = "";
+        stdin.on("data", function(chunk){
+                text += chunk;
+        });
+        stdin.on("end", function() {
+                OUTPUT.write(jsp.parse(text));
+                OUTPUT.end();
+        });
+}
+
