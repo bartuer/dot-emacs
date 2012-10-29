@@ -22,6 +22,3 @@
 [submodule "jcodetools"]
 	path = jcodetools
 	url = ssh://bartuer/Users/bartuer/etc/el/jcodetools
-[submodule "vendor/uglifyjs"]
-	path = vendor/uglifyjs
-	url = git://github.com/mishoo/UglifyJS.git
