@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar ~/etc/el/vendor/closure/compiler/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS  --js $1 --js_output_file /dev/stdout | tr -d '\n' > $2
+java -jar ~/etc/el/vendor/closure/compiler/compiler.jar --language_in ECMASCRIPT5 --compilation_level ADVANCED_OPTIMIZATIONS  --js $1 --js_output_file /dev/stdout | tr -d '\n' > $2
