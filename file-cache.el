@@ -19,6 +19,8 @@
                                 "~/local/src/tone/js"
                                 "~/local/src/tone/css"
                                 "~/local/src/tone/doc/sample"
+                                "~/local/src/tone/bin"
+                                "~/local/src/tone/bin/pipe"
                                 "~/local/src/widget/video-controller"
                                 "~/local/src/pass"
                                 "~/Movies/kids"
