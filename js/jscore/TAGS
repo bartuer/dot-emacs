@@ -1,5 +1,5 @@
 
-/Users/bartuer/etc/el/js/jscore/array.js,741
+/home/bartuer/etc/el/js/jscore/array.js,741
 array.concat = function (item) {array.concat(item)12,290
 array.join = function (separator) {array.join(separator)33,1005
 array.pop = function () {array.pop()47,1399
@@ -13,14 +13,14 @@ array.unshift = function (item) {array.unshift(item)294,9157
 var by = function (name) {by(name)189,5410
 var by2 = function (name, minor) {by2(name, minor)239,7215
 
-/Users/bartuer/etc/el/js/jscore/date.js,244
+/home/bartuer/etc/el/js/jscore/date.js,244
 date.new = function () {date.()9,87
 date.getDate = function () {date.getDate()22,248
 date.getTime = function () {date.getTime()33,393
 date.getMonth = function () {date.getMonth()46,586
 date.getYear = function () {date.getYear()58,817
 
-/Users/bartuer/etc/el/js/jscore/func.js,590
+/home/bartuer/etc/el/js/jscore/func.js,590
 func.apply = function (thisArg, argArray) {func.apply(thisArg, argArray)12,280
 func.arguments = function () {func.arguments()64,1835
 func.arguments.callee = function () {func.arguments.callee()68,1878
@@ -31,9 +31,9 @@ function f(a, b, c) {f(a, b, c).<definition-2>76,1940
 function factorial(x) {factorial(x).<definition-1>81,2032
 function factorial(x) {factorial(x).<definition-2>81,2032
 
-/Users/bartuer/etc/el/js/jscore/math.js,0
+/home/bartuer/etc/el/js/jscore/math.js,0
 
-/Users/bartuer/etc/el/js/jscore/number.js,587
+/home/bartuer/etc/el/js/jscore/number.js,587
 number.toExponential = function (fractionDigits) {number.toExponential(fractionDigits)11,293
 number.toFixed = function (fractionDigits) {number.toFixed(fractionDigits)29,868
 number.toPrecision = function (precision) {number.toPrecision(precision)47,1372
@@ -43,16 +43,16 @@ number.isFinite = function () {number.isFinite()100,2856
 number.parseInt = function (str, radix) {number.parseInt(str, radix)124,3634
 number.parseFloat = function (str) {number.parseFloat(str)146,4254
 
-/Users/bartuer/etc/el/js/jscore/object.js,173
+/home/bartuer/etc/el/js/jscore/object.js,173
 object.hasOwnProperty = function (name) {object.hasOwnProperty(name)11,257
     var F = function () {};F()22,539
   Object.create = function (o) {Object.create(o)21,512
 
-/Users/bartuer/etc/el/js/jscore/regexp.js,124
+/home/bartuer/etc/el/js/jscore/regexp.js,124
 regexp.exec = function (string) {regexp.exec(string)27,1200
 regexp.test = function (string) {regexp.test(string)64,3790
 
-/Users/bartuer/etc/el/js/jscore/string.js,1597
+/home/bartuer/etc/el/js/jscore/string.js,1597
 string.charAt = function (pos) {string.charAt(pos)12,334
 string.charCodeAt = function (pos) {string.charCodeAt(pos)29,772
 string.concat = function (string) {string.concat(string)43,1051

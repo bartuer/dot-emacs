@@ -103,13 +103,11 @@ it is suitable to browse OO hierarchy"
     (setq anything-etags-cache-tag-file-dir
           (ido-completing-read
            "TAGS location:"
-           (list "~/etc/el/js"
+           (list "~/local/src/tone/js"
+                 "~/etc/el/js"
                  (concat prototype-root "src")
                  "~/local/src/js-functional"
-                 "~/local/src/scriptaculous/src"
                  "~/etc/el/js/jscore"
-                 "~/local/src/widget/collectionview/javascripts/frameworks/uki/src/"
-                 "~/local/src/mui/frameworks/uki/src"
                  "~/local/src/closure-library/closure/goog"
                  "./"
                  ))))
