@@ -69,7 +69,7 @@
   "The ruby program name.")
 
 ;; must using full path, can not start with $HOME or ~
-(defvar ri-ruby-script "~/etc/el/vendor/ri/bin/ri-emacs"
+(defvar ri-ruby-script () (expand-file-name "~/etc/el/vendor/ri/bin/ri-emacs")
   "the ruby script to communicate with")
 
 (defvar ri-ruby-process nil
