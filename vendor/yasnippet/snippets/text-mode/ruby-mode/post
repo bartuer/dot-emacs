@@ -1,0 +1,6 @@
+# name: post uki
+# --
+post '/${1:url}' do
+  ${2:var} = @params["$2"]
+  [200, 'text/plain', 'ok']
+end

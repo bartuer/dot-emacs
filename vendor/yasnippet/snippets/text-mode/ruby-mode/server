@@ -8,18 +8,7 @@ require 'uki/routes'
 $KCODE = 'u'
 
 UkiRoutes.class_eval do
-  set :views, File.dirname(__FILE__) + '/views'
-  get '/' do
+  get '/hello' do
     [200, 'text/plain', '早']
   end
-
-  get '/nokogiri' do
-    nokogiri :hello
-  end
-
-  get '/erubis' do
-    data  = { :kiss => 'me'}
-    erubis :hello, :layout => :wrapper, :locals => data
-  end
-
 end
