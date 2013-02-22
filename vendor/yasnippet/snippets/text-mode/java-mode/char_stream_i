@@ -1,0 +1,13 @@
+# name: char stream input
+# --
+try (
+    ${1:FileReader} ${2:fin} =
+    ${3:new FileReader("filename")};
+){
+    int c;
+    while ((c = fin.read()) != -1) {
+        $0
+    }
+} catch (${4:Exception} e) {
+   System.err.println("$4: "  + e.getMessage());
+}

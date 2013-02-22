@@ -1,0 +1,10 @@
+# name: line stream output
+# --
+try (
+    ${4:PrintWriter} ${5:fout} = ${6:new PrintWriter(
+    new FileWriter("filename"))};
+){
+    fout$0
+} catch (${7:Exception} e) {
+    System.err.println("$7: "  + e.getMessage());
+}

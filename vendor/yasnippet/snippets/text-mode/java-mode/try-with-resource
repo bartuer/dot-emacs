@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: try, catch with resource
+# --
+try (
+    ${1:resource_type} ${2:resource_name} =
+    ${3:resource_init};
+){
+    $0
+} catch (${4:Exception} e}) {
+    System.err.println("$4: "  + e.getMessage());
+}

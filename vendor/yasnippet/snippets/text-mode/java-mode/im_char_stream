@@ -1,0 +1,5 @@
+# name: import of character stream
+# --
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
