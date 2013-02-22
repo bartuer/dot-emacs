@@ -521,7 +521,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (ido-mode 1))
 
 (require 'xml-augment nil t)
-(add-hook 'sgml-mode-hook 'xml-augment-hook)
+;; (add-hook 'sgml-mode-hook 'xml-augment-hook)
 
 (require 'bartuer-filecache nil t)
 (bartuer-filecache-load)
@@ -591,8 +591,8 @@ If give a negative ARG, will undo the last mark action, thus the
   "insert link can jump to diff"
   (interactive)
   (if graph
-      (shell-command (concat "cd " repos ";git1.7 difftool " commit "~" " " commit))
-    (shell-command (concat "cd " repos ";git-diff " commit "~" " " commit) "*git link output*"))
+      (shell-command (concat "cd " repos ";git difftool " commit "~" " " commit))
+    (shell-command (concat "cd " repos ";git diff " commit "~" " " commit) "*git link output*"))
   (pop-to-buffer "*git link output*")
   (diff-mode)
   (diff-refine-hunk))
@@ -668,7 +668,6 @@ If give a negative ARG, will undo the last mark action, thus the
                  (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
                                                (prin1-to-string major-mode))))
                ))
-
 
 (require 'rinari nil t)
 (add-hook 'rinari-minor-mode-hook (lambda ()
@@ -757,6 +756,30 @@ If give a negative ARG, will undo the last mark action, thus the
 (defadvice inf-ruby-completions (before icicle-ri-help activate)
     "do right thing for icicle-candidate-help-fn ."
   (setq icicle-candidate-help-fn 'bartuer-ruby-ri)) 
+
+;;; for java emacs-eclim 
+(require 'eclim)
+(require 'eclimd)
+(setq eclim-auto-save t)
+(global-eclim-mode)
+
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+
+(require 'auto-complete)
+(add-to-list 'ac-dictionary-directories "~/etc/el/vendor/auto-complete/dict")
+(require 'auto-complete-config)
+(ac-config-default)
+
+(autoload 'company-mode "company" nil t)
+(require 'company)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(global-company-mode t)
+
+(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
 
 (require 'bartuer-erlang nil t)
 (autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
