@@ -1,3 +1,4 @@
-#name getElementById
+#name create element by id
 # --
-document.getElementById("${2:id}");
+var ${1:name} = div();
+attr($1, {'id':'$1'});

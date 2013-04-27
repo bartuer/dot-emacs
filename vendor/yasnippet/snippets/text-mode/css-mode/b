@@ -1,0 +1,3 @@
+# name: border b describe_name
+# --
+border : 1px solid black;

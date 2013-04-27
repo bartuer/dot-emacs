@@ -1,5 +1,5 @@
 # name: load eventlistener 
 # --
-window.addEventListener('load', function (e) {
+document.addEventListener('DOMContentLoaded',  function () {
   $0  
 });
