@@ -55,7 +55,7 @@
  '(gdb-use-separate-io-buffer t)
  '(global-font-lock-mode t nil (font-lock))
  '(global-mark-ring-max 32)
- '(grep-find-command "find . -type f -a ! -name \"*.o\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"*_min.css\" |grep -vE \"BROWSE|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |sed -e 's+ +\\\\\\\\ +g'|xargs grep -niHE ")
+ '(grep-find-command "find . -type f -a ! -name \"*.o\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" |grep -vE \"BROWSE|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |quote0|xargs -0 grep -niHE ")
  '(grep-highlight-matches t)
  '(gud-gdb-command-name (concat "gdb-darwin -annotate=3 -silent -x ~/etc/el/gdb/init.gdb  -x " (expand-file-name "~/local/src/chromium/src/v8/dbg_agent.gdb")))
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
