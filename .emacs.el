@@ -1,4 +1,5 @@
 
+
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
@@ -352,6 +353,7 @@ If give a negative ARG, will undo the last mark action, thus the
     (which-function-mode 1))
 
 (require 'remember nil t)
+(require 'org-remember nil t)
 (org-remember-insinuate)
 (setq org-directory "~/org")
 (setq org-default-notes-file (concat org-directory "/note.org"))
@@ -1096,6 +1098,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
+(require 'typescript)
+(autoload 'typescript-mode "typescript.el"
+  "Major mode for TypeScript files" t)
+(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -1142,3 +1148,35 @@ If give a negative ARG, will undo the last mark action, thus the
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
+
+(defun hide-ctrl-M ()
+  "Hides the disturbing '^M' showing up in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defvar visible-name
+  "convert visible name to camel name, need glasses"
+  "[a-z0-9]\(_[a-z0-9]+\)+")
+
+(defvar camelize-replace
+  "query-replace-regexp-eval to-expr."
+  (camelize-method \&))
+
+(defun mapcar-head (fn-head fn-rest list)
+  "Like MAPCAR, but applies a different function to the first element."
+  (if list
+      (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
+
+(defun camelize-method (s)
+  "Convert under_score string S to camelCase string."
+  (mapconcat 'identity (mapcar-head
+                        '(lambda (word) (downcase word))
+                        '(lambda (word) (capitalize (downcase word)))
+                        (split-string s "_")) ""))
+
+(defun camelize-buffer
+  "convert visible name to camel verion"
+  (interactive)
+  (query-replace-regexp-eval visible-name (camelize-method \&))
+  )
