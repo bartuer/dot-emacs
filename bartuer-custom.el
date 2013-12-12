@@ -1,9 +1,9 @@
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
@@ -44,8 +44,6 @@
  '(flymake-allowed-file-name-masks (quote (("\\.c\\'" flymake-simple-make-init) ("\\.m\\'" flymake-objc-init) ("Rakefile" flymake-ruby-init) ("\\.rb\\'" flymake-ruby-init) ("\\.js\\'" flymake-jslint-init) ("\\.xml\\'" flymake-xml-init) ("\\.plist\\'" flymake-xml-init) ("\\.html?\\'" flymake-jslint-init) ("\\.css" flymake-css-init) ("\\.cs\\'" flymake-simple-make-init) ("\\.cpp\\'" flymake-simple-make-init) ("\\.p[ml]\\'" flymake-perl-init) ("\\.php[345]?\\'" flymake-php-init) ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup) ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup) ("\\.tex\\'" flymake-simple-tex-init) ("\\.idl\\'" flymake-simple-make-init))))
  '(flymake-log-level -1)
  '(flymake-objc-compile-options (quote ("-I." "-F../Frameworks" "-I../Classes")))
- '(ispell-dictionary "british")
- '(ispell-program-name "aspell")
  '(flyspell-use-meta-tab nil)
  '(gdb-debug-log-max 20)
  '(gdb-enable-debug t)
@@ -88,10 +86,13 @@
  '(ido-max-window-height 5)
  '(indent-tabs-mode nil)
  '(isearch-resume-in-command-history t)
+ '(ispell-dictionary "british")
+ '(ispell-program-name "aspell")
  '(js2-allow-member-expr-as-function-name t)
  '(js2-allow-rhino-new-expr-initializer t)
  '(js2-basic-offset 2)
  '(js2-highlight-level 3)
+ '(js2-mirror-mode nil)
  '(js2-parse-minor-mode-string " Pa")
  '(kill-read-only-ok t)
  '(line-number-mode t)
@@ -152,10 +153,10 @@
  '(view-read-only t))
  
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
  '(css-property ((t (:inherit font-lock-keyword-face))))
@@ -170,6 +171,9 @@
  '(flyspell-incorrect ((t (:underline "red"))))
  '(flyspell-incorrect-face ((t (:underline "red"))) t)
  '(font-lock-comment-face ((((class color) (min-colors 8) (background dark)) (:foreground "green"))))
+ '(font-lock-function-name-face ((t (:foreground "color-99"))))
+ '(font-lock-keyword-face ((t (:foreground "green"))))
+ '(font-lock-string-face ((t (:foreground "cyan"))))
  '(font-lock-variable-name-face ((((class color) (min-colors 8)) (:foreground "white" :weight light))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
  '(icicle-complete-input ((((background dark)) (:foreground "green"))))
