@@ -493,7 +493,7 @@ can bind C-j in comint buffer"
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
-
+  (setq js2-mirror-mode nil)
   (make-local-variable 'suite-list)
   (js-find-suite)
   (make-local-variable 'live-edit-string)
