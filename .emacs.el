@@ -1096,6 +1096,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
+(require 'typescript)
+(autoload 'typescript-mode "typescript.el"
+  "Major mode for TypeScript files" t)
+(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -1142,3 +1146,52 @@ If give a negative ARG, will undo the last mark action, thus the
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
+
+<<<<<<< HEAD
+;;; disable edit change prompt
+(defun ask-user-about-supersession-threat (fn)
+  "boldly ignore file changes on disk"
+  )
+
+(global-auto-revert-mode 1)
+=======
+(defun hide-ctrl-M ()
+  "Hides the disturbing '^M' showing up in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defun mapcar-head (fn-head fn-rest list)
+  "Like MAPCAR, but applies a different function to the first element."
+  (if list
+      (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
+
+(defun camelize-method (s)
+  "Convert under_score string S to camelCase string."
+  (mapconcat 'identity (mapcar-head
+                        '(lambda (word) (downcase word))
+                        '(lambda (word) (capitalize (downcase word)))
+                        (split-string s "_")) ""))
+
+
+
+(defun camelize-buffer (regexp to-expr &optional delimited start end)
+  "Replace some things after point matching REGEXP with the result of TO-EXPR."
+  (interactive
+   (progn
+   (barf-if-buffer-read-only)
+   (let* ((from
+	   "[a-z0-9]\\(_[a-z0-9]+\\)+")
+	  (to (list (read-from-minibuffer
+		     (format "Query replace regexp %s with eval: "
+			     (query-replace-descr from))
+		     nil nil t "(camelize-method \&)" from t))))
+     (replace-match-string-symbols to)
+     (list from (car to) current-prefix-arg
+	   (if (and transient-mark-mode mark-active)
+	       (region-beginning))
+	   (if (and transient-mark-mode mark-active)
+	       (region-end))))))
+  (perform-replace regexp (cons 'replace-eval-replacement to-expr)
+		   t 'literal delimited nil nil (point-min) (point-max))
+)

@@ -1,9 +1,9 @@
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
@@ -57,7 +57,7 @@
  '(gdb-use-separate-io-buffer t)
  '(global-font-lock-mode t nil (font-lock))
  '(global-mark-ring-max 32)
- '(grep-find-command "find . -type f -a ! -name \"*.o\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" |grep -vE \"BROWSE|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |quote0|xargs -0 grep -niHE ")
+ '(grep-find-command "find . -type f -a ! -name \"*.o\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" -a ! -name \"*_img.css\" |grep -vE \"BROWSE|Makefile|CMakeFiles|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |tr '\n' '\0'|xargs -0 grep -niHE ")
  '(grep-highlight-matches t)
  '(gud-gdb-command-name (concat "gdb-darwin -annotate=3 -silent -x ~/etc/el/gdb/init.gdb  -x " (expand-file-name "~/local/src/chromium/src/v8/dbg_agent.gdb")))
  '(gud-pdb-command-name "/usr/lib/python2.5/pdb.py")
@@ -87,16 +87,20 @@
  '(ido-max-prospects 96)
  '(ido-max-window-height 5)
  '(indent-tabs-mode nil)
+ '(inferior-lisp-program "/usr/local/bin/sbcl")
  '(isearch-resume-in-command-history t)
+ '(ispell-dictionary "british")
+ '(ispell-program-name "aspell")
  '(js2-allow-member-expr-as-function-name t)
  '(js2-allow-rhino-new-expr-initializer t)
  '(js2-basic-offset 2)
  '(js2-highlight-level 3)
+ '(js2-mirror-mode nil)
  '(js2-parse-minor-mode-string " Pa")
  '(kill-read-only-ok t)
  '(line-number-mode t)
  '(list-matching-lines-default-context-lines 0)
- '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/rinari/" "~/etc/el/vendor/rinari/jump" "~/etc/el/vendor/rinari/util" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
+ '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
  '(lpr-command "~/scripts/pdfprint")
  '(mail-send-hook (quote (quote-encoded-subject)))
  '(make-backup-files nil)
@@ -109,7 +113,7 @@
  '(org-agenda-columns-add-appointments-to-effort-sum t)
  '(org-agenda-files (quote ("~/local/src/milestone/milestone.org" "~/local/src/tone/tone.org" "~/local/src/pusher/pusher.org" "~/local/src/bew/bew.org" "~/local/src/cells/cells.txt" "~/org/note.org" "~/local/src/buddy/plan.org")))
  '(org-archive-save-context-info (quote (time file category todo itags olpath ltags)))
- '(org-clock-idle-time 30)
+ '(org-clock-idle-time 3000)
  '(org-columns-default-format "%40ITEM(Task) %15Effort(EFFORT){:} %SCHEDULED(SCHEDULE) %22DEADLINE(DEADLINE) %CLOCK(CLOCK)")
  '(org-completion-use-ido t)
  '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . default) ("\\.x?html?\\'" . default) ("\\.pdf\\'" . default) ("m4v" . "/usr/bin/qlmanage -p %s") ("png" . "qlmanage -p %s") ("mov" . "qlmanage -p %s"))))
@@ -152,10 +156,10 @@
  '(view-read-only t))
  
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
  '(css-property ((t (:inherit font-lock-keyword-face))))
@@ -170,6 +174,9 @@
  '(flyspell-incorrect ((t (:underline "red"))))
  '(flyspell-incorrect-face ((t (:underline "red"))) t)
  '(font-lock-comment-face ((((class color) (min-colors 8) (background dark)) (:foreground "green"))))
+ '(font-lock-function-name-face ((t (:foreground "color-99"))))
+ '(font-lock-keyword-face ((t (:foreground "green"))))
+ '(font-lock-string-face ((t (:foreground "cyan"))))
  '(font-lock-variable-name-face ((((class color) (min-colors 8)) (:foreground "white" :weight light))))
  '(icicle-candidate-part ((((background dark)) (:foreground "red"))))
  '(icicle-complete-input ((((background dark)) (:foreground "green"))))
@@ -177,11 +184,13 @@
  '(icicle-search-context-level-4 ((((background dark)) nil)))
  '(icicle-search-context-level-8 ((((background dark)) nil)))
  '(icicle-special-candidate ((((background dark)) nil)))
+ '(js2-instance-member-face ((t (:foreground "magenta"))))
  '(js2-jsdoc-html-tag-delimiter-face ((((class color) (min-colors 8) (background dark)) (:foreground "yellow"))))
  '(link ((((class color) (background light)) (:foreground "cyan" :underline t))))
  '(magit-item-highlight ((nil (:foreground "green"))))
  '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))
  '(magit-section-title ((t (:inherit magit-header :foreground "red" :weight bold))))
+ '(minibuffer-prompt ((t (:foreground "magenta"))))
  '(mode-line ((t (:inverse-video t))))
  '(mode-line-buffer-id ((t (:background "yellow" :foreground "blue" :weight bold))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:inverse-video nil))))

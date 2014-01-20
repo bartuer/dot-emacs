@@ -1,0 +1,5 @@
+# name: typescript static public method
+# --
+static ${1:functionName}() {
+    $0
+}
