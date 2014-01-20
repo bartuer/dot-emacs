@@ -1,4 +1,3 @@
-
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
@@ -27,7 +26,7 @@
                (revert-buffer t t)))
 (defalias 'p 'finder-commentary)
 (defalias 'c 'emacs-lisp-byte-compile)
-(add-to-list 'load-path (expand-file-name "~/etc/el/icicles"))
+;; (add-to-list 'load-path (expand-file-name "~/etc/el/icicles"))
 (add-to-list 'load-path (expand-file-name "~/etc/el"))
 
 (defalias 'g 'global-set-key)
@@ -352,6 +351,7 @@ If give a negative ARG, will undo the last mark action, thus the
     (which-function-mode 1))
 
 (require 'remember nil t)
+(require 'org-remember nil t)
 (org-remember-insinuate)
 (setq org-directory "~/org")
 (setq org-default-notes-file (concat org-directory "/note.org"))
@@ -381,13 +381,12 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (require 'auto-install nil t)
-
 (require 'ispell nil t)
 (if (fboundp 'ispell-region)
-    (progn
-     (ispell-region (point-min) (point-min))
-     (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
-     ))
+   (progn
+    (ispell-region (point-min) (point-min))
+    (global-set-key "\C-x\C-\M-i" 'ispell-complete-word)
+    ))
 
 (global-set-key "\M-i" 'hippie-expand)
 (global-set-key "\M-j" 'dabbrev-expand)
@@ -468,34 +467,34 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'anything-yasnippet)
 (require 'anything-etags)
-(require 'icicles nil t)
-(global-set-key [(f6)] 'icicle-complete-keys)
+;; (require 'icicles nil t)
+;; (global-set-key [(f6)] 'icicle-complete-keys)
 (global-set-key "\M-'" 'advertised-undo)
-(defun bartuer-icicle-key-map()
-  (when icicle-mode
-    (let ((map minibuffer-local-completion-map))
-      (define-key map [(f1)] 'icicle-completion-help) 
-      (define-key map "\M-." 'anything-etags-select-from-here)
-      (define-key map "\M-'" 'advertised-undo)
-      (define-key map "\M-o" 'icicle-erase-minibuffer-or-history-element)
-      (define-key map "\M-v" 'icicle-switch-to-Completions-buf)
-      (define-key map "\C-w" 'backward-kill-word)
-      (define-key map "\C-\M-y" 'icicle-apropos-complete-and-narrow)
-      (define-key map "\C-\M-i" 'icicle-apropos-complete)
-      (define-key map "\C-i" 'minibuffer-complete)
-      (define-key map " " 'minibuffer-complete-word)
-      (define-key map "\C-j" 'exit-minibuffer)
-      (define-key map "\C-s" 'icicle-narrow-candidates)
-      (define-key map "\M-l" 'switch-to-buffer)
-      (define-key map "\M-k" 'other-window)
-      (define-key map "\C-n" 'icicle-next-apropos-candidate-action)
-      (define-key map "\C-p" 'icicle-previous-apropos-candidate-action)
-      (define-key map "\C-\M-n" 'icicle-help-on-next-apropos-candidate)
-      (define-key map "\C-\M-p" 'icicle-help-on-previous-apropos-candidate))))
-(add-hook 'icicle-mode-hook 'bartuer-icicle-key-map)
-(when(fboundp 'icy-mode) 
-  (defalias 'i 'icy-mode)
-  (icy-mode))
+;; (defun bartuer-icicle-key-map()
+;;   (when icicle-mode
+;;     (let ((map minibuffer-local-completion-map))
+;;       (define-key map [(f1)] 'icicle-completion-help) 
+;;       (define-key map "\M-." 'anything-etags-select-from-here)
+;;       (define-key map "\M-'" 'advertised-undo)
+;;       (define-key map "\M-o" 'icicle-erase-minibuffer-or-history-element)
+;;       (define-key map "\M-v" 'icicle-switch-to-Completions-buf)
+;;       (define-key map "\C-w" 'backward-kill-word)
+;;       (define-key map "\C-\M-y" 'icicle-apropos-complete-and-narrow)
+;;       (define-key map "\C-\M-i" 'icicle-apropos-complete)
+;;       (define-key map "\C-i" 'minibuffer-complete)
+;;       (define-key map " " 'minibuffer-complete-word)
+;;       (define-key map "\C-j" 'exit-minibuffer)
+;;       (define-key map "\C-s" 'icicle-narrow-candidates)
+;;       (define-key map "\M-l" 'switch-to-buffer)
+;;       (define-key map "\M-k" 'other-window)
+;;       (define-key map "\C-n" 'icicle-next-apropos-candidate-action)
+;;       (define-key map "\C-p" 'icicle-previous-apropos-candidate-action)
+;;       (define-key map "\C-\M-n" 'icicle-help-on-next-apropos-candidate)
+;;       (define-key map "\C-\M-p" 'icicle-help-on-previous-apropos-candidate))))
+;; (add-hook 'icicle-mode-hook 'bartuer-icicle-key-map)
+;; (when(fboundp 'icy-mode) 
+;;   (defalias 'i 'icy-mode)
+;;   (icy-mode))
 
 (defadvice execute-extended-command (before icicle-m-x-help activate)
   "do right thing for icicle-candidate-help-fn ."
@@ -998,6 +997,7 @@ If give a negative ARG, will undo the last mark action, thus the
              '("\\.gdb$" . gdb-script-mode))
 
 (autoload 'bartuer-read-mark "bartuer-mark.el" "for record note" t)
+(require 'view nil t)
 (define-key view-mode-map "j" 'bartuer-read-mark)
 (define-key view-mode-map "k" 'google-define)
 
@@ -1096,6 +1096,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
+(require 'typescript)
+(autoload 'typescript-mode "typescript.el"
+  "Major mode for TypeScript files" t)
+(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -1142,3 +1146,52 @@ If give a negative ARG, will undo the last mark action, thus the
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
+
+<<<<<<< HEAD
+;;; disable edit change prompt
+(defun ask-user-about-supersession-threat (fn)
+  "boldly ignore file changes on disk"
+  )
+
+(global-auto-revert-mode 1)
+=======
+(defun hide-ctrl-M ()
+  "Hides the disturbing '^M' showing up in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defun mapcar-head (fn-head fn-rest list)
+  "Like MAPCAR, but applies a different function to the first element."
+  (if list
+      (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
+
+(defun camelize-method (s)
+  "Convert under_score string S to camelCase string."
+  (mapconcat 'identity (mapcar-head
+                        '(lambda (word) (downcase word))
+                        '(lambda (word) (capitalize (downcase word)))
+                        (split-string s "_")) ""))
+
+
+
+(defun camelize-buffer (regexp to-expr &optional delimited start end)
+  "Replace some things after point matching REGEXP with the result of TO-EXPR."
+  (interactive
+   (progn
+   (barf-if-buffer-read-only)
+   (let* ((from
+	   "[a-z0-9]\\(_[a-z0-9]+\\)+")
+	  (to (list (read-from-minibuffer
+		     (format "Query replace regexp %s with eval: "
+			     (query-replace-descr from))
+		     nil nil t "(camelize-method \&)" from t))))
+     (replace-match-string-symbols to)
+     (list from (car to) current-prefix-arg
+	   (if (and transient-mark-mode mark-active)
+	       (region-beginning))
+	   (if (and transient-mark-mode mark-active)
+	       (region-end))))))
+  (perform-replace regexp (cons 'replace-eval-replacement to-expr)
+		   t 'literal delimited nil nil (point-min) (point-max))
+)

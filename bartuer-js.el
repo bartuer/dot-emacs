@@ -493,7 +493,7 @@ can bind C-j in comint buffer"
   (yas/minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
-
+  (setq js2-mirror-mode nil)
   (make-local-variable 'suite-list)
   (js-find-suite)
   (make-local-variable 'live-edit-string)
@@ -523,11 +523,14 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
+
+  (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
   (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
   (define-key js2-mode-map "\C-c\C-b" 'send-buffer-jsh)
   (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
+
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-m" 'js2-enter-key)
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
