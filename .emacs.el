@@ -1142,3 +1142,10 @@ If give a negative ARG, will undo the last mark action, thus the
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
+
+;;; disable edit change prompt
+(defun ask-user-about-supersession-threat (fn)
+  "boldly ignore file changes on disk"
+  )
+
+(global-auto-revert-mode 1)
