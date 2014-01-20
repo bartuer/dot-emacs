@@ -44,6 +44,8 @@
  '(flymake-allowed-file-name-masks (quote (("\\.c\\'" flymake-simple-make-init) ("\\.m\\'" flymake-objc-init) ("Rakefile" flymake-ruby-init) ("\\.rb\\'" flymake-ruby-init) ("\\.js\\'" flymake-jslint-init) ("\\.xml\\'" flymake-xml-init) ("\\.plist\\'" flymake-xml-init) ("\\.html?\\'" flymake-jslint-init) ("\\.css" flymake-css-init) ("\\.cs\\'" flymake-simple-make-init) ("\\.cpp\\'" flymake-simple-make-init) ("\\.p[ml]\\'" flymake-perl-init) ("\\.php[345]?\\'" flymake-php-init) ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup) ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup) ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup) ("\\.tex\\'" flymake-simple-tex-init) ("\\.idl\\'" flymake-simple-make-init))))
  '(flymake-log-level -1)
  '(flymake-objc-compile-options (quote ("-I." "-F../Frameworks" "-I../Classes")))
+ '(ispell-dictionary "british")
+ '(ispell-program-name "aspell")
  '(flyspell-use-meta-tab nil)
  '(gdb-debug-log-max 20)
  '(gdb-enable-debug t)
