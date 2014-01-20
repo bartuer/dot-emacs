@@ -16,7 +16,7 @@
   (unless (buffer-modified-p)
     (shell-command (concat
                     "push "
-                    "'window.location.reload(true)'") nil))
+                    "'window.location.href = window.location.href'") nil))
   (save-buffer))
                     
 (define-minor-mode reload-mode
