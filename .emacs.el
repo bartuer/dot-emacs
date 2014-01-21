@@ -519,7 +519,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq-default ido-mode 'both)
   (ido-mode 1))
 
-(require 'xml-augment nil t)
+;; (require 'xml-augment nil t)
 ;; (add-hook 'sgml-mode-hook 'xml-augment-hook)
 
 (require 'bartuer-filecache nil t)
@@ -1147,14 +1147,13 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
 
-<<<<<<< HEAD
 ;;; disable edit change prompt
 (defun ask-user-about-supersession-threat (fn)
   "boldly ignore file changes on disk"
   )
 
 (global-auto-revert-mode 1)
-=======
+
 (defun hide-ctrl-M ()
   "Hides the disturbing '^M' showing up in files containing mixed UNIX and DOS line endings."
   (interactive)
@@ -1195,3 +1194,5 @@ If give a negative ARG, will undo the last mark action, thus the
   (perform-replace regexp (cons 'replace-eval-replacement to-expr)
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
+
+(require 'uuid)
