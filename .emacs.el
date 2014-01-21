@@ -519,7 +519,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq-default ido-mode 'both)
   (ido-mode 1))
 
-(require 'xml-augment nil t)
+;; (require 'xml-augment nil t)
 ;; (add-hook 'sgml-mode-hook 'xml-augment-hook)
 
 (require 'bartuer-filecache nil t)
@@ -1194,3 +1194,5 @@ If give a negative ARG, will undo the last mark action, thus the
   (perform-replace regexp (cons 'replace-eval-replacement to-expr)
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
+
+(require 'uuid)
