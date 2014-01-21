@@ -1147,14 +1147,13 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
 (require 'bartuer-page)
 
-<<<<<<< HEAD
 ;;; disable edit change prompt
 (defun ask-user-about-supersession-threat (fn)
   "boldly ignore file changes on disk"
   )
 
 (global-auto-revert-mode 1)
-=======
+
 (defun hide-ctrl-M ()
   "Hides the disturbing '^M' showing up in files containing mixed UNIX and DOS line endings."
   (interactive)
