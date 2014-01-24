@@ -158,6 +158,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(anything-visible-mark ((t (:background "green1" :foreground "black"))))
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
  '(css-property ((t (:inherit font-lock-keyword-face))))
@@ -168,6 +169,16 @@
  '(diff-file-header ((t (:background "blue" :weight bold))))
  '(diff-function ((t (:foreground "magenta"))))
  '(diff-header ((t (:background "blue"))))
+ '(ediff-current-diff-A ((t (:background "#ffdddd" :foreground "black"))))
+ '(ediff-current-diff-B ((t (:background "#ddffdd" :foreground "black"))))
+ '(ediff-current-diff-C ((t (:background "#ffffaa" :foreground "black"))))
+ '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
+ '(ediff-even-diff-B ((t (:background "Grey" :foreground "black"))))
+ '(ediff-fine-diff-A ((t (:background "#ffbbbb" :foreground "black"))))
+ '(ediff-fine-diff-B ((t (:background "#aaffaa" :foreground "black"))))
+ '(ediff-fine-diff-C ((t (:background "lightblue" :foreground "black"))))
+ '(ediff-odd-diff-A ((t (:background "Grey" :foreground "black"))))
+ '(ediff-odd-diff-C ((t (:background "Grey" :foreground "black"))))
  '(erb-face ((((class color) (min-colors 8)) nil)))
  '(flymake-errline ((((class color)) (:foreground "red"))))
  '(flymake-pos ((((class color)) (:background "yellow" :foreground "red"))))
@@ -208,6 +219,8 @@
  '(org-link ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(org-target ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
+ '(region ((t (:background "color-234"))))
+ '(smerge-markers ((t (:background "grey85" :foreground "black"))))
  '(speedbar-button-face ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "blue"))))
  '(yas/field-highlight-face ((t (:background "blue"))))
