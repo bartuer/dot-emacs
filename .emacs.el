@@ -1195,4 +1195,7 @@ If give a negative ARG, will undo the last mark action, thus the
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
 
+(require 'dos)
+
+
 (require 'uuid)
