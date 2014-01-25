@@ -35,6 +35,8 @@
  '(enable-local-eval t)
  '(eol-mnemonic-dos "(d\\r\\n)")
  '(eol-mnemonic-mac "(m\\r)")
+ '(everything-cmd "/home/bazhou/c/Program Files (x86)/Everything/Everything.exe")
+ '(everything-use-ftp t)
  '(fast-wiki-minor-mode-string " wk")
  '(file-cache-filter-regexps (quote ("~$" "\\.o$" "\\.exe$" "\\.a$" "\\.elc$" ",v$" "\\.output$" "\\.$" "#$" "\\.class$" "\\.DS_Store$" "\\.gif$" "\\.pdf$" "\\.png$" "\\.jpg$" "\\.gitignore$")))
  '(fill-column 70)

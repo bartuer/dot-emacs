@@ -1208,6 +1208,6 @@ If give a negative ARG, will undo the last mark action, thus the
 )
 
 (require 'dos)
-
+(require 'everything)
 
 (require 'uuid)
