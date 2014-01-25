@@ -265,7 +265,7 @@ otherwise."
                           everything-matchcase
                           everything-matchwholeword
                           everything-matchpath))
-  (save-excursion
+  (save-excursion         
     (set-buffer (get-buffer-create everything-result-buffer))
     (goto-char (point-min))
     (while (search-forward "\\" nil t)  ;; we dont want crappy backslashes in our path names

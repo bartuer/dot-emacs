@@ -221,7 +221,7 @@
  '(org-link ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(org-target ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
- '(region ((t (:background "color-234"))))
+ '(region ((t (:background "color-240"))))
  '(smerge-markers ((t (:background "grey85" :foreground "black"))))
  '(speedbar-button-face ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(which-func ((((background dark)) (:background "yellow" :foreground "blue"))))
