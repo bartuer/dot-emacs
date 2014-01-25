@@ -637,7 +637,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (defalias 'u (lambda (url-content-insert-location)
                (interactive "surl: ")
-               (shell-command  (concat "curl " url-content-insert-location " 2>/dev/null")
+               (shell-command  (concat "curl -n --ntlm -k " url-content-insert-location " 2>/dev/null")
                                (get-buffer-create "preview-url") (get-buffer "*Shell Command Output*"))
                (with-current-buffer "preview-url"
                  (goto-char (point-min))
