@@ -1,0 +1,151 @@
+
+Chrome key bindings
+
+Ctrl+N                                 Open a new window
+Ctrl+Shift+N                           Open a new window in incognito mode
+Ctrl+T                                 Open a new tab
+Ctrl+O                                 Open a file in the browser
+
+Ctrl+Shift+Q (twice)                   Sign out of your Google Account on
+                                       Chrome OS
+Ctrl+W                                 Close the current tab
+Ctrl+Shift+W                           Close the current window
+                                       Reopen the last tab you've closed.
+Ctrl+Shift+T                           Google Chrome remembers the last 10 tabs
+                                       you've closed.
+Ctrl+1 through Ctrl+8                  Go to the tab at the specified position
+                                       in the window
+Ctrl+9                                 Go to the last tab in the window
+Alt+1 through Alt+8                    Go to the window at the specified
+                                       position
+Alt+9                                  Go to the last window open
+Ctrl+Tab                               Go to the next tab in the window
+Ctrl+Shift+Tab                         Go to the previous tab in the window
+Alt+Tab                                Go to the next window you have open
+Alt+Shift+Tab                          Go to the previous window you have open
+Click and hold the Back or Forward     See your browsing history for the tab
+arrow in the browser toolbar
+Backspace, or press Alt and the left   Go to previous page in your browsing
+arrow                                  history.
+Shift+Backspace, or press Alt and the  Go to the next page in your browsing
+right arrow                            history.
+Press Ctrl and click a link            Open the link in a new tab in the
+                                       background
+Press Ctrl+Shift and click a link      Open the link in a new tab and switch to
+                                       the newly opened tab
+Press Shift and click a link           Open the link in a new window
+Drag a link to a tab                   Open the link in the tab
+Drag a link to a blank area on the tab Open the link in a new tab
+strip
+Type a URL in the address bar, then    Open the URL in a new tab
+press Alt+Enter
+Press Esc while dragging a tab         Return the tab to its original position
+Ctrl+Shift+L                           Locks your screenPage shortcutsPress Alt and up arrow
+                                       Page up
+Press Alt and down arrow           Page down
+Space bar                          Scroll down the web page
+Press Ctrl+Alt and up arrow        Home
+Press Ctrl+Alt and down arrow      End
+Ctrl+P                             Print your current page
+Ctrl+S                             Save your current page
+Ctrl+R                             Reload your current page
+Ctrl+Shift+R                       Reload your current page without using
+                                   cached content
+Ctrl and +                         Zoom in on the page
+Ctrl and -                         Zoom out on the page
+Ctrl+0                             Reset zoom level
+Esc                                Stop the loading of your current page
+PressAlt and click a link          Open the link in a new tab in the background
+Ctrl+D                             Save your current webpage as a bookmark
+Ctrl+Shift+D                       Save all open pages in your current window
+                                   as bookmarks in a new folder
+Drag a link to bookmarks bar       Save the link as a bookmark
+Ctrl+F                             Open the find bar to search your current
+                                   page
+Ctrl+G or Enter                    Go to the next match for your input in the
+                                   find bar
+Ctrl+Shift+G or Shift+Enter        Go to the previous match for your input in
+                                   the find bar
+                                   Perform a search. Type a search term after
+Ctrl+K or Ctrl+E                   the question mark in the address bar and
+                                   press Enter.
+Ctrl+Enter                         Add www. and .com to your input in the
+                                   address bar and open the resulting URL
+Ctrl+  window switcher key         Take a screenshot of your current page
+Ctrl+ Shift+  window switcher key  Take a partial screenshot
+Ctrl+U                             View page source
+Ctrl+Shift+I                       Toggle the display of the Developer Tools
+                                   panel
+
+
+Ctrl+Shift+J                       Toggle the display of the DOM InspectorBrowser settings                                        Toggle the display of the bookmarks
+Ctrl+Shift+B                            bar. Bookmarks appear on the New Tab
+                                        page if the bar is hidden.
+Alt+Shift+M                             Open the Files app
+Ctrl+.                                  Display hidden files in the Files app
+Ctrl+H                                  Open the History page
+Ctrl+J                                  Open the Downloads page
+Shift+Esc                               Open the Task Manager
+Ctrl+Alt+/                              Open the list of available keyboard
+                                        shortcuts
+Ctrl+?                                  Go to the Help Center
+Ctrl+ maximize key                      Configure monitor display
+Shift+Alt+S                             Opens the status area in the bottom-
+                                        right corner of the screen.
+                                        Place focus on the launcher                                        * Press Tab or the right arrow to focus
+                                          on the next item in the toolbar
+                                        * Press Shift+Tab or the left arrow to
+                                          focus on the previous item in the
+                                          toolbar
+Shift+Alt+L                             * Press Space or Enter to activate
+                                          buttons, including page actions and
+                                          browser actions
+                                        * Press Shift +  increase volume key
+                                          to open the context menu for the
+                                          button (if available).
+                                        * Press Esc to return focus to the page                                        Pressing Ctrl and either the back or
+                                        forward keys switches focus to the next
+                                        keyboard-accessible pane. Panes
+                                        include:                                        * Status area containing the time,
+Ctrl +  back button  or Ctrl +  forward   network icon, and battery icon in the
+button                                    bottom-right corner of the screen
+                                        * Launcher
+                                        * Address bar
+                                        * Bookmarks bar (if visible)
+                                        * The main web content (including any
+                                          infobars)
+                                        * Downloads bar (if visible)                                        Place focus on the bookmarks bar. Use
+Alt+Shift+B                             the actions listed for Shift+Alt+T to
+                                        move the focus.
+Alt+E or Alt+F                          Open the Chrome menu on the browser
+                                        toolbar
+Shift+Search+Volume Up                  Open right-click menus for focused
+                                        items.
+                                        Enable or disable accessibility
+                                        features if you're not signed in with a
+Ctrl+Alt+Z                              Google Account. If you're signed in,
+                                        you can configure the accessibility
+                                        feature on the Settings page.
+Ctrl+Shift and +                        Increase screen scale
+Ctrl+Shift and -                        Decrease screen scale
+Ctrl+Shift and )                        Reset screen scale
+Ctrl+Shift and Refresh                  Rotate screen 90 degreesText editingCtrl+A                             Select everything on the page
+Ctrl+L or Alt+D                    Select the content in the address bar
+Press Ctrl+Shift and right arrow   Select next word or letter
+Press Shift+Search and right arrow Select text to the end of the line
+Press Shift+Search and left arrow  Select text to the beginning of the line
+Press Ctrl+Shift and left arrow    Select previous word or letter
+Press Ctrl and right arrow         Move to the end of the next word
+Press Ctrl and left arrow          Move to the start of the previous word
+Press Alt and up arrow             Page up
+Press Alt and down arrow           Page down
+Press Ctrl+Alt and up arrow        Home
+Press Ctrl+Alt and down arrow      End
+Ctrl+C                             Copy selected content to the clipboard
+Ctrl+V                             Paste content from the clipboard
+Ctrl+Shift+V                       Paste content from the clipboard as plain
+                                   text
+Ctrl+X                             Cut
+Ctrl+Backspace                     Delete the previous word
+Alt+Backspace                      Delete the next letter (forward delete)
+Ctrl+Z                             Undo your last action
