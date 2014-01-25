@@ -177,7 +177,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key [(f5)] 'compile)
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
-(global-set-key "\M-5" 'comint-previous-matching-input)
+(global-set-key "\M-5" 'everything-find-file)
 
 (defun do-ql-dwim()
   (interactive)
@@ -1207,7 +1207,7 @@ If give a negative ARG, will undo the last mark action, thus the
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
 
+(require 'uuid)
 (require 'dos)
 (require 'everything)
 
-(require 'uuid)
