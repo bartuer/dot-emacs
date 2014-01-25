@@ -244,7 +244,7 @@ If query is already an existing file, return it without running a query."
 	    ((eq (length files) 1)
 	     (car files))
 	    (t
-	     (completing-read (format "Select from query '%s' (%s matches): " query (length files))
+	     (ido-completing-read (format "Select from query '%s' (%s matches): " query (length files))
 			      files nil nil (when (eq (length files) 1)
 					      (car files))))))))
 
@@ -270,9 +270,19 @@ otherwise."
     (goto-char (point-min))
     (while (search-forward "\\" nil t)  ;; we dont want crappy backslashes in our path names
       (replace-match "/" nil t))
+    (goto-char (point-min))
+    (while (search-forward "" nil t)
+      (replace-match "" nil t))
+    (goto-char (point-min))
+    (while (search-forward "C:" nil t)
+      (replace-match "/cygdrive/c" t t))
+    (goto-char (point-min))
+    (while (search-forward "\\" nil t)
+      (replace-match "/" nil t))
     (run-hooks 'everything-post-process-hook)
     (split-string
-     (buffer-substring-no-properties (point-min) (point-max)) "\n" t)))
+                  (buffer-substring-no-properties (point-min) (point-max)) "\n" t)
+    ))
 
 
 ;; es.exe parameters
