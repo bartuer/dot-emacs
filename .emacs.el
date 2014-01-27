@@ -816,8 +816,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-commonlisp-load "~/etc/el/bartuer-commonlisp.el"
   "mode for commonlisp mode" t nil)
 (add-hook 'commonlisp-mode-hook 'bartuer-commonlisp-load)
-(slime-setup '(slime-js slime-repl slime-fancy slime-fuzzy))
-
+(slime-setup '(slime-repl))
 
 (require 'redis nil t)
 (require 'css-mode nil t)
