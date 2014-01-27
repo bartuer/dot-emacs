@@ -811,6 +811,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'python-mode-hook 'bartuer-python-load)
 (add-to-list 'auto-mode-alist '("\.py$" . python-mode))
 
+(require 'slime)
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(autoload 'bartuer-commonlisp-load "~/etc/el/bartuer-commonlisp.el"
+  "mode for commonlisp mode" t nil)
+(add-hook 'commonlisp-mode-hook 'bartuer-commonlisp-load)
+(slime-setup '(slime-js slime-repl slime-fancy slime-fuzzy))
+
+
 (require 'redis nil t)
 (require 'css-mode nil t)
 (autoload 'bartuer-css-load "~/etc/el/bartuer-css.el" t)
@@ -1211,4 +1219,3 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'uuid)
 (require 'dos)
 (require 'everything)
-

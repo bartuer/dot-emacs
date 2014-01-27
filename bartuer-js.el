@@ -492,6 +492,7 @@ can bind C-j in comint buffer"
     (flyspell-prog-mode))
   (yas/minor-mode-on)
   (flymake-mode t)
+  (slime-js-minor-mode 1)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
   (make-local-variable 'suite-list)

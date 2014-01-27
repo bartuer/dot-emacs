@@ -52,12 +52,6 @@ maintain."
   :type '(boolean)
   :group 'slime-repl)
 
-(defcustom slime-repl-auto-right-margin nil
-  "When T we bind CL:*PRINT-RIGHT-MARGIN* to the width of the
-current repl's (as per slime-output-buffer) window."
-  :type '(boolean)
-  :group 'slime-repl)
-
 (defface slime-repl-prompt-face
   (if (slime-face-inheritance-possible-p)
       '((t (:inherit font-lock-keyword-face)))
@@ -190,8 +184,7 @@ current repl's (as per slime-output-buffer) window."
   (let ((stream (open-network-stream "*lisp-output-stream*" 
                                      (slime-with-connection-buffer ()
                                        (current-buffer))
-				     (car (process-contact (slime-connection)))
-                                     port))
+				     slime-lisp-host port))
         (emacs-coding-system (car (find coding-system
                                         slime-net-valid-coding-systems
                                         :key #'third))))
@@ -453,8 +446,7 @@ joined together."))
   ("\C-c\C-u" 'slime-repl-kill-input)
   ("\C-c\C-n" 'slime-repl-next-prompt)
   ("\C-c\C-p" 'slime-repl-previous-prompt)
-  ("\C-c\C-z" 'slime-nop)
-  ("\C-cI" 'slime-repl-inspect))
+  ("\C-c\C-z" 'slime-nop))
 
 (slime-define-keys slime-inspector-mode-map
   ((kbd "M-RET") 'slime-inspector-copy-down-to-repl))
@@ -532,13 +524,7 @@ joined together."))
 
 (defun slime-repl-eval-string (string)
   (slime-rex ()
-      ((if slime-repl-auto-right-margin
-           `(swank:listener-eval ,string
-                                 :window-width
-                                 ,(with-current-buffer (slime-output-buffer)
-                                    (window-width)))
-           `(swank:listener-eval ,string))
-       (slime-lisp-package))
+      ((list 'swank:listener-eval string) (slime-lisp-package))
     ((:ok result)
      (slime-repl-insert-result result))
     ((:abort condition)
@@ -564,8 +550,7 @@ joined together."))
       (slime-save-marker slime-output-start
         (slime-save-marker slime-output-end
           (goto-char slime-output-end)
-          (insert-before-markers (format "; Evaluation aborted on %s.\n"
-                                         condition))
+          (insert-before-markers (format "; Evaluation aborted on %s.\n" condition))
           (slime-repl-insert-prompt))))
     (slime-repl-show-maximum-output)))
 
@@ -589,8 +574,7 @@ If `slime-repl-suppress-prompt' is true, does nothing and returns nil."
               '(face slime-repl-prompt-face read-only t intangible t
                      slime-repl-prompt t
                      ;; emacs stuff
-                     rear-nonsticky (slime-repl-prompt read-only face
-                                     intangible)
+                     rear-nonsticky (slime-repl-prompt read-only face intangible)
                      ;; xemacs stuff
                      start-open t end-open t)
             (insert-before-markers prompt))
@@ -1527,8 +1511,7 @@ expansion will be added to the REPL's history.)"
                               name))
                   (qualified-symbol-name (slime-qualify-cl-symbol-name symbol))
                   (symbol-name (slime-cl-symbol-name qualified-symbol-name))
-                  (symbol-package (slime-cl-symbol-package
-                                   qualified-symbol-name))
+                  (symbol-package (slime-cl-symbol-package qualified-symbol-name))
                   (call (if (equalp (slime-lisp-package) symbol-package)
                             symbol-name
                             qualified-symbol-name)))
@@ -1602,8 +1585,7 @@ expansion will be added to the REPL's history.)"
   (interactive)
   (let* ((package (slime-current-package))
          (exists-p (or (null package)
-                       (slime-eval `(cl:packagep
-                                     (swank::guess-package ,package)))))
+                       (slime-eval `(cl:packagep (swank::guess-package ,package)))))
          (directory default-directory))
     (when (and package exists-p)
       (slime-repl-set-package package))
@@ -1735,29 +1717,12 @@ If the current buffer is not a REPL, don't do anything."
 (defun slime-repl-add-hooks ()
   (add-hook 'slime-event-hooks 'slime-repl-event-hook-function)
   (add-hook 'slime-connected-hook 'slime-repl-connected-hook-function)
-  (add-hook 'slime-cycle-connections-hook
-            'slime-change-repl-to-default-connection))
+  (add-hook 'slime-cycle-connections-hook 'slime-change-repl-to-default-connection))
 
 (defun slime-repl-remove-hooks ()
   (remove-hook 'slime-event-hooks 'slime-repl-event-hook-function)
   (remove-hook 'slime-connected-hook 'slime-repl-connected-hook-function)
-  (remove-hook 'slime-cycle-connections-hook
-               'slime-change-repl-to-default-connection))
-
-(defun slime-repl-sexp-at-point ()
-  "Returns the current sexp at point (or NIL if none is found)
-while ignoring the repl prompt text."
-  (if (<= slime-repl-input-start-mark (point))
-      (save-restriction
-        (narrow-to-region slime-repl-input-start-mark (point-max))
-        (slime-sexp-at-point))
-    (slime-sexp-at-point)))
-
-(defun slime-repl-inspect (string)
-  (interactive 
-   (list (slime-read-from-minibuffer "Inspect value (evaluated): "
-                                     (slime-repl-sexp-at-point))))
-  (slime-inspect string))
+  (remove-hook 'slime-cycle-connections-hook 'slime-change-repl-to-default-connection))
 
 (let ((byte-compile-warnings '()))
   (mapc #'byte-compile
@@ -2024,8 +1989,7 @@ SWANK> [*foo]"))
     (slime-wait-condition "Debugger visible" 
                           (lambda () 
                             (and (slime-sldb-level= 1)
-                                 (get-buffer-window
-                                  (sldb-get-default-buffer))))
+                                 (get-buffer-window (sldb-get-default-buffer))))
                           5)
     (with-current-buffer (sldb-get-default-buffer)
       (sldb-continue))

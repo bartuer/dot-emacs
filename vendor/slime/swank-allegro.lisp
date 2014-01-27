@@ -29,17 +29,13 @@
 
 ;;;; UTF8
 
-(define-symbol-macro utf8-ef 
-    (load-time-value 
-     (excl:crlf-base-ef (excl:find-external-format :utf-8))
-     t))
-
 (defimplementation string-to-utf8 (s)
-  (excl:string-to-octets s :external-format utf8-ef 
-                         :null-terminate nil))
+  (let ((ef (load-time-value (excl:find-external-format :utf-8) t)))
+    (excl:string-to-octets s :external-format ef)))
 
 (defimplementation utf8-to-string (u)
-  (excl:octets-to-string u :external-format utf8-ef))
+  (let ((ef (load-time-value (excl:find-external-format :utf-8) t)))
+    (excl:octets-to-string u :external-format ef)))
 
 
 ;;;; TCP Server
@@ -85,6 +81,12 @@
             (excl:find-external-format (car e) 
                                        :try-variant t)))))
 
+(defimplementation format-sldb-condition (c)
+  (princ-to-string c))
+
+(defimplementation call-with-syntax-hooks (fn)
+  (funcall fn))
+
 ;;;; Unix signals
 
 (defimplementation getpid ()
@@ -108,9 +110,6 @@
     (simple-error () :not-available)))
 
 (defimplementation macroexpand-all (form)
-  #+(version>= 8 0)
-  (excl::walk-form form)
-  #-(version>= 8 0)
   (excl::walk form))
 
 (defimplementation describe-symbol-for-emacs (symbol)
@@ -140,11 +139,6 @@
     (:class
      (describe (find-class symbol)))))
 
-(defimplementation type-specifier-p (symbol)
-  (or (ignore-errors
-       (subtypep nil symbol))
-      (not (eq (type-specifier-arglist symbol) :not-available))))
-
 ;;;; Debugger
 
 (defvar *sldb-topframe*)
@@ -169,11 +163,11 @@
                               (find-package :swank)))
         (top-frame (excl::int-newest-frame (excl::current-thread))))
     (loop for frame = top-frame then (next-frame frame)
+          for name  = (debugger:frame-name frame)
           for i from 0
-          while (and frame (< i 30))
-          when (eq (debugger:frame-name frame) magic-symbol)
+          when (eq name magic-symbol)
             return (next-frame frame)
-          finally (return top-frame))))
+          until (= i 10) finally (return top-frame))))
 
 (defun next-frame (frame)
   (let ((next (excl::int-next-older-frame frame)))
@@ -216,29 +210,27 @@
   (let* ((frame (nth-frame index)))
     (multiple-value-bind (x fun xx xxx pc) (debugger::dyn-fd-analyze frame)
       (declare (ignore x xx xxx))
-      (cond ((and pc
-                  #+(version>= 8 2)
-                  (pc-source-location fun pc)
-                  #-(version>= 8 2)
-                  (function-source-location fun)))
+      (cond (pc
+             #+(version>= 8 2)
+             (pc-source-location fun pc)
+             #-(version>= 8 2)
+             (function-source-location fun))
             (t ; frames for unbound functions etc end up here
              (cadr (car (fspec-definition-locations
                          (car (debugger:frame-expression frame))))))))))
 
 (defun function-source-location (fun)
-  (cadr (car (fspec-definition-locations 
-              (xref::object-to-function-name fun)))))
+  (cadr (car (fspec-definition-locations (xref::object-to-function-name fun)))))
 
 #+(version>= 8 2)
 (defun pc-source-location (fun pc)
   (let* ((debug-info (excl::function-source-debug-info fun)))
     (cond ((not debug-info)
            (function-source-location fun))
-          (t
+          (t 
            (let* ((code-loc (find-if (lambda (c)
                                        (<= (- pc (sys::natural-width))
-                                           (let ((x (excl::ldb-code-pc c)))
-                                             (or x -1))
+                                           (excl::ldb-code-pc c)
                                            pc))
                                      debug-info)))
              (cond ((not code-loc)
@@ -248,35 +240,28 @@
 
 #+(version>= 8 2)
 (defun ldb-code-to-src-loc (code)
-  (declare (optimize debug))
-  (let* ((func (excl::ldb-code-func code))
-         (debug-info (excl::function-source-debug-info func))
-         (start (loop for i from (excl::ldb-code-index code) downto 0
-                      for bpt = (aref debug-info i)
-                      for start = (excl::ldb-code-start-char bpt)
-                      when start return start))
+  (let* ((start (excl::ldb-code-start-char code))
+         (func (excl::ldb-code-func code))
          (src-file (excl:source-file func)))
-    (cond (start
+    (cond (start 
            (buffer-or-file-location src-file start))
-          (func
+          (t
            (let* ((debug-info (excl::function-source-debug-info func))
                   (whole (aref debug-info 0))
                   (paths (source-paths-of (excl::ldb-code-source whole)
                                           (excl::ldb-code-source code)))
-                  (path (if paths (longest-common-prefix paths) '()))
-                  (start 0))
-             (buffer-or-file
-              src-file
-              (lambda (file)
-                (make-location `(:file ,file)
+                  (path (longest-common-prefix paths))
+                  (start (excl::ldb-code-start-char whole)))
+             (buffer-or-file 
+              src-file 
+              (lambda (file) 
+                (make-location `(:file ,file) 
                                `(:source-path (0 . ,path) ,start)))
               (lambda (buffer bstart)
                 (make-location `(:buffer ,buffer)
                                `(:source-path (0 . ,path)
-                                              ,(+ bstart start)))))))
-          (t
-           nil))))
-
+                                              ,(+ bstart start))))))))))
+ 
 (defun longest-common-prefix (sequences)
   (assert sequences)
   (flet ((common-prefix (s1 s2)
@@ -300,19 +285,11 @@
     ;; let-bind lexical variables
     (let ((vars (loop for i below (debugger:frame-number-vars frame)
                       for name = (debugger:frame-var-name frame i)
-                      if (typep name '(and symbol (not null) (not keyword)))
+                      if (symbolp name)
                       collect `(,name ',(debugger:frame-var-value frame i)))))
-      (debugger:eval-form-in-context
+      (debugger:eval-form-in-context 
        `(let* ,vars ,form)
        (debugger:environment-of-frame frame)))))
-
-(defimplementation frame-package (frame-number)
-  (let* ((frame (nth-frame frame-number))
-         (exp (debugger:frame-expression frame)))
-    (typecase exp
-      ((cons symbol) (symbol-package (car exp)))
-      ((cons (cons (eql :internal) (cons symbol)))
-       (symbol-package (cadar exp))))))
 
 (defimplementation return-from-frame (frame-number form)
   (let ((frame (nth-frame frame-number)))
@@ -359,20 +336,13 @@
   `(satisfies redefinition-p))
 
 (defun signal-compiler-condition (&rest args)
-  (apply #'signal 'compiler-condition args))
+  (signal (apply #'make-condition 'compiler-condition args)))
 
 (defun handle-compiler-warning (condition)
   (declare (optimize (debug 3) (speed 0) (space 0)))
-  (cond ((and (not *buffer-name*)
+  (cond ((and (not *buffer-name*) 
               (compiler-undefined-functions-called-warning-p condition))
          (handle-undefined-functions-warning condition))
-        ((and (typep condition 'excl::compiler-note)
-              (let ((format (slot-value condition 'excl::format-control)))
-                (and (search "Closure" format)
-                     (search "will be stack allocated" format))))
-         ;; Ignore "Closure <foo> will be stack allocated" notes.
-         ;; That occurs often but is usually uninteresting.
-         )
         (t
          (signal-compiler-condition
           :original-condition condition
@@ -384,7 +354,7 @@
                       (reader-error  :read-error)
                       (error         :error))
           :message (format nil "~A" condition)
-          :location (if (typep condition 'reader-error)
+          :location (if (typep condition 'reader-error) 
                         (location-for-reader-error condition)
                         (location-for-warning condition))))))
 
@@ -560,8 +530,7 @@
                  (t
                   (find-definition-in-file fspec type file top-level)))))
         ((member :top-level)
-         (make-error-location "Defined at toplevel: ~A" 
-                              (fspec->string fspec))))
+         (make-error-location "Defined at toplevel: ~A" (fspec->string fspec))))
     (error (e)
       (make-error-location "Error: ~A" e))))
 
@@ -674,8 +643,7 @@
 ;;;; Profiling
 
 ;; Per-function profiling based on description in
-;;  http://www.franz.com/support/documentation/8.0/\
-;;  doc/runtime-analyzer.htm#data-collection-control-2
+;;  http://www.franz.com/support/documentation/8.0/doc/runtime-analyzer.htm#data-collection-control-2
 
 (defvar *profiled-functions* ())
 (defvar *profile-depth* 0)

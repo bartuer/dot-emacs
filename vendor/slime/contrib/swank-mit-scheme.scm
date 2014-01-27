@@ -420,11 +420,10 @@
 (define (swank:operator-arglist socket name pack)
   (let ((v (ignore-errors
 	    (lambda ()
-              (string-trim-right
-               (with-output-to-string
-                 (lambda ()
-                   (carefully-pa
-                    (eval (read-from-string name) (user-env pack))))))))))
+	      (with-output-to-string 
+		(lambda ()
+		  (carefully-pa 
+		   (eval (read-from-string name) (user-env pack)))))))))
     (if (condition? v) 'nil v)))
 
 (define (carefully-pa o)
