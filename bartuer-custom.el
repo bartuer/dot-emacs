@@ -1,9 +1,9 @@
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
@@ -142,6 +142,8 @@
 ]+")
  '(sgml-tag-alist (quote (("![" ("ignore" t) ("include" t)) ("!attlist") ("!doctype") ("!element") ("!entity"))))
  '(size-indication-mode t)
+ '(slime-complete-symbol-function (quote slime-simple-complete-symbol))
+ '(slime-net-coding-system (quote utf-8-unix))
  '(smtpmail-auth-credentials "~/.authinfo")
  '(smtpmail-debug-info t)
  '(smtpmail-debug-verb t)
@@ -156,10 +158,10 @@
  '(view-read-only t))
  
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
  '(anything-visible-mark ((t (:background "green1" :foreground "black"))))
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))

@@ -811,12 +811,20 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'python-mode-hook 'bartuer-python-load)
 (add-to-list 'auto-mode-alist '("\.py$" . python-mode))
 
+
 (require 'slime)
+
+(require 'ac-slime)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(eval-after-load "auto-complete"
+       '(add-to-list 'ac-modes 'slime-repl-mode))
+
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
 (autoload 'bartuer-commonlisp-load "~/etc/el/bartuer-commonlisp.el"
   "mode for commonlisp mode" t nil)
 (add-hook 'commonlisp-mode-hook 'bartuer-commonlisp-load)
-(slime-setup '(slime-repl))
+(slime-setup '(slime-js slime-repl))
 
 (require 'redis nil t)
 (require 'css-mode nil t)

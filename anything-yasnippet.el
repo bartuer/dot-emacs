@@ -228,6 +228,18 @@
             (jct-current-line) )) "__JCT_NEWLINE__")
   )
 
+(defun anything-slime-complete-symbol ()
+  (interactive)
+  (let* ((end (point))
+         (beg (scan-sexps (point) -1))
+         (prefix (buffer-substring-no-properties beg end))
+         (result (slime-simple-completions prefix)))
+    (mapcar* (lambda (item)
+              (cons item (substring-no-properties item (length prefix) (length item)))) (car result))
+
+    ) 
+  )
+
 (setq anything-c-source-complete-introspect-js 
       '((name . "Introspect Completion")
         (candidates 
@@ -239,10 +251,8 @@
            (condition-case x
                ;; should be depend on the mode, for inf-mozrepl-mode, should use it's own inspect function
                (setq anything-yasnippet-introspect-table
-                     (mapcar 
-                      'anything-js-introspect-parser
-                      (prepare-js-completion-line)
-                      ))
+                     (anything-slime-complete-symbol)
+                     )
              (error (setq anything-yasnippet-introspect-table nil))
              )
            )

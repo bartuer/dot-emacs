@@ -492,7 +492,6 @@ can bind C-j in comint buffer"
     (flyspell-prog-mode))
   (yas/minor-mode-on)
   (flymake-mode t)
-  (slime-js-minor-mode 1)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
   (make-local-variable 'suite-list)
@@ -527,8 +526,10 @@ can bind C-j in comint buffer"
 
   (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
   (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
+
   (define-key js2-mode-map "\C-c\C-b" 'send-buffer-jsh)
   (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
+
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
 
