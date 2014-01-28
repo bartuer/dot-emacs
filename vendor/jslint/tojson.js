@@ -1,10 +1,15 @@
-(function(a) {
-    var input = read(a[0]);
+var sys = require('sys');
+var fs = require('fs');
+
+function jstojson(a) {
+    var input = fs.readFileSync(a, 'utf-8');
     if (!input) {
-        print("tojson: Couldn't open file '");
-        quit(1);
+        sys.print("tojson: Couldn't open file '");
+        process.exit(1);
     }
     var json_statement = eval("object_hold_string = " + input);
-    print(JSON.stringify(json_statement));
+    sys.print(JSON.stringify(json_statement));
 
-} (arguments));
+};
+
+jstojson(process.argv[2]);

@@ -5207,7 +5207,7 @@ loop:   for (;;) {
 
     itself.dump = function () {
         for (var i = 0; i < lines.length; i += 1) {
-             print(lines[i]);
+             sys.print(lines[i]);
         }
     };
 
@@ -5215,15 +5215,19 @@ loop:   for (;;) {
     return itself;
 
 }());
-(function(a) {
-    if (!a[0]) {
-        print("Usage: jslint.js file.js");
-        quit(1);
+
+var fs = require('fs');
+var sys = require('sys');
+
+function jscorrect(a) {
+    if (!a[2]) {
+        sys.print("usage: jslint.js file.js");
+        process.exit(1);
     }
-    var input = read(a[0]);
+    var input = fs.readFileSync(a[2], 'utf-8');
     if (!input) {
-        print("jslint: Couldn't open file '" + a[0] + "'.");
-        quit(1);
+        sys.print("jslint: Couldn't open file '" + a[2] + "'");
+        process.exit(1);
     }
     if (!JSLINT(input, {
             adsafe     : false,
@@ -5255,9 +5259,11 @@ loop:   for (;;) {
             widget     : false
     })) {
         JSLINT.dump();
-        quit(2);
+        process.exit(2);
     } else {
-        print("jslint: No problems found in " + a[0]);
-        quit();
+        sys.print("jslint: No problems found in " + a[2]);
+        process.exit(0);
     }
-} (arguments));
+}
+
+jscorrect(process.argv);

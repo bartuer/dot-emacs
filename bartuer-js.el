@@ -327,7 +327,7 @@ wrap block add semicolon correct plus and equal"
       (insert content)
       (let ((indent-col (current-column)))
         (write-region start end "/tmp/d8-temp.js")
-        (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jscorrect.js -- /tmp/d8-temp.js" t)))
+        (shell-command-on-region start end "~/local/bin/uki_jscorrect" t)))
     (ediff-buffers (get-buffer (buffer-name))
                    (get-buffer-create (concat (buffer-name) "-correct")))))
 
@@ -339,26 +339,11 @@ wrap block add semicolon correct plus and equal"
     (setq end (region-end)))
   (let ((indent-col (current-column)))
     (write-region start end "/tmp/d8-temp.js")
-    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsindent.js -- /tmp/d8-temp.js" t)
+    (shell-command-on-region start end "~/local/bin/uki_jsindent" t)
     (indent-rigidly start (point) indent-col)
-    (delete-backward-char 1)
     )
   )
-
-(defun js-beautify (&optional start end)
-  "invoke jsbeautify to indent"
-  (interactive)
-  (when (eq start nil)
-    (setq start (region-beginning))
-    (setq end (region-end)))
-  (let ((indent-col (current-column)))
-    (write-region start end "/tmp/d8-temp.js")
-    (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/jsbeautify.js -- -a -p -n -i 2 /tmp/d8-temp.js" t)
-    (indent-rigidly start (point) indent-col)
-    (delete-backward-char 1)
-    )
-  )
-
+  
 (defun js-to-json (&optional start end)
   "convert region to json string"
   (interactive)
@@ -366,7 +351,7 @@ wrap block add semicolon correct plus and equal"
     (setq start (region-beginning))
     (setq end (region-end)))
   (write-region start end "/tmp/d8-temp.js")
-  (shell-command-on-region start end "d8 ~/etc/el/vendor/jslint/tojson.js --  /tmp/d8-temp.js" "*json*" nil)
+  (shell-command-on-region start end "~/local/bin/uki_js2json" "*json*" nil)
   (with-current-buffer "*json*"
     (goto-char (point-min))
     (if (equal (thing-at-point 'char) "{") 
