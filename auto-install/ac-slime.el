@@ -99,6 +99,17 @@
     (match . ac-source-slime-case-correcting-completions))
   "Source for slime completion.")
 
+(defvar ac-source-slime-js-simple
+  '((init . ac-slime-init)
+    (candidates . ac-source-slime-simple-candidates)
+    (candidate-face . ac-slime-menu-face)
+    (selection-face . ac-slime-selection-face)
+    (prefix . slime-js-complete-symbol-prefix-at-point)
+    (symbol . "l")
+    (document . ac-slime-documentation)
+    (match . ac-source-slime-case-correcting-completions))
+  "Source for slime completion.")
+
 
 ;;;###autoload
 (defun set-up-slime-ac (&optional fuzzy)
@@ -109,6 +120,12 @@
                    'ac-source-slime-fuzzy
                  'ac-source-slime-simple)))
 
+(defun set-up-slime-js-ac (&optional fuzzy)
+  "Add an optionally-fuzzy slime completion source to `ac-sources'."
+  (interactive)
+  (add-to-list 'ac-sources
+               'ac-source-slime-js-simple
+               ))
 
 (provide 'ac-slime)
 

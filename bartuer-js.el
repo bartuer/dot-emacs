@@ -482,6 +482,10 @@ can bind C-j in comint buffer"
     (set-marker overlay-arrow-position (point)))
   (pop-to-buffer "*d8r*"))
 
+(defun slime-js-complete-symbol-prefix-at-point ()
+  
+)
+
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -498,7 +502,7 @@ can bind C-j in comint buffer"
   (js-find-suite)
   (make-local-variable 'live-edit-string)
   (js-find-live-edit-string)
-  
+  (set-up-slime-js-ac)
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
   (defalias  'pu (lambda () (interactive)

@@ -231,7 +231,7 @@
 (defun anything-slime-complete-symbol ()
   (interactive)
   (let* ((end (point))
-         (beg (scan-sexps (point) -1))
+         (beg (slime-js-complete-symbol-prefix-at-point))
          (prefix (buffer-substring-no-properties beg end))
          (result (slime-simple-completions prefix)))
     (mapcar* (lambda (item)
