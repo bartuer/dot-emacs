@@ -4442,15 +4442,20 @@ var JSLINT = (function() {
     };
     itself.edition = '2009-06-14';
     return itself;
-} ()); (function(a) {
-    if (!a[0]) {
-        print("Usage: jslint.js file.js");
-        quit(1);
+} ());
+
+var fs = require('fs');
+var sys = require('sys');
+
+function js_flymake(a) {
+    if (!a[2]) {
+        sys.print("Usage: jslint.js file.js");
+        process.exit(1);
     }
-    var input = read(a[0]);
+    var input = fs.readFileSync(a[2], 'utf-8');
     if (!input) {
-        print("jslint: Couldn't open file '" + a[0] + "'.");
-        quit(1);
+        sys.print("jslint: Couldn't open file '" + a[2] + "'.");
+        process.exit(1);
     }
     if (!JSLINT(input, {
         bitwise: true,
@@ -4468,14 +4473,17 @@ var JSLINT = (function() {
         for (var i = 0; i < JSLINT.errors.length; i += 1) {
             var e = JSLINT.errors[i];
             if (e) {
-                print('Lint at line ' + (e.line + 1) + ' character ' + (e.character + 1) + ': ' + e.reason);
-                print((e.evidence || '').replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
-                print('');
+
+                sys.print('Lint at line ' + (e.line + 1) + ' character ' + (e.character + 1) + ': ' + e.reason);
+                sys.print((e.evidence || '').replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
+                sys.print('');
             }
         }
-        quit(2);
+        process.exit(2);
     } else {
-        print("jslint: No problems found in " + a[0]);
-        quit();
+        sys.print("jslint: No problems found in " + a[0]);
+        process.exit(0);
     }
-} (arguments));
+}
+
+js_flymake(process.argv);
