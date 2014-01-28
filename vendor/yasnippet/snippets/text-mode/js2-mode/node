@@ -1,0 +1,4 @@
+# name: node  basic fs and process
+# --
+var fs = require('fs');
+var sys = require('sys');
