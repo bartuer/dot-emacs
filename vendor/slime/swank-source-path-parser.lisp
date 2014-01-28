@@ -48,9 +48,7 @@ before and after of calling FN in the hashtable SOURCE-MAP."
     (let ((start (1- (file-position stream)))
 	  (values (multiple-value-list (funcall fn stream char)))
 	  (end (file-position stream)))
-      #+(or)
-      (format t "[~D \"~{~A~^, ~}\" ~D ~D ~S]~%" 
-	      start values end (char-code char) char)
+      ;(format t "[~D \"~{~A~^, ~}\" ~D ~D ~S]~%" start values end (char-code char) char)
       (unless (null values)
 	(push (cons start end) (gethash (car values) source-map)))
       (values-list values))))

@@ -23,9 +23,7 @@
 (import-from :ccl *gray-stream-symbols* :swank-backend)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (multiple-value-bind (ok err) (ignore-errors (require 'xref))
-    (unless ok
-      (warn "~a~%" err))))
+  (require 'xref))
 
 ;;; swank-mop
 
@@ -158,15 +156,16 @@
 
 (defun handle-compiler-warning (condition)
   "Resignal a ccl:compiler-warning as swank-backend:compiler-warning."
-  (signal 'compiler-condition
-          :original-condition condition
-          :message (compiler-warning-short-message condition)
-          :source-context nil
-          :severity (compiler-warning-severity condition)
-          :location (source-note-to-source-location 
-                     (ccl:compiler-warning-source-note condition)
-                     (lambda () "Unknown source")
-                     (ccl:compiler-warning-function-name condition))))
+  (signal (make-condition
+           'compiler-condition
+           :original-condition condition
+           :message (compiler-warning-short-message condition)
+           :source-context nil
+           :severity (compiler-warning-severity condition)
+           :location (source-note-to-source-location 
+                      (ccl:compiler-warning-source-note condition)
+                      (lambda () "Unknown source")
+                      (ccl:compiler-warning-function-name condition)))))
 
 (defgeneric compiler-warning-severity (condition))
 (defmethod compiler-warning-severity ((c ccl:compiler-warning)) :warning)
@@ -179,11 +178,6 @@
 (defmethod compiler-warning-short-message ((c ccl:compiler-warning))
   (with-output-to-string (stream)
     (ccl:report-compiler-warning c stream :short t)))
-
-;; Needed because `ccl:report-compiler-warning' would return
-;; "Nonspecific warning".
-(defmethod compiler-warning-short-message ((c ccl::shadowed-typecase-clause))
-  (princ-to-string c))
 
 (defimplementation call-with-compilation-hooks (function)
   (handler-bind ((ccl:compiler-warning 'handle-compiler-warning))
@@ -211,7 +205,7 @@
       (unwind-protect
            (progn
              (with-open-file (s temp-file-name :direction :output 
-                                :if-exists :error :external-format :utf-8)
+                                :if-exists :error)
                (write-string string s))
              (let ((binary-filename (compile-temp-file
                                      temp-file-name filename buffer position)))
@@ -230,8 +224,7 @@
                       (setf (gethash temp-file-name *temp-file-map*)
                             buffer-name)
                       temp-file-name))
-                :compile-file-original-buffer-offset (1- offset)
-                :external-format :utf-8))
+                :compile-file-original-buffer-offset (1- offset)))
 
 (defimplementation save-image (filename &optional restart-function)
   (ccl:save-application filename :toplevel-function restart-function))
@@ -242,8 +235,8 @@
   (delete-duplicates
    (mapcan #'find-definitions
            (if inverse 
-             (ccl::get-relation relation name :wild :exhaustive t)
-             (ccl::get-relation relation :wild name :exhaustive t)))
+             (ccl:get-relation relation name :wild :exhaustive t)
+             (ccl:get-relation relation :wild name :exhaustive t)))
    :test 'equal))
 
 (defimplementation who-binds (name)
@@ -412,22 +405,6 @@
         (pc-source-location lfun pc)
         (function-source-location lfun)))))
 
-(defun function-name-package (name)
-  (etypecase name
-    (null nil)
-    (symbol (symbol-package name))
-    ((cons (eql setf) symbol) (symbol-package (cadr name)))
-    ((cons (eql :internal)) (function-name-package (car (last name))))
-    ((cons (and symbol (not keyword)) (cons list null))
-     (symbol-package (car name)))
-    (standard-method (function-name-package (ccl:method-name name)))))
-
-(defimplementation frame-package (frame-number)
-  (with-frame (p context) frame-number
-    (let* ((lfun (ccl:frame-function p context))
-           (name (ccl:function-name lfun)))
-      (function-name-package name))))
-
 (defimplementation eval-in-frame (form index)
   (with-frame (p context) index
     (let ((vars (ccl:frame-named-variables p context)))
@@ -545,27 +522,11 @@
               (t `(:error ,(funcall if-nil-thunk))))
       (error (c) `(:error ,(princ-to-string c))))))
 
-(defun alphatizer-definitions (name)
-  (let ((alpha (gethash name ccl::*nx1-alphatizers*)))
-    (and alpha (ccl:find-definition-sources alpha))))
-
-(defun p2-definitions (name)
-  (let ((nx1-op (gethash name ccl::*nx1-operators*)))
-    (and nx1-op
-         (let ((dispatch (ccl::backend-p2-dispatch ccl::*target-backend*)) )
-           (and (array-in-bounds-p dispatch nx1-op)
-                (let ((p2 (aref dispatch nx1-op)))
-                  (and p2
-                       (ccl:find-definition-sources p2))))))))
-
 (defimplementation find-definitions (name)
-  (let ((defs (append (or (ccl:find-definition-sources name)
-                          (and (symbolp name)
-                               (fboundp name)
-                               (ccl:find-definition-sources
-                                (symbol-function name))))
-                      (alphatizer-definitions name)
-                      (p2-definitions name))))
+  (let ((defs (or (ccl:find-definition-sources name)
+                  (and (symbolp name)
+                       (fboundp name)
+                       (ccl:find-definition-sources (symbol-function name))))))
     (loop for ((type . name) . sources) in defs
           collect (list (definition-name type name)
                         (source-note-to-source-location
@@ -710,10 +671,6 @@
     (loop for i below (ccl:uvsize object) append 
           (label-value-line (princ-to-string i) (ccl:uvref object i)))))
 
-(defimplementation type-specifier-p (symbol)
-  (or (ccl:type-specifier-p symbol)
-      (not (eq (type-specifier-arglist symbol) :not-available))))
-
 ;;; Multiprocessing
 
 (defvar *known-processes* 
@@ -838,5 +795,3 @@
 
 (defimplementation hash-table-weakness (hashtable)
   (ccl:hash-table-weak-p hashtable))
-
-(pushnew 'deinit-log-output ccl:*save-exit-functions*)

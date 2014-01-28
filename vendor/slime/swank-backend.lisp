@@ -1,4 +1,4 @@
-;;; -*- indent-tabs-mode: nil; outline-regexp: ";;;;;*" -*-
+;;; -*- Mode: lisp; indent-tabs-mode: nil; outline-regexp: ";;;;;*" -*-
 ;;;
 ;;; slime-backend.lisp --- SLIME backend interface.
 ;;;
@@ -160,6 +160,7 @@ Backends implement these functions using DEFIMPLEMENTATION."
        ,(if (null default-body)
             `(pushnew ',name *unimplemented-interfaces*)
             (gen-default-impl))
+       ;; see <http://www.franz.com/support/documentation/6.2/doc/pages/variables/compiler/s_cltl1-compile-file-toplevel-compatibility-p_s.htm>
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (export ',name :swank-backend))
        ',name)))
@@ -239,21 +240,19 @@ EXCEPT is a list of symbol names which should be ignored."
 
 (defmacro with-struct ((conc-name &rest names) obj &body body)
   "Like with-slots but works only for structs."
-  (check-type conc-name symbol)
-  (flet ((reader (slot)
-           (intern (concatenate 'string
-                                (symbol-name conc-name)
-                                (symbol-name slot))
-                   (symbol-package conc-name))))
+  (flet ((reader (slot) (intern (concatenate 'string
+					     (symbol-name conc-name)
+					     (symbol-name slot))
+				(symbol-package conc-name))))
     (let ((tmp (gensym "OO-")))
-      ` (let ((,tmp ,obj))
-          (symbol-macrolet
-              ,(loop for name in names collect 
-                     (typecase name
-                       (symbol `(,name (,(reader name) ,tmp)))
-                       (cons `(,(first name) (,(reader (second name)) ,tmp)))
-                       (t (error "Malformed syntax in WITH-STRUCT: ~A" name))))
-            ,@body)))))
+    ` (let ((,tmp ,obj))
+        (symbol-macrolet
+            ,(loop for name in names collect 
+                   (typecase name
+                     (symbol `(,name (,(reader name) ,tmp)))
+                     (cons `(,(first name) (,(reader (second name)) ,tmp)))
+                     (t (error "Malformed syntax in WITH-STRUCT: ~A" name))))
+          ,@body)))))
 
 (defmacro when-let ((var value) &body body)
   `(let ((,var ,value))
@@ -756,12 +755,10 @@ additional information on the specifiers defined in ANSI Common Lisp.")
       (type           '(type-specifier &rest args))
       (ftype          '(type-specifier &rest function-names))
       (otherwise
-       (flet ((typespec-p (symbol) 
-                (member :type (describe-symbol-for-emacs symbol))))
+       (flet ((typespec-p (symbol) (member :type (describe-symbol-for-emacs symbol))))
          (cond ((and (symbolp decl-identifier) (typespec-p decl-identifier))
                 '(&rest variables))
-               ((and (listp decl-identifier) 
-                     (typespec-p (first decl-identifier)))
+               ((and (listp decl-identifier) (typespec-p (first decl-identifier)))
                 '(&rest variables))
                (t :not-available)))))))
 
@@ -781,16 +778,10 @@ additional information on the specifiers defined in ANSI Common Lisp.")
                   :not-available))
       (t :not-available))))
 
-(definterface type-specifier-p (symbol)
-  "Determine if SYMBOL is a type-specifier."
-  (or (documentation symbol 'type)
-      (not (eq (type-specifier-arglist symbol) :not-available))))
-
 (definterface function-name (function)
   "Return the name of the function object FUNCTION.
 
-The result is either a symbol, a list, or NIL if no function name is
-available."
+The result is either a symbol, a list, or NIL if no function name is available."
   (declare (ignore function))
   nil)
 
@@ -845,9 +836,8 @@ symbol. The recognised keys are:
   :TYPE :CLASS :ALIEN-TYPE :ALIEN-STRUCT :ALIEN-UNION :ALIEN-ENUM
 
 The value of each property is the corresponding documentation string,
-or NIL (or the obsolete :NOT-DOCUMENTED). It is legal to include keys
-not listed here (but slime-print-apropos in Emacs must know about
-them).
+or :NOT-DOCUMENTED. It is legal to include keys not listed here (but
+slime-print-apropos in Emacs must know about them).
 
 Properties should be included if and only if they are applicable to
 the symbol. For example, only (and all) fbound symbols should include
@@ -1076,8 +1066,7 @@ returns.")
   (cond ((typep datum 'condition)
          `(:error ,(format nil "Error: ~A" datum)))
         ((symbolp datum)
-         `(:error ,(format nil "Error: ~A" 
-                           (apply #'make-condition datum args))))
+         `(:error ,(format nil "Error: ~A" (apply #'make-condition datum args))))
         (t
          (assert (stringp datum))
          `(:error ,(apply #'format nil datum args)))))
@@ -1352,7 +1341,6 @@ Don't execute unwind-protected sections, don't raise conditions.
 
 (definterface send (thread object)
   "Send OBJECT to thread THREAD."
-  (declare (ignore thread))
   object)
 
 (definterface receive (&optional timeout)
@@ -1372,7 +1360,6 @@ If THREAD is nil delete the association."
 (definterface find-registered (name)
   "Find the thread that was registered for the symbol NAME.
 Return nil if the no thread was registred or if the tread is dead."
-  (declare (ignore name))
   nil)
 
 (definterface set-default-initial-binding (var form)
@@ -1432,6 +1419,12 @@ but that thread may hold it more than once."
    (declare (ignore lock)
             (type function function))
    (funcall function))
+
+;; Same here: don't use this outside of swank-gray.lisp.
+(definterface call-with-io-timeout (function &key seconds)
+  "Calls function with the specified IO timeout."
+  (declare (ignore seconds))
+  (funcall function))
 
 
 ;;;; Weak datastructures
@@ -1506,8 +1499,3 @@ RESTART-FUNCTION, if non-nil, should be called when the image is loaded.")
   "Request saving a heap image to the file FILENAME.
 RESTART-FUNCTION, if non-nil, should be called when the image is loaded.
 COMPLETION-FUNCTION, if non-nil, should be called after saving the image.")
-
-(defun deinit-log-output ()
-  ;; Can't hang on to an fd-stream from a previous session.
-  (setf (symbol-value (find-symbol "*LOG-OUTPUT*" 'swank))
-        nil))

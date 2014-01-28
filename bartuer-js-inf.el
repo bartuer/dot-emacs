@@ -79,13 +79,23 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t)))
+                                   (list  "slime-connection" "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t))
+         (js-buffer (current-buffer)))
     (setq js-process (apply (intern jsh) nil))
     (if (string-equal jsh "node-d8")
         (progn
           (pop-to-buffer "*node.eval:4242.debug:5959.console*")
           (pop-to-buffer "*node.d8r*"))
       (pop-to-buffer (concat "*" jsh "*")))
+    (if (string-equal jsh "slime-connection")
+        (progn
+          (slime-connect "localhost" "4005" nil t)
+          (with-current-buffer js-buffer
+              (slime-js-minor-mode 1)
+              (pop-to-buffer js-buffer t)
+              )
+          )
+        )
     ))
 
 (defun d8r-head ()

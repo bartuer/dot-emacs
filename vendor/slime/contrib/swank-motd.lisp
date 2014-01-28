@@ -64,5 +64,3 @@
                   do (write-line line motd-for-emacs)))))))
     (error (c)
       (format nil ";; ERROR ~S OPENING MOTD ~S.~%" c motd-pathname))))
-
-(provide :swank-motd)
