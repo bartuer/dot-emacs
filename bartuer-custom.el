@@ -1,9 +1,9 @@
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
@@ -93,14 +93,14 @@
  '(ispell-program-name "aspell")
  '(js2-allow-member-expr-as-function-name t)
  '(js2-allow-rhino-new-expr-initializer t)
- '(js2-basic-offset 2)
+ '(js2-basic-offset 4)
  '(js2-highlight-level 3)
  '(js2-mirror-mode nil)
  '(js2-parse-minor-mode-string " Pa")
  '(kill-read-only-ok t)
  '(line-number-mode t)
  '(list-matching-lines-default-context-lines 0)
- '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/slime/contrib" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/vc" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
+ '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/vc" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
  '(lpr-command "~/scripts/pdfprint")
  '(mail-send-hook (quote (quote-encoded-subject)))
  '(make-backup-files nil)
@@ -142,8 +142,6 @@
 ]+")
  '(sgml-tag-alist (quote (("![" ("ignore" t) ("include" t)) ("!attlist") ("!doctype") ("!element") ("!entity"))))
  '(size-indication-mode t)
- '(slime-complete-symbol-function (quote slime-simple-complete-symbol))
- '(slime-net-coding-system (quote utf-8-unix))
  '(smtpmail-auth-credentials "~/.authinfo")
  '(smtpmail-debug-info t)
  '(smtpmail-debug-verb t)
@@ -158,10 +156,10 @@
  '(view-read-only t))
  
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(anything-visible-mark ((t (:background "green1" :foreground "black"))))
  '(button ((((supports :underline t)) (:foreground "cyan" :underline t))))
  '(comint-highlight-prompt ((t (:foreground "cyan"))))
@@ -220,9 +218,8 @@
  '(org-drawer ((t (:foreground "cyan" :weight bold))))
  '(org-level-1 ((t (:foreground "cyan"))))
  '(org-level-7 ((t (:foreground "cyan"))))
- '(org-link ((nil (:foreground "cyan" :underline t))))
- '(org-table ((t (:foreground "color-183"))))
- '(org-target ((nil (:foreground "cyan" :underline t))))
+ '(org-link ((((class color) (background dark)) (:foreground "cyan" :underline t))))
+ '(org-target ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
  '(region ((t (:background "color-240"))))
  '(smerge-markers ((t (:background "grey85" :foreground "black"))))

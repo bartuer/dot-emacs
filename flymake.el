@@ -1860,7 +1860,7 @@ Use CREATE-TEMP-F for creating temp copy."
          (local-file (file-relative-name
 		      temp-file
 		      (file-name-directory buffer-file-name))))
-    (list "~/local/bin/uki_jsflymake" (list (expand-file-name local-file)) ))))
+    (list (expand-file-name "~/local/bin/uki_jsflymake") (list (expand-file-name local-file)) )))
 
 (add-to-list 'flymake-err-line-patterns 
              '("^Lint at line \\([[:digit:]]+\\) \\(character\\) \\([[:digit:]]+: .+\\)$"  
