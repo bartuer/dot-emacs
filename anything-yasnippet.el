@@ -228,11 +228,19 @@
             (jct-current-line) )) "__JCT_NEWLINE__")
   )
 
+(defun anything-slime-get-symbol-prefix (beg end)
+  (let* ((str (buffer-substring-no-properties beg end)))
+    (if (equal " " str)
+        ""
+      str)
+    )
+  )
+
 (defun anything-slime-complete-symbol ()
   (interactive)
   (let* ((end (point))
          (beg (slime-js-complete-symbol-prefix-at-point))
-         (prefix (buffer-substring-no-properties beg end))
+         (prefix (anything-slime-get-symbol-prefix beg end))
          (result (slime-simple-completions prefix)))
     (mapcar* (lambda (item)
               (cons item (substring-no-properties item (length prefix) (length item)))) (car result))

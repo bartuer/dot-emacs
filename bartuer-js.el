@@ -468,8 +468,25 @@ can bind C-j in comint buffer"
   (pop-to-buffer "*d8r*"))
 
 (defun slime-js-complete-symbol-prefix-at-point ()
-  
-)
+  (interactive)
+  (let* ((expr-beg (line-beginning-position))
+        (last-space (save-excursion
+                      (search-backward " ")
+                      (point)
+                      )))
+    (if last-space
+        (if (< expr-beg last-space)
+            last-space
+          expr-beg)
+      expr-beg
+      )
+    )
+  )
+
+(defun js-try-to-parse-buffer ()
+  (interactive)
+  (slime-js-send-buffer)
+  )
 
 (defun bartuer-js-load ()
   "for javascript language
@@ -498,6 +515,7 @@ can bind C-j in comint buffer"
   ;; (push-mode t)
   (add-hook 'after-save-hook 'js-merge nil t)
   (add-hook 'after-save-hook 'js-find-live-edit-string nil t)
+  (add-hook 'after-save-hook 'js-try-to-parse-buffer nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
@@ -506,6 +524,7 @@ can bind C-j in comint buffer"
       (setq indent-line-function 'espresso-indent-line)
       (define-key js2-mode-map "\C-m" 'newline))
   (set (make-local-variable 'indent-region-function) 'js-indent)
+
 
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)

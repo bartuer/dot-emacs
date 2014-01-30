@@ -75,28 +75,43 @@
     (setq spidermonkey-process (get-buffer-process (make-comint "spidermonkey" "spidermonkey-nanojit"))))
   spidermonkey-process)
 
+(defun slime ()
+  (interactive)
+  (let ((js-buffer (current-buffer)))
+    (if (slime-current-connection)
+        (progn
+          (pop-to-buffer "*slime-repl JS*" t)
+          (pop-to-buffer js-buffer t)
+          )
+      (progn
+        (slime-connect "localhost" "4005" nil t)
+        (with-current-buffer js-buffer
+          (slime-js-minor-mode 1)
+          (pop-to-buffer js-buffer t)
+          )
+        ))
+    )
+)
+
 (defun connect-jsh ()
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "slime-connection" "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t))
+                                   (list  "slime" "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t))
          (js-buffer (current-buffer)))
-    (setq js-process (apply (intern jsh) nil))
-    (if (string-equal jsh "node-d8")
-        (progn
-          (pop-to-buffer "*node.eval:4242.debug:5959.console*")
-          (pop-to-buffer "*node.d8r*"))
-      (pop-to-buffer (concat "*" jsh "*")))
-    (if (string-equal jsh "slime-connection")
-        (progn
-          (slime-connect "localhost" "4005" nil t)
-          (with-current-buffer js-buffer
-              (slime-js-minor-mode 1)
-              (pop-to-buffer js-buffer t)
-              )
-          )
+
+    (if (equal jsh "slime")
+        (slime)
+      (progn
+        (setq js-process (apply (intern jsh) nil))
+        (if (string-equal jsh "node-d8")
+            (progn
+              (pop-to-buffer "*node.eval:4242.debug:5959.console*")
+              (pop-to-buffer "*node.d8r*"))
+          (pop-to-buffer (concat "*" jsh "*")))
         )
-    ))
+      )
+))
 
 (defun d8r-head ()
   (when (string-equal (process-name js-process) "d8r")
