@@ -377,7 +377,7 @@ and embed it in a style element"
   (save-excursion
     (let ((start (point-min))
           (end (point-max)))
-      (slime-flash-region start end)
+      (message "send buffer to swank server")
       (slime-js-eval
        (buffer-substring-no-properties start end))
       (message "Sent buffer"))))
