@@ -786,12 +786,23 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'company-mode "company" nil t)
 (require 'company)
+
 (require 'company-emacs-eclim)
 (company-emacs-eclim-setup)
 (global-company-mode t)
 
 (require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
+
+(defun enable-ac-ispell ()
+      (add-to-list 'ac-sources 'ac-source-ispell))
+
+
+(require 'ac-ispell)
+(eval-after-load "auto-complete"
+  '(progn (ac-ispell-setup))
+ )
+
 
 (require 'bartuer-erlang nil t)
 (autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
@@ -1157,7 +1168,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-v" 'clipboard-paste)
 
 (defun interprogram-cut-function (string &optional push)
-  (get-buffer-create "pbcopy")
+  (get-buffer-create "py")
   (with-current-buffer "pbcopy"
     (delete-region (point-min) (point-max))
     (insert string)

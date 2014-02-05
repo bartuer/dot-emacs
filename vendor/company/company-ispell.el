@@ -49,7 +49,7 @@ If nil, use `ispell-complete-word-dict'."
     ('interactive (company-begin-backend 'company-ispell))
     ('prefix (when (company-ispell-available)
                (company-grab-word)))
-    ('candidates (lookup-words arg (or company-ispell-dictionary
+    ('candidates (lookup-words (concat (company-grab-word) "*") (or company-ispell-dictionary
                                        ispell-complete-word-dict)))
     ('sorted t)
     ('ignore-case t)))
