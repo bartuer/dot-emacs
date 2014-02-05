@@ -309,14 +309,6 @@ otherwise."
 
 (defun everything-is-running ()
   "Check if Everything is running."
-  
-  (find "Everything.exe"
-	(mapcar (lambda (p) (cdr (assoc 'comm (process-attributes p))))
-		(list-system-processes))
-	:test 'string=))
-
-(defun everything-is-running ()
-  "Check if Everything is running."
   t)
 
 
