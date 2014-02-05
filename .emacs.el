@@ -809,6 +809,8 @@ If give a negative ARG, will undo the last mark action, thus the
   '(progn (ac-ispell-setup))
  )
 
+(semantic-mode 1)
+(global-ede-mode 1)
 
 (require 'bartuer-erlang nil t)
 (autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
