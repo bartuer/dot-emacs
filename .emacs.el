@@ -178,6 +178,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
 (global-set-key "\M-5" 'everything-find-file)
+(global-set-key "\M-6" 'nav-toggle)
 
 (defun do-ql-dwim()
   (interactive)
@@ -200,6 +201,11 @@ If give a negative ARG, will undo the last mark action, thus the
                              (define-key dired-mode-map " " 'do-ql-dwim)
                              (define-key dired-mode-map "w" 'dired-copy-filename-as-kill-fix)
                              ))
+
+(require 'nav)
+
+(nav-disable-overeager-window-splitting)
+
 (defun color-print ()
   (interactive)
   (require 'htmlize nil t)
