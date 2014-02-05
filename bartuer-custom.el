@@ -5,6 +5,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
+ '(ac-auto-show-menu 0.4)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
  '(auto-revert-verbose nil)

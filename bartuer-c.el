@@ -43,6 +43,7 @@
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-j" 'recompile)
   (define-key c-mode-base-map "\C-c\C-c" 'c-load-etags)
+  (hs-minor-mode t)
   )
 
 (defun that-line-end (n)
