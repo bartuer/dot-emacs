@@ -5,6 +5,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(PC-meta-flag nil)
+ '(ac-auto-show-menu 0.4)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(auto-compression-mode t nil (jka-compr))
  '(auto-revert-verbose nil)
@@ -19,6 +20,7 @@
  '(column-number-mode t)
  '(comint-completion-autolist t)
  '(comint-input-autoexpand t)
+ '(company-backends (quote (company-emacs-eclim company-elisp company-css company-semantic company-clang company-xcode company-ropemacs (company-gtags company-etags company-dabbrev-code company-pysmell company-keywords) company-oddmuse company-files company-dabbrev company-nxml company-ispell company-abbrev)))
  '(compilation-ask-about-save nil)
  '(compilation-auto-jump-to-first-error t)
  '(current-language-environment "UTF-8")
@@ -89,6 +91,7 @@
  '(indent-tabs-mode nil)
  '(inferior-lisp-program "/usr/local/bin/sbcl" t)
  '(isearch-resume-in-command-history t)
+ '(ispell-complete-word-dict "/usr/share/dict/web2")
  '(ispell-dictionary "british")
  '(ispell-program-name "aspell")
  '(js2-allow-member-expr-as-function-name t)
@@ -100,7 +103,7 @@
  '(kill-read-only-ok t)
  '(line-number-mode t)
  '(list-matching-lines-default-context-lines 0)
- '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/vc" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
+ '(load-path (quote ("~/etc/el/ess/" "~/etc/el/vendor/nav" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/cheat" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/vc" "~/local/share/emacs/current/lisp/cedet" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp")) t)
  '(lpr-command "~/scripts/pdfprint")
  '(mail-send-hook (quote (quote-encoded-subject)))
  '(make-backup-files nil)

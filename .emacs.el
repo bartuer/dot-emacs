@@ -178,6 +178,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-3" 'shell-command)
 (global-set-key "\M-1" 'shell)
 (global-set-key "\M-5" 'everything-find-file)
+(global-set-key "\M-6" 'nav-toggle)
 
 (defun do-ql-dwim()
   (interactive)
@@ -200,6 +201,11 @@ If give a negative ARG, will undo the last mark action, thus the
                              (define-key dired-mode-map " " 'do-ql-dwim)
                              (define-key dired-mode-map "w" 'dired-copy-filename-as-kill-fix)
                              ))
+
+(require 'nav)
+
+(nav-disable-overeager-window-splitting)
+
 (defun color-print ()
   (interactive)
   (require 'htmlize nil t)
@@ -786,12 +792,25 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'company-mode "company" nil t)
 (require 'company)
+
 (require 'company-emacs-eclim)
 (company-emacs-eclim-setup)
 (global-company-mode t)
 
 (require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
+
+(defun enable-ac-ispell ()
+      (add-to-list 'ac-sources 'ac-source-ispell))
+
+
+(require 'ac-ispell)
+(eval-after-load "auto-complete"
+  '(progn (ac-ispell-setup))
+ )
+
+(semantic-mode 1)
+(global-ede-mode 1)
 
 (require 'bartuer-erlang nil t)
 (autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
@@ -1157,7 +1176,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-v" 'clipboard-paste)
 
 (defun interprogram-cut-function (string &optional push)
-  (get-buffer-create "pbcopy")
+  (get-buffer-create "py")
   (with-current-buffer "pbcopy"
     (delete-region (point-min) (point-max))
     (insert string)
