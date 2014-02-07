@@ -1175,12 +1175,15 @@ If give a negative ARG, will undo the last mark action, thus the
   ))
 (global-set-key "\M-v" 'clipboard-paste)
 
-(defun interprogram-cut-function (string &optional push)
-  (get-buffer-create "py")
+(defun clipboard-copy-function (string &optional push)
+  (get-buffer-create "pbcopy")
   (with-current-buffer "pbcopy"
-    (delete-region (point-min) (point-max))
     (insert string)
-    (call-process-region (point-min) (point-max) "pbcopy")
+    (set-buffer-file-coding-system 'utf-8-dos)
+     ;; cp /cygdrive/c/WINDOWS/system32/clip.exe /usr/local/bin/pbcopy.exe
+     ;; even set coding-system to utf-dos copy multiple line has problem
+     ;; IDE can handle it, like VS
+    (call-process-region (point-min) (point-max) "pbcopy" t 0)
     )
   )
 
@@ -1191,7 +1194,8 @@ If give a negative ARG, will undo the last mark action, thus the
 ))
 
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
-;; (setq interprogram-cut-function (intern "interprogram-cut-function"))
+
+(setq interprogram-cut-function (intern "clipboard-copy-function"))
 (require 'bartuer-page)
 
 ;;; disable edit change prompt
