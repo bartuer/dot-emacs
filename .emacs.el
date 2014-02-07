@@ -1175,12 +1175,16 @@ If give a negative ARG, will undo the last mark action, thus the
   ))
 (global-set-key "\M-v" 'clipboard-paste)
 
+(setq buffer-file-coding-system 'utf-8-unix)
+
 (defun interprogram-cut-function (string &optional push)
   (get-buffer-create "pbcopy")
   (with-current-buffer "pbcopy"
     (insert string)
+    (set-buffer-file-coding-system 'utf-8-dos)
      ;; cp /cygdrive/c/WINDOWS/system32/clip.exe /usr/local/bin/pbcopy.exe
-    (call-process-region (point-min) (point-max) "pbcopy" t 0)
+     ;; even set coding-system to utf-dos copy multiple line has problem
+    (call-process-region (point-min) (point-max) "pbcopy" nil 0)
     )
   )
 
