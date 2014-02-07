@@ -211,7 +211,7 @@ If we have a current region use it's value as the default."
           (read-from-minibuffer "Define: "
                                 (thing-at-point 'word)))
          (data-buffer
-          (google-define-get-command "www.google.com.hk"
+          (google-define-get-command "www.google.com"
                                      (concat
                                       "/search?num=100&hl=en&defl=all&q=define%3A%22"
                                       (replace-regexp-in-string " +" "\+" search-word)
