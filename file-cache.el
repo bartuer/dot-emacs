@@ -5,4 +5,6 @@
                                 "~/org"
                                 "~/org/corp_note"
                                 "~/local/src/emacs_win_port"
+                                "~/local/src/work"
+                                "~/local/src/work/bug27198"
                                 ))
