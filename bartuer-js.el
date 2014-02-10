@@ -505,6 +505,7 @@ can bind C-j in comint buffer"
   (make-local-variable 'live-edit-string)
   (js-find-live-edit-string)
   (set-up-slime-js-ac)
+  (slime-js-minor-mode)
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
   (defalias  'pu (lambda () (interactive)
@@ -544,8 +545,7 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
-  (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
-  )
+  (define-key js2-mode-map "\C-\M-i" 'anything-complete-js))
 
 (require 'bartuer-page nil t)
 (provide 'bartuer-js)
