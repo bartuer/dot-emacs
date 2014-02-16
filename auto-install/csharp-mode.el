@@ -5494,7 +5494,7 @@ Key bindings:
     (c-common-init 'csharp-mode)
 
     ;; compile
-    (local-set-key "\C-x\C-e"  'csharp-invoke-compile-interactively)
+    (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
 
     ;; to allow next-error to work with csc.exe:
     (setq compilation-scroll-output t)

@@ -36,6 +36,18 @@
 (global-set-key "\C-ck" 'kill-region) ;delete to the beginning "\C-x-DEL",move 1
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
 
+(require 'guess-style)
+(autoload 'guess-style-set-variable "guess-style" nil t)
+(autoload 'guess-style-guess-variable "guess-style")
+(autoload 'guess-style-guess-all "guess-style" nil t)
+(global-guess-style-info-mode 1)
+(defun ttt()
+  (interactive)
+  (whitespace-mode)
+  (guess-style-guess-all)
+  )
+
+
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
 (global-set-key "\C-i" '(lambda ()
                           (interactive)
@@ -966,6 +978,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\mm$" . objc-mode))
 (add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
+(require 'csharp-mode)
+
 (defun mac-control ()
   "insert key symbol for shift"
   (interactive)
@@ -1061,8 +1075,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
 (add-hook 'sql-mode-hook 'bartuer-sql-load)
 
-(autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
-(add-hook 'sgml-mode-hook 'bartuer-sgml-load)
+(add-to-list 'auto-mode-alist '("\\html$" . nxml-mode))
+;; (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
+;; (add-hook 'sgml-mode-hook 'bartuer-sgml-load)
 
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
