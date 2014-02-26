@@ -1888,6 +1888,19 @@ Use CREATE-TEMP-F for creating temp copy."
     (list "~/etc/el/vendor/erlang/share/flyerl/simple_check.erl" (list local-file))))
 (add-to-list 'flymake-allowed-file-name-masks '("\\.erl\\'" flymake-erlang-init))
 
+;;; for script sharp
+(defun flymake-csharp-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name temp-file
+                                         (file-name-directory buffer-file-name))))
+    (list "~/dev/otools/bin/oacr.sh" (list local-file))))
+(add-to-list 'flymake-allowed-file-name-masks '("\\.cs\\'" flymake-csharp-init))
+
+(add-to-list 'flymake-err-line-patterns 
+             '("^\\([_A-Za-z0-9][^(]+\\.cs\\)(\\([0-9]+\\)) ?: \\(\\(error\\|warning\\) +:? *C[SA][0-9]+ *:[ \t\n]*\\(.+\\)\\)"
+	      nil 1 2 3))
+
 (provide 'flymake)
 
 ;; arch-tag: 8f0d6090-061d-4cac-8862-7c151c4a02dd
