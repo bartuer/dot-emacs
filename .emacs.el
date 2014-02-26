@@ -577,6 +577,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
 (add-hook 'magit-mode-hook 'bartuer-magit-load)
 
+(require 'bartuer-sd)
 (defun accumulate-rectangle (start end &optional fill)
   "add numbers up in rectangle"
   (interactive "r*\nP")
