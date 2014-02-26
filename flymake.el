@@ -228,6 +228,7 @@ See `x-popup-menu' for the menu specifier format."
   :group 'flymake
   :type 'integer)
 
+
 (defun flymake-log (level text &rest args)
   "Log a message at level LEVEL.
 If LEVEL is higher than `flymake-log-level', the message is
@@ -854,7 +855,6 @@ Perhaps use text from LINE-ERR-INFO-LIST to enhance highlighting."
 	 (real-file-name     nil)
 	 (source-file-name   buffer-file-name)
 	 (get-real-file-name-f (flymake-get-real-file-name-function source-file-name)))
-
     (while (< idx count)
       (setq line-err-info (flymake-parse-line (nth idx lines)))
       (when line-err-info
@@ -960,7 +960,6 @@ Return its components if so, nil otherwise."
       (when (string-match (car (car patterns)) line)
 	(let* ((file-idx (nth 1 (car patterns)))
 	       (line-idx (nth 2 (car patterns))))
-
 	  (setq raw-file-name (if file-idx (match-string file-idx line) nil))
 	  (setq line-no       (if line-idx (string-to-number (match-string line-idx line)) 0))
 	  (setq err-text      (if (> (length (car patterns)) 4)
@@ -1898,8 +1897,8 @@ Use CREATE-TEMP-F for creating temp copy."
 (add-to-list 'flymake-allowed-file-name-masks '("\\.cs\\'" flymake-csharp-init))
 
 (add-to-list 'flymake-err-line-patterns 
-             '("^\\([_A-Za-z0-9][^(]+\\.cs\\)(\\([0-9]+\\)) ?: \\(\\(error\\|warning\\) +:? *C[SA][0-9]+ *:[ \t\n]*\\(.+\\)\\)"
-	      nil 1 2 3))
+             '("^\\(\\([_A-Za-z0-9]+\\.cs\\)(\\([0-9]+\\)) ?: \\(error\\|warning\\) +:? *[SA]+[0-9]+ *:[ \t\n]*\\(.+\\)\\)"
+	      2 3 nil 5))
 
 (provide 'flymake)
 

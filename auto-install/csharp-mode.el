@@ -2569,7 +2569,7 @@ This fn does these things:
 
 
   ;; 5. define some advice for the error parsing
-  (defadvice flymake-parse-err-lines (before
+  (defadvice flymake-parse-err-lines-remove (before
                                       csharp-flymake-parse-line-patch-1
                                       activate compile)
     (if (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
@@ -2577,7 +2577,7 @@ This fn does these things:
         ;; starts.
         (setq csharp-flymake-aux-error-info nil)))
 
-  (defadvice flymake-parse-line (around
+  (defadvice flymake-parse-line-remove (around
                                  csharp-flymake-parse-line-patch-2
                                  activate compile)
     ;; This advice will run in all buffers.  Let's may sure we
@@ -2631,7 +2631,7 @@ This fn does these things:
   ;; that the result is that the cursor is on the line that contains the
   ;; error.  At exit from that fn, the column is not important. This advice
   ;; sets the column.
-  (defadvice flymake-goto-line (around
+  (defadvice flymake-goto-line-remove (around
                                 csharp-flymake-goto-line-patch
                                 activate compile)
     ;; This advice will run in all buffers.  Let's may sure we
