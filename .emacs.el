@@ -980,6 +980,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
 (require 'csharp-mode)
+(load "~/etc/el/bartuer-csharp.el")
+(add-hook 'csharp-mode-hook 'bartuer-csharp-load)
 
 (defun mac-control ()
   "insert key symbol for shift"

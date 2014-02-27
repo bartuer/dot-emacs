@@ -803,14 +803,14 @@ wrote this alternative.
                                    (line-number-at-pos)
                                  -1))))
                 (= curline aftline)))
-            (newline-and-indent))
+            (newline))
         (self-insert-command 1)
         (c-indent-line-or-region)
         (end-of-line)
         (newline)
         (insert "}")
-        ;;(c-indent-command) ;; not sure of the difference here
-        (c-indent-line-or-region)
+        (c-indent-command) ;; not sure of the difference here
+        ;; (c-indent-line-or-region)
         (forward-line -1)
         (end-of-line)
         (newline-and-indent)
@@ -5216,14 +5216,14 @@ The return value is meaningless, and is ignored by cc-mode.
 
 (c-add-style "C#"
              '("Java"
-               (c-basic-offset . 4)
+               (c-basic-offset . 8)
                (c-comment-only-line-offset . (0 . 0))
                (c-offsets-alist . (
                                    (access-label          . -)
                                    (arglist-close         . c-lineup-arglist)
                                    (arglist-cont          . 0)
                                    (arglist-cont-nonempty . c-lineup-arglist)
-                                   (arglist-intro         . c-lineup-arglist-intro-after-paren)
+                                   (arglist-intro         . +)
                                    (block-close           . 0)
                                    (block-open            . 0)
                                    (brace-entry-open      . 0)
@@ -5273,11 +5273,11 @@ The return value is meaningless, and is ignored by cc-mode.
                                    (statement-cont        . +)
                                    (stream-op             . c-lineup-streamop)
                                    (string                . c-lineup-dont-change)
-                                   (substatement          . +)
+                                   (substatement          . 0)
                                    (substatement-open     . 0)
                                    (template-args-cont c-lineup-template-args +)
                                    (topmost-intro         . 0)
-                                   (topmost-intro-cont    . +)
+                                   (topmost-intro-cont    . 0)
                                    ))
                ))
 
