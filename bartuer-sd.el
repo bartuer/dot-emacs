@@ -1,0 +1,11 @@
+(defun sd-edit ()
+  (interactive)
+  (let* ((file-name (file-relative-name (buffer-file-name)))
+         (cmd (concat "sd edit " file-name))
+         )
+    (shell-command cmd)
+    (revert-buffer t t)
+    )
+  )
+
+(provide 'bartuer-sd)

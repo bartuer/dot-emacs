@@ -202,7 +202,7 @@ the current directory and its sub-directories."
 				     (when (or (eq major-mode 'shell-mode)
 					       (eq major-mode 'eshell-mode)
 					       (eq major-mode 'dired-mode))
-				       (format "\"%s\" " (expand-file-name default-directory))))))
+				      (car kill-ring)))))
     (unless (string= query "")
       (everything-select query))))
 

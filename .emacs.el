@@ -56,6 +56,7 @@
                                     (t (indent-relative-maybe))
                                     (t (indent-for-comment))))))
 
+(require 'smart-tabs-mode)
 
 (global-set-key "\C-z" (lambda ()
                          (interactive)
@@ -577,6 +578,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
 (add-hook 'magit-mode-hook 'bartuer-magit-load)
 
+(require 'bartuer-sd)
 (defun accumulate-rectangle (start end &optional fill)
   "add numbers up in rectangle"
   (interactive "r*\nP")
@@ -979,6 +981,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
 (require 'csharp-mode)
+(load "~/etc/el/bartuer-csharp.el")
+(add-hook 'csharp-mode-hook 'bartuer-csharp-load)
 
 (defun mac-control ()
   "insert key symbol for shift"

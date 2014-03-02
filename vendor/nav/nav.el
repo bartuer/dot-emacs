@@ -636,6 +636,7 @@ http://code.google.com/p/emacs-nav/issues/detail?id=78
 (defun nav-print-current-dir ()
   "Shows the full path that nav is currently displaying"
   (interactive)
+  (kill-new default-directory)
   (print default-directory))
 
 (define-derived-mode nav-mode fundamental-mode

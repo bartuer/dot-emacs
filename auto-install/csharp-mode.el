@@ -803,14 +803,14 @@ wrote this alternative.
                                    (line-number-at-pos)
                                  -1))))
                 (= curline aftline)))
-            (newline-and-indent))
+            (newline))
         (self-insert-command 1)
         (c-indent-line-or-region)
         (end-of-line)
         (newline)
         (insert "}")
-        ;;(c-indent-command) ;; not sure of the difference here
-        (c-indent-line-or-region)
+        (c-indent-command) ;; not sure of the difference here
+        ;; (c-indent-line-or-region)
         (forward-line -1)
         (end-of-line)
         (newline-and-indent)
@@ -2569,7 +2569,7 @@ This fn does these things:
 
 
   ;; 5. define some advice for the error parsing
-  (defadvice flymake-parse-err-lines (before
+  (defadvice flymake-parse-err-lines-remove (before
                                       csharp-flymake-parse-line-patch-1
                                       activate compile)
     (if (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
@@ -2577,7 +2577,7 @@ This fn does these things:
         ;; starts.
         (setq csharp-flymake-aux-error-info nil)))
 
-  (defadvice flymake-parse-line (around
+  (defadvice flymake-parse-line-remove (around
                                  csharp-flymake-parse-line-patch-2
                                  activate compile)
     ;; This advice will run in all buffers.  Let's may sure we
@@ -2631,7 +2631,7 @@ This fn does these things:
   ;; that the result is that the cursor is on the line that contains the
   ;; error.  At exit from that fn, the column is not important. This advice
   ;; sets the column.
-  (defadvice flymake-goto-line (around
+  (defadvice flymake-goto-line-remove (around
                                 csharp-flymake-goto-line-patch
                                 activate compile)
     ;; This advice will run in all buffers.  Let's may sure we
@@ -5216,14 +5216,14 @@ The return value is meaningless, and is ignored by cc-mode.
 
 (c-add-style "C#"
              '("Java"
-               (c-basic-offset . 4)
+               (c-basic-offset . 8)
                (c-comment-only-line-offset . (0 . 0))
                (c-offsets-alist . (
                                    (access-label          . -)
                                    (arglist-close         . c-lineup-arglist)
                                    (arglist-cont          . 0)
                                    (arglist-cont-nonempty . c-lineup-arglist)
-                                   (arglist-intro         . c-lineup-arglist-intro-after-paren)
+                                   (arglist-intro         . +)
                                    (block-close           . 0)
                                    (block-open            . 0)
                                    (brace-entry-open      . 0)
@@ -5273,11 +5273,11 @@ The return value is meaningless, and is ignored by cc-mode.
                                    (statement-cont        . +)
                                    (stream-op             . c-lineup-streamop)
                                    (string                . c-lineup-dont-change)
-                                   (substatement          . +)
+                                   (substatement          . 0)
                                    (substatement-open     . 0)
                                    (template-args-cont c-lineup-template-args +)
                                    (topmost-intro         . 0)
-                                   (topmost-intro-cont    . +)
+                                   (topmost-intro-cont    . 0)
                                    ))
                ))
 
@@ -5494,7 +5494,8 @@ Key bindings:
     (c-common-init 'csharp-mode)
 
     ;; compile
-    (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
+    ;; (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
+    (local-set-key "\C-j"  'compile)
 
     ;; to allow next-error to work with csc.exe:
     (setq compilation-scroll-output t)
@@ -5511,10 +5512,11 @@ Key bindings:
            'ms-csharp)))
 
     ;; flymake
-    (eval-after-load "flymake"
-      '(progn
-         (if csharp-want-flymake-fixup
-             (csharp-flymake-install))))
+    ;; (eval-after-load "flymake"
+    ;;   '(progn
+    ;;      (if csharp-want-flymake-fixup
+    ;;          (csharp-flymake-install))))
+    (flymake-mode t)
 
     (eval-after-load  "yasnippet"
       '(progn
