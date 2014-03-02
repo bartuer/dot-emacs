@@ -56,6 +56,7 @@
                                     (t (indent-relative-maybe))
                                     (t (indent-for-comment))))))
 
+(require 'smart-tabs-mode)
 
 (global-set-key "\C-z" (lambda ()
                          (interactive)

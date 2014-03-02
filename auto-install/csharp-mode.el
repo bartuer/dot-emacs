@@ -5494,7 +5494,8 @@ Key bindings:
     (c-common-init 'csharp-mode)
 
     ;; compile
-    (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
+    ;; (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
+    (local-set-key "\C-j"  'compile)
 
     ;; to allow next-error to work with csc.exe:
     (setq compilation-scroll-output t)
@@ -5511,10 +5512,11 @@ Key bindings:
            'ms-csharp)))
 
     ;; flymake
-    (eval-after-load "flymake"
-      '(progn
-         (if csharp-want-flymake-fixup
-             (csharp-flymake-install))))
+    ;; (eval-after-load "flymake"
+    ;;   '(progn
+    ;;      (if csharp-want-flymake-fixup
+    ;;          (csharp-flymake-install))))
+    (flymake-mode t)
 
     (eval-after-load  "yasnippet"
       '(progn
