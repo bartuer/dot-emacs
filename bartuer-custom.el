@@ -223,6 +223,7 @@
  '(org-level-1 ((t (:foreground "cyan"))))
  '(org-level-7 ((t (:foreground "cyan"))))
  '(org-link ((((class color) (background dark)) (:foreground "cyan" :underline t))))
+ '(org-table ((t (:foreground "color-82"))))
  '(org-target ((((class color) (background dark)) (:foreground "cyan" :underline t))))
  '(reb-match-1 ((((class color) (background dark)) (:background "blue"))))
  '(region ((t (:background "color-240"))))
