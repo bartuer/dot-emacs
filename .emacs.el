@@ -182,6 +182,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (require 'powershell)
+(require 'powershell-mode)
+(add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
 
 (add-hook 'shell-mode-hook
           (lambda ()
