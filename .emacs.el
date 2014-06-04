@@ -1,6 +1,9 @@
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))

@@ -1,3 +1,3 @@
 # name : console log print
 # --
-console.log('$0');
+console.info('27198debug $0');
