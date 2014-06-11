@@ -310,7 +310,7 @@ Otherwise, treat as a stand-alone file."
   "Load the filename corresponding to the present buffer in F# with #load"
   (interactive)
   (require 'inf-fsharp-mode)
-  (let* ((name (ammend-buffer-file-name))
+  (let* ((name (replace-regexp-in-string "\\\\" "\\\\\\\\" (ammend-buffer-file-name)))
          (command (concat "#load \"" name "\"")))
     (when (buffer-modified-p)
       (when (y-or-n-p (concat "Do you want to save \"" name "\" before
