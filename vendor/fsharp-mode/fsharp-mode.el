@@ -74,7 +74,7 @@ and whether it is in a project directory.")
   (define-key fsharp-mode-map "\C-c\C-r" 'fsharp-eval-region)
   (define-key fsharp-mode-map "\C-c\C-f" 'fsharp-load-buffer-file)
   (define-key fsharp-mode-map "\C-c\C-s" 'fsharp-show-subshell)
-  (define-key fsharp-mode-map "\M-\C-h" 'fsharp-mark-phrase)
+  (define-key fsharp-mode-map "\C-\M-h" 'fsharp-mark-phrase)
 
   (define-key fsharp-mode-map (kbd "M-n") 'next-error)
   (define-key fsharp-mode-map (kbd "M-p") 'previous-error)
@@ -94,7 +94,7 @@ and whether it is in a project directory.")
   (define-key fsharp-mode-map (kbd "C-c C-t") 'fsharp-ac/show-tooltip-at-point)
   (define-key fsharp-mode-map (kbd "C-c C-d") 'fsharp-ac/gotodefn-at-point)
   (define-key fsharp-mode-map (kbd "C-c C-q") 'fsharp-ac/stop-process)
-  (define-key fsharp-mode-map (kbd "C-c C-.") 'fsharp-ac/complete-at-point)
+  (define-key fsharp-mode-map "\C-\M-i" 'fsharp-ac/complete-at-point)
 
   (unless running-xemacs
     (let ((map (make-sparse-keymap "fsharp"))
@@ -250,9 +250,12 @@ and whether it is in a project directory.")
     (add-submenu nil fsharp-mode-xemacs-menu))
 
   (setq compile-command (fsharp-mode-choose-compile-command
-                         ((ammend-buffer-file-name))))
+                         (ammend-buffer-file-name)))
 
-  (fsharp-mode--load-with-binding (ammend-buffer-file-name))
+  (let ((file-name (ammend-buffer-file-name)))
+    (fsharp-mode--load-with-binding file-name)  
+    )
+  
   (turn-on-fsharp-doc-mode)
   (run-hooks 'fsharp-mode-hook))
 
