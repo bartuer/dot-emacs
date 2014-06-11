@@ -37,11 +37,12 @@
 
 (defvar fsharp-ac-executable "fsautocomplete.exe")
 
-(defvar fsharp-ac-complete-command
+(setq fsharp-ac-complete-command
   (let ((exe (or (executable-find fsharp-ac-executable)
                  (concat (file-name-directory (or load-file-name buffer-file-name))
                          "bin/" fsharp-ac-executable))))
     (case system-type
+      (cygwin (list exe))
       (windows-nt (list exe))
       (otherwise (list "mono" exe)))))
 
@@ -97,7 +98,7 @@ display in a help buffer instead.")
 
 (defun fsharp-ac-parse-current-buffer ()
   (save-restriction
-    (let ((file (expand-file-name (buffer-file-name))))
+    (let ((file (cygu2w (expand-file-name (buffer-file-name)))))
       (widen)
       (fsharp-ac--log (format "Parsing \"%s\"\n" file))
       (process-send-string
@@ -107,7 +108,7 @@ display in a help buffer instead.")
                (buffer-substring-no-properties (point-min) (point-max)))))))
 
 (defun fsharp-ac-parse-file (file)
-  (with-current-buffer (find-file-noselect file)
+  (with-current-buffer (find-file-noselect file) ;todo
     (fsharp-ac-parse-current-buffer)))
 
 
@@ -136,29 +137,29 @@ display in a help buffer instead.")
     ;; Load given project.
     (when (fsharp-ac--process-live-p)
       (log-psendstr fsharp-ac-completion-process
-                    (format "project \"%s\"\n" (expand-file-name file))))
+                    (format "project \"%s\"\n" (expand-file-name file)))) ;todo
     file))
 
 (defun fsharp-ac/load-file (file)
   "Start the compiler binding for an individual F# script."
   (when (fsharp-ac--script-file-p file)
-    (if (file-exists-p file)
+    (if (ammend-file-exists-p file)
         (when (not (fsharp-ac--process-live-p))
           (fsharp-ac/start-process))
       (add-hook 'after-save-hook 'fsharp-ac--load-after-save nil 'local))))
 
 (defun fsharp-ac--load-after-save ()
   (remove-hook 'fsharp-ac--load-after-save 'local)
-  (fsharp-ac/load-file (buffer-file-name)))
+  (fsharp-ac/load-file (buffer-file-name))) ;todo
 
 (defun fsharp-ac--valid-project-p (file)
   (and file
-       (file-exists-p file)
+       (file-exists-p file)             ;todo
        (string-match-p (rx "." "fsproj" eol) file)))
 
 (defun fsharp-ac--script-file-p (file)
   (and file
-       (string-match-p (rx (or "fsx" "fsscript"))
+       (string-match-p (rx (or "fsx" "fsscript" "fs"))
                        (file-name-extension file))))
 
 (defun fsharp-ac--reset ()
@@ -201,17 +202,16 @@ display in a help buffer instead.")
 (defun fsharp-ac/start-process ()
   "Launch the F# completion process in the background"
   (interactive)
-
   (when (fsharp-ac--process-live-p)
     (kill-process fsharp-ac-completion-process))
-
   (condition-case nil
       (progn
         (setq fsharp-ac-completion-process (fsharp-ac--configure-proc))
-        (fsharp-ac--reset-timer))
-    (error
-     (setq fsharp-ac-intellisense-enabled nil)
-     (message "Failed to start fsautocomplete. Disabling intellisense."))))
+        (fsharp-ac--reset-timer)
+        )
+  (error
+    (setq fsharp-ac-intellisense-enabled nil)
+    (message "Failed to start fsautocomplete. Disabling intellisense."))))
 
 (defun fsharp-ac--configure-proc ()
   (let ((proc (let (process-connection-type)
@@ -277,7 +277,7 @@ display in a help buffer instead.")
      (fsharp-ac-parse-current-buffer)
      (fsharp-ac-send-pos-request
       "completion"
-      (expand-file-name (buffer-file-name (current-buffer)))
+      (cygu2w (expand-file-name (buffer-file-name (current-buffer))))
       (line-number-at-pos)
       (current-column)))
 
@@ -357,7 +357,7 @@ The current buffer must be an F# file that exists on disk."
          (not ac-completing)
          (eq fsharp-ac-status 'idle)
          (or (member (file-truename file) fsharp-ac-project-files)
-             (string-match-p (rx (or "fsx" "fsscript"))
+             (string-match-p (rx (or "fsx" "fsscript" "fs"))
                              (file-name-extension file))))))
 
 (defvar fsharp-ac-awaiting-tooltip nil)
@@ -374,7 +374,7 @@ The current buffer must be an F# file that exists on disk."
   (when (fsharp-ac-can-make-request)
      (fsharp-ac-parse-current-buffer)
      (fsharp-ac-send-pos-request "tooltip"
-                                 (expand-file-name (buffer-file-name))
+                                 (cygu2w (expand-file-name (buffer-file-name)))
                                  (line-number-at-pos)
                                  (current-column))))
 
@@ -384,7 +384,7 @@ The current buffer must be an F# file that exists on disk."
   (when (fsharp-ac-can-make-request)
     (fsharp-ac-parse-current-buffer)
     (fsharp-ac-send-pos-request "finddecl"
-                                (expand-file-name (buffer-file-name))
+                                (cygu2w (expand-file-name (buffer-file-name)))
                                 (line-number-at-pos)
                                 (current-column))))
 
@@ -480,8 +480,8 @@ The current buffer must be an F# file that exists on disk."
          (ofaces (mapcar (lambda (o) (overlay-get o 'face))
                          (overlays-in beg end)))
          )
-    (unless (or (not (string= (file-truename buffer-file-name)
-                              (file-truename file)))
+    (unless (or (not (string= (file-truename buffer-file-name) ;todo
+                              (file-truename file))) ;todo
              (and (eq face 'fsharp-warning-face)
                  (memq 'fsharp-error-face ofaces)))
 
@@ -561,6 +561,7 @@ around to the start of the buffer."
 ;;; Handle output from the completion process.
 
 (defun fsharp-ac--get-msg (proc)
+  (debug)
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
     (let ((eofloc (search-forward "\n" nil t)))
@@ -630,7 +631,7 @@ around to the start of the buffer."
   (let* ((file (gethash "File" data))
          (line (gethash "Line" data))
          (col (gethash "Column" data)))
-    (find-file file)
+    (find-file file)                    ;todo
     (goto-char (fsharp-ac-line-column-to-pos line col))))
 
 (defun fsharp-ac-handle-errors (data)
@@ -674,7 +675,7 @@ display a short summary in the minibuffer."
         (princ str)))))
 
 (defun fsharp-ac-handle-project (data)
-  (setq fsharp-ac-project-files (-map 'file-truename data))
+  (setq fsharp-ac-project-files (-map 'file-truename data)) ;todo
   (fsharp-ac-parse-file (car (last fsharp-ac-project-files))))
 
 (defun fsharp-ac-handle-process-error (str)

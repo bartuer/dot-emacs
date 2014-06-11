@@ -7,18 +7,33 @@
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
   )
 
+(defun cygw2u (path)
+  (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
+  )
+
+(defun cygu2w (path)
+  (concat "C:\\cygwin64" (subst-char-in-string ?/ ?\\ path)) 
+  )
+
+(defun ammend-file-exists-p (file-name)
+  (let ((path-util (executable-find "cygpath")))
+    (if path-util
+        (file-exists-p (cygw2u file-name)) 
+      (file-exists-p file-name)
+        ))
+  )
+
 (defun ammend-buffer-file-name (&optional name)
   (let* ((path-util (executable-find "cygpath"))
          (file-name (if (not name)
                    (buffer-file-name)
                  name)))
     (if path-util
-        (subst-char-in-string ?/ ?\\ (replace-regexp-in-string "\n" "" (shell-command-to-string (concat "cygpath -m " file-name))))
+        (cygu2w file-name)
       file-name
       )
     )
   )
-
 
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
