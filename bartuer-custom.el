@@ -213,7 +213,7 @@
  '(magit-item-highlight ((nil (:foreground "green"))))
  '(magit-log-tag-label ((((class color) (background dark)) (:background "blue"))))
  '(magit-section-title ((t (:inherit magit-header :foreground "red" :weight bold))))
- '(minibuffer-prompt ((t (:foreground "magenta"))))
+ '(minibuffer-prompt ((t (:foreground "brightwhite"))))
  '(mode-line ((t (:inverse-video t))))
  '(mode-line-buffer-id ((t (:background "yellow" :foreground "blue" :weight bold))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:inverse-video nil))))

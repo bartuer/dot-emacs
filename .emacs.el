@@ -7,14 +7,18 @@
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
   )
 
-(defun ammend-buffer-file-name ()
-  (let* ((path-util (executable-find "cygpath")))
+(defun ammend-buffer-file-name (&optional name)
+  (let* ((path-util (executable-find "cygpath"))
+         (file-name (if (not name)
+                   (buffer-file-name)
+                 name)))
     (if path-util
-        (replace-regexp-in-string "\n" "" (shell-command-to-string (concat "cygpath -w " buffer-file-name)))
-      buffer-file-name
+        (subst-char-in-string ?/ ?\\ (replace-regexp-in-string "\n" "" (shell-command-to-string (concat "cygpath -m " file-name))))
+      file-name
       )
     )
   )
+
 
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))

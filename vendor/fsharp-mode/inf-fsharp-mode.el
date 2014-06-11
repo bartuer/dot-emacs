@@ -204,8 +204,8 @@ Input and output via buffer `*inferior-fsharp*'."
   (save-excursion
     ;; send location to fsi
     (let* (
-          (name (file-truename (buffer-name (current-buffer))))
-          (dir (file-name-directory name))
+          (name (ammend-buffer-file-name))
+          (dir (ammend-buffer-file-name (file-name-directory (buffer-file-name))))
           (line (number-to-string (line-number-at-pos start)))
           (loc (concat "# " line " \"" name "\"\n"))
           (movedir (concat "#silentCd @\"" dir "\";;\n")))

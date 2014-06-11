@@ -1,0 +1,6 @@
+# name: destructor ~ 
+# --
+~${classname}()
+{
+        $0
+}
