@@ -1,8 +1,25 @@
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
+<<<<<<< HEAD
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+=======
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  )
+
+(defun ammend-buffer-file-name ()
+  (let* ((path-util (executable-find "cygpath")))
+    (if path-util
+        (replace-regexp-in-string "\n" "" (shell-command-to-string (concat "cygpath -w " buffer-file-name)))
+      buffer-file-name
+      )
+    )
+  )
+>>>>>>> d7767690cc33e16cfb39ba87266396093408e9dc
 
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -990,6 +1007,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'csharp-mode)
 (load "~/etc/el/bartuer-csharp.el")
 (add-hook 'csharp-mode-hook 'bartuer-csharp-load)
+
+
+(require 'fsharp-mode)
+(load "~/etc/el/bartuer-fsharp.el")
+(add-hook 'fsharp-mode-hook 'bartuer-fsharp-load)
+(add-to-list 'auto-mode-alist '("\\fs$" . fsharp-mode))
 
 (defun mac-control ()
   "insert key symbol for shift"

@@ -1,0 +1,6 @@
+#name : do { ... } while (...) 
+# --
+do
+{
+	${0://thing to do}
+} while (${1:condition})
