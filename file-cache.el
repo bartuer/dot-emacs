@@ -2,6 +2,8 @@
                                 "~"
                                 "~/etc/el"
                                 "~/etc/el/kb"
+                                "~/etc/el/vendor/fsharp-mode"
+                                "~/local/share/doc/fsharp/project"
                                 "~/org"
                                 "~/org/corp_note"
                                 "~/local/src/emacs_win_port"

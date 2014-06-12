@@ -109,7 +109,7 @@ display in a help buffer instead.")
                (buffer-substring-no-properties (point-min) (point-max)))))))
 
 (defun fsharp-ac-parse-file (file)
-  (with-current-buffer (find-file-noselect file) ;todo
+  (with-current-buffer (find-file-noselect file)
     (fsharp-ac-parse-current-buffer)))
 
 
@@ -151,7 +151,7 @@ display in a help buffer instead.")
 
 (defun fsharp-ac--load-after-save ()
   (remove-hook 'fsharp-ac--load-after-save 'local)
-  (fsharp-ac/load-file (buffer-file-name))) ;todo
+  (fsharp-ac/load-file (buffer-file-name)))
 
 (defun fsharp-ac--valid-project-p (file)
   (and file
@@ -634,7 +634,7 @@ around to the start of the buffer."
   (let* ((file (gethash "File" data))
          (line (gethash "Line" data))
          (col (gethash "Column" data)))
-    (find-file file)                    ;todo
+    (find-file (cygw2u file))                    
     (goto-char (fsharp-ac-line-column-to-pos line col))))
 
 (defun fsharp-ac-handle-errors (data)
