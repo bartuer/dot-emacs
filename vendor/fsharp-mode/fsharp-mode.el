@@ -88,7 +88,7 @@ and whether it is in a project directory.")
   (define-key fsharp-mode-map [backspace] 'fsharp-electric-backspace)
   (define-key fsharp-mode-map (kbd ".") 'fsharp-ac/electric-dot)
 
-  (define-key fsharp-mode-map (kbd "C-c <up>") 'fsharp-goto-block-up)
+  (define-key fsharp-mode-map (kbd "C-c C-u") 'fsharp-goto-block-up)
 
   (define-key fsharp-mode-map (kbd "C-c C-p") 'fsharp-ac/load-project)
   (define-key fsharp-mode-map (kbd "C-c C-t") 'fsharp-ac/show-tooltip-at-point)
