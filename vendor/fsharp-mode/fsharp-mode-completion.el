@@ -70,6 +70,7 @@ display in a help buffer instead.")
 ;;; ----------------------------------------------------------------------------
 
 (defvar fsharp-ac-debug nil)
+(setq fsharp-ac-debug t)
 (defvar fsharp-ac-status 'idle)
 (defvar fsharp-ac-completion-process nil)
 (defvar fsharp-ac-project-files nil)
@@ -192,7 +193,7 @@ display in a help buffer instead.")
       (kill-process fsharp-ac-completion-process)))
   (when fsharp-ac-idle-timer
     (cancel-timer fsharp-ac-idle-timer))
-  (setq fsharp-ac-status 'idle
+    (setq fsharp-ac-status 'idle
         fsharp-ac-completion-process nil
         fsharp-ac-project-files nil
         fsharp-ac-idle-timer nil
@@ -214,13 +215,13 @@ display in a help buffer instead.")
     (message "Failed to start fsautocomplete. Disabling intellisense."))))
 
 (defun fsharp-ac--configure-proc ()
-  (let ((proc (let (process-connection-type)
-                (apply 'start-process "fsharp-complete" "*fsharp-complete*"
-                       fsharp-ac-complete-command))))
+  (apply 'start-process "fsharp-complete" "*fsharp-complete*"
+                       fsharp-ac-complete-command)
+  (let ((proc (get-buffer-process "*fsharp-complete*"))) 
     (sleep-for 0.1)
     (if (process-live-p proc)
         (progn
-	  (set-process-coding-system proc 'utf-8-auto)
+          (set-process-coding-system proc 'utf-8-auto)
           (set-process-filter proc 'fsharp-ac-filter-output)
           (set-process-query-on-exit-flag proc nil)
           (setq fsharp-ac-status 'idle
@@ -232,7 +233,9 @@ display in a help buffer instead.")
           proc)
       (fsharp-ac-message-safely "Failed to launch: '%s'"
                                 (s-join " " fsharp-ac-complete-command))
-      nil)))
+      nil)    
+  )
+)
 
 (defun fsharp-ac--reset-timer ()
   (when fsharp-ac-idle-timer
@@ -561,7 +564,6 @@ around to the start of the buffer."
 ;;; Handle output from the completion process.
 
 (defun fsharp-ac--get-msg (proc)
-  (debug)
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
     (let ((eofloc (search-forward "\n" nil t)))
@@ -589,6 +591,7 @@ around to the start of the buffer."
 
 (defun fsharp-ac-filter-output (proc str)
   "Filter output from the completion process and handle appropriately."
+  (fsharp-ac--log (format "response: %s\n" str))
   (with-current-buffer (process-buffer proc)
     (save-excursion
       (goto-char (process-mark proc))
