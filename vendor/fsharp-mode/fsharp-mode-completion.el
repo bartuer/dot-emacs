@@ -138,7 +138,7 @@ display in a help buffer instead.")
     ;; Load given project.
     (when (fsharp-ac--process-live-p)
       (log-psendstr fsharp-ac-completion-process
-                    (format "project \"%s\"\n" (expand-file-name file)))) ;todo
+                    (format "project \"%s\"\n" (cygu2w (expand-file-name file)))))
     file))
 
 (defun fsharp-ac/load-file (file)
@@ -155,7 +155,7 @@ display in a help buffer instead.")
 
 (defun fsharp-ac--valid-project-p (file)
   (and file
-       (file-exists-p file)             ;todo
+       (file-exists-p file)
        (string-match-p (rx "." "fsproj" eol) file)))
 
 (defun fsharp-ac--script-file-p (file)
@@ -483,8 +483,8 @@ The current buffer must be an F# file that exists on disk."
          (ofaces (mapcar (lambda (o) (overlay-get o 'face))
                          (overlays-in beg end)))
          )
-    (unless (or (not (string= (file-truename buffer-file-name) ;todo
-                              (file-truename file))) ;todo
+    (unless (or (not (string= (file-truename (cygu2w buffer-file-name))
+                              (file-truename file)))
              (and (eq face 'fsharp-warning-face)
                  (memq 'fsharp-error-face ofaces)))
 
@@ -678,7 +678,11 @@ display a short summary in the minibuffer."
         (princ str)))))
 
 (defun fsharp-ac-handle-project (data)
-  (setq fsharp-ac-project-files (-map 'file-truename data)) ;todo
+  (let ((path-util (executable-find "cygpath")))
+    (if path-util
+        (setq fsharp-ac-project-files (-map 'cygw2u data))
+      (setq fsharp-ac-project-files (-map 'file-truename data))
+        ))
   (fsharp-ac-parse-file (car (last fsharp-ac-project-files))))
 
 (defun fsharp-ac-handle-process-error (str)
