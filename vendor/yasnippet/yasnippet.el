@@ -642,7 +642,6 @@ for each field."
   "Expand snippet at current point. Text between START and END
 will be deleted before inserting template."
   (run-hooks 'yas/before-expand-snippet-hook)
-
   (goto-char start)
 
   (let ((key (buffer-substring-no-properties start end))

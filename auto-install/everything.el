@@ -202,7 +202,7 @@ the current directory and its sub-directories."
 				     (when (or (eq major-mode 'shell-mode)
 					       (eq major-mode 'eshell-mode)
 					       (eq major-mode 'dired-mode))
-				       (format "\"%s\" " (expand-file-name default-directory))))))
+				      (car kill-ring)))))
     (unless (string= query "")
       (everything-select query))))
 
@@ -306,14 +306,6 @@ otherwise."
       (kill-buffer everything-result-buffer))
     (apply #'call-process  everything-cmd nil (get-buffer-create everything-result-buffer) nil args)))
 
-
-(defun everything-is-running ()
-  "Check if Everything is running."
-  
-  (find "Everything.exe"
-	(mapcar (lambda (p) (cdr (assoc 'comm (process-attributes p))))
-		(list-system-processes))
-	:test 'string=))
 
 (defun everything-is-running ()
   "Check if Everything is running."

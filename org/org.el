@@ -9013,7 +9013,7 @@ application the system uses for this file type."
   (setq org-window-config-before-follow-link (current-window-configuration))
   (org-remove-occur-highlights nil nil t)
   (cond
-   ((and (stringp (ffap-file-at-point))
+   ((and (stringp (ffap-string-at-point))
          (not (string-match-p "^http:.*" (ffap-string-at-point)))
          (not (string-match-p "^https:.*" (ffap-string-at-point))))
     (browse-url

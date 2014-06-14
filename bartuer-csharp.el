@@ -1,0 +1,7 @@
+(defun bartuer-csharp-load ()
+  (turn-on-auto-revert-mode)
+  (setq indent-tabs-mode t)
+  (smart-tabs-mode-enable)
+  (smart-tabs-advice bartuer-c-indent c-basic-offset)
+  (c-set-style "c#")
+  )

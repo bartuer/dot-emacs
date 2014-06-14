@@ -1,6 +1,40 @@
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  )
+
+(defun cygw2u (path)
+  (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
+  )
+
+(defun cygu2w (path)
+  (concat "C:\\cygwin64" (subst-char-in-string ?/ ?\\ path)) 
+  )
+
+(defun ammend-file-exists-p (file-name)
+  (let ((path-util (executable-find "cygpath")))
+    (if path-util
+        (file-exists-p (cygw2u file-name)) 
+      (file-exists-p file-name)
+        ))
+  )
+
+(defun ammend-buffer-file-name (&optional name)
+  (let* ((path-util (executable-find "cygpath"))
+         (file-name (if (not name)
+                   (buffer-file-name)
+                 name)))
+    (if path-util
+        (cygu2w file-name)
+      file-name
+      )
+    )
+  )
+
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -36,6 +70,18 @@
 (global-set-key "\C-ck" 'kill-region) ;delete to the beginning "\C-x-DEL",move 1
 (global-set-key "\C-xk" 'kill-whole-line) ;delete whole line, move 1
 
+(require 'guess-style)
+(autoload 'guess-style-set-variable "guess-style" nil t)
+(autoload 'guess-style-guess-variable "guess-style")
+(autoload 'guess-style-guess-all "guess-style" nil t)
+(global-guess-style-info-mode 1)
+(defun ttt()
+  (interactive)
+  (whitespace-mode)
+  (guess-style-guess-all)
+  )
+
+
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
 (global-set-key "\C-i" '(lambda ()
                           (interactive)
@@ -44,6 +90,7 @@
                                     (t (indent-relative-maybe))
                                     (t (indent-for-comment))))))
 
+(require 'smart-tabs-mode)
 
 (global-set-key "\C-z" (lambda ()
                          (interactive)
@@ -164,6 +211,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-j" 'eval-last-sexp)
 (defalias 'e 'eval-current-buffer)
 
+
+(require 'powershell)
+(require 'powershell-mode)
+(add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
 
 (add-hook 'shell-mode-hook
           (lambda ()
@@ -565,6 +616,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-magit-load "bartuer-magit.el" "add rinari-launch in magit" t)
 (add-hook 'magit-mode-hook 'bartuer-magit-load)
 
+(require 'bartuer-sd)
 (defun accumulate-rectangle (start end &optional fill)
   "add numbers up in rectangle"
   (interactive "r*\nP")
@@ -966,6 +1018,16 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\mm$" . objc-mode))
 (add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
+(require 'csharp-mode)
+(load "~/etc/el/bartuer-csharp.el")
+(add-hook 'csharp-mode-hook 'bartuer-csharp-load)
+
+
+(require 'fsharp-mode)
+(load "~/etc/el/bartuer-fsharp.el")
+(add-hook 'fsharp-mode-hook 'bartuer-fsharp-load)
+(add-to-list 'auto-mode-alist '("\\fs$" . fsharp-mode))
+
 (defun mac-control ()
   "insert key symbol for shift"
   (interactive)
@@ -1061,8 +1123,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
 (add-hook 'sql-mode-hook 'bartuer-sql-load)
 
-(autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
-(add-hook 'sgml-mode-hook 'bartuer-sgml-load)
+(add-to-list 'auto-mode-alist '("\\html$" . nxml-mode))
+;; (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
+;; (add-hook 'sgml-mode-hook 'bartuer-sgml-load)
 
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
@@ -1175,11 +1238,14 @@ If give a negative ARG, will undo the last mark action, thus the
   ))
 (global-set-key "\M-v" 'clipboard-paste)
 
-(defun interprogram-cut-function (string &optional push)
+(defun clipboard-copy-function (string &optional push)
   (get-buffer-create "pbcopy")
   (with-current-buffer "pbcopy"
     (insert string)
+    (set-buffer-file-coding-system 'utf-8-dos)
      ;; cp /cygdrive/c/WINDOWS/system32/clip.exe /usr/local/bin/pbcopy.exe
+     ;; even set coding-system to utf-dos copy multiple line has problem
+     ;; IDE can handle it, like VS
     (call-process-region (point-min) (point-max) "pbcopy" t 0)
     )
   )
@@ -1192,7 +1258,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 ;;; TODO this implement has bug, must (setq interprogram-cut-function nil)
 
-(setq interprogram-cut-function (intern "interprogram-cut-function"))
+(setq interprogram-cut-function (intern "clipboard-copy-function"))
 (require 'bartuer-page)
 
 ;;; disable edit change prompt

@@ -1,0 +1,3 @@
+(defun bartuer-fsharp-load ()
+  ""
+  )
