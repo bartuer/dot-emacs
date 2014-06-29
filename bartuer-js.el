@@ -77,7 +77,7 @@
   (interactive)
   (slime-js-send-buffer)
   (let ((expression (get-jslime-sexp)))
-    (slime-repl-eval-string expression)  
+    (slime-repl-eval-string  expression)  
     )
   )
 
@@ -513,7 +513,7 @@ can bind C-j in comint buffer"
 (defun js-try-to-parse-buffer ()
   (interactive)
   (slime-js-send-buffer)
-  (slime-repl-eval-string "(function () {if (undefined !== test_result) {return test_result;}})();") 
+  (slime-repl-eval-string "(function () {if (undefined !== test_result) { try{return JSON2.stringify(test_result, null, '\t');} catch(e) {return test_result;}}}());") 
   )
 
 (defun bartuer-js-load ()
