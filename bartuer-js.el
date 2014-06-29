@@ -54,6 +54,33 @@
               )))
           suite-list))
 
+(defun find-jexp-beg ()
+                 (backward-sexp)
+                 (if (or (eq 32 (char-before))
+                         (bolp))  
+                     (point)
+                     (find-jexp-beg)
+                   )
+  )
+
+(defun get-jslime-sexp ()
+  (save-excursion
+    (let ((end (point))
+          (beg (find-jexp-beg))
+          )
+      (buffer-substring-no-properties beg end)
+      )
+  )
+)
+
+(defun bartuer-jslime ()
+  (interactive)
+  (slime-js-send-buffer)
+  (let ((expression (get-jslime-sexp)))
+    (slime-repl-eval-string expression)  
+    )
+  )
+
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
   (interactive (jct-interactive))
@@ -542,10 +569,11 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
 
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
-  (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
+  (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
   )
+
 
 (require 'bartuer-page nil t)
 (provide 'bartuer-js)
