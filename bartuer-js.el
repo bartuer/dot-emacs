@@ -513,6 +513,7 @@ can bind C-j in comint buffer"
 (defun js-try-to-parse-buffer ()
   (interactive)
   (slime-js-send-buffer)
+  (slime-repl-eval-string "(function () {if (undefined !== test_result) {return test_result;}})();") 
   )
 
 (defun bartuer-js-load ()
@@ -540,8 +541,6 @@ can bind C-j in comint buffer"
   ;; (reload-mode t)
   ;; TODO need more stable message queue, then push will be cheap
   ;; (push-mode t)
-  (add-hook 'after-save-hook 'js-merge nil t)
-  (add-hook 'after-save-hook 'js-find-live-edit-string nil t)
   (add-hook 'after-save-hook 'js-try-to-parse-buffer nil t)
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
@@ -552,21 +551,19 @@ can bind C-j in comint buffer"
       (define-key js2-mode-map "\C-m" 'newline))
   (set (make-local-variable 'indent-region-function) 'js-indent)
 
+  (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
+  (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
+  (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
+  (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
 
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
-  (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
 
-  (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
-  (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
-
-  (define-key js2-mode-map "\C-c\C-b" 'send-buffer-jsh)
-  (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
-
-  (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
-  (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
+  (define-key js2-mode-map "\C-\M-x" 'slime-js-send-defun)
+  (define-key js2-mode-map "\C-c\C-b" 'slime-js-send-buffer)
+  (define-key js2-mode-map "\C-c\C-r" 'slime-js-send-region)
 
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-j" 'bartuer-jslime)
