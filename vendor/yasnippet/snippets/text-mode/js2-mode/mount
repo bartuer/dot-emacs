@@ -1,0 +1,3 @@
+# name: mount appendChild
+# --
+dom.mount(${1:fatherNode}, ${2:childNode});

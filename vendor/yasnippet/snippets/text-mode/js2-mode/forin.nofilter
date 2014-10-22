@@ -1,5 +1,5 @@
 #name : for in no filter
 # --
 for (var ${1:prop} in ${2:obj}) {
-  $0;
+    $0;
 }

@@ -1,0 +1,4 @@
+# name: namespace bind former view parameter rails 
+# (rdoc "ActionView::Helpers::FormHelper#form_for")
+# --
+[:${1:admin}, @${2:post}]

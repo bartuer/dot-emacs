@@ -1,0 +1,6 @@
+# name: link_to block
+# (rdoc "ActionView::Helpers::UrlHelper#link_to")
+# --
+<% link_to(@${1:model}) do %>
+   <strong><%= @$1.name %></strong> -- <span>Check it out!!</span>
+<% end %>

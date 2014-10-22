@@ -1,0 +1,4 @@
+# name : rss atom auto_discovery_link_tag linker view api rails
+# (rdoc "ActionView::Helpers::AssetTagHelper#auto_discovery_link_tag")
+# --
+<%= auto_discovery_link_tag(${1::rss}, {urlh$0}, {:rel => "${2:alternate}", :type => "${3:override-mime}", :title => "${4:Example RSS}"}) %>

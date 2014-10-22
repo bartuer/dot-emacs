@@ -1,0 +1,4 @@
+# name: bind record former view parameter rails 
+# (rdoc "ActionView::Helpers::FormHelper#form_for")
+# --
+@${1:record}

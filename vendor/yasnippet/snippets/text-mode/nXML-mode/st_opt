@@ -1,0 +1,5 @@
+# name: option submit_tag former view parameter rails 
+# (rdoc "ActionFormer View::Helpers::FormTagHelper#submit_tag")
+# (yas/tap) removeme, :confirm 'Am I really a MS', :disable true, :disable_with 'not available now...'
+# --
+${1:`(yas/p ":confirm" "'Am I really a MS'")`}$0, ${2:`(yas/p ":disable" "true")`}, ${3:`(yas/p ":disable_with" "'not available now...'")`}

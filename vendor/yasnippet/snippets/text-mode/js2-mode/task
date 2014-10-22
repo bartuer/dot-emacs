@@ -1,0 +1,5 @@
+# name: taks gulp
+# --
+gulp.task('${1:task}', function () {
+    $0;
+});

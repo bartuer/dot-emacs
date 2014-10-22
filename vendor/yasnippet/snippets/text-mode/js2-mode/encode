@@ -1,0 +1,4 @@
+# name: nodejs encode
+# --
+response.setEncoding('${1:utf8'});
+$0

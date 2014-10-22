@@ -1,0 +1,4 @@
+# name: radio_button_tag former view api rails 
+# (rdoc "ActionFormer View::Helpers::FormTagHelper#radio_button_tag")
+# --
+radio_button_tag "${1:name_obj_method}", "${2:value_obj[method]}", checked = false$0, fopt
