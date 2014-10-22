@@ -63,6 +63,14 @@
                    )
   )
 
+(defun jslime-eval-for-loop ()
+  (interactive)
+  (let ((loop-value-array-code "var slime-js-loop-value = [];"))
+    (slime-js-eval
+     (concat loop-value-array-code slime-js-buffer-or-region-string))
+  )
+  )
+
 (defun get-jslime-sexp ()
   (save-excursion
     (let ((end (point))
@@ -466,6 +474,11 @@ wrap block add semicolon correct plus and equal"
   :type '(choice string (const :tag "None" nil))
   :group 'js2)
 
+(defcustom slime-push-minor-mode-string " SlimePush"
+  "String to display in mode line when push mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'js2)
+
 (define-minor-mode push-mode
   "Minor mode to push current buffer to browser"
   :group 'js2 :lighter push-minor-mode-string
@@ -475,6 +488,17 @@ wrap block add semicolon correct plus and equal"
     )
    (t
     (remove-hook 'after-save-hook 'js-push t)))
+  )
+
+(define-minor-mode slime-push-mode
+  "Minor mode to push current buffer to browser via slime"
+  :group 'js2 :lighter slime-push-minor-mode-string
+  (cond
+   (push-mode
+    (add-hook 'after-save-hook ' 'js-try-to-parse-buffer t)
+    )
+   (t
+    (remove-hook 'after-save-hook 'js-try-to-parse-buffer t)))
   )
 
 (fset 'stepin
@@ -538,10 +562,13 @@ can bind C-j in comint buffer"
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
 
+  (defalias  'slimepu (lambda () (interactive)
+                        (slime-push-mode)))
+
   ;; (reload-mode t)
   ;; TODO need more stable message queue, then push will be cheap
   ;; (push-mode t)
-  (add-hook 'after-save-hook 'js-try-to-parse-buffer nil t)
+
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
@@ -558,13 +585,12 @@ can bind C-j in comint buffer"
 
   (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
-  (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
 
   (define-key js2-mode-map "\C-\M-x" 'slime-js-send-defun)
   (define-key js2-mode-map "\C-c\C-b" 'slime-js-send-buffer)
   (define-key js2-mode-map "\C-c\C-r" 'slime-js-send-region)
-
+  (define-key js2-mode-map "\C-\M-u" 'slime-js-start-of-toplevel-form)
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
   (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
