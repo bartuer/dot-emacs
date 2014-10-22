@@ -231,6 +231,16 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-5" 'everything-find-file)
 (global-set-key "\M-6" 'nav-toggle)
 
+(defun call-stack-parse ()
+  (interactive)
+  (setq next-error-function 'compilation-next-error-function)
+  (set (make-local-variable 'compilation-locs)
+       (make-hash-table :test 'equal :weakness 'value))
+  (compilation--ensure-parse (point))
+  (setq compilation-current-error (point))
+)
+(defalias 'cs 'call-stack-parse)
+
 (defun do-ql-dwim()
   (interactive)
   (let* ((proc (get-buffer-process "*Async Shell Command*")))

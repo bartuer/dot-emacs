@@ -587,6 +587,8 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
   (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
 
+  (define-key js2-mode-map "\C-c\C-\M-n" 'js2-next-error)
+
   (define-key js2-mode-map "\C-\M-x" 'slime-js-send-defun)
   (define-key js2-mode-map "\C-c\C-b" 'slime-js-send-buffer)
   (define-key js2-mode-map "\C-c\C-r" 'slime-js-send-region)
