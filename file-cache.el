@@ -7,9 +7,8 @@
                                 "~/org"
                                 "~/org/corp_note"
                                 "~/local/src/emacs_win_port"
-                                "~/dev/osfclient/web/jscript"
-                                "~/dev/biserver/EwaJs"
-                                "~/dev/biserver/EwaJs/Agave"
-                                "~/dev/biserver/EwaJs/Features/ChartInsert"
-                                "~/dev/biserver/EwaJs/Features/WebExtension"
+                                "~/local/src/op/src"
+                                "~/local/src/op/src/static"
+                                "~/local/src/op/src/test"
+                                "~/local/src/op/doc"
                                 ))
