@@ -49,6 +49,7 @@
   (find-file-other-window file)
   (goto-char point))
 
+(defalias ': (lambda () (interactive) (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):")))
 (defalias 'll (lambda ()
                 (interactive)
                 (kill-new (format "(link \"%s\" %d)"
