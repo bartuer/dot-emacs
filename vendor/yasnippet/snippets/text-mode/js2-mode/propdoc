@@ -2,7 +2,9 @@
 # --
 
 /**
- * ${1:description}
- * $0
+ * ### ${1:class.prop}
+ * ```js
+ * ```
+ * @ $0
  * @prop {${2:type}} ${3:readonly}
  */
