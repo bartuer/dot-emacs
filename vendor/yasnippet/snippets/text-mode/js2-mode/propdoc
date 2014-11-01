@@ -1,0 +1,8 @@
+# name: jsdoc propdoc property
+# --
+
+/**
+ * ${1:description}
+ * $0
+ * @prop {${2:type}} ${3:readonly}
+ */

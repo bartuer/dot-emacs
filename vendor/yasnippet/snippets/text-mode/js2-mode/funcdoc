@@ -1,0 +1,9 @@
+# name: jsdoc funcdoc interface function
+# --
+
+/**
+ * ${1:description}
+ * @param {${2:type}} ${3:name}
+ * @callback ${4:name}
+ * @return {${5:type}}
+ */

@@ -11,4 +11,5 @@
                                 "~/local/src/op/src/static"
                                 "~/local/src/op/src/test"
                                 "~/local/src/op/doc"
+                                "~/local/src/sp_proxy_page"
                                 ))

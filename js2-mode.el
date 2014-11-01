@@ -1034,9 +1034,9 @@ in large files.")
 
 (defface js2-warning
   `((((class color) (background light))
-     (:underline  "orange"))
+     (:underline  "color-166"))
     (((class color) (background dark))
-     (:underline "orange"))
+     (:underline "color-166"))
     (t (:underline t)))
   "Face for JavaScript warnings."
   :group 'js2-mode)
@@ -1051,46 +1051,46 @@ in large files.")
   :group 'js2-mode)
 
 (defface js2-jsdoc-tag
-  '((t :foreground "SlateGray"))
+  '((t :foreground "brightblack"))
   "Face used to highlight @whatever tags in jsdoc comments."
   :group 'js2-mode)
 
 (defface js2-jsdoc-type
-  '((t :foreground "SteelBlue"))
+  '((t :foreground "green"))
   "Face used to highlight {FooBar} types in jsdoc comments."
   :group 'js2-mode)
 
 (defface js2-jsdoc-value
-  '((t :foreground "PeachPuff3"))
+  '((t :foreground "white"))
   "Face used to highlight tag values in jsdoc comments."
   :group 'js2-mode)
 
 (defface js2-function-param
-  '((t :foreground "SeaGreen"))
+  '((t :foreground "color-254"))
   "Face used to highlight function parameters in javascript."
   :group 'js2-mode)
 
 (defface js2-instance-member
-  '((t :foreground "DarkOrchid"))
+  '((t :foreground "color-27"))
   "Face used to highlight instance variables in javascript.
 Not currently used."
   :group 'js2-mode)
 
 (defface js2-private-member
-  '((t :foreground "PeachPuff3"))
+  '((t :foreground "color-125"))
   "Face used to highlight calls to private methods in javascript.
 Not currently used."
   :group 'js2-mode)
 
 (defface js2-private-function-call
-  '((t :foreground "goldenrod"))
+  '((t :foreground "color-190"))
   "Face used to highlight calls to private functions in javascript.
 Not currently used."
   :group 'js2-mode)
 
 (defface js2-jsdoc-html-tag-name
   '((((class color) (min-colors 88) (background light))
-     (:foreground "rosybrown"))
+     (:foreground "color-136"))
     (((class color) (min-colors 8) (background dark))
      (:foreground "yellow"))
     (((class color) (min-colors 8) (background light))
@@ -1100,7 +1100,7 @@ Not currently used."
 
 (defface js2-jsdoc-html-tag-delimiter
   '((((class color) (min-colors 88) (background light))
-     (:foreground "dark khaki"))
+     (:foreground "color-71"))
     (((class color) (min-colors 8) (background dark))
      (:foreground "green"))
     (((class color) (min-colors 8) (background light))
@@ -1124,7 +1124,7 @@ declarations to `js2-recorded-identifiers', which see."
 (make-variable-buffer-local 'js2-post-parse-callbacks)
 
 (defface js2-external-variable
-  '((t :foreground "orange"))
+  '((t :foreground "color-166"))
   "Face used to highlight undeclared variable identifiers.
 An undeclared variable is any variable not declared with var or let
 in the current scope or any lexically enclosing scope.  If you use
@@ -5276,7 +5276,7 @@ into temp buffers."
     (aset table js2-STRING 'font-lock-string-face)
     (aset table js2-REGEXP 'font-lock-string-face)
     (aset table js2-COMMENT 'font-lock-comment-face)
-    (aset table js2-THIS 'font-lock-builtin-face)
+    (aset table js2-THIS 'font-lock-keyword-face)
     (aset table js2-VOID 'font-lock-constant-face)
     (aset table js2-NULL 'font-lock-constant-face)
     (aset table js2-TRUE 'font-lock-constant-face)
@@ -10970,7 +10970,8 @@ If there is no such matching line, returns current end of line."
     (save-excursion
       (while (and (zerop (forward-line direction))
                   (looking-at js2-mode-//-comment-re)
-                  (eq indent (length (match-string 1))))
+                  )
+        (debug)
         (setq pos (point-at-eol))
       pos))))
 
@@ -10981,7 +10982,7 @@ If there is no such matching line, returns current end of line."
       (goto-char (point-min))
       (while (re-search-forward js2-mode-//-comment-re nil t)
         (setq beg (point)
-              end (js2-mode-extend-//-comment 1))
+              end (point-at-eol))
         (unless (eq beg end)
           (overlay-put (js2-mode-flag-region beg end 'hide)
                        'comment t))

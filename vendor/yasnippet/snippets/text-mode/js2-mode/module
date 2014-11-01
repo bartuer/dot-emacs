@@ -17,7 +17,7 @@ function ${1:module_name}() {
 
     $1Interface.prototype.help  = function () {
         return "var o = new $1(); // then explore it's property and method";
-    }
+    };
     
     return new $1Interface();
 };
