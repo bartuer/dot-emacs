@@ -3,5 +3,5 @@
 try {
     $0;
 } catch(e) {
-    console.error('error : ' + e);
+    debug(e);
 }

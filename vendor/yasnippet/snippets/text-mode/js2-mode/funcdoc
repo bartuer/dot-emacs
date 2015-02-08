@@ -2,11 +2,9 @@
 # --
 
 /**
- * #### ${1:class.metho}
- * ```js
- * ```
+ * #### ${1:class.method}
+ * 
  * @
  * @param {${2:type}} ${3:name}
- * @callback ${4:name}
  * @return {${5:type}}
  */

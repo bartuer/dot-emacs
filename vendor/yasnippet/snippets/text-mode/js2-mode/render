@@ -1,0 +1,8 @@
+# name: render render describe_name
+# --
+self.prototype.render = function () {
+    var model = this.model;
+    var layout = this.layout;
+
+    this.element = this.elem('div', '$0')
+};
