@@ -81,6 +81,17 @@
   )
 )
 
+(defun slime-js-send-buffer ()
+  (interactive)
+  (save-excursion
+    (let ((start (point-min))
+          (end (point-max)))
+      (message "send buffer to swank server")
+      (slime-js-eval
+       (buffer-substring-no-properties start end))
+      (message "Sent buffer"))))
+
+
 (defun bartuer-jslime ()
   (interactive)
   (slime-js-send-buffer)
@@ -540,6 +551,7 @@ can bind C-j in comint buffer"
   (slime-repl-eval-string "(function () {if (undefined !== test_result) { try{return JSON2.stringify(test_result, null, '\t');} catch(e) {return test_result;}}}());") 
   )
 
+(eval-after-load 'tern '(progn (require 'tern-auto-complete) (tern-ac-setup)))
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -552,10 +564,10 @@ can bind C-j in comint buffer"
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
-  (make-local-variable 'suite-list)
-  (js-find-suite)
-  (make-local-variable 'live-edit-string)
-  (js-find-live-edit-string)
+  ;; (make-local-variable 'suite-list)
+  ;; (js-find-suite)
+  ;; (make-local-variable 'live-edit-string)
+  ;; (js-find-live-edit-string)
   (set-up-slime-js-ac)
   (defalias  'pa (lambda () (interactive)
                  (js2-parse-mode)))
