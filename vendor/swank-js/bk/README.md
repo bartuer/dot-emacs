@@ -1,7 +1,7 @@
 swank-js
 ========
 
-NOTE: the official repo is at [[https://github.com/swank-js/swank-js]].
+NOTE: the official repo is at <https://github.com/swank-js/swank-js>.
 
 swank-js provides [SLIME](http://common-lisp.net/project/slime/) REPL
 and other development tools for in-browser JavaScript and
@@ -73,7 +73,7 @@ Installation
         npm install -g swank-js
 
 3. Get recent [SLIME](http://common-lisp.net/project/slime/) from its CVS
-or the [git mirror](http://git.boinkor.net/gitweb/slime.git). The backend
+or the [git mirror](https://github.com/antifuchs/slime.git). The backend
 was verified to work with SLIME 2012-02-12, it may or may not work with
 other versions, but note that breaking change in the protocol was introduced
 in SLIME 2011-11-27.
@@ -113,12 +113,14 @@ Usage
 If you want to use swank from the node project just add following to your
 package.json file:
 
-        "devDependencies": {
-          "swank-js": ">=0.0.1"
+      { 
+       	 "devDependencies": {
+         "swank-js": ">=0.0.1"
         },
-        "scripts": {
+          "scripts": {
           "swank": "node node_modules/swank-js"
         }
+      }
 
 Once this is done you should be able to run up a swank for this project by
 running:
