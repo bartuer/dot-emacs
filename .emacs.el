@@ -13,6 +13,12 @@
 (global-set-key "\C-xx" 'mc/mark-all-dwim)
 (global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
 
+(require 'key-chord)
+(key-chord-mode 1)
+(key-chord-define-global "jf" 'er/expand-region)
+(key-chord-define-global "hg" 'er/contract-region)
+(require 'expand-region)
+
 (defun cygw2u (path)
   (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
   )
