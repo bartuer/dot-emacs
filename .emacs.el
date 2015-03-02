@@ -12,6 +12,8 @@
 (require 'multiple-cursors)
 (global-set-key "\C-xx" 'mc/mark-all-dwim)
 (global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
+(global-set-key "\C-xy" 'mc/insert-numbers)
+(global-set-key "\C-xp" 'mc/edit-lines)
 
 (require 'key-chord)
 (key-chord-mode 1)
@@ -19,8 +21,14 @@
 (key-chord-define-global "hg" 'er/contract-region)
 (require 'expand-region)
 
+(defun hacker-news ()
+  (interactive)
+  (require 'hackernews)
+  (hackernews))
+
 (require 'ace-jump-mode)
 (global-set-key "\C-c " 'ace-jump-mode)
+
 (defun cygw2u (path)
   (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
   )
@@ -1150,6 +1158,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-js-load "bartuer-js.el" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
+
+
 
 (add-to-list 'auto-mode-alist '("\\.sql$" . sql-mode))
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)

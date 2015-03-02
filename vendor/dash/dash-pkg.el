@@ -1,1 +1,1 @@
-(define-package "dash" "20140607.33" "A modern list library for Emacs" (quote nil))
+(define-package "dash" "20141220.1452" "A modern list library for Emacs" (quote nil))

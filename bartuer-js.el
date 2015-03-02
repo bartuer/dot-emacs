@@ -1,6 +1,6 @@
 (require 'moz nil t)
 (require 'bartuer-js-inf nil t)
-
+(require 'js2-refactor)
 (defvar suite-list nil)
 
 (defvar live-edit-string "")
@@ -609,6 +609,8 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
+  (js2r-add-keybindings-with-modifier "\C-s-")
+  (js2r-add-keybindings-with-prefix "\C-c \C-m")
   )
 
 
