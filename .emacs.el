@@ -4,8 +4,14 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages"))
   )
+
+(require 'phi-search)
+(require 'multiple-cursors)
+(global-set-key "\C-xx" 'mc/mark-all-dwim)
+(global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
 
 (defun cygw2u (path)
   (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
@@ -735,6 +741,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'cheat nil t)            
 (require 'gist nil t)
 (require 'pastie nil t)
+
 
 (require 'yasnippet)
 (yas/initialize)
