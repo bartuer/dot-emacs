@@ -19,6 +19,8 @@
 (key-chord-define-global "hg" 'er/contract-region)
 (require 'expand-region)
 
+(require 'ace-jump-mode)
+(global-set-key "\C-c " 'ace-jump-mode)
 (defun cygw2u (path)
   (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
   )
