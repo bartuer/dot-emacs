@@ -1143,7 +1143,6 @@ information."
 (defvar js2-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map [mouse-1] #'js2-mode-show-node)
-    (define-key map (kbd "M-j") #'js2-line-break)
     (define-key map (kbd "C-c C-e") #'js2-mode-hide-element)
     (define-key map (kbd "C-c C-s") #'js2-mode-show-element)
     (define-key map (kbd "C-c C-a") #'js2-mode-show-all)
