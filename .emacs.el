@@ -16,15 +16,12 @@
 (global-set-key "\C-xp" 'mc/edit-lines)
 
 (require 'key-chord)
+(require 'space-chord)
 (key-chord-mode 1)
 (key-chord-define-global "jf" 'er/expand-region)
 (key-chord-define-global "hg" 'er/contract-region)
+(space-chord-define-global "j" 'ace-jump-mode)
 (require 'expand-region)
-
-(defun hacker-news ()
-  (interactive)
-  (require 'hackernews)
-  (hackernews))
 
 (require 'ace-jump-mode)
 (global-set-key "\C-c " 'ace-jump-mode)
@@ -1350,6 +1347,12 @@ If give a negative ARG, will undo the last mark action, thus the
   (perform-replace regexp (cons 'replace-eval-replacement to-expr)
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
+
+(defun hacker-news ()
+  (interactive)
+  (require 'hackernews)
+  (hackernews))
+
 
 (require 'uuid)
 (require 'dos)
