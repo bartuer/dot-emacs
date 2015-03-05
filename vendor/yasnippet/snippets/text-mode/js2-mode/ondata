@@ -1,0 +1,5 @@
+# name: nodejs on data 
+# --
+${1:req|res}.on('data', function (data) {
+    $0
+});

@@ -1,0 +1,5 @@
+# name: nodejs  on end
+# --
+${1:req|res}.on('end', function () {
+    $0
+});

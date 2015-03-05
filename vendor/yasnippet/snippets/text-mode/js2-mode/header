@@ -1,0 +1,4 @@
+# name: nodejs http header
+# --
+res.writeHead(${1:code}, {'content-type' : '${2::plain/text}'});
+$0

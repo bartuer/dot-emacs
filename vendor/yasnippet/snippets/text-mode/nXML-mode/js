@@ -1,0 +1,3 @@
+# name: js
+# --
+<script src="${1:/javascripts/file-url}.js"></script>

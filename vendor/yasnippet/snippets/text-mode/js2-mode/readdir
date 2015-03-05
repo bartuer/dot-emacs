@@ -1,0 +1,7 @@
+# name: nodejs readdir 
+# --
+fs.readdir(${1:dirname}, function (err, items) {
+    items.forEach(function (item) {
+        $0
+    });
+});

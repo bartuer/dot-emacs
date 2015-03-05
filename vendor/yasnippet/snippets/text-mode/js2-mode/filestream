@@ -1,0 +1,4 @@
+# name: nodejs filestream 
+# --
+var file_stream = fs.createReadStream();
+$0

@@ -1,0 +1,5 @@
+# name: last element
+# --
+var parts = ${1:obj}.split('${2:splitor}');
+var last = parts[parts.length -1];
+$0

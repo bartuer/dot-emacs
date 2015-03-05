@@ -1,0 +1,4 @@
+# name: nodejs export
+# --
+module.exports = ${name};
+$0
