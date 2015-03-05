@@ -1,0 +1,3 @@
+# name: classes 
+# --
+dom.classes(${1:element}, ${2:classes});

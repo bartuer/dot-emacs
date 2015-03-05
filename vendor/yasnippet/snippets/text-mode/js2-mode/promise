@@ -1,0 +1,7 @@
+# name: promise 
+# --
+function ${1:name}(${2:para}) {
+    return new Promise(function(resolve, reject) {
+           $0
+    });
+}

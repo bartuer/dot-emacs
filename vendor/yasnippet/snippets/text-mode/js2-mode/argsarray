@@ -1,0 +1,3 @@
+# name: arguments argarray array
+# --
+var args = Array.prototype.slice.call(${1:arguments});$0

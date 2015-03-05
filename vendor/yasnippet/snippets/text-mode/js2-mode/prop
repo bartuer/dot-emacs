@@ -1,0 +1,10 @@
+# name: property prop define property
+# --
+Object.defineProperty(${1:class}.prototype, '${2:property}', {
+    get : function () {
+        $0
+    },
+    set : function (value) {
+        
+    }
+});

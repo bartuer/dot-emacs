@@ -127,6 +127,7 @@ directories."
     (define-key keymap "o" 'nav-open-file-under-cursor)
     (define-key keymap "p" 'nav-pop-dir)
     (define-key keymap "P" 'nav-print-current-dir)
+    (define-key keymap "O" 'nav-goto-current-dir)
     (define-key keymap "q" 'nav-unsplit-window-horizontally)
     (define-key keymap "r" 'nav-refresh)
     (define-key keymap "s" 'nav-shell)
@@ -207,6 +208,7 @@ j\t Jump to another directory.
 m\t Move or rename file or directory.
 n\t Make a new directory.
 o\t Open file under cursor in the nav window.
+O\t Open current dir with default file browser.
 p\t Pop directory stack to go back to the previous directory.
 P\t Print full path of current displayed directory.
 q\t Quit nav.
@@ -638,6 +640,12 @@ http://code.google.com/p/emacs-nav/issues/detail?id=78
   (interactive)
   (kill-new default-directory)
   (print default-directory))
+
+(defun nav-goto-current-dir ()
+  "Open file browser or Finder at current dir"
+  (interactive)
+  (shell-command (concat "cygstart " default-directory))
+  )
 
 (define-derived-mode nav-mode fundamental-mode
   "Nav mode navigates filesystems."

@@ -1,6 +1,65 @@
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages"))
+  )
+
+(require 'phi-search)
+(require 'multiple-cursors)
+(global-set-key "\C-xx" 'mc/mark-all-dwim)
+(global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
+(global-set-key "\C-xy" 'mc/insert-numbers)
+(global-set-key "\C-xp" 'mc/edit-lines)
+
+(require 'key-chord)
+(require 'space-chord)
+(key-chord-mode 1)
+(key-chord-define-global "jf" 'er/expand-region)
+(key-chord-define-global "hg" 'er/contract-region)
+(space-chord-define-global "j" 'ace-jump-mode)
+(require 'expand-region)
+
+(require 'ace-jump-mode)
+(global-set-key "\C-c " 'ace-jump-mode)
+
+(defun cygw2u (path)
+  (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
+  )
+
+(defun cygu2w (path)
+  (concat "C:\\cygwin64" (subst-char-in-string ?/ ?\\ path)) 
+  )
+
+(defun ammend-file-exists-p (file-name)
+  (let ((path-util (executable-find "cygpath")))
+    (if path-util
+        (file-exists-p (cygw2u file-name)) 
+      (file-exists-p file-name)
+        ))
+  )
+
+(defun ammend-buffer-file-name (&optional name)
+  (let* ((path-util (executable-find "cygpath"))
+         (file-name (if (not name)
+                   (buffer-file-name)
+                 name)))
+    (if path-util
+        (cygu2w file-name)
+      file-name
+      )
+    )
+  )
+
+(defun what-face (pos)
+    (interactive "d")
+      (let ((face (or (get-char-property (point) 'read-face-name)
+                                        (get-char-property (point) 'face))))
+            (if face (message "Face: %s" face) (message "No face at %d" pos))))
+
 (if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -15,6 +74,7 @@
   (find-file-other-window file)
   (goto-char point))
 
+(defalias ': (lambda () (interactive) (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):")))
 (defalias 'll (lambda ()
                 (interactive)
                 (kill-new (format "(link \"%s\" %d)"
@@ -178,6 +238,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'e 'eval-current-buffer)
 
 
+(require 'powershell)
+(require 'powershell-mode)
+(add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
+
 (add-hook 'shell-mode-hook
           (lambda ()
             (ansi-color-for-comint-mode-on)
@@ -192,6 +256,16 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-1" 'shell)
 (global-set-key "\M-5" 'everything-find-file)
 (global-set-key "\M-6" 'nav-toggle)
+
+(defun call-stack-parse ()
+  (interactive)
+  (setq next-error-function 'compilation-next-error-function)
+  (set (make-local-variable 'compilation-locs)
+       (make-hash-table :test 'equal :weakness 'value))
+  (compilation--ensure-parse (point))
+  (setq compilation-current-error (point))
+)
+(defalias 'cs 'call-stack-parse)
 
 (defun do-ql-dwim()
   (interactive)
@@ -681,6 +755,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'gist nil t)
 (require 'pastie nil t)
 
+
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
@@ -984,6 +1059,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (load "~/etc/el/bartuer-csharp.el")
 (add-hook 'csharp-mode-hook 'bartuer-csharp-load)
 
+
+(require 'fsharp-mode)
+(load "~/etc/el/bartuer-fsharp.el")
+(add-hook 'fsharp-mode-hook 'bartuer-fsharp-load)
+(add-to-list 'auto-mode-alist '("\\fs$" . fsharp-mode))
+
 (defun mac-control ()
   "insert key symbol for shift"
   (interactive)
@@ -1074,6 +1155,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-js-load "bartuer-js.el" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
+
+
 
 (add-to-list 'auto-mode-alist '("\\.sql$" . sql-mode))
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
@@ -1264,6 +1347,12 @@ If give a negative ARG, will undo the last mark action, thus the
   (perform-replace regexp (cons 'replace-eval-replacement to-expr)
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
+
+(defun hacker-news ()
+  (interactive)
+  (require 'hackernews)
+  (hackernews))
+
 
 (require 'uuid)
 (require 'dos)

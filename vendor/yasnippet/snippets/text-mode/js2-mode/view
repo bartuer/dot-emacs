@@ -1,8 +1,10 @@
-# name: uki view
+# name: my view
 # --
-{
-  view: '${1:view}',
-  rect: '${2:l} ${3:t} ${4:w} ${5:h}',
-  anchors: 'left top right bottom'
-  $0
+function ${1:ViewName}Class() {
+    Inherit([ViewClass()], function () {
+        var self = this;
+        self.prototype.render = function () {
+            $0                                                                
+        };
+    });
 }

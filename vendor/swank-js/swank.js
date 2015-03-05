@@ -41,8 +41,6 @@ var CONFIG_FILE_NAME = "~/.swankjsrc";
 
 var cfg = new config.Config(CONFIG_FILE_NAME);
 var executive = new swh.Executive({ config: cfg });
-var console = { log: function(){} };
-var isEmbedded = !!module.parent;
 
 var swankServer = net.createServer(
   function (stream) {
@@ -57,11 +55,6 @@ var swankServer = net.createServer(
         console.log("response: %s", responseBuf.toString());
         stream.write(responseBuf);
       });
-    handler.on(
-      "quit", function (response) {
-        console.log("quit from client");
-        stream.end();
-      });
     stream.on(
       "data", function (data) {
         parser.execute(data);
@@ -73,10 +66,7 @@ var swankServer = net.createServer(
         handler.removeAllListeners("response");
       });
   });
-exports.startSwankServer = function startSwankServer(port, host) {
-  swankServer.listen(port || 4005, host || "localhost");
-};
-if (!isEmbedded) exports.startSwankServer(process.argv[2], process.argv[3]);
+swankServer.listen(process.argv[2] || 4005, process.argv[3] || "localhost");
 
 function BrowserRemote (clientInfo, client) {
   var userAgent = ua.recognize(clientInfo.userAgent);
@@ -458,33 +448,29 @@ HttpListener.prototype.serveClient = function serveClient(req, res) {
 var httpListener = new HttpListener(cfg);
 var httpServer = http.createServer(httpListener.serveClient.bind(httpListener));
 
-exports.startSocketIOServer = function startSocketIOServer(port, host) {
-  httpServer.listen(port || 8009, host);
-  io = io.listen(httpServer);
+httpServer.listen(8009);
+io = io.listen(httpServer);
 
-  io.sockets.on(
-    "connection", function (client) {
-      // new client is here!
-      console.log("client connected");
-      function handleHandshake (message) {
-        message = JSON.parse(message);
-        client.removeListener("message", handleHandshake);
-        if (!message.hasOwnProperty("op") || message.op != "handshake")
-          console.warn("WARNING: skipping pre-handshake message: %j", message);
-        else {
-          var address = null;
-          if (client.connection && client.connection.remoteAddress)
-            address = client.connection.remoteAddress || "noaddress";
-          var remote = new BrowserRemote({ address: address, userAgent: message.userAgent || "" }, client);
-          executive.attachRemote(remote);
-          console.log("added remote: %s", remote.fullName());
-        }
-      };
-      client.on("message", handleHandshake);
-    }
-  );
-};
-if (!isEmbedded) exports.startSocketIOServer(8009);
+io.sockets.on(
+  "connection", function (client) {
+    // new client is here!
+    console.log("client connected");
+    function handleHandshake (message) {
+      message = JSON.parse(message);
+      client.removeListener("message", handleHandshake);
+      if (!message.hasOwnProperty("op") || message.op != "handshake")
+        console.warn("WARNING: skipping pre-handshake message: %j", message);
+      else {
+        var address = null;
+        if (client.connection && client.connection.remoteAddress)
+          address = client.connection.remoteAddress || "noaddress";
+        var remote = new BrowserRemote({ address: address, userAgent: message.userAgent || "" }, client);
+        executive.attachRemote(remote);
+        console.log("added remote: %s", remote.fullName());
+      }
+    };
+    client.on("message", handleHandshake);
+  });
 
 // TBD: handle reader errors
 

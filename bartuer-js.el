@@ -1,6 +1,6 @@
 (require 'moz nil t)
 (require 'bartuer-js-inf nil t)
-
+(require 'js2-refactor)
 (defvar suite-list nil)
 
 (defvar live-edit-string "")
@@ -53,6 +53,52 @@
               "')\""
               )))
           suite-list))
+
+(defun find-jexp-beg ()
+                 (backward-sexp)
+                 (if (or (eq 32 (char-before))
+                         (bolp))  
+                     (point)
+                     (find-jexp-beg)
+                   )
+  )
+
+(defun jslime-eval-for-loop ()
+  (interactive)
+  (let ((loop-value-array-code "var slime-js-loop-value = [];"))
+    (slime-js-eval
+     (concat loop-value-array-code slime-js-buffer-or-region-string))
+  )
+  )
+
+(defun get-jslime-sexp ()
+  (save-excursion
+    (let ((end (point))
+          (beg (find-jexp-beg))
+          )
+      (buffer-substring-no-properties beg end)
+      )
+  )
+)
+
+(defun slime-js-send-buffer ()
+  (interactive)
+  (save-excursion
+    (let ((start (point-min))
+          (end (point-max)))
+      (message "send buffer to swank server")
+      (slime-js-eval
+       (buffer-substring-no-properties start end))
+      (message "Sent buffer"))))
+
+
+(defun bartuer-jslime ()
+  (interactive)
+  (slime-js-send-buffer)
+  (let ((expression (get-jslime-sexp)))
+    (slime-repl-eval-string  expression)  
+    )
+  )
 
 (defun bartuer-jxmp (&optional option)
   "dump the jxmpfilter output apropose"
@@ -439,6 +485,11 @@ wrap block add semicolon correct plus and equal"
   :type '(choice string (const :tag "None" nil))
   :group 'js2)
 
+(defcustom slime-push-minor-mode-string " SlimePush"
+  "String to display in mode line when push mode is enabled; nil for none."
+  :type '(choice string (const :tag "None" nil))
+  :group 'js2)
+
 (define-minor-mode push-mode
   "Minor mode to push current buffer to browser"
   :group 'js2 :lighter push-minor-mode-string
@@ -448,6 +499,17 @@ wrap block add semicolon correct plus and equal"
     )
    (t
     (remove-hook 'after-save-hook 'js-push t)))
+  )
+
+(define-minor-mode slime-push-mode
+  "Minor mode to push current buffer to browser via slime"
+  :group 'js2 :lighter slime-push-minor-mode-string
+  (cond
+   (push-mode
+    (add-hook 'after-save-hook ' 'js-try-to-parse-buffer t)
+    )
+   (t
+    (remove-hook 'after-save-hook 'js-try-to-parse-buffer t)))
   )
 
 (fset 'stepin
@@ -486,8 +548,10 @@ can bind C-j in comint buffer"
 (defun js-try-to-parse-buffer ()
   (interactive)
   (slime-js-send-buffer)
+  (slime-repl-eval-string "(function () {if (undefined !== test_result) { try{return JSON2.stringify(test_result, null, '\t');} catch(e) {return test_result;}}}());") 
   )
 
+(eval-after-load 'tern '(progn (require 'tern-auto-complete) (tern-ac-setup)))
 (defun bartuer-js-load ()
   "for javascript language
 "
@@ -500,10 +564,10 @@ can bind C-j in comint buffer"
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
-  (make-local-variable 'suite-list)
-  (js-find-suite)
-  (make-local-variable 'live-edit-string)
-  (js-find-live-edit-string)
+  ;; (make-local-variable 'suite-list)
+  ;; (js-find-suite)
+  ;; (make-local-variable 'live-edit-string)
+  ;; (js-find-live-edit-string)
   (set-up-slime-js-ac)
   (slime-js-minor-mode)
   (defalias  'pa (lambda () (interactive)
@@ -511,12 +575,13 @@ can bind C-j in comint buffer"
   (defalias  'pu (lambda () (interactive)
                  (push-mode)))
 
+  (defalias  'slimepu (lambda () (interactive)
+                        (slime-push-mode)))
+
   ;; (reload-mode t)
   ;; TODO need more stable message queue, then push will be cheap
   ;; (push-mode t)
-  (add-hook 'after-save-hook 'js-merge nil t)
-  (add-hook 'after-save-hook 'js-find-live-edit-string nil t)
-  (add-hook 'after-save-hook 'js-try-to-parse-buffer nil t)
+
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
@@ -526,26 +591,28 @@ can bind C-j in comint buffer"
       (define-key js2-mode-map "\C-m" 'newline))
   (set (make-local-variable 'indent-region-function) 'js-indent)
 
-
-  (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
-  (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
-  (define-key js2-mode-map "\C-\M-n" 'js2-next-error)
-  (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
   (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
-
   (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
-  (define-key js2-mode-map "\C-\M-x" 'send-function-jsh)
-
-  (define-key js2-mode-map "\C-c\C-b" 'send-buffer-jsh)
-  (define-key js2-mode-map "\C-c\C-r" 'send-region-jsh)
-
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
 
+  (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
+  (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
+  (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
+
+  (define-key js2-mode-map "\C-c\C-\M-n" 'js2-next-error)
+
+  (define-key js2-mode-map "\C-\M-x" 'slime-js-send-defun)
+  (define-key js2-mode-map "\C-c\C-b" 'slime-js-send-buffer)
+  (define-key js2-mode-map "\C-c\C-r" 'slime-js-send-region)
+  (define-key js2-mode-map "\C-\M-u" 'slime-js-start-of-toplevel-form)
   (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
-  (define-key js2-mode-map "\C-j" 'bartuer-jxmp)
+  (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
-  (define-key js2-mode-map "\C-\M-i" 'anything-complete-js))
+  (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
+  (js2r-add-keybindings-with-prefix "\C-c \C-m")
+  )
+
 
 (require 'bartuer-page nil t)
 (provide 'bartuer-js)
