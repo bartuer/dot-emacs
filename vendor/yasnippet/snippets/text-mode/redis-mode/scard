@@ -1,4 +1,0 @@
-# name : scard Return the number of elements (the cardinality) of the Set at key
-# (link "~/local/src/redis/doc/ScardCommand.txt" 1)
-# --
-scard ${1:key}

@@ -1,6 +1,0 @@
-# name: short jsdoc
-# --
-/**
- * ${1:desc}
- */
- 

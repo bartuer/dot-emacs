@@ -1,53 +1,69 @@
-;;; company-clang.el --- a company-mode completion back-end for clang
-;;
-;; Copyright (C) 2010 Nikolaj Schumacher
-;;
-;; This file is part of company 0.5.
-;;
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 2
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
+;;; company-clang.el --- company-mode completion back-end for Clang  -*- lexical-binding: t -*-
+
+;; Copyright (C) 2009, 2011, 2013-2014  Free Software Foundation, Inc.
+
+;; Author: Nikolaj Schumacher
+
+;; This file is part of GNU Emacs.
+
+;; GNU Emacs is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;;
+
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+;;
+
+;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'company-template)
+(require 'cl-lib)
+
+(defgroup company-clang nil
+  "Completion back-end for Clang."
+  :group 'company)
 
 (defcustom company-clang-executable
   (executable-find "clang")
-  "*Location of clang executable"
-  :group 'company-clang
+  "Location of clang executable."
   :type 'file)
 
-(defcustom company-clang-auto-save t
-  "*Determines whether to save the buffer when retrieving completions.
-clang can only complete correctly when the buffer has been saved."
-  :group 'company-clang
-  :type '(choice (const :tag "Off" nil)
-                 (const :tag "On" t)))
+(defcustom company-clang-begin-after-member-access t
+  "When non-nil, automatic completion will start whenever the current
+symbol is preceded by \".\", \"->\" or \"::\", ignoring
+`company-minimum-prefix-length'.
+
+If `company-begin-commands' is a list, it should include `c-electric-lt-gt'
+and `c-electric-colon', for automatic completion right after \">\" and
+\":\".")
 
 (defcustom company-clang-arguments nil
-  "*Additional arguments to pass to clang when completing.
-Prefix files (-include ...) can be selected with
-`company-clang-set-prefix' or automatically through a custom
-`company-clang-prefix-guesser'."
-  :group 'company-clang
-  :type '(repeat (string :tag "Argument" nil)))
+  "Additional arguments to pass to clang when completing.
+Prefix files (-include ...) can be selected with `company-clang-set-prefix'
+or automatically through a custom `company-clang-prefix-guesser'."
+  :type '(repeat (string :tag "Argument")))
 
 (defcustom company-clang-prefix-guesser 'company-clang-guess-prefix
-  "*A function to determine the prefix file for the current buffer."
-  :group 'company-clang
+  "A function to determine the prefix file for the current buffer."
   :type '(function :tag "Guesser function" nil))
 
-(defvar company-clang-modes '(c-mode objc-mode)
+(defvar company-clang-modes '(c-mode c++-mode objc-mode)
   "Major modes which clang may complete.")
+
+(defcustom company-clang-insert-arguments t
+  "When non-nil, insert function arguments as a template after completion."
+  :type 'boolean
+  :package-version '(company . "0.8.0"))
 
 ;; prefix ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -69,7 +85,7 @@ Prefix files (-include ...) can be selected with
   ;; Prefixes seem to be called .pch.  Pre-compiled headers do, too.
   ;; So we look at the magic number to rule them out.
   (let* ((file (company-clang--guess-pch-file buffer-file-name))
-         (magic-number (company-clang--file-substring file 0 4)))
+         (magic-number (and file (company-clang--file-substring file 0 4))))
     (unless (member magic-number '("CPCH" "gpch"))
       file)))
 
@@ -91,32 +107,72 @@ Prefix files (-include ...) can be selected with
 
 ;; parsing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: How to handle OVERLOAD and Pattern?
+;; TODO: Handle Pattern (syntactic hints would be neat).
+;; Do we ever see OVERLOAD (or OVERRIDE)?
 (defconst company-clang--completion-pattern
-  "^COMPLETION: \\_<\\(%s[a-zA-Z0-9_:]*\\)")
+  "^COMPLETION: \\_<\\(%s[a-zA-Z0-9_:]*\\)\\(?: : \\(.*\\)$\\)?$")
 
-(defconst company-clang--error-buffer-name "*clang error*")
+(defconst company-clang--error-buffer-name "*clang-error*")
 
-(defun company-clang--parse-output (prefix)
+(defun company-clang--lang-option ()
+     (if (eq major-mode 'objc-mode)
+         (if (string= "m" (file-name-extension buffer-file-name))
+             "objective-c" "objective-c++")
+       (substring (symbol-name major-mode) 0 -5)))
+
+(defun company-clang--parse-output (prefix _objc)
   (goto-char (point-min))
   (let ((pattern (format company-clang--completion-pattern
                          (regexp-quote prefix)))
+        (case-fold-search nil)
         lines match)
     (while (re-search-forward pattern nil t)
       (setq match (match-string-no-properties 1))
       (unless (equal match "Pattern")
+        (save-match-data
+          (when (string-match ":" match)
+            (setq match (substring match 0 (match-beginning 0)))))
+        (let ((meta (match-string-no-properties 2)))
+          (when (and meta (not (string= match meta)))
+            (put-text-property 0 1 'meta
+                               (company-clang--strip-formatting meta)
+                               match)))
         (push match lines)))
     lines))
+
+(defun company-clang--meta (candidate)
+  (get-text-property 0 'meta candidate))
+
+(defun company-clang--annotation (candidate)
+  (let ((meta (company-clang--meta candidate)))
+    (cond
+     ((null meta) nil)
+     ((string-match "[^:]:[^:]" meta)
+      (substring meta (1+ (match-beginning 0))))
+     ((string-match "\\((.*)[ a-z]*\\'\\)" meta)
+      (let ((paren (match-beginning 1)))
+        (if (not (eq (aref meta (1- paren)) ?>))
+            (match-string 1 meta)
+          (with-temp-buffer
+            (insert meta)
+            (goto-char paren)
+            (substring meta (1- (search-backward "<"))))))))))
+
+(defun company-clang--strip-formatting (text)
+  (replace-regexp-in-string
+   "#]" " "
+   (replace-regexp-in-string "[<{[]#\\|#[>}]" "" text t)
+   t))
 
 (defun company-clang--handle-error (res args)
   (goto-char (point-min))
   (let* ((buf (get-buffer-create company-clang--error-buffer-name))
-         (cmd (concat company-clang-executable (mapconcat 'identity args " ")))
+         (cmd (concat company-clang-executable " " (mapconcat 'identity args " ")))
          (pattern (format company-clang--completion-pattern ""))
          (err (if (re-search-forward pattern nil t)
                   (buffer-substring-no-properties (point-min)
                                                   (1- (match-beginning 0)))
-                ;; Warn the user more agressively if no match was found.
+                ;; Warn the user more aggressively if no match was found.
                 (message "clang failed with error %d:\n%s" res cmd)
                 (buffer-string))))
 
@@ -130,94 +186,150 @@ Prefix files (-include ...) can be selected with
         (setq buffer-read-only t)
         (goto-char (point-min))))))
 
-(defun company-clang--call-process (prefix &rest args)
-  (with-temp-buffer
-    (let ((res (apply 'call-process company-clang-executable nil t nil args)))
-      (unless (eq 0 res)
-        (company-clang--handle-error res args))
-      ;; Still try to get any useful input.
-      (company-clang--parse-output prefix))))
+(defun company-clang--start-process (prefix callback &rest args)
+  (let ((objc (derived-mode-p 'objc-mode))
+        (buf (get-buffer-create "*clang-output*"))
+        ;; Looks unnecessary in Emacs 25.1 and later.
+        (process-adaptive-read-buffering nil))
+    (with-current-buffer buf (erase-buffer))
+    (if (get-buffer-process buf)
+        (funcall callback nil)
+      (let ((process (apply #'start-process "company-clang" buf
+                            company-clang-executable args)))
+        (set-process-sentinel
+         process
+         (lambda (proc status)
+           (unless (string-match-p "hangup" status)
+             (funcall
+              callback
+              (let ((res (process-exit-status proc)))
+                (with-current-buffer buf
+                  (unless (eq 0 res)
+                    (company-clang--handle-error res args))
+                  ;; Still try to get any useful input.
+                  (company-clang--parse-output prefix objc)))))))
+        (unless (company-clang--auto-save-p)
+          (send-region process (point-min) (point-max))
+          (send-string process "\n")
+          (process-send-eof process))))))
 
 (defsubst company-clang--build-location (pos)
   (save-excursion
     (goto-char pos)
-    (format "%s:%d:%d" buffer-file-name (line-number-at-pos)
-            (1+ (current-column)))))
+    (format "%s:%d:%d"
+            (if (company-clang--auto-save-p) buffer-file-name "-")
+            (line-number-at-pos)
+            (1+ (length
+                 (encode-coding-region
+                  (line-beginning-position)
+                  (point)
+                  'utf-8
+                  t))))))
 
 (defsubst company-clang--build-complete-args (pos)
-  (append '("-cc1" "-fsyntax-only")
+  (append '("-fsyntax-only" "-Xclang" "-code-completion-macros")
+          (unless (company-clang--auto-save-p)
+            (list "-x" (company-clang--lang-option)))
           company-clang-arguments
           (when (stringp company-clang--prefix)
             (list "-include" (expand-file-name company-clang--prefix)))
-          '("-code-completion-at")
-          (list (company-clang--build-location pos))
-          (list buffer-file-name)))
+          (list "-Xclang" (format "-code-completion-at=%s"
+                                  (company-clang--build-location pos)))
+          (list (if (company-clang--auto-save-p) buffer-file-name "-"))))
 
-(defun company-clang--candidates (prefix)
-  (and company-clang-auto-save
+(defun company-clang--candidates (prefix callback)
+  (and (company-clang--auto-save-p)
        (buffer-modified-p)
        (basic-save-buffer))
   (when (null company-clang--prefix)
     (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
                                   'none)))
-  (apply 'company-clang--call-process
+  (apply 'company-clang--start-process
          prefix
+         callback
          (company-clang--build-complete-args (- (point) (length prefix)))))
+
+(defun company-clang--prefix ()
+  (if company-clang-begin-after-member-access
+      (company-grab-symbol-cons "\\.\\|->\\|::" 2)
+    (company-grab-symbol)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst company-clang-required-version "1.1")
+(defconst company-clang-required-version 1.1)
+
+(defvar company-clang--version nil)
+
+(defun company-clang--auto-save-p ()
+  (< company-clang--version 2.9))
 
 (defsubst company-clang-version ()
   "Return the version of `company-clang-executable'."
   (with-temp-buffer
     (call-process company-clang-executable nil t nil "--version")
     (goto-char (point-min))
-    (when (re-search-forward "\\`clang version \\([0-9.]+\\)" nil t)
-      (match-string-no-properties 1))))
+    (if (re-search-forward "clang\\(?: version \\|-\\)\\([0-9.]+\\)" nil t)
+        (let ((ver (string-to-number (match-string-no-properties 1))))
+          (if (> ver 100)
+              (/ ver 100)
+            ver))
+      0)))
 
 (defun company-clang-objc-templatify (selector)
-  (let* ((end (point))
-         (beg (- (point) (length selector)))
-         (templ (company-template-declare-template beg end)))
+  (let* ((end (point-marker))
+         (beg (- (point) (length selector) 1))
+         (templ (company-template-declare-template beg end))
+         (cnt 0))
     (save-excursion
       (goto-char beg)
-      (while (search-forward ":" end t)
-        (replace-match ":  ")
-        (incf end 2)
-        (company-template-add-field templ (1- (match-end 0)) "<arg>"))
-      (delete-char -1))
+      (catch 'stop
+        (while (search-forward ":" end t)
+          (when (looking-at "([^)]*) ?")
+            (delete-region (match-beginning 0) (match-end 0)))
+          (company-template-add-field templ (point) (format "arg%d" cnt))
+          (if (< (point) end)
+              (insert " ")
+            (throw 'stop t))
+          (cl-incf cnt))))
     (company-template-move-to-first templ)))
 
 (defun company-clang (command &optional arg &rest ignored)
-  "A `company-mode' completion back-end for clang.
-Clang is a parser for C and ObjC.  The unreleased development version of
-clang (1.1) is required.
+  "`company-mode' completion back-end for Clang.
+Clang is a parser for C and ObjC.  Clang version 1.1 or newer is required.
 
 Additional command line arguments can be specified in
 `company-clang-arguments'.  Prefix files (-include ...) can be selected
 with `company-clang-set-prefix' or automatically through a custom
 `company-clang-prefix-guesser'.
 
-Completions only work correctly when the buffer has been saved.
-`company-clang-auto-save' determines whether to do this automatically."
+With Clang versions before 2.9, we have to save the buffer before
+performing completion.  With Clang 2.9 and later, buffer contents are
+passed via standard input."
   (interactive (list 'interactive))
-  (case command
-        ('interactive (company-begin-backend 'company-clang))
-        ('init (unless company-clang-executable
-                 (error "Company found no clang executable"))
-               (when (version< (company-clang-version)
-                               company-clang-required-version)
-                 (error "Company requires clang version 1.1")))
-        ('prefix (and (memq major-mode company-clang-modes)
-                      buffer-file-name
-                      company-clang-executable
-                      (not (company-in-string-or-comment))
-                      (or (company-grab-symbol) 'stop)))
-        ('candidates (company-clang--candidates arg))
-        ('post-completion (and (derived-mode-p 'objc-mode)
-                               (string-match ":" arg)
-                               (company-clang-objc-templatify arg)))))
+  (cl-case command
+    (interactive (company-begin-backend 'company-clang))
+    (init (when (memq major-mode company-clang-modes)
+            (unless company-clang-executable
+              (error "Company found no clang executable"))
+            (setq company-clang--version (company-clang-version))
+            (when (< company-clang--version company-clang-required-version)
+              (error "Company requires clang version 1.1"))))
+    (prefix (and (memq major-mode company-clang-modes)
+                 buffer-file-name
+                 company-clang-executable
+                 (not (company-in-string-or-comment))
+                 (or (company-clang--prefix) 'stop)))
+    (candidates (cons :async
+                      (lambda (cb) (company-clang--candidates arg cb))))
+    (meta       (company-clang--meta arg))
+    (annotation (company-clang--annotation arg))
+    (post-completion (let ((anno (company-clang--annotation arg)))
+                       (when (and company-clang-insert-arguments anno)
+                         (insert anno)
+                         (if (string-match "\\`:[^:]" anno)
+                             (company-clang-objc-templatify anno)
+                           (company-template-c-like-templatify
+                            (concat arg anno))))))))
 
 (provide 'company-clang)
 ;;; company-clang.el ends here

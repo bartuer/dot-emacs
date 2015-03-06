@@ -1,8 +1,0 @@
-# name: form_tag form view api rails 
-# (rdoc "ActionView::Helpers::FormTagHelper#form_tag")
-# it is no use to set the :method, anything will become post
-# and if it is not a do block, nothing will happen
-# --
-<% form_tag 'url', ${1:`(yas/p ":multipart" "true")`} do %>
-  $0
-<% end %>

@@ -1,5 +1,0 @@
-#name: connect map route url controller configure api rails 
-# (ri "ActionController::Routing")
-# (yas/tap) map.${6:connect}('/pattern', :conditions {:method => :get}, :controller 'class', :action 'method', :requirements { :month => regex }, :defaults { :id => nil }) 
-# --
-map.${6:connect}('/pattern', ${1:`(yas/p ":conditions" "{:method => :get}")`}$0, ${2:`(yas/p ":controller" "'class'")`}, ${3:`(yas/p ":action" "'method'")`}, ${4:`(yas/p ":requirements" "{ :month => regex }")`}, ${5:`(yas/p ":defaults" "{ :id => nil }")`}) 

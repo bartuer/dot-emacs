@@ -1,5 +1,0 @@
-# name: nodejs on error
-# --
-${1:req|res}.on('error', function (error) {
-    $0
-});

@@ -1,4 +1,0 @@
-# name : zincrby If the member already exists increment its score  by _increment_ otherwise add the member setting _increment_ as score
-# (link "~/local/src/redis/doc/ZincrbyCommand.txt" 1)
-# --
-zincrby ${1:key} ${2:increment} ${3:member}

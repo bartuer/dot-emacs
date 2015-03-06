@@ -1,6 +1,0 @@
-# name: concise has_and_belongs_to_many associations model api rails 
-# (rdoc "ActiveRecord::Associations::ClassMethods#has_and_belongs_to_many")
-# (rdoc "ActiveRecord::Associations::ClassMethods")
-# (link "~/local/src/rails/activerecord/test/models/associations" 137)
-# --
-has_and_belongs_to_many :${1:association}

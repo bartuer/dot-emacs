@@ -1,3 +1,0 @@
-#name : encode(type)
-# --
-@encode(${1:type_name})

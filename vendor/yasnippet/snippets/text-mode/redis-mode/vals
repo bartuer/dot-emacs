@@ -1,4 +1,0 @@
-# name : vals Return all the values in a hash.
-# (link "~/local/src/redis/doc/ValsCommand.txt" 1)
-# --
-vals ${1:key}

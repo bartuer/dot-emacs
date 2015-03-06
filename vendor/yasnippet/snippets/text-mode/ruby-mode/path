@@ -1,3 +1,0 @@
-# name: relative path File dir
-# --
-File.join(File.dirname(__FILE__), '${1:relative_path}')

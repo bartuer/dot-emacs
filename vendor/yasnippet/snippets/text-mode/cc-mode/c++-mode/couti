@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: cout
-# key: cout
-# --
-cout << "${1:var}[" << i << "]:" << $1[i] $0<< endl;

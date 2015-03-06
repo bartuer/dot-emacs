@@ -1,4 +1,0 @@
-# name : padding-bottom
-# (css-find "padding-bottom")
-# --
-padding-bottom :$0 padding-width ;

@@ -1,6 +1,0 @@
-# name: text_field former view api rails 
-# (rdoc "ActionFormer::View::Helpers::FormHelper#text_field")
-# text_field(:post, :title)
-# => <input type="text" id="post_title" name="post[title]" value="#{@post.title}" />
-# --
-text_field :${1:obj}, :${2:method}$0, fopt

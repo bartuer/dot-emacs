@@ -1,4 +1,0 @@
-#name : prototype inherent pattern
-# --
-var ${1:to} = Object.create(${2:from});
-$0

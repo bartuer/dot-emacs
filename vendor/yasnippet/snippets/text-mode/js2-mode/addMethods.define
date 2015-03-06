@@ -1,9 +1,0 @@
-# name: define addMethods prototype dom event extension extend
-# --
-${1:first}: function(element, ${2:args}) {
-  element = $(element);
-  $0
-  return element;
-}
-
-  

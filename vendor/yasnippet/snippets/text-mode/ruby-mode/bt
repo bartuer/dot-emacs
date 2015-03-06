@@ -1,8 +1,0 @@
-# name: concise belongs_to associations model api rails 
-# (rdoc "ActiveRecord::Associations::ClassMethods#belongs_to")
-# (rdoc "ActiveRecord::Associations::ClassMethods")
-# (link "~/local/src/rails3-tut-code/e1/ar/counters.rb" 1064)
-# (link "~/local/src/rails3-tut-code/e1/ar/polymorphic.rb" 1145)
-# (link "~/local/src/rails/activerecord/test/models/associations" 137)
-# --
-belongs_to :${1:assoction}

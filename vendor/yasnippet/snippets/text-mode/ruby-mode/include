@@ -1,6 +1,0 @@
-# name: finder include crud model controller parameter rails 
-# (rdoc "ActiveRecord::Base.find")
-# (link "~/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
-# (link "~/local/src/rails/activerecord/test/cases/finder" 137)
-# --
-include => :${1:assoc} a {:${2:through}=>:${3:assoc}}

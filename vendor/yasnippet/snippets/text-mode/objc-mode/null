@@ -1,3 +1,0 @@
-#name : assert null
-# --
-STAssertNULL(${1:one}, @"${2:should }$0");

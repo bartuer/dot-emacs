@@ -1,7 +1,0 @@
-# name : json partial render controller api rails
-# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 5264)
-# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 23613)
-# (rdoc "ActionController::Base#render")
-# (yas/tap) render, :json h a, :locals h, :object obj, :callback 'function'
-# --
-render ${1:`(yas/p ":json" "h.to_json")`}$0, ${2:`(yas/p ":locals" "h")`}, ${3:`(yas/p ":object" "obj")`}, ${4:`(yas/p ":callback" "'function'")`}

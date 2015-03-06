@@ -1,3 +1,0 @@
-# name: paralist parameter list
-# --
-${1:para_type} ${2:para_name}, paralist$0

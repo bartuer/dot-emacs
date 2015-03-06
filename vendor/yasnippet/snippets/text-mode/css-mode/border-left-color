@@ -1,4 +1,0 @@
-# name : border-left-color
-# (css-find "border-left-color")
-# --
-border-left-color :$0 transparent color ;

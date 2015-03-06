@@ -1,3 +1,0 @@
-# name : prototype css selector $$
-# --
-$$('${1:div.class}')

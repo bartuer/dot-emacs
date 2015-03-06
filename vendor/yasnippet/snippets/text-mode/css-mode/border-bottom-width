@@ -1,4 +1,0 @@
-# name : border-bottom-width
-# (css-find "border-bottom-width")
-# --
-border-bottom-width :$0 border-width ;

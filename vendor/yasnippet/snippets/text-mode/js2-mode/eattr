@@ -1,3 +1,0 @@
-# name: jspec expect attribute has_attr
-# --
-expect('${1:element}').to(has_attr, '${2:attr}'${3:, 'option_value'});

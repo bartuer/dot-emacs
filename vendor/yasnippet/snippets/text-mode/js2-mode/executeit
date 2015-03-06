@@ -1,5 +1,0 @@
-# name: module define closure
-# --
-(function (view){
-  $0
-})(self);

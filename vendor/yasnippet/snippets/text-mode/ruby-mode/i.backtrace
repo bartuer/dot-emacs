@@ -1,3 +1,0 @@
-#name : inspect backtrace
-# --
-${1:exception}.backtrace

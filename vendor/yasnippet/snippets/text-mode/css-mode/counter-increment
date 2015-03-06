@@ -1,4 +1,0 @@
-# name : counter-increment
-# (css-find "counter-increment")
-# --
-counter-increment :$0 none 5 identifier ;

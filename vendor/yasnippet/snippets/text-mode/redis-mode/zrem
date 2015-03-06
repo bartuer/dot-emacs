@@ -1,4 +1,0 @@
-# name : zrem Remove the specified member from the Sorted Set value at key
-# (link "~/local/src/redis/doc/ZremCommand.txt" 1)
-# --
-zrem ${1:key} ${2:member}

@@ -1,4 +1,0 @@
-# name : css stylesheet_link_tag linker view api rails
-# (rdoc "ActionView::Helpers::AssetTagHelper#stylesheet_link_tag")
-# --
-<%= stylesheet_link_tag "${1:source}.css" %>

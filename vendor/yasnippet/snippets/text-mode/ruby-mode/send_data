@@ -1,5 +1,0 @@
-#name : send data controller api rails
-# (rdoc "ActionController::Streaming#send_data")
-# --
-# TODO if data is large, should use render :text => proc {}
-send_data ${1:data} h

@@ -1,3 +1,0 @@
-# name : link_to options popup
-# --
-:popup => ${1:true}

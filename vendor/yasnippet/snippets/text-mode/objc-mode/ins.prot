@@ -1,3 +1,0 @@
-#name : conformsToProtocol
-# --
-[${1:instance} conformsToProtocol:@protocol(${2:prot})]

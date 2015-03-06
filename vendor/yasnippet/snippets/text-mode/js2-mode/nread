@@ -1,3 +1,0 @@
-# name: node readFile sync
-# --
-var ${1:result} = fs.readFileSync(${2:name}, 'utf-8');

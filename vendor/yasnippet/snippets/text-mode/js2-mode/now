@@ -1,3 +1,0 @@
-# name : console log debug timer
-# --
-console.log('$1: ' + (new Date()).getTime());

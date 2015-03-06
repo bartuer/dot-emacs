@@ -1,3 +1,0 @@
-#name : inspect class variable @@var
-# --
-Module === ${1:instance} ? class_variables : $1.class.class_variables

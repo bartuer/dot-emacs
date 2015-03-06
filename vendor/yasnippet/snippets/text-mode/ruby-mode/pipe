@@ -1,7 +1,0 @@
-# name: popen pipe open3
-# --
-Open3.popen3("${1:cmd}") {|i,o,e|
-  i.puts ${2:ARGF.to_s}
-  i.close
-  o.gets
-}

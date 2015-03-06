@@ -1,4 +1,0 @@
-# name: add class name
-# --
-${1:element}.classList.add('${2:class}');
-$0

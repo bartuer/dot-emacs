@@ -1,3 +1,0 @@
-#name : url controller parameter rails
-# --
-${1:named}_path(${2:args...})

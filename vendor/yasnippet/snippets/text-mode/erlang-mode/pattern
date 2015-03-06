@@ -1,4 +1,0 @@
-# name: message pattern match
-# --
-{${1:head}, ${2:tail}} ->
-    $0$2

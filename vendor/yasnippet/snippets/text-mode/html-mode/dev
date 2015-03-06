@@ -1,4 +1,0 @@
-# name: develop dev pusher
-# it can not use with other closure compressed js
-# --
-<script src="/js/dev.package.js"></script>

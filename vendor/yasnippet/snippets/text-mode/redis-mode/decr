@@ -1,4 +1,0 @@
-# name : decr decrement the integer value of key
-# (link "~/local/src/redis/doc/DecrCommand.txt" 1)
-# --
-decr ${1:key}

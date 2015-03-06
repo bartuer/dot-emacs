@@ -1,3 +1,0 @@
-#name : assert_instance_of
-# --
-assert_instance_of ${1:Class}, ${2:instance}$0

@@ -1,4 +1,0 @@
-# name : volume
-# (css-find "volume")
-# --
-volume :$0 x-loud loud medium soft x-soft silent 50% 5 ;

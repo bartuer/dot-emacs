@@ -1,3 +1,0 @@
-#name : each_value
-# --
-each_value { |${val}| $0 }

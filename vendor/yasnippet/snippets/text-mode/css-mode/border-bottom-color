@@ -1,4 +1,0 @@
-# name : border-bottom-color
-# (css-find "border-bottom-color")
-# --
-border-bottom-color :$0 transparent color ;

@@ -1,3 +1,0 @@
-# name: div create list
-# --
-var ${1:name} = dom.div(["$0"]);

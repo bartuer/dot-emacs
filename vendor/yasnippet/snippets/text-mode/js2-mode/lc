@@ -1,5 +1,0 @@
-#name: lambda function call
-# --
-(function () {
-  $0
-})();

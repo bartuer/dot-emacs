@@ -1,3 +1,0 @@
-#name : copy, ...
-# --
-copy, ${1:attr2}$0

@@ -1,5 +1,0 @@
-#name: lambda function one
-# --
-function (${1:para}) {
-    $0
-};

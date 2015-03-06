@@ -1,3 +1,0 @@
-#name : get path
-# --
-[${1:object} valueForKeyPath:@"$2"]$0

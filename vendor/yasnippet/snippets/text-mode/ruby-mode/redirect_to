@@ -1,6 +1,0 @@
-# name : redirect_to controller api rails
-# (link "~/local/src/rails/actionpack/test/controller/redirect_test.rb" 1802)
-# (rdoc "ActionController::Base#redirect_to")
-# @controller.redirect_to_url	
-# --
-redirect_to, urlh$0, ${1:record}, "http://www.gny.org/"${1:url}"

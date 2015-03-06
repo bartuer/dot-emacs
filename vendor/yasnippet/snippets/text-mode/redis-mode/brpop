@@ -1,4 +1,0 @@
-# name : brpop Blocking RPOP
-# (link "~/local/src/redis/doc/BrpopCommand.txt" 1)
-# --
-brpop ${1:key1} ${2:key2} ${3:keyn} ${4:timeout}

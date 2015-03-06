@@ -1,5 +1,0 @@
-# name : rbtest test method
-# --
-=begin test_${1:method}
- $0
-=end

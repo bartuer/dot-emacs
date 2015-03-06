@@ -1,5 +1,0 @@
-#name : test_method
-# --
-def test_${1:name}
-  $0
-end

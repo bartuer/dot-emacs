@@ -1,4 +1,0 @@
-# name : quit close the connection
-# (link "~/local/src/redis/doc/QuitCommand.txt" 1)
-# --
-quit 

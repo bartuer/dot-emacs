@@ -1,3 +1,0 @@
-# name: show column sc sql console
-# --
-show columns from ${1:table};

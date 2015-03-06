@@ -1,3 +1,0 @@
-# name: function pointer define
-# --
-typedef ${2:return_type} (*${1:name})($0);

@@ -1,3 +1,0 @@
-#name : assert not equal
-# --
-STAssertNotEquals(${1:one}, ${2:two}, @"${3:should }$0");

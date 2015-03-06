@@ -1,5 +1,0 @@
-#name : assert_throws
-# --
-assert_throws (:${1:symbol}) do
-  $0
-end

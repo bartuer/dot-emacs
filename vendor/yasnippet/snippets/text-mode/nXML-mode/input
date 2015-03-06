@@ -1,3 +1,0 @@
-#name : html_input
-# --
-<input id="${1:id}" name="$1" type=inputtype$0 value="${2:val}" />

@@ -1,9 +1,0 @@
-#name : super <NSMutableCopying>
-# --
-- (id) mutableCopyWithZone:(NSZone *)zone
-{
-  ${1:class} *copy = [self mutableCopy];
-  // retain items
-  $0
-  return copy;
-}

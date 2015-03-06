@@ -1,4 +1,0 @@
-# name : counter-reset
-# (css-find "counter-reset")
-# --
-counter-reset :$0 none 5 identifier ;

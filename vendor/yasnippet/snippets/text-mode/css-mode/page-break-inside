@@ -1,4 +1,0 @@
-# name : page-break-inside
-# (css-find "page-break-inside")
-# --
-page-break-inside :$0 auto avoid ;

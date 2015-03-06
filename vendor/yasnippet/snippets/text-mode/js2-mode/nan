@@ -1,3 +1,0 @@
-#name : is nan
-# --
-isNaN(${1:v})

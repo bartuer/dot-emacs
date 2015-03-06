@@ -451,7 +451,7 @@ method."
              (method (if (= 1 (length methods)) (first methods)
                        (eclim--completing-read "Signature: " methods)))
              (sig (eclim--java-parse-method-signature method)))
-        (yas/expand-snippet (format "@Override\n%s %s(%s) {$0}"
+        (yas-expand-snippet (format "@Override\n%s %s(%s) {$0}"
                                     (join " " (remove 'abstract (assoc-default :return sig)))
                                     (assoc-default :name sig)
                                     (join ", " (loop for arg in (remove-if #'null (assoc-default :arglist sig))

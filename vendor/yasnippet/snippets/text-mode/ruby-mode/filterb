@@ -1,4 +1,0 @@
-# name : block filter controller api rails
-# (rdoc "ActionController::Filters::ClassMethods")
-# --
-{|controller| head(400) if controller.params[]}

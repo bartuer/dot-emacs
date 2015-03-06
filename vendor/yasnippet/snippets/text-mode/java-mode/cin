@@ -1,3 +1,0 @@
-# name: console input cin
-# --
-InputStreamReader cin = new InputStreamReader(System.in);

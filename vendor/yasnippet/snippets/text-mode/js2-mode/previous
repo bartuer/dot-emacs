@@ -1,3 +1,0 @@
-# name: previous prototype dom object
-# --
-previous('${1:cssrule}', ${2:1})

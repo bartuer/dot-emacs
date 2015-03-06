@@ -1,5 +1,0 @@
-# name: argv 
-# --
-var argv = process.argv;
-var ${1:parameter} = argv[2];
-$0

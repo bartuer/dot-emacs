@@ -1,4 +1,0 @@
-# name : pitch
-# (css-find "pitch")
-# --
-pitch :$0 x-high high medium low x-low frequency ;

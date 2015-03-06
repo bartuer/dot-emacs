@@ -1,4 +1,0 @@
-# name : outline-style
-# (css-find "outline-style")
-# --
-outline-style :$0 border-style ;

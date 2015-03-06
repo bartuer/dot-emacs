@@ -1,5 +1,0 @@
-# name: class delete v[-] c[-] b[-] e[-] crud model controller api rails 
-# (rdoc "ActiveRecord::Base.delete")
-# (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
-# --
-${1:class}.delete(${2:ids})

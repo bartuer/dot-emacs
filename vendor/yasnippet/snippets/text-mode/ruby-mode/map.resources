@@ -1,5 +1,0 @@
-#name: resource map route url controller configure api rails 
-# (rdoc "ActionController::Resources#resources")
-# (yas/tap) map.resources( :${16:models}, :collection actionh, :member actionh, :new actionh, :has_many modela, :has_one :model, :requirements { :month => regex }, 'remove_as_hold' :as => 'uriname', :path_names {:method => 'uriname'}, :path_prefix pattern, :shallow true, :conditions actionh, :only actiona, :except actiona, :none actiona, 'remove_all_hold' :all => actiona)
-# --
-map.resources( :${16:models}, ${1:`(yas/p ":collection" "actionh")`}$0, ${2:`(yas/p ":member" "actionh")`}, ${3:`(yas/p ":new" "actionh")`}, ${4:`(yas/p ":has_many" "modela")`}, ${5:`(yas/p ":has_one" ":model")`}, ${6:`(yas/p ":requirements" "{ :month => regex }")`}, ${7:`(yas/p "'remove_as_hold'" ":as => 'uriname'")`}, ${8:`(yas/p ":path_names" "{:method => 'uriname'}")`}, ${9:`(yas/p ":path_prefix" "pattern")`}, ${10:`(yas/p ":shallow" "true")`}, ${11:`(yas/p ":conditions" "actionh")`}, ${12:`(yas/p ":only" "actiona")`}, ${13:`(yas/p ":except" "actiona")`}, ${14:`(yas/p ":none" "actiona")`}, ${15:`(yas/p "'remove_all_hold'" ":all => actiona")`})

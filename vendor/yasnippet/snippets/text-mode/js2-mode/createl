@@ -1,3 +1,0 @@
-# name: create html element
-# --
-var ${1:name} = dom.create("${2:type}", ["$0"]);

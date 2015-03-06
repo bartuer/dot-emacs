@@ -1,3 +1,0 @@
-# name: sql data type varchar
-# --
-varchar(${1:1024}) default NULL,

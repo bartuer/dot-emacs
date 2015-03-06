@@ -1,4 +1,0 @@
-# name : append append the specified string to the string stored at key
-# (link "~/local/src/redis/doc/AppendCommand.txt" 1)
-# --
-append ${1:key} ${2:value}

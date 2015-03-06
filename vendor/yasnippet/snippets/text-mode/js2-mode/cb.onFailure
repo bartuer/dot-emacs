@@ -1,3 +1,0 @@
-# name: onFailure callback prototype ajax
-# --
-onFailure: ${1:func} ${2:function(r, header) { }$0}

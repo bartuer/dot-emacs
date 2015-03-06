@@ -1,3 +1,0 @@
-# name: json parse parse
-# --
-JSON.parse(${1:obj})

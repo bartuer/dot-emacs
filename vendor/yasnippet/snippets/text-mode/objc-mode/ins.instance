@@ -1,3 +1,0 @@
-#name : isMemberOfClass
-# --
-[${1:instance} isMemberOfClass:[${2:classname} class]];

@@ -1,3 +1,0 @@
-#name : get
-# --
-[${1:object} valueForKey:@"$2"]$0

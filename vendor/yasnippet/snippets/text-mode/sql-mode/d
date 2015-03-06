@@ -1,3 +1,0 @@
-# name: d sql console
-# --
-delete from ${1:table_name} where id= ${2:num};

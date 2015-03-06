@@ -1,4 +1,0 @@
-# name : empty-cells
-# (css-find "empty-cells")
-# --
-empty-cells :$0 hide show ;

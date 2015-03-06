@@ -1,8 +1,0 @@
-#name : begin try catch
-# --
-begin
-  $0
-rescue ${1:StandardError} => ${2:ex}
-  
-end
-

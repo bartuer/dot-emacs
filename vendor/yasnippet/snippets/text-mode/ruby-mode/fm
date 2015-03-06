@@ -1,3 +1,0 @@
-#name : flexmock
-# --
-flexmock(${1:object})$0

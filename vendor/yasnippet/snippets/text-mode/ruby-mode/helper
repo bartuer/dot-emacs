@@ -1,5 +1,0 @@
-# name : helper controller api rails
-# (rdoc "ActionController::Helpers::ClassMethods#helper")
-# ActionController::Base.helpers_dir
-# --
-helper :${1:method} '$1' ${2:Class}

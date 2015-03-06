@@ -1,4 +1,0 @@
-#name : :action => ... :id =>
-# --
-:action => "${1:action}", :id => ${2:id}
-

@@ -1,5 +1,0 @@
-#name : set path
-# --
-[${1:object} setValue:[${3:class} ${4:msg}:${5:value}]
-             forKeyPath:@"$2"];
-$0

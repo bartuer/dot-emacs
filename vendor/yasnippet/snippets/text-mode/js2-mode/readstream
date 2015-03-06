@@ -1,4 +1,0 @@
-# name: node  read file stream
-# --
-var buf = fs.createReadStream(${1:filename});
-$0

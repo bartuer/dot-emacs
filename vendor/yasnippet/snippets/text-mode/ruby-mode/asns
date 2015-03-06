@@ -1,3 +1,0 @@
-#name : assert_not_same
-# --
-assert_not_same ${1:one}, ${2:another}$0

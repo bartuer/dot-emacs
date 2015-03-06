@@ -1,3 +1,0 @@
-# name : util error 
-# --
-Util.error(CONST.error.$0);

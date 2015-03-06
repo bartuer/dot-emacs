@@ -1,3 +1,0 @@
-#name : respondsToSelector
-# --
-[${1:target} respondsToSelector:${2:@selector}(${3:signature})]$0

@@ -1,3 +1,0 @@
-# name: method rdebug
-# --
-m i ${1:obj}

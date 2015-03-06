@@ -1,6 +1,0 @@
-# name: build dom element only class
-# --
-var ${1:name} = div('$1');
-mount(${2:mount_point}, $1);
-
-$0

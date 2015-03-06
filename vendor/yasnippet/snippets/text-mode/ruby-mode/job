@@ -1,8 +1,0 @@
-# name: job resque task
-# --
-class ${1:JobName}
-  @queue = :${2:queue_name}
-  def self.perform(${3:parameter})
-    $0
-  end
-end

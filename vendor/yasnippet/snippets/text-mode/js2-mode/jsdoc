@@ -1,7 +1,0 @@
-# name: jsdoc funcdoc interface function
-# --
-/**
- * @file ${1:description}
- * @author ${2:author}
- * @copyright ${3:org} ${4:year}
- */

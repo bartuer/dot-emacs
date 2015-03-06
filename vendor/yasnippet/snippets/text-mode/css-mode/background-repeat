@@ -1,4 +1,0 @@
-# name : background-repeat
-# (css-find "background-repeat")
-# --
-background-repeat :$0 no-repeat repeat-y repeat-x repeat ;

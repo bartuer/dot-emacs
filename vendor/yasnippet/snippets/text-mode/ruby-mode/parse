@@ -1,3 +1,0 @@
-#name : json yajl parse decode
-# --
-Yajl::Parser.parse(${1:str})

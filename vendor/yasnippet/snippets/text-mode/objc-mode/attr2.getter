@@ -1,3 +1,0 @@
-#name : getter
-# --
-getter=${1:name}

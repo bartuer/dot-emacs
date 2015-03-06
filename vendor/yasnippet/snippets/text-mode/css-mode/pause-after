@@ -1,4 +1,0 @@
-# name : pause-after
-# (css-find "pause-after")
-# --
-pause-after :$0 50% time ;

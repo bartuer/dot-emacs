@@ -1,3 +1,0 @@
-# name: removeClassName prototype dom layout
-# --
-removeClassName('${1:className}')

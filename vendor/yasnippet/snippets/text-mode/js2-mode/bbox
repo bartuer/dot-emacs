@@ -1,3 +1,0 @@
-# name: bound box bbox
-# --
-${1:elem}.getBoundingClientRect()

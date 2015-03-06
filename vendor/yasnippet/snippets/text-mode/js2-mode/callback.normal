@@ -1,5 +1,0 @@
-# name: normal callback define prototype ajax
-# --
-function(req, header){
-  $0
-}

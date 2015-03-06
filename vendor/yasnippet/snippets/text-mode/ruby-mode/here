@@ -1,5 +1,0 @@
-#name : here document
-# --
-<<-EOF
-$0
-EOF

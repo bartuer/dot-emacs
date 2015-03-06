@@ -1,4 +1,0 @@
-# name : punsubscribe patttern unsubsribe all message
-# (link "~/local/src/redis/doc/PunsubscribeCommand.txt" 1)
-# --
-punsubscribe ${1:pattern1} ${2:pattern2} ${3:patternn}

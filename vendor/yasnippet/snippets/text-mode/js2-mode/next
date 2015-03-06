@@ -1,3 +1,0 @@
-# name: next prototype dom object
-# --
-next('${1:cssrule}', ${2:1})

@@ -1,3 +1,0 @@
-# name: shell get_all_key 
-# --
-application:get_all_key(${1:app}).

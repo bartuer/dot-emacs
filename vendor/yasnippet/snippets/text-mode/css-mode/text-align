@@ -1,4 +1,0 @@
-# name : text-align
-# (css-find "text-align")
-# --
-text-align :$0 justify center right left ;

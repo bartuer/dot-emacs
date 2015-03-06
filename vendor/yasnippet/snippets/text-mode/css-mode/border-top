@@ -1,4 +1,0 @@
-# name : border-top
-# (css-find "border-top")
-# --
-border-top :$0 border-style border-width ;

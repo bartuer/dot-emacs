@@ -1,3 +1,0 @@
-#name : assert true
-# --
-STAssertTrue(${1:expr}, @"${2:should }$0");

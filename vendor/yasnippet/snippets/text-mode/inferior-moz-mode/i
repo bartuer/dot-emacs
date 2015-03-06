@@ -1,3 +1,0 @@
-#name : inspect
-# --
-repl.inspect(${1:target});

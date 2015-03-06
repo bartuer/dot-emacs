@@ -1,3 +1,0 @@
-# name: clonePosition prototype dom layout
-# --
-clonePosition(${1:source})

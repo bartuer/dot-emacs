@@ -1,3 +1,0 @@
-# name: up prototype dom object
-# --
-up('${1:cssrule}', ${2:1})

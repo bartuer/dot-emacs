@@ -1,3 +1,0 @@
-# name: debug log fprintf error
-# --
-fprintf(stderr, "$1: %${2:s}\n",${1:v});

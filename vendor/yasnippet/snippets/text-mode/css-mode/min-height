@@ -1,4 +1,0 @@
-# name : min-height
-# (css-find "min-height")
-# --
-min-height :$0 50% 5 ;

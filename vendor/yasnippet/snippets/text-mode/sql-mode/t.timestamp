@@ -1,3 +1,0 @@
-# name: sql data type timestamp
-# --
-timestamp default NULL,

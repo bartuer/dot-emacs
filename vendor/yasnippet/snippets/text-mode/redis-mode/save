@@ -1,4 +1,0 @@
-# name : save Synchronously save the DB on disk
-# (link "~/local/src/redis/doc/SaveCommand.txt" 1)
-# --
-save 

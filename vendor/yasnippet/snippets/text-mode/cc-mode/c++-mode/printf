@@ -1,3 +1,0 @@
-# name:  printf
-# --
-printf("$1 %$0\n", ${1:var});

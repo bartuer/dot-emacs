@@ -1,3 +1,0 @@
-#name: key value pair line
-# --
-${1:name}: ${2:l} , l:$0

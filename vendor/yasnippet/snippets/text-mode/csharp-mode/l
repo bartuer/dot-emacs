@@ -1,3 +1,0 @@
-# name: log system writeline
-# --
-System.Console.WriteLine("$0");

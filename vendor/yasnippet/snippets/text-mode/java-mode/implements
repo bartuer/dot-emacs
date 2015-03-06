@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: implements
-# key: imp
-# --
-class ${1:inherent_class} implements ${2:interface} {
-      $0
-}

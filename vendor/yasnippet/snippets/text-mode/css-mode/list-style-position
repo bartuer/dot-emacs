@@ -1,4 +1,0 @@
-# name : list-style-position
-# (css-find "list-style-position")
-# --
-list-style-position :$0 outside inside ;

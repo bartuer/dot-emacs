@@ -1,4 +1,0 @@
-#name : record time
-#contributor : Bartuer
-# --
-(message "%s-%s" (format-time-string "%M:%S") (nth 2 (current-time)))

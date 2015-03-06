@@ -1,6 +1,0 @@
-# name: import of Scanner
-# --
-
-import java.io.BufferedReader;
-import java.util.Scanner;
-import java.io.IOException;

@@ -1,3 +1,0 @@
-# name: app disconnect
-# --
-${1:app}.disconnect('/${2:url_not_end_with_slash}', ${3:fun});

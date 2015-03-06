@@ -1,6 +1,0 @@
-# name : flash action communication view rails
-# (rdoc "ActionController::Flash")
-# --
-<% if flash[:${1:notice}] %>
-  <div class="$1"><%= flash[:$1] %></div>
-<% end %>

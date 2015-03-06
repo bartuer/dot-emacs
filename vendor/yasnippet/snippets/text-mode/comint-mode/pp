@@ -1,4 +1,0 @@
-# name:pp
-# (link "~/local/src/v8/src/d8.js" 9212)
-# --
-pp #${1:num}#

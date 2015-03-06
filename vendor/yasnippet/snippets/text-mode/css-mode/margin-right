@@ -1,4 +1,0 @@
-# name : margin-right
-# (css-find "margin-right")
-# --
-margin-right :$0 margin-width ;

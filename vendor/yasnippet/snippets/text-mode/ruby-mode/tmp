@@ -1,7 +1,0 @@
-# name: rake file task
-# --
-Tempfile.open('w') { |file|
-  file.write(${1:content})
-  file.flush
-  ${2:result} =  '${3:command} #{file.path}'
-}

@@ -1,4 +1,0 @@
-#name : init string (NSString)
-# --
-NSString.alloc.initWithString("${1:str}")$0
-

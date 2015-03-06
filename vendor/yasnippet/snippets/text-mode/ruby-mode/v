@@ -1,3 +1,0 @@
-# name: vector .. range
-# --
-[*${1:beg}..${2:end}]

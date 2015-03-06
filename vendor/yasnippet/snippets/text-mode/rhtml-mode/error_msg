@@ -1,5 +1,0 @@
-# name: error_message former view api rails 
-# (rdoc "ActionView::Helpers::ActiveRecordHelper#error_messages_for")
-# (yas/tap) error_messages_for, :header_tag 'h2', :id 'errorExplanation', :class 'errorExplanation', :object obj, :object_name 'name', :header_message 'msg', :message 'msg'
-# --
-<%= error_messages_for ${1:`(yas/p ":header_tag" "'h2'")`}$0, ${2:`(yas/p ":id" "'errorExplanation'")`}, ${3:`(yas/p ":class" "'errorExplanation'")`}, ${4:`(yas/p ":object" "obj")`}, ${5:`(yas/p ":object_name" "'name'")`}, ${6:`(yas/p ":header_message" "'msg'")`}, ${7:`(yas/p ":message" "'msg'")`} %>

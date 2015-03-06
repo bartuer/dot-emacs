@@ -1,4 +1,0 @@
-# name: check_box former view api rails
-# (rdoc "ActionFormer View::Helpers::FormHelper#check_box")
-# --
-check_box :${1:obj}, :${2:method}, $0{}, "${3:checked_value}", "${4:unchecked_value}"

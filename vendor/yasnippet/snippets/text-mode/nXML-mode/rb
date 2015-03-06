@@ -1,5 +1,0 @@
-# name: ruby html5
-# --
-<ruby>
-  ${1:zi} <rt>${2:yin}</rt>
-</ruby>

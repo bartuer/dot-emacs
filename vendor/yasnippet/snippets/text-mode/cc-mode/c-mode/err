@@ -1,3 +1,0 @@
-# name: debug log fprintf error with error number system call
-# --
-printf("${1:subtitle} %s\n", strerror(errno));

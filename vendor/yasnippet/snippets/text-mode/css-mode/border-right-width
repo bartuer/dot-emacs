@@ -1,4 +1,0 @@
-# name : border-right-width
-# (css-find "border-right-width")
-# --
-border-right-width :$0 border-width ;

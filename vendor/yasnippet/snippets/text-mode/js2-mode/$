@@ -1,3 +1,0 @@
-# name : prototype element $
-# --
-$('${1:id}')

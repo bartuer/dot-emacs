@@ -1,3 +1,0 @@
-#name : setter(see dyn)
-# --
-setter=${1:name}

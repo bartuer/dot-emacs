@@ -1,3 +1,0 @@
-#name div
-# --
-<div class=${1:class} id=${2:id}>$0</div>

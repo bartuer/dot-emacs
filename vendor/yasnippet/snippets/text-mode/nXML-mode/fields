@@ -1,7 +1,0 @@
-# name: fields_for former view api rails 
-# (rdoc "ActionView::Helpers::FormHelper#fields_for")
-# --
-<% fields_for :${1:obj_bind} do |obj| %>
- ${2:method}:  <%= text_field$0 %> <br />
-<% end %>
-

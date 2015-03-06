@@ -1,5 +1,0 @@
-#name : if __FILE__ == $PROGRAM_NAME main
-# --
-if __FILE__ == $PROGRAM_NAME
-  $0
-end

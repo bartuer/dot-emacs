@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: extends
-# key: ext
-# --
-class ${1:inherent_class} extends ${2:base_class} {
-      $0
-}

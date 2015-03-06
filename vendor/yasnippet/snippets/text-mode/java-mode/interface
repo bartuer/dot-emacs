@@ -1,5 +1,0 @@
-# name: interface interface describe_name
-# --
-interface ${1:interface_name} {
-    $0
-}

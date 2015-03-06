@@ -1,3 +1,0 @@
-#name : methodForSelector
-# --
-IMP method_address = [${1:instance} methodForSelector:${2:aSEL}];

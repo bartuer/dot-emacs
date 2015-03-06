@@ -1,3 +1,0 @@
-# name: map array
-# --
-${1:array}.map(function (e) { $0 });

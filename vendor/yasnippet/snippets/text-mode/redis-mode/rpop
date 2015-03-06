@@ -1,4 +1,0 @@
-# name : rpop Return and remove (atomically) the last element of the List at key
-# (link "~/local/src/redis/doc/RpopCommand.txt" 1)
-# --
-rpop ${1:key}

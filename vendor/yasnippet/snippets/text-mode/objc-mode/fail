@@ -1,3 +1,0 @@
-#name : assert fail
-# --
-STFail(@"${1:should }$0");

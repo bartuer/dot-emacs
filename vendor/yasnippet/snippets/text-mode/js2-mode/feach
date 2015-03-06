@@ -1,6 +1,0 @@
-# name: foreach 
-# --
-${1:array}.forEach(
-    function (e) {
-        $0
-});

@@ -1,3 +1,0 @@
-# name: jspec expect hide be_hidden
-# --
-expect('${1:element}').to(be_hidden);

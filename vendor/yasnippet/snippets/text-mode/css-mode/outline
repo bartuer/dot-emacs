@@ -1,4 +1,0 @@
-# name : outline
-# (css-find "outline")
-# --
-outline :$0 border-width border-style invert color ;

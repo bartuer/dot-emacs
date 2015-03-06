@@ -1,3 +1,0 @@
-#name : assert operation
-# --
-STAssertOperation(${1:one}, ${2:two}, ${3:op}, @"${4:should }$0");

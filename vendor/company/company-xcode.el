@@ -1,28 +1,39 @@
-;;; company-xcode.el --- a company-mode completion back-end for Xcode projects
-;;
-;; Copyright (C) 2009 Nikolaj Schumacher
-;;
-;; This file is part of company 0.5.
-;;
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 2
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
+;;; company-xcode.el --- company-mode completion back-end for Xcode projects
+
+;; Copyright (C) 2009-2011, 2014  Free Software Foundation, Inc.
+
+;; Author: Nikolaj Schumacher
+
+;; This file is part of GNU Emacs.
+
+;; GNU Emacs is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;;
+
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+;;
+
+;;; Code:
 
 (require 'company)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
+
+(defgroup company-xcode nil
+  "Completion back-end for Xcode projects."
+  :group 'company)
 
 (defcustom company-xcode-xcodeindex-executable (executable-find "xcodeindex")
-  "*Location of xcodeindex executable"
-  :group 'company-xcode
+  "Location of xcodeindex executable."
   :type 'file)
 
 (defvar company-xcode-tags nil)
@@ -35,14 +46,13 @@
 (defcustom company-xcode-types
   '("Class" "Constant" "Enum" "Macro" "Modeled Class" "Structure"
     "Type" "Union" "Function")
-  "*The types of symbols offered by `company-xcode'
+  "The types of symbols offered by `company-xcode'.
 No context-enabled completion is available.  Types like methods will be
 offered regardless of whether the class supports them.  The defaults should be
 valid in most contexts."
   :set (lambda (variable value)
          (set variable value)
          (company-xcode-reset))
-  :group 'company-xcode
   :type '(set (const "Category") (const "Class") (const "Class Method")
               (const "Class Variable") (const "Constant") (const "Enum")
               (const "Field") (const "Instance Method")
@@ -52,8 +62,7 @@ valid in most contexts."
               (const "Structure") (const "Type") (const "Union")
               (const "Variable") (const "Function")))
 
-(defvar company-xcode-project 'unknown)
-(make-variable-buffer-local 'company-xcode-project)
+(defvar-local company-xcode-project 'unknown)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -71,7 +80,7 @@ valid in most contexts."
                             "\t[^\t\n]*\t[^\t\n]*"))
             candidates)
         (while (re-search-forward regexp nil t)
-          (add-to-list 'candidates (match-string 1)))
+          (cl-pushnew (match-string 1) candidates :test #'equal))
         (message "Retrieving dump from %s...done" project-bundle)
         candidates))))
 
@@ -97,17 +106,17 @@ valid in most contexts."
                         company-xcode-tags))))))
 ;;;###autoload
 (defun company-xcode (command &optional arg &rest ignored)
-  "A `company-mode' completion back-end for Xcode projects."
+  "`company-mode' completion back-end for Xcode projects."
   (interactive (list 'interactive))
-  (case command
-    ('interactive (company-begin-backend 'company-xcode))
-    ('prefix (and company-xcode-xcodeindex-executable
+  (cl-case command
+    (interactive (company-begin-backend 'company-xcode))
+    (prefix (and company-xcode-xcodeindex-executable
+                 (company-xcode-tags)
+                 (not (company-in-string-or-comment))
+                 (or (company-grab-symbol) 'stop)))
+    (candidates (let ((completion-ignore-case nil))
                   (company-xcode-tags)
-                  (not (company-in-string-or-comment))
-                  (or (company-grab-symbol) 'stop)))
-    ('candidates (let ((completion-ignore-case nil))
-                   (company-xcode-tags)
-                   (all-completions arg (company-xcode-tags))))))
+                  (all-completions arg (company-xcode-tags))))))
 
 
 (provide 'company-xcode)

@@ -1,4 +1,0 @@
-# name : json escaper view api rails
-# (rdoc "ERB::Util#json_escape")
-# --
-j(${1:content})

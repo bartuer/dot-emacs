@@ -1,3 +1,0 @@
-#name : pragma
-# --
-#pragma mark ${1:name}

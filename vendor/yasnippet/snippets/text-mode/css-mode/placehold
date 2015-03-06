@@ -1,4 +1,0 @@
-# name : placehold
-# (css-find "background-image")
-# --
-background-image :url("http://placehold.it/${1:width}x${2:height}.png/${3:backcolor}/${4:000000}&text=$1x$2,${5:text}") ;

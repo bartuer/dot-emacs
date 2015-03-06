@@ -1,3 +1,0 @@
-# name: descendantOf prototype dom object
-# --
-descendantOf(${1:ancestor})

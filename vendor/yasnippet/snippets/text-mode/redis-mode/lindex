@@ -1,4 +1,0 @@
-# name : lindex Return the element at index position from the List at key
-# (link "~/local/src/redis/doc/LindexCommand.txt" 1)
-# --
-lindex ${1:key} ${2:index}

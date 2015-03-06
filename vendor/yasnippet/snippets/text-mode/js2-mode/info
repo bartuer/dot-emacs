@@ -1,3 +1,0 @@
-# name : console info debug
-# --
-console.info('$1:'+${1:obj});

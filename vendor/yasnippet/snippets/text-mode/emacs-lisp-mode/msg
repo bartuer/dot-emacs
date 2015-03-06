@@ -1,4 +1,0 @@
-#name : message
-#contributor : Bartuer
-# --
-(message "${1:str}")

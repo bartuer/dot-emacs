@@ -1,3 +1,0 @@
-#name : html_label
-# --
-<label for="${1:url}">${2:txt}</label>

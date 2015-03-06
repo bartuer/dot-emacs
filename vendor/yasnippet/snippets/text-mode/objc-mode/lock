@@ -1,7 +1,0 @@
-#name : synchronized(mutex){critical code}
-# --
-@synchronized(${1:self})
-{
-  // critical code
-  $0
-}

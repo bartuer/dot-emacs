@@ -1,3 +1,0 @@
-# name: <meta />
-# --
-<meta name="${1:description}" content="${2:content}" />

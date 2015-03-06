@@ -1,4 +1,0 @@
-#name : run time
-# --
-SEL ${1:symbol};
-$1 = NSSelectorFromString(${2:aStr});

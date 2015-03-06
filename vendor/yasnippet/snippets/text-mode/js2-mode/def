@@ -1,3 +1,0 @@
-#name : default ||
-# --
-${1:value} || ${2:default}$0

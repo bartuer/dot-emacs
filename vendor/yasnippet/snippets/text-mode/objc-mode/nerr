@@ -1,3 +1,0 @@
-#name : assert no error
-# --
-STAssertNoErr(${1:one}, @"${2:should }$0");

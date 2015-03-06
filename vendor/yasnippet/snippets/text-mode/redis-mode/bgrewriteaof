@@ -1,4 +1,0 @@
-# name : bgrewriteaof Rewrite the append only file in background when it gets too big
-# (link "~/local/src/redis/doc/BgrewriteaofCommand.txt" 1)
-# --
-bgrewriteaof 

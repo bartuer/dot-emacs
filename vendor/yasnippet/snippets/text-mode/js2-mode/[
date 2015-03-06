@@ -1,3 +1,0 @@
-#name : retrieval obj["property"] find [
-# --
-${1:name}["${2:property}"$0

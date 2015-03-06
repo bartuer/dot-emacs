@@ -1,3 +1,0 @@
-# name: filter rdbeug
-# --
-ps ${1:@obj}.map &:method

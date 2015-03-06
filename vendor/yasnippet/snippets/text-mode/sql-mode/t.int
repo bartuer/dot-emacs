@@ -1,3 +1,0 @@
-# name: sql data type int
-# --
-int(${1:length}) default NULL,

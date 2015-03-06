@@ -1,4 +1,0 @@
-# name : sdiffstore Compute the difference between the Set  key1 and all the Sets key2 ... keyN and store the resulting Set at dstkey
-# (link "~/local/src/redis/doc/SdiffstoreCommand.txt" 1)
-# --
-sdiffstore ${1:dstkey} ${2:key1} ${3:key2} ${4:keyn}

@@ -1,6 +1,0 @@
-# name: finder joins crud model controller parameter rails 
-# (rdoc "ActiveRecord::Base.find")
-# (link "~/local/src/rails/activerecord/test/cases/finder_test.rb" 394)
-# (link "~/local/src/rails/activerecord/test/cases/finder" 137)
-# --
-joins => :${1:assoc} "${2:INNER JOIN authors ON posts.author_id = authors.id AND authorsnmae = 'M'}"

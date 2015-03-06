@@ -1,4 +1,0 @@
-#name : controller,action
-# --
-:controller => "${1:controller}", :action => "${2:action}"
-

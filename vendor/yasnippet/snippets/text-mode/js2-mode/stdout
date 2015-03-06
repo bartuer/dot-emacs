@@ -1,3 +1,0 @@
-# name: stdout nodejs
-# --
-process.stdout

@@ -1,3 +1,0 @@
-# name: format
-# --
-system.out.format("%${1:type}%n", ${2:var});

@@ -1,5 +1,0 @@
-# name: zeromq listen zlisten socket 0mq
-# --
-void *${1:sockat_name} = zsocket_new (${2:context}, ${3:ztype});
-assert ($1);
-zsocket_connect ($1, "${4:address}");

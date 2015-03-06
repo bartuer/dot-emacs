@@ -1,6 +1,0 @@
-# name: index option migration model parameter rails 
-# (rdoc "ActiveRecord::Migration")
-# (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
-# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
-# --
-:name => "${1:index_name}", :unique => true

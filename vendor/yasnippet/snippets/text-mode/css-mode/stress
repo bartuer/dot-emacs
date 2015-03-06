@@ -1,4 +1,0 @@
-# name : stress
-# (css-find "stress")
-# --
-stress :$0 5 ;

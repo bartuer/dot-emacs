@@ -1,9 +1,0 @@
-# name: font-face 
-# --
-@font-face {
-    font-family: '${1:family}';
-    src: url('$2.ttf') format('truetype');
-    src: url('$2.svg') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}

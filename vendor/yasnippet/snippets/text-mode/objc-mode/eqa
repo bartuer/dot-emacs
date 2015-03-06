@@ -1,3 +1,0 @@
-#name : assert equals with accuracy
-# --
-STAssertEqualsWithAccuracy(${1:one}, ${2:two}, ${3:accuracy}, @"${4:should }$0");

@@ -1,3 +1,0 @@
-#name : declare
-# --
-@protocol ${1:Name};

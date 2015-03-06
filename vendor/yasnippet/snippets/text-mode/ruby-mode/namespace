@@ -1,5 +1,0 @@
-# name: rake namespace
-# --
-namespace "${1:name}" do
-  $0
-end

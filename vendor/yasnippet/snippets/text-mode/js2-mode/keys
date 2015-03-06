@@ -1,3 +1,0 @@
-# name: keys properties
-# --
-Object.getOwnPropertyNames(${1:obj})

@@ -1,4 +1,0 @@
-# name : rpush Append an element to the tail of the List value at key
-# (link "~/local/src/redis/doc/RpushCommand.txt" 1)
-# --
-rpush ${1:key} ${2:value}

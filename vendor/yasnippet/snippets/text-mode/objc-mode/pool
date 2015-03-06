@@ -1,6 +1,0 @@
-#name : immediately
-# --
-NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-// for huge loop, thread
-$0
-[pool release];

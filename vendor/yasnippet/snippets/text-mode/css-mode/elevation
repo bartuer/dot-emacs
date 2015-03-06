@@ -1,4 +1,0 @@
-# name : elevation
-# (css-find "elevation")
-# --
-elevation :$0 lower higher above level below angle ;

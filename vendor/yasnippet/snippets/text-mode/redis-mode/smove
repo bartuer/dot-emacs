@@ -1,4 +1,0 @@
-# name : smove Move the specified member from one Set to another  atomically
-# (link "~/local/src/redis/doc/SmoveCommand.txt" 1)
-# --
-smove ${1:srckey} ${2:dstkey} ${3:member}

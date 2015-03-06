@@ -1,7 +1,0 @@
-# name: build dom element only id
-# --
-var ${1:name} = create('div');
-attr($1, {'id':'$1'});
-mount(${2:mount_point}, $1);
-
-$0

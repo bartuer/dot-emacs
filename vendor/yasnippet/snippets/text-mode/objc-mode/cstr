@@ -1,3 +1,0 @@
-# name: c string utf8string
-# --
-[${1:nsstring} UTF8String]

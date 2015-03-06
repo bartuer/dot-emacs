@@ -1,4 +1,0 @@
-# name : renamenx rename the old key in the new one if the newname  key does not already exist
-# (link "~/local/src/redis/doc/RenamenxCommand.txt" 1)
-# --
-renamenx ${1:oldname } ${2:newname}

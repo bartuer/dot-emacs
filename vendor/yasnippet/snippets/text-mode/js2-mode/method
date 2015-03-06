@@ -1,5 +1,0 @@
-# name: method 
-# --
-${1:module}.prototype.${2:method} = function (${3:arguments}) {
-    $0                                                        
-};

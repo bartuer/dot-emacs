@@ -1,4 +1,0 @@
-# name : pause-before
-# (css-find "pause-before")
-# --
-pause-before :$0 50% time ;

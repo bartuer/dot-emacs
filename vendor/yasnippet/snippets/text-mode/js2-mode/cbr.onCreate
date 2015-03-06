@@ -1,3 +1,0 @@
-# name: onCreate responders callback prototype ajax
-# --
-onCreate: ${1:func} ${2:function(ajaxr, r, header){ }$0}

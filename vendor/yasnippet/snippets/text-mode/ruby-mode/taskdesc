@@ -1,3 +1,0 @@
-# name: rake task describe desc
-# --
-desc "${1:comments}"

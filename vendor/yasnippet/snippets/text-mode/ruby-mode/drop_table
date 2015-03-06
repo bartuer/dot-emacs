@@ -1,6 +1,0 @@
-# name: drop_table migration model api rails 
-# (rdoc "ActiveRecord::Migration")
-# (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
-# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
-# --
-drop_table :${1:table_name}

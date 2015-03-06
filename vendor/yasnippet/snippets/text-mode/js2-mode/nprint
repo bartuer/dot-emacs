@@ -1,3 +1,0 @@
-# name: node print 
-# --
-sys.print(${1:""});

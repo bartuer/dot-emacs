@@ -1,3 +1,0 @@
-#name : inspect Object/Module constants ABC ::abc ::ABC::abc
-# --
-Module.constants; Object.constants

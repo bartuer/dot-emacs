@@ -1,9 +1,0 @@
-#name : measure time
-#contributor : Bartuer
-# --
-(setq ${1:name}_beg (current-time))
-(setq $1_beg_num (+ (* 65535 (nth 0 $1_beg)) (nth 1 $1_beg) (* 0.000001 (nth 2 $1_beg))))
-
-(setq $1_end (current-time))
-(setq $1_end_num (+ (* 65535 (nth 0 $1_end)) (nth 1 $1_end) (* 0.000001 (nth 2 $1_end))))
-(message "%10s time %f" "$1" (- $1_end_num  $1_beg_num ))

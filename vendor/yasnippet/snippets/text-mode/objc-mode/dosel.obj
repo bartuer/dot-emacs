@@ -1,3 +1,0 @@
-#name : [receiver signature:obj]
-# --
-[${1:receiver} performSelector:${2:aSEL} withObject:${3:aObj}];

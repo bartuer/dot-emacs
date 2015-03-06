@@ -1,3 +1,0 @@
-# name: jspec expect class has_classes
-# --
-expect('${1:element}').to(has_classes, '${2:class1}', '${3:class2}');

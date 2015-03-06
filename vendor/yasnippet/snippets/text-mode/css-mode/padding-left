@@ -1,4 +1,0 @@
-# name : padding-left
-# (css-find "padding-left")
-# --
-padding-left :$0 padding-width ;

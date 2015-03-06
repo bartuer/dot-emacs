@@ -1,4 +1,0 @@
-# name : list-style-type
-# (css-find "list-style-type")
-# --
-list-style-type :$0 none upper-alpha lower-alpha georgian armenian upper-latin lower-latin lower-greek upper-roman lower-roman decimal-leading-zero decimal square circle disc ;

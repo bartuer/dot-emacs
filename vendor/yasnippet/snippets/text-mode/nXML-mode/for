@@ -1,5 +1,0 @@
-# name: for each in items ... end
-# --
-<% for ${1:item} in @${2:collection}s -%>
-  $0
-<% end -%>

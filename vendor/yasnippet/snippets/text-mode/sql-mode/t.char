@@ -1,3 +1,0 @@
-# name: sql data type char
-# --
-char(${1:255}) default NULL,

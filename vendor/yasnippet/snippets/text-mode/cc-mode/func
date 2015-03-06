@@ -1,6 +1,0 @@
-# name: function fun implement
-# --
-${1:return_type}
-${2:func_name} ( paralist$0 ) {
-  
-}

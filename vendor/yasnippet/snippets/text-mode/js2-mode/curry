@@ -1,3 +1,0 @@
-#name : curry
-# --
-var ${1:new_method} = ${2:method}.curry(${3:arg});

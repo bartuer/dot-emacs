@@ -1,8 +1,0 @@
-#name : protocol
-# --
-// all properties need @synthesize or @dynamic
-
-@implementation ${1:ClassName} <${2:CategoryName}>
-// all instance variable need dealloc
-$0
-@end

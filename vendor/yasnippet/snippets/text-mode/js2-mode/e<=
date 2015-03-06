@@ -1,3 +1,0 @@
-# name: e<= jspec expect compare at_most
-# --
-expect(${1:val1}).to(be_at_most, ${2:val2});

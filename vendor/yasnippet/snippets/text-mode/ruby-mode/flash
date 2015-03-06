@@ -1,4 +1,0 @@
-# name : flash action communication controller api rails
-# (rdoc "ActionController::Flash")
-# --
-flash[:${notice}] = ${2:val}

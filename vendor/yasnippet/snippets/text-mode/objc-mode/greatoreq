@@ -1,3 +1,0 @@
-#name : assert great than or equal
-# --
-STAssertGreaterThanOrEqual(${1:one}, ${2:two}, @"${3:should }$0");

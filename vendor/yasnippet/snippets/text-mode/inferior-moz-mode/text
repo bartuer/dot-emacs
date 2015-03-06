@@ -1,3 +1,0 @@
-# name : textContent
-# --
-${1:obj}.textContent

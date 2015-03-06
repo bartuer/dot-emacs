@@ -1,3 +1,0 @@
-# name: select prototype dom object
-# --
-select('${1:cssrule}')

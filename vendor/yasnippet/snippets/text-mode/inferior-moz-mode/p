@@ -1,3 +1,0 @@
-#name : print
-# --
-repl.print(${1:function});

@@ -1,4 +1,0 @@
-# name : overflow
-# (css-find "overflow")
-# --
-overflow :$0 auto scroll hidden visible ;

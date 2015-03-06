@@ -1,3 +1,0 @@
-#name : change dir
-# --
-${1:var} = File.join(File.dirname(__FILE__), ${location})

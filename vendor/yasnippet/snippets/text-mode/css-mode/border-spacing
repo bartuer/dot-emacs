@@ -1,4 +1,0 @@
-# name : border-spacing
-# (css-find "border-spacing")
-# --
-border-spacing :$0 5 5 ;

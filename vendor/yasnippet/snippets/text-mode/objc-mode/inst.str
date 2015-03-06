@@ -1,9 +1,0 @@
-#name : instance a string
-# it is dangerous write code like:
-# id o = [Class alloc];
-# [o init];
-# [o msg];
-# for [o init] maybe return another object, not only return nil problem.
-# --
-[[NSString alloc] initWithString:${1}];$0
-

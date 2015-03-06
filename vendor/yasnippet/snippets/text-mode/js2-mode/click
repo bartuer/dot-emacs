@@ -1,3 +1,0 @@
-# name: simulate click
-# --
-$('${1:dom_id}').simulate('click');

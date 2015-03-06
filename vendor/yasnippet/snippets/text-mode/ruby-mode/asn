@@ -1,3 +1,0 @@
-#name : assert_nil
-# --
-assert_nil ${1:instance}$0

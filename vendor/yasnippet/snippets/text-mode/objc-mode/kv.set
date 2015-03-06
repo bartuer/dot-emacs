@@ -1,5 +1,0 @@
-#name : set
-# --
-[${1:object} setValue:[${3:class} ${4:msg}:${5:value}]
-             forKey:@"$2"];
-$0

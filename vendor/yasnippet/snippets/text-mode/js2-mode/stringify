@@ -1,3 +1,0 @@
-# name: json encode stringify
-# --
-JSON.stringify(${1:obj})

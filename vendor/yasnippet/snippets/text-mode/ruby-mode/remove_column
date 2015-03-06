@@ -1,6 +1,0 @@
-# name: remove_column migration model api rails 
-# (rdoc "ActiveRecord::Migration")
-# (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
-# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
-# --
-remove_column :${1:table_name}, :${2:column_name}

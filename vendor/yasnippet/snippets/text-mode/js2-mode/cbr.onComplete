@@ -1,4 +1,0 @@
-# name: onComplete responders callback prototype ajax
-# --
-onComplete: ${1:function(ajaxr, r){ }$0}
-

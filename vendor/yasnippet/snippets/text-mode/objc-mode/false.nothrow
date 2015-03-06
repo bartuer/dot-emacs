@@ -1,3 +1,0 @@
-#name : assert false and no throw
-# --
-STAssertFalseNoThrow(${1:expr}, @"${2:should }$0");

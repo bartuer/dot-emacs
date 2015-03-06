@@ -1,6 +1,0 @@
-# name: nodejs tcpserver
-# --
-var server = net.createServer(function (socket) {
-                                  
-});
-server.listen('${1:port}');

@@ -1,5 +1,0 @@
-# name: class destroy v[.] c[-] b[] e[] crud model controller api rails 
-# (rdoc "ActiveRecord::Base.destroy")
-# (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
-# --
-${1:Class}.destroy(${2:ids})

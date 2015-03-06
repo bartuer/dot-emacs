@@ -1,4 +1,0 @@
-# name: mail_to linker view api rails
-# (rdoc "ActionView::Helpers::UrlHelper#mail_to")
-# --
-<%= mail_to "${1:address}", "${2:name}", :encode => "javascript" ${3:,mt_opt}$0 %>

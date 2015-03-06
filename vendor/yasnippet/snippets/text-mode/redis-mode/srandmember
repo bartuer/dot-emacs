@@ -1,4 +1,0 @@
-# name : srandmember Return a random member of the Set value at key
-# (link "~/local/src/redis/doc/SrandmemberCommand.txt" 1)
-# --
-srandmember ${1:key}

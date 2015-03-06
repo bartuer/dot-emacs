@@ -1,5 +1,0 @@
-#name : assert_nothing_raised
-# --
-assert_nothing_raised (${1:Error}) do
-  $0
-end

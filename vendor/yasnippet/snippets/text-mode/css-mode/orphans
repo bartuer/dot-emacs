@@ -1,4 +1,0 @@
-# name : orphans
-# (css-find "orphans")
-# --
-orphans :$0 5 ;

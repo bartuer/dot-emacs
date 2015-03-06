@@ -1,3 +1,0 @@
-#name : inspect controller instance variable @var
-# --
-@controller.instance_variable_get('@#{:${1:symbol}}')

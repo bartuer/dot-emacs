@@ -1,7 +1,0 @@
-#name : :yields
-# --
-if block_given?
-  yield ${1:e}
-else
-  $1
-end

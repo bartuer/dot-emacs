@@ -1,6 +1,0 @@
-#name : category
-# --
-@interface ${1:Class}(${2:category})
-// message define
-$0
-@end

@@ -1,4 +1,0 @@
-# name: submit_tag former view api rails 
-# (rdoc "ActionFormer View::Helpers::FormTagHelper#submit_tag")
-# --
-<%= submit_tag "${1:save}"$0, st_opt %>

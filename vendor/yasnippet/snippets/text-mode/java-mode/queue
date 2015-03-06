@@ -1,3 +1,0 @@
-# name: queue
-# --
-Queue<${1:type}> ${2:que} = new ${3:LinkedList}<$1>();$0

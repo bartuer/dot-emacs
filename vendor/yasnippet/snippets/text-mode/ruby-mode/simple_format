@@ -1,4 +1,0 @@
-# name : simple_format formatter view api rails
-# (rdoc "ActionView::Helpers::TextHelper#simple_format")
-# --
-simple_format(${1:content})

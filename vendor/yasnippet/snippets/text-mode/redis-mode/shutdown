@@ -1,4 +1,0 @@
-# name : shutdown Synchronously save the DB on disk  then shutdown the server
-# (link "~/local/src/redis/doc/ShutdownCommand.txt" 1)
-# --
-shutdown 

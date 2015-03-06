@@ -1,4 +1,0 @@
-# name : flushall remove all the keys from all the databases
-# (link "~/local/src/redis/doc/FlushallCommand.txt" 1)
-# --
-flushall 

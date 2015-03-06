@@ -1,3 +1,0 @@
-#name : json yajl encode
-# --
-Yajl::Encoder.encode(${1:obj})

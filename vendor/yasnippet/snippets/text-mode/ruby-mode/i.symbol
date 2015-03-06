@@ -1,3 +1,0 @@
-#name : inspect symbol :name
-# --
-Symbol.all_symbols.map{|s| ":" + s.id2name}

@@ -1,8 +1,0 @@
-# name: validates_confirmation_of validate model api rails 
-# (rdoc "ActiveRecord::Validations::ClassMethods#validates_confirmation_of")
-# --
-validates_confirmation_of(:${1:name},
-                          :on => :create :update :save,
-                          :allow_nil => false,
-                          :if => Proc.new { |o| ${2:condition}},
-                          :message => '')

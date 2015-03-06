@@ -1,6 +1,0 @@
-#name: object literal
-# --
-var ${1:obj} = {
-    ${2:name}: ${3:value},
-    :$0
-};

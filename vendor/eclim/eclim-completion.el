@@ -169,7 +169,7 @@ buffer."
                   (template (eclim--completion-yasnippet-convert insertion)))
              (delete-region eclim--completion-start end)
              (if (and eclim-use-yasnippet template (featurep 'yasnippet))
-                 (yas/expand-snippet template)
+                 (yas-expand-snippet template)
                (insert insertion))
              (when package
                (eclim-java-import
@@ -185,14 +185,14 @@ buffer."
 			(when (string-match "\\(.*\\)=\"\\(.*\\)\"" completion)
 				(delete-region eclim--completion-start end)
 				(if (and eclim-use-yasnippet (featurep 'yasnippet))
-						(yas/expand-snippet (format "%s=\"${%s}\" ${}" (match-string 1 completion) (match-string 2 completion)))
+						(yas-expand-snippet (format "%s=\"${%s}\" ${}" (match-string 1 completion) (match-string 2 completion)))
 					(insert completion))))))
 
 (defun eclim--completion-action-default ()
   (when (and (= 40 (char-before)) (not (looking-at ")")))
     ;; we've inserted an open paren, so let's close it
     (if (and eclim-use-yasnippet (featurep 'yasnippet))
-        (yas/expand-snippet "$1)$0")
+        (yas-expand-snippet "$1)$0")
       (progn
         (insert ")")
         (backward-char)))))

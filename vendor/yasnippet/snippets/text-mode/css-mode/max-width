@@ -1,4 +1,0 @@
-# name : max-width
-# (css-find "max-width")
-# --
-max-width :$0 none 50% 5 ;

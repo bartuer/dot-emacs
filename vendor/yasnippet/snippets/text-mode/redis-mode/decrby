@@ -1,4 +1,0 @@
-# name : decrby decrement the integer value of key by integer
-# (link "~/local/src/redis/doc/DecrbyCommand.txt" 1)
-# --
-decrby ${1:key} ${2:integer}

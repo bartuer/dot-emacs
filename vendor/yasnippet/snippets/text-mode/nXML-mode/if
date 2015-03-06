@@ -1,5 +1,0 @@
-# name: if cond ... 
-# --
-<% if ${1:cond} -%>
-  $0
-<% end -%>

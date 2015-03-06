@@ -1,3 +1,0 @@
-# name: select expr equal sql console
-# --
-${1:column} = '${2:value}'

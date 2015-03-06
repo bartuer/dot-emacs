@@ -1,7 +1,0 @@
-#name : dynamically binding delay release
-# --
-id ${2:instance} = [[${1:Type} alloc] init];
-if ($2) {
-  [$2 autorelease];
-}
-$0

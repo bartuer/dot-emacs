@@ -1,4 +1,0 @@
-# name: checked ckd surround block with checked
-# type: command
-# --
-${1:$((lambda () (surround "checked")))}

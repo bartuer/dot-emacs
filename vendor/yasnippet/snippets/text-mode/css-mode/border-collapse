@@ -1,4 +1,0 @@
-# name : border-collapse
-# (css-find "border-collapse")
-# --
-border-collapse :$0 separate collapse ;

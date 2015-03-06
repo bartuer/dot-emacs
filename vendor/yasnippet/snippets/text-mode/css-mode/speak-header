@@ -1,4 +1,0 @@
-# name : speak-header
-# (css-find "speak-header")
-# --
-speak-header :$0 always once ;

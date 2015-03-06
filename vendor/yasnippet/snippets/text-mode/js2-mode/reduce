@@ -1,5 +1,0 @@
-# name: map array
-# --
-${1:array}.reduce(function (prev, current) {
-    $0
-}, ${2:init});

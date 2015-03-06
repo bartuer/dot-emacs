@@ -1,3 +1,0 @@
-#name : should eql
-# --
-${1:actual}.should eql(${2:expected})

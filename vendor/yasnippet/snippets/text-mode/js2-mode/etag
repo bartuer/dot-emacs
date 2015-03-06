@@ -1,3 +1,0 @@
-# name: jspec expect tag has_tag
-# --
-expect('${1:element}').to(has_tag, '${2:tag}');

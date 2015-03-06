@@ -1,4 +1,0 @@
-# name : zrank Return the rank (or index) or _member_ in the sorted set at  _key_ with scores being ordered from low to high
-# (link "~/local/src/redis/doc/ZrankCommand.txt" 1)
-# --
-zrank ${1:key} ${2:member}

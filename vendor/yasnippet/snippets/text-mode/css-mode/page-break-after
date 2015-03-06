@@ -1,4 +1,0 @@
-# name : page-break-after
-# (css-find "page-break-after")
-# --
-page-break-after :$0 right left avoid always auto ;

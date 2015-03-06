@@ -1,4 +1,0 @@
-#name : autorelease
-# 
-# --
-[${1:obj} autorelease];

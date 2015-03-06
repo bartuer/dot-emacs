@@ -1,5 +1,0 @@
-# name: for in
-# --
-for(${1:type} ${2:val} : ${3:container}.${4:keySet}) {
-    
-}

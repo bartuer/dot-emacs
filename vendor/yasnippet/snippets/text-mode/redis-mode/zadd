@@ -1,4 +1,0 @@
-# name : zadd Add the specified member to the Sorted Set value at key  or update the score if it already exist
-# (link "~/local/src/redis/doc/ZaddCommand.txt" 1)
-# --
-zadd ${1:key} ${2:score} ${3:member}

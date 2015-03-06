@@ -1,8 +1,0 @@
-# name : layout controller api rails
-# it is for specify the controller layout, for application layout
-# views/layouts/application.erb
-# (rdoc "ActionController::Layout::ClassMethods")
-# (link "~/local/src/rails/actionpack/test/controller/layout_test.rb" 2682)
-# (yas/tap) layout "template_name", except a, only a
-# --
-layout "template_name", ${1:`(yas/p "except" "a")`}$0, ${2:`(yas/p "only" "a")`}

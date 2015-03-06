@@ -1,3 +1,0 @@
-# name: method hash anchor
-# --
-{ :${1:method} => method$0 }

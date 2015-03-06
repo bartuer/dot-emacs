@@ -1,4 +1,0 @@
-# name: radio_button former view api rails
-# (rdoc "ActionFormer View::Helpers::FormHelper#radio_button")
-# --
-radio_button :${1:obj}, :${2:method}, ${3:value}$0, fopt

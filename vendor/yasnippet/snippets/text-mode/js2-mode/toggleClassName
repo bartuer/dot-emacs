@@ -1,3 +1,0 @@
-# name: toggleClassName prototype dom layout
-# --
-toggleClassName('${1:className}')

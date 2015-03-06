@@ -1,5 +1,0 @@
-#name: function one
-# --
-function ${1:name}(${2:arg1}) {
-    $0
-}

@@ -1,3 +1,0 @@
-# name: jspec expect child has_child
-# --
-expect('${1:element}').to(has_child);

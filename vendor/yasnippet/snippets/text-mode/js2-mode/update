@@ -1,4 +1,0 @@
-# name: update prototype dom tree
-# (link "~/local/src/prototype/src/dom/dom.js" 4796)
-# --
-update('${1:content}')

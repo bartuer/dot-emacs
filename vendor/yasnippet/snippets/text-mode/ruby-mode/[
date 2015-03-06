@@ -1,3 +1,0 @@
-#name : [:item]
-# --
-${flash}[:${notice}] = $0

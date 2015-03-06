@@ -1,8 +1,0 @@
-# name : session controller api rails
-# (link "~/local/src/rails/actionpack/lib/action_controller/test_process.rb" 7361)
-# (link "~/local/src/rails/actionpack/test/controller/session/test_session_test.rb" 1149)
-# (link "~/local/src/rails/actionpack/test/controller/session/cookie_store_test.rb" 730)
-# (link "~/local/src/rails/actionpack/test/controller/session/cookie_store_test.rb" 2701)
-# (link "session._config" 51)
-# --
-$0session[:${1:key}]

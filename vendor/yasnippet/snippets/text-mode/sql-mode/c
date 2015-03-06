@@ -1,4 +1,0 @@
-#name : sql column c
-# --
-'${1:name}' t$0
-c

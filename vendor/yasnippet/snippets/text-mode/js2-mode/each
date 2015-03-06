@@ -1,5 +1,0 @@
-# name: each 
-# --
-each(function (e) {
-  $0
-});

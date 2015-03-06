@@ -1,3 +1,0 @@
-# name: memcpy copy memory 
-# --
-memcpy(${1:to}, ${2:from}, ${3:size});

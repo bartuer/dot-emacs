@@ -1,4 +1,0 @@
-# name : border-left-style
-# (css-find "border-left-style")
-# --
-border-left-style :$0 border-style ;

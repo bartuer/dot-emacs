@@ -1,3 +1,0 @@
-# name: hash dict
-# --
-{ :${1:key} => ${2:val}, :$0 }

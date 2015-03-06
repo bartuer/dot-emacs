@@ -1,5 +1,0 @@
-#name: lambda function three
-# --
-function (${1:para1}, ${2:para2}, ${3:para3}) {
-    $0
-}

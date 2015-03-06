@@ -1,3 +1,0 @@
-#name : throw string
-# --
-throw "$0";

@@ -1,3 +1,0 @@
-#name : objc send
-# --
-${1:instance}.objc_send :${2:msg}, ${3:value}

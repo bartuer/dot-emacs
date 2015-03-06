@@ -1,3 +1,0 @@
-# name: reference other ts file
-# --
-///<reference path='${1:filename}.ts'/>

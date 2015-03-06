@@ -1,3 +1,0 @@
-# name: rake shell
-# --
-sh %{$0 }

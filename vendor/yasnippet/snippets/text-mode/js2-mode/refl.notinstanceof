@@ -1,3 +1,0 @@
-#name : not instanceof
-# --
-!(${1:obj} instanceof ${2:Constructor})

@@ -1,3 +1,0 @@
-# name: shell restart
-# --
-init:restart().

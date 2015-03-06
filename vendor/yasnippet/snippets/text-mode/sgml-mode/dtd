@@ -1,5 +1,0 @@
-<!DOCTYPE ${1:type} PUBLIC "-//{2:company}//DTD $1 ${3:version}//EN$"
-        "http://${4:spec_link}">
-<$1 version="$3">
-  $0
-</$1>

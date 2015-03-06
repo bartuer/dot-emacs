@@ -1,3 +1,0 @@
-# name: m matrix
-# --
-m.m${1:coordination} = va[${2:index}];

@@ -1,3 +1,0 @@
-# name: match prototype dom layout
-# --
-match('${1:selector}')

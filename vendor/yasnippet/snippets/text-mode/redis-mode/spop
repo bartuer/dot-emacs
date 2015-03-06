@@ -1,4 +1,0 @@
-# name : spop Remove and return (pop) a random element from the Set value at key
-# (link "~/local/src/redis/doc/SpopCommand.txt" 1)
-# --
-spop ${1:key}

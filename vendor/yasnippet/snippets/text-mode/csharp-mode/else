@@ -1,3 +1,0 @@
-# name: else block
-# --
-${1:$((lambda () (surround "else")))}

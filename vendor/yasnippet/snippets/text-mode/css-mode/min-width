@@ -1,4 +1,0 @@
-# name : min-width
-# (css-find "min-width")
-# --
-min-width :$0 50% 5 ;

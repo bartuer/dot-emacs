@@ -1,4 +1,0 @@
-# name : type return the type of the value stored at key
-# (link "~/local/src/redis/doc/TypeCommand.txt" 1)
-# --
-type ${1:key}

@@ -1,4 +1,0 @@
-# name: nodejs fs
-# --
-var fs = require('fs');
-$0

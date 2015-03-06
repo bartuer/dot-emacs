@@ -1,5 +1,0 @@
-# name : to string render controller debug rails
-# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 8998)
-# (rdoc "ActionController::Base#render_to_string")
-# --
-render_to_string render$0

@@ -1,9 +1,0 @@
-#name : super <NSCopying>
-# --
-- (id) copyWithZone:(NSZone *)zone
-{
-  ${1:class} *copy = NSCopyObject(self, 0, zone);
-  // retain items
-  $0
-  return copy;
-}

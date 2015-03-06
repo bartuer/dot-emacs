@@ -1,3 +1,0 @@
-# name: readAttribute prototype dom tree
-# --
-readAttribute('${1:name}')

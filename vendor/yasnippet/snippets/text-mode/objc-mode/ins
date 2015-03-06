@@ -1,3 +1,0 @@
-#name : isa
-# --
-${1:object_pointer}->isa

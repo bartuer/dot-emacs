@@ -1,5 +1,0 @@
-# name : setTimeout
-# --
-setTimeout(function () {
-             $0
-           }, ${1:100});

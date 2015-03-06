@@ -1,3 +1,0 @@
-# name: message register pid alias
-# --
-register(${1:name}, ${2:pid})

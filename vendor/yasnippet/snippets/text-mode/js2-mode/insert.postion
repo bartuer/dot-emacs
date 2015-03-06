@@ -1,3 +1,0 @@
-# name: insert prototype dom tree
-# --
-insert({${1:before after top bottom}:${2:content}})

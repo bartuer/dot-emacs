@@ -1,5 +1,0 @@
-# name: responder callback define prototype ajax
-# --
-function(ajaxreq, req, header){
-  $0
-}

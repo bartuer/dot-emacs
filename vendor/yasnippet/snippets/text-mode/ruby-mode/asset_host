@@ -1,3 +1,0 @@
-# name : asset controller configure rails
-# --
-ActionController::Base.asset_host

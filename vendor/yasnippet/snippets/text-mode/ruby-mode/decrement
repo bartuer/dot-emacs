@@ -1,5 +1,0 @@
-# name: decrement v[-] c[-] b[-] e[-] crUd model controller api rails 
-# (link "~/local/src/rails/activerecord/lib/active_record/base.rb" 119177)
-# (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
-# --
-${1:instance}.decrement

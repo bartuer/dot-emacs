@@ -1,4 +1,0 @@
-#name : throw object
-# --
-throw {name:    ${1:name},
-       message: ${2:msg}};

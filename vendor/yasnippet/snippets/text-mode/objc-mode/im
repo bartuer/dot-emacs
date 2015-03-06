@@ -1,2 +1,0 @@
-#import "${1:filename}.h"
-$0

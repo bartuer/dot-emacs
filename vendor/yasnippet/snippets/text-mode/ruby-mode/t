@@ -1,4 +1,0 @@
-# name: t i18n translate
-# (rdoc "I18n::translate")
-# --
-I18n.t('${1:section}.${2:define}',:default => "${3:default}")

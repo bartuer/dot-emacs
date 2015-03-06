@@ -1,3 +1,0 @@
-#name getElementsByTagName
-# --
-document.getElementsByTagName("${2:tag}");

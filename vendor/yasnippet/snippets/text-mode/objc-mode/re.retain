@@ -1,4 +1,0 @@
-#name : retain (do not for weak)
-# there is DANGEROUS to cycle retain, can not dealloc 
-# --
-[${1:obj} retain];

@@ -1,7 +1,0 @@
-# name: request form prototype ajax
-# (link "~/local/src/prototype/src/dom/form.js" 8191)
-# --
-${1:form}.request( {
-  opt,
-  cb
-});

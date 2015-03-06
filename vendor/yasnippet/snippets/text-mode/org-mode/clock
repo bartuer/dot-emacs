@@ -1,5 +1,0 @@
-# -*- mode: org; require-final-newline: nil; backup-inhibited: t -*-
-#name: clock history property entry
-# --
-:Clockhistory: 1
-:Clock1: |$0||

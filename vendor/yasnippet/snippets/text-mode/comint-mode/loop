@@ -1,3 +1,0 @@
-# name: loop shell for
-# --
-for i in {1..${1:10}}; do $0 $i ; done

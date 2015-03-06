@@ -1,6 +1,0 @@
-# name : test function for sentest
-# --
-- (void) test$1
-{
-  $0
-}

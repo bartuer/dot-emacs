@@ -1,3 +1,0 @@
-# name: extend prototype dom event extension extend
-# --
-extend(${1:dest}, ${2:source})

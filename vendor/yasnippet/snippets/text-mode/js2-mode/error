@@ -1,3 +1,0 @@
-# name : console error debug
-# --
-console.error($0);

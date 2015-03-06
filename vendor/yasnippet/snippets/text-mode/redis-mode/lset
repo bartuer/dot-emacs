@@ -1,4 +1,0 @@
-# name : lset Set a new value as the element at index position of the  List at key
-# (link "~/local/src/redis/doc/LsetCommand.txt" 1)
-# --
-lset ${1:key} ${2:index} ${3:value}

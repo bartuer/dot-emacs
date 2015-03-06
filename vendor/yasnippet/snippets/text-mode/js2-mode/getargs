@@ -1,3 +1,0 @@
-# name: arguments getargs
-# --
-var args = Object.getOwnPropertyNames(arguments);$0

@@ -1,3 +1,0 @@
-# name : document
-# --
-repl.doc(${1:target});

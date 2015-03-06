@@ -1,5 +1,0 @@
-# name: typescript private method
-# --
-private ${1:functionName}() {
-    $0
-}

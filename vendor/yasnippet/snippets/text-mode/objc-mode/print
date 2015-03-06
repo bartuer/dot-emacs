@@ -1,3 +1,0 @@
-# name: printf log
-# --
-printf("${1:message}\n");

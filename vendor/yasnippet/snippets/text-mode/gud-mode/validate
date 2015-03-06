@@ -1,3 +1,0 @@
-# name: validate rdbeug
-# --
-ps ${1:@obj}.validate.map &:method

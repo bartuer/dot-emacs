@@ -1,3 +1,0 @@
-# name: getComputedStyle css style
-# --
-var $2 = parseInt(getComputedStyle(${1:element}).${2:field}, 10);

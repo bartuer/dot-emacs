@@ -1,6 +1,0 @@
-# name: concise has_one associations model api rails 
-# (rdoc "ActiveRecord::Associations::ClassMethods#has_one")
-# (rdoc "ActiveRecord::Associations::ClassMethods")
-# (link "~/local/src/rails/activerecord/test/models/associations" 137)
-# --
-has_one :${1:association}

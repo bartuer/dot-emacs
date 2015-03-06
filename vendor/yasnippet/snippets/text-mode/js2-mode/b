@@ -1,5 +1,0 @@
-# name : log iphone debug bubble msg message
-# it is more possible setup for debug than user feedback, given true
-# as default
-# --
-bubble_msg(${1:str}, true);

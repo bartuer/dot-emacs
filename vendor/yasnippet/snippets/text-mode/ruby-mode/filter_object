@@ -1,9 +1,0 @@
-# name : object filter controller rails
-# (rdoc "ActionController::Filters::ClassMethods")
-# (link "~/local/src/rails/actionpack/test/controller/filters_test.rb" 2928)
-# --
-class ${1:OutputCompression}Filter
-  def self.filter(controller)
-    $0controller.response.body = compress(controller.response.body)
-  end
-end

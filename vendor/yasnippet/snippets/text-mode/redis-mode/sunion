@@ -1,4 +1,0 @@
-# name : sunion Return the union between the Sets stored at key1  key2 ... keyN
-# (link "~/local/src/redis/doc/SunionCommand.txt" 1)
-# --
-sunion ${1:key1} ${2:key2} ${3:keyn}

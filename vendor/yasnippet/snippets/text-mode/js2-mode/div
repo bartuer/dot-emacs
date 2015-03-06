@@ -1,3 +1,0 @@
-# name: div create empty
-# --
-var ${1:name} = dom.div();

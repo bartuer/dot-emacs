@@ -1,4 +1,0 @@
-# name : bgsave Asynchronously save the DB on disk
-# (link "~/local/src/redis/doc/BgsaveCommand.txt" 1)
-# --
-bgsave 

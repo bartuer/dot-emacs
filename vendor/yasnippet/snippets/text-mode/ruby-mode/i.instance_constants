@@ -1,3 +1,0 @@
-#name : inspect instance constants instance::CONSTANT
-# --
-${1:instance}.constants

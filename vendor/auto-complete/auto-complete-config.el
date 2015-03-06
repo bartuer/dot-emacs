@@ -156,7 +156,7 @@
 (ac-define-source yasnippet
   '((depends yasnippet)
     (candidates . ac-yasnippet-candidates)
-    (action . yas/expand)
+    (action . yas-expand)
     (candidate-face . ac-yasnippet-candidate-face)
     (selection-face . ac-yasnippet-selection-face)
     (symbol . "a")))

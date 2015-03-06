@@ -1,4 +1,0 @@
-# name : outline-color
-# (css-find "outline-color")
-# --
-outline-color :$0 invert color ;
