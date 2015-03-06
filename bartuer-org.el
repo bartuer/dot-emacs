@@ -863,7 +863,7 @@ see \\[org-timeline] and `org-timeline-next-line'"
                    clock
                    "|"
                    ))
-          (yas/expand)
+          (yas-expand)
           (org-entry-put (point) "Clockhistory" (format "%d" (+ 1 his-num)) )
           )
         (let ((end-pos (save-excursion 

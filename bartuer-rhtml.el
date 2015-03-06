@@ -1,7 +1,7 @@
 (autoload 'bartuer-ruby-assign "bartuer-ruby.el" "for ruby assign" t nil)
 (defun bartuer-rhtml-load ()
   "mode hooks for rhtml"
-  (yas/minor-mode-auto-on)
+  (yas-minor-mode-auto-on)
   (define-key rhtml-mode-map "\C-\M-k" 'sgml-delete-tag)
   (define-key rhtml-mode-map "\C-\M-f" 'sgml-skip-tag-forward)
   (define-key rhtml-mode-map "\C-\M-b" 'sgml-skip-tag-backward)

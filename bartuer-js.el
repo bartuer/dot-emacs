@@ -560,7 +560,7 @@ can bind C-j in comint buffer"
   (require 'flyspell nil t)
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
-  (yas/minor-mode-on)
+  (yas-minor-mode-on)
   (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)

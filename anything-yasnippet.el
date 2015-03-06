@@ -24,11 +24,11 @@
                                  signature))
                               ) msg))
   (insert "anything")
-  (yas/define 'objc-mode
+  (yas--define 'objc-mode
               "anything"
               signature-template)
   (message (format "objc-complete:%s" msg))
-  (yas/expand))
+  (yas-expand))
               
 
 (defvar anything-objc-message-re "\\(\\(^[-+]?\\ *([a-zA-Z_0-9<>\\ \\*]*)\\)\\([a-zA-Z0-9_+:()<>,\\ \\.\\*]*\\).*\177\\(.*\\)\001.*$\\)"
@@ -120,11 +120,11 @@
          (setq signature-template msg)))
   
   (insert "anythingetagsjs")
-  (yas/define 'js2-mode
+  (yas--define 'js2-mode
               "anythingetagsjs"
               signature-template)
   (message (format "js-complete:%s" msg))
-  (yas/expand))
+  (yas-expand))
 
 (defun yasnippet-complete-erlang (arglist)
   "constructure an snippet according to the erlang signature string"
@@ -139,10 +139,10 @@
                                 "${\\&}"
                                 arglist))
       (insert " anythingerlang")
-      (yas/define 'erlang-mode
+      (yas--define 'erlang-mode
                   "anythingerlang"
                   signature-template)
-      (yas/expand)
+      (yas-expand)
       (save-excursion
         (search-backward "(")
         (backward-delete-char 1)
@@ -283,7 +283,7 @@ from static imenu->etags index and dynamically generated properties via introspe
   (if (buffer-file-name)
     (flymake-mode nil))
   (insert (car msg))
-  (yas/expand))
+  (yas-expand))
 
 (defun yasnippet-edit-syntax-expand (msg)
   "jump to the yas define"
@@ -294,10 +294,20 @@ from static imenu->etags index and dynamically generated properties via introspe
 
 (setq snippet-dot-re "\\(^.*\\)\\.\\(.*$\\)")
 
+(defun yas/directory-files (directory file?)
+  "Return directory files or subdirectories in full path."
+  (remove-if (lambda (file)
+               (or (string-match "^\\."
+                                 (file-name-nondirectory file))
+                   (if file?
+                       (file-directory-p file)
+                     (not (file-directory-p file)))))
+             (directory-files directory t)))
+
 (defun anything-syntax-parser ()
   "return (lable . expand-short-cut)"
   (setq current-mode-snippet-directory
-        (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
+        (concat "~/etc/el/vendor/yasnippet/snippets/"
                 (prin1-to-string major-mode)))
   (let* ((syntax-expand-list nil))
     (when (file-directory-p current-mode-snippet-directory)
@@ -358,9 +368,9 @@ K is key parameter's key
 V is key parameter's value
 "
   (if v
-      (yas/define major-mode k
+      (yas--define major-mode k
               (format "%s => ${1:%s}" k v))
-    (yas/define major-mode k k))
+    (yas--define major-mode k k))
   k
   )
 

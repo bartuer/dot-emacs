@@ -3780,7 +3780,7 @@ overwritten, and the table is not marked as requiring realignment."
 			   orgtbl-hijacker-command-103
 			   orgtbl-hijacker-command-104
 			   orgtbl-hijacker-command-105
-			   yas/expand))
+			   yas-expand))
 		 (org-table-blank-field))
 	    t)
 	   (eq N 1)

@@ -503,6 +503,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-." 'anything-etags-select-from-here)
 (load "~/etc/el/bartuer-etags.el")
 
+(require 'helm-config)
+
 (load "~/etc/el/anything-c-source-mark-ring.el")
 (defun anything-imenu-jump (p)
   "(number-or-marker-p p), need move window first"
@@ -757,24 +759,16 @@ If give a negative ARG, will undo the last mark action, thus the
 
 
 (require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/etc/el/vendor/yasnippet/snippets")
+(yas--initialize)
+(yas-load-directory "~/etc/el/vendor/yasnippet/snippets")
 (global-set-key "\C-cy" (lambda ()
                                (interactive)
                                (message "load yas")
-                               (yas/load-directory "~/etc/el/vendor/yasnippet/snippets")))
-(add-hook 'yas/after-exit-snippet-hook (lambda ()
+                               (yas-load-directory "~/etc/el/vendor/yasnippet/snippets")))
+(add-hook 'yas-after-exit-snippet-hook (lambda ()
                                             (flymake-mode t)))
 
-(defalias 'y (lambda ()
-               (interactive)
-               (setq yas/use-menu nil)
-               (remhash major-mode yas/snippet-tables)
-               (if (eq major-mode 'text-mode)
-                   (yas/reload-all)
-                 (yas/load-directory-1 (concat "~/etc/el/vendor/yasnippet/snippets/text-mode/"
-                                               (prin1-to-string major-mode))))
-               ))
+(defalias 'y (lambda () (yas-reload-all)))
 
 (require 'rinari nil t)
 (add-hook 'rinari-minor-mode-hook (lambda ()
@@ -879,8 +873,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'auto-complete-config)
 (ac-config-default)
 
-(autoload 'company-mode "company" nil t)
 (require 'company)
+(autoload 'company-mode "company" nil t)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+
 
 (require 'company-emacs-eclim)
 (company-emacs-eclim-setup)
@@ -1055,11 +1052,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\mm$" . objc-mode))
 (add-to-list 'auto-mode-alist '("\\.j$" . objc-mode))
 
-(require 'csharp-mode)
-(load "~/etc/el/bartuer-csharp.el")
-(add-hook 'csharp-mode-hook 'bartuer-csharp-load)
-
-
 (require 'fsharp-mode)
 (load "~/etc/el/bartuer-fsharp.el")
 (add-hook 'fsharp-mode-hook 'bartuer-fsharp-load)
@@ -1229,6 +1221,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php" . php-mode))
 
+(require 'omnisharp)
+(autoload 'csharp-mode "vendor/csharp-mode/csharp-mode.el" "for csharp" t)
+(require 'csharp-mode)
+(add-to-list 'auto-mode-alist '("\\.cs$" . csharp-mode))
+(autoload 'bartuer-csharp-load "bartuer-csharp.el" t)
+(load "~/etc/el/bartuer-csharp.el")
+(add-hook 'csharp-mode-hook 'bartuer-csharp-load)
+
 (autoload 'markdown-mode "markdown-mode.el"
      "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.text" . markdown-mode))
@@ -1352,7 +1352,6 @@ If give a negative ARG, will undo the last mark action, thus the
   (interactive)
   (require 'hackernews)
   (hackernews))
-
 
 (require 'uuid)
 (require 'dos)

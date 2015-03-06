@@ -466,7 +466,7 @@ the block line three
 
 
   ;; toggle these modes
-  (yas/minor-mode-auto-on)
+  (yas-minor-mode-auto-on)
   (ruby-electric-mode)
   (flyspell-prog-mode)
   (unless (string-equal (buffer-name) "*current*")

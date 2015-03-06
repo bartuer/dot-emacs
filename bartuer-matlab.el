@@ -38,7 +38,7 @@
     (define-key map "\C-c\C-f" 'octave-send-defun)
     (define-key map "\C-c\C-r" 'octave-send-region)
     )
-   (yas/minor-mode-on)
+   (yas-minor-mode-on)
   )
 
 (provide 'bartuer-matlab)
