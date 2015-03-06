@@ -1,0 +1,5 @@
+# name: interval
+# --
+var ${1:interval} = window.setInterval(function (t) {
+  $0
+}, ${2:time});

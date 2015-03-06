@@ -1,0 +1,5 @@
+#name : teardown do ... end
+# --
+teardown do
+  $0
+end

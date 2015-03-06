@@ -1,0 +1,14 @@
+#name : with final
+# --
+@try 
+{
+  $0
+} 
+@catch (${1:exception})
+{
+  
+} 
+@finally
+{
+  
+}

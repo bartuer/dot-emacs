@@ -1,0 +1,6 @@
+# name: timestamp type migration model parameter rails 
+# (rdoc "ActiveRecord::Migration")
+# (rdoc "ActiveRecord::ConnectionAdapters::TableDefinition#column")
+# (link "~/local/src/rails/activerecord/test/cases/migration_test.rb" 9078)
+# --
+:timestamp$0, typeopt

@@ -1,0 +1,3 @@
+# name: select sort order by sql console
+# --
+GROUP BY ${1:column} HAVING ${2:expr}

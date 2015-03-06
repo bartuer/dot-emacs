@@ -1,0 +1,5 @@
+#name : jspec it
+# --
+it('${1:should success}', function () {
+    expect(true).to.equal(true);
+});

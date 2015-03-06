@@ -1,0 +1,7 @@
+# name: validates_presence_of validate model api rails 
+# (rdoc "ActiveRecord::Validations::ClassMethods#validates_presence_of")
+# --
+validates_presence_of(:${1:name},
+                      :on => :create :update :save,
+                      :if => Proc.new { |o| ${2:condition}},
+                      :message => '')

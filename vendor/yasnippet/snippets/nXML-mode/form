@@ -1,0 +1,6 @@
+#name html_form
+# --
+<form action="${1:url}" class="${2:classname}" id="${3:id}" method="${4:post}" >
+  input$0
+  <input id=${5:submitid} name="commit" type="submit" value="${6:submit}" />
+</form>

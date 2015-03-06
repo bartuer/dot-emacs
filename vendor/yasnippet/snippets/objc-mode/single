@@ -1,0 +1,11 @@
+#name :singleton
+# --
+static ${1:class} *${2:instance} = nil;
+$0+ ($1 *) $2;//move me to header
++ ($1 *) $2
+{
+   if($2 == nil)
+     $2 = [[$1 alloc] init];
+
+   return $2;
+}

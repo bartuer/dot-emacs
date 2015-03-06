@@ -1,0 +1,5 @@
+# name: test "description" do
+# --
+test "should ${1:desc}" do
+  $0
+end

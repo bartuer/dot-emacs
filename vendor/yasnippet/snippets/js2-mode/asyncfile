@@ -1,0 +1,5 @@
+# name: read file async nodejs
+# --
+fs.readFile(${1:filename}, "utf8", function (err, string_content) {
+    $0
+});

@@ -1,0 +1,3 @@
+#name : inspect instance variables @var
+# --
+instance_variables

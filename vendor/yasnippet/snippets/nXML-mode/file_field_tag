@@ -1,0 +1,4 @@
+# name: file_field_tag former view api rails 
+# (rdoc "ActionFormer View::Helpers::FormTagHelper#file_field_tag")
+# --
+file_field_tag "${1:name}"$0, fopt

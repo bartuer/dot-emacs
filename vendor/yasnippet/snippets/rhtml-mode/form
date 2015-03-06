@@ -1,0 +1,9 @@
+# name : form_for former view api rails
+# (rdoc "ActionView::Helpers::FormHelper#form_for")
+# --
+<% form_for bind$0, :url => { urlh } do |obj| %>
+ <%= obj.error_messages %>
+ ${1:method}:  <%= text_field %> <br />
+ submit_tag
+ image_submit_tag
+<% end %>

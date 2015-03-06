@@ -1,0 +1,3 @@
+# name: ee jspec expect ee
+# --
+expect(${1:element}).to.equal(${2:value});

@@ -1,0 +1,4 @@
+# name : getall Return all the fields and associated values in a hash.
+# (link "~/local/src/redis/doc/GetallCommand.txt" 1)
+# --
+getall ${1:key}

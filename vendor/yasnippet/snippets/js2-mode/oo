@@ -1,0 +1,9 @@
+# name: OO oo 
+# --
+function ${1:Name}${2:Cat}Class() {
+    return Inherit(${3:View}Class(), function () {
+        var self = this;
+
+        render$0
+    });
+}

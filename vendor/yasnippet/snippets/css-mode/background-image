@@ -1,0 +1,4 @@
+# name : background-image
+# (css-find "background-image")
+# --
+background-image :$0 none uri ;

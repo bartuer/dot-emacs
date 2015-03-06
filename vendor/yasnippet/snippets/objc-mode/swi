@@ -1,0 +1,12 @@
+switch (${1:color}) {
+case ${2:red}:
+  $3
+  break;
+case ${4:blue}:
+  $5
+  break;
+case ${6:green}:
+  $7
+  break;
+$0
+}

@@ -1,0 +1,5 @@
+# name: rake task parallel
+# --
+multitask :${1:task} => [:${2:para_task}, :${3:para_task_another}] do |t|
+  $0
+end

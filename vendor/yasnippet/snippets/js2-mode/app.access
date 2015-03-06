@@ -1,0 +1,3 @@
+# name: app access
+# --
+${1:app}.access('/${2:url_not_end_with_slash}');

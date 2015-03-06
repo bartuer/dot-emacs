@@ -1,0 +1,27 @@
+# name: has_many associations model api rails 
+# (rdoc "ActiveRecord::Associations::ClassMethods#has_many")
+# (rdoc "ActiveRecord::Associations::ClassMethods")
+# (link "~/local/src/rails/activerecord/test/models/associations" 137)
+# --
+has_many(asso$0,
+        :class_name => '${1:Class}',
+        :foreign_key => '${2:thismodel}_id',
+        :join_table => '${3:model1}s_${4:model1}s',
+        :conditions,
+        :select_f,
+        :order => '${6:column} DESC',
+        :uniq => true,
+        :include => asso,
+        :limit => ${7:number},
+        :offset => ${8:number},
+        :group => '${9:column}',
+        :having => sql,
+        :as => asso,
+        :source => asso,
+        :source_type => asso,
+        :finder_sql => sql,
+        :counter_sql => sql,
+        :autosave => true,
+        :validate => false,
+        :readonly => true,
+        :extend => ${11:[Class]}) edo

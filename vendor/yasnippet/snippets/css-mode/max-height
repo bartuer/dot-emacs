@@ -1,0 +1,4 @@
+# name : max-height
+# (css-find "max-height")
+# --
+max-height :$0 none 50% 5 ;

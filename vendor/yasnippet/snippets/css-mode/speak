@@ -1,0 +1,4 @@
+# name : speak
+# (css-find "speak")
+# --
+speak :$0 spell-out none normal ;

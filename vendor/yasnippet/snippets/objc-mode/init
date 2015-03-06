@@ -1,0 +1,21 @@
+#name : object
+# return type should be id, for it's subclass instance could dynamic bind
+# to avoid cycle init invocation, invoke superclass's designated initializer
+# superclass's init would return a object not the self, assign it to self
+# --
+- (id) init; //move me to header
+- (id) init
+{
+  if ((self = [super ${1:designated_init}]) != nil) {
+    // assign instance variable directly, do not using accessors
+    $0
+    
+    //check as early as possible
+    if(NO) {
+      [self release];
+      return nil;
+    }
+    
+  }
+  return self;
+}

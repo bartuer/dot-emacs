@@ -1,0 +1,5 @@
+#name : def method
+# --
+def ${1:method}(${2:*array}, ${3:&block}, ${4:opt=}{})
+  $0
+end

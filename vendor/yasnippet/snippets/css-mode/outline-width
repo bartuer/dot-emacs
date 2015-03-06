@@ -1,0 +1,4 @@
+# name : outline-width
+# (css-find "outline-width")
+# --
+outline-width :$0 border-width ;

@@ -1,0 +1,4 @@
+# name : speak-numeral
+# (css-find "speak-numeral")
+# --
+speak-numeral :$0 continuous digits ;

@@ -1,0 +1,3 @@
+#name : should throw_symbol
+# --
+${1:actual}.should throw_symbol(${2:symbol})

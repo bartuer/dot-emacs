@@ -1,0 +1,3 @@
+# name : xhr xml_http_request controller api rails
+# --
+xhr method$0, :${1:action}, :${2:format => 'js'}, :${3:session}, :${4:flash}

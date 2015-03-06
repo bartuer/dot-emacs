@@ -1,0 +1,4 @@
+#name : get signature string
+# --
+NSString *${1:aStr};
+$1 = NSStringFromSelector(${2:aSEL});

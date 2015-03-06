@@ -1,0 +1,6 @@
+# name: shell job task
+# --
+Taskit.new(ARGV[0], File.basename(__FILE__)).run { |path, token|
+  log =  "=== exec #{token} ===\n"
+  log += $0
+}

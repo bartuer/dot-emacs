@@ -1,0 +1,4 @@
+# name : padding-right
+# (css-find "padding-right")
+# --
+padding-right :$0 padding-width ;

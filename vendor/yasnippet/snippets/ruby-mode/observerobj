@@ -1,0 +1,14 @@
+# name : callback object model api rails
+# (link "~/local/src/rails3-tut-code/e1/ar/observer.rb" 978)
+# --
+class ${1:`(capitalize (replace-regexp-in-string ".rb" "" (file-name-nondirectory (buffer-file-name))))`} < ActiveRecord::Observer
+
+  observe Order, Payment, Refund
+
+  def after_save(model)
+    $0
+  end
+end
+
+# put this clause somewhere
+$1.instance

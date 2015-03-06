@@ -1,0 +1,6 @@
+# name: select options
+# --
+<select name=${1:name} multiple>
+<option>${2:one}</option>
+</select>
+

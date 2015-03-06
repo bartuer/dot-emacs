@@ -1,0 +1,5 @@
+#name: function three
+# --
+function ${1:name}(${2:arg1}, ${3:arg2}, ${4:arg3}) {
+    $0
+}

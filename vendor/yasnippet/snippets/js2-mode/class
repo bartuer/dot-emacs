@@ -1,0 +1,3 @@
+# name : create elment by class
+# --
+var ${1:name} = div('$1');

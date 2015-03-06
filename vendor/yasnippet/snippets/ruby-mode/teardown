@@ -1,0 +1,6 @@
+#name : teardown method
+# --
+def teardown
+  super
+  $0
+end

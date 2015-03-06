@@ -1,0 +1,4 @@
+#name : function with when
+# --
+${1:name} (${2:X}) when $2 ${3:expr} -> 
+    $0

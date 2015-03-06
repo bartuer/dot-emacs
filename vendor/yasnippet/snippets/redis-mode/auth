@@ -1,0 +1,4 @@
+# name : auth simple password authentication if enabled
+# (link "~/local/src/redis/doc/AuthCommand.txt" 1)
+# --
+auth 

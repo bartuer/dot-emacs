@@ -1,0 +1,3 @@
+#name : each do
+# --
+each do |${item}| $0 end

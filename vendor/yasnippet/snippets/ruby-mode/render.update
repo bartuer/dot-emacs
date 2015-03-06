@@ -1,0 +1,12 @@
+# name : update partial render controller api rails
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 5785)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 24654)
+# (rdoc "ActionView::Helpers::ScriptaculousHelper")
+# (link "~/local/src/rails/actionpack/lib/action_view/helpers/scriptaculous_helper.rb" 2044)
+# (rdoc "ActionController::Base#render")
+# --
+render :update $0 do |page|
+  page.replace ${2:name}, ${3:v}       
+  page.visual_effect :highlight, $2
+end
+  

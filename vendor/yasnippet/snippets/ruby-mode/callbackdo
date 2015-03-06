@@ -1,0 +1,9 @@
+# name: callbackdo callback model parameter rails 
+# (rdoc "ActiveRecord::Callbacks")
+# how to debug what callbacks will be called ? see:
+# (link "/Library/Ruby/Gems/1.8/gems/activesupport-2.3.4/lib/active_support/callbacks.rb" 2136)
+# (link "~/scripts/cheat-sheet" 14038)
+# --
+do |${1:object}|
+  $0
+end

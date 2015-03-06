@@ -1,0 +1,3 @@
+#name : not hasOwnProperty
+# --
+!(${1:obj}.hasOwnProperty('${2:prop}'))

@@ -1,0 +1,4 @@
+# name : table-layout
+# (css-find "table-layout")
+# --
+table-layout :$0 fixed auto ;

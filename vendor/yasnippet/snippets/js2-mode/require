@@ -1,0 +1,4 @@
+# name: require 
+# --
+var ${1:name} = require('$1');
+require$0

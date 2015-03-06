@@ -1,0 +1,4 @@
+# name : clip
+# (css-find "clip")
+# --
+clip :$0 auto shape ;

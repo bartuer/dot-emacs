@@ -1,0 +1,3 @@
+# name: addClassName prototype dom layout
+# --
+addClassName('${1:className}')

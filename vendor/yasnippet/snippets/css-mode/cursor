@@ -1,0 +1,4 @@
+# name : cursor
+# (css-find "cursor")
+# --
+cursor :$0 progress help wait text w-resize s-resize sw-resize se-resize n-resize nw-resize ne-resize e-resize move pointer default crosshair auto uri ;

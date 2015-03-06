@@ -1,0 +1,11 @@
+#name : constructor closure
+# --
+function ${1:Constructor} (x) {
+  var that = create ;
+  var ${2:data} = ${3:f}(x);
+  that.${4:method} = function () {
+    $2;$0
+  };
+
+  return that;
+}

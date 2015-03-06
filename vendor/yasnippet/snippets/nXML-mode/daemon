@@ -1,0 +1,22 @@
+# name: daemon
+# (man "launchd.plist(5)")
+# (man "launchctl")
+# (link "/var/log/system.log")
+# --
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>${1:`(substring (file-name-nondirectory (buffer-file-name)) 0 -6)`}</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>${2:full_path_of_daemon_program}</string>
+      <string>${3:parameter}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+  </dict>
+</plist>
+sudo launchctl load -w /Library/LaunchDaemons/$1.plist

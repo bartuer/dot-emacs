@@ -1,0 +1,4 @@
+# name: find_by_and_by crud model controller api rails 
+# (rdoc "ActiveRecord::Base")
+# --
+find_by_${1:attr1}_and_${2:attr2}($1, $2)

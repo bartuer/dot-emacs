@@ -1,0 +1,6 @@
+#name : url_for hash controller api rails
+# (link "~/local/src/rails/actionpack/lib/action_controller/base.rb" 27987)
+# (rdoc "ActionController::Base#url_for")
+# (yas/tap) remove_me, :action 'action', :controller 'controller', :only_path true, :trailing_slash true, :anchor 'comments', :host 'www.gnu.org', :port '8080', :protocal 'ftp', :user 'u', :password 'p', :skip_relative_url_root true, :overwrite_params h
+# --
+${1:`(yas/p ":action" "'action'")`}$0, ${2:`(yas/p ":controller" "'controller'")`}, ${3:`(yas/p ":only_path" "true")`}, ${4:`(yas/p ":trailing_slash" "true")`}, ${5:`(yas/p ":anchor" "'comments'")`}, ${6:`(yas/p ":host" "'www.gnu.org'")`}, ${7:`(yas/p ":port" "'8080'")`}, ${8:`(yas/p ":protocal" "'ftp'")`}, ${9:`(yas/p ":user" "'u'")`}, ${10:`(yas/p ":password" "'p'")`}, ${11:`(yas/p ":skip_relative_url_root" "tue")`}, ${12:`(yas/p ":overwrite_params" "h")`}

@@ -1,0 +1,4 @@
+# name : lpop Return and remove (atomically) the first element of the List at key
+# (link "~/local/src/redis/doc/LpopCommand.txt" 1)
+# --
+lpop ${1:key}

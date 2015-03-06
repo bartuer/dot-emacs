@@ -1,0 +1,5 @@
+# name: load eventlistener 
+# --
+document.addEventListener('DOMContentLoaded',  function () {
+  $0  
+});

@@ -1,0 +1,3 @@
+#name : assert_no_match
+# --
+assert_no_match /${1:pattern}/, ${1:string}$0

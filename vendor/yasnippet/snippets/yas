@@ -1,0 +1,5 @@
+# name: yas
+# --
+# name: ${1:category} ${2:`(file-name-nondirectory (buffer-file-name))`} ${3:describe_name}
+# --
+$0

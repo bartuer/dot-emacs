@@ -1,0 +1,5 @@
+# name: rake directory task
+# --
+directory "${1:file}" => ["${2:dependency}"] do |t|
+  $0
+end

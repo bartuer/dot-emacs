@@ -1,0 +1,3 @@
+# name: formatter
+# --
+%${1:1}$${2:+}${3:width_10}.${4:presicion_10}${5:conversion_f}

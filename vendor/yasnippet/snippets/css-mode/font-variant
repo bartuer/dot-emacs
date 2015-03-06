@@ -1,0 +1,4 @@
+# name : font-variant
+# (css-find "font-variant")
+# --
+font-variant :$0 small-caps normal ;

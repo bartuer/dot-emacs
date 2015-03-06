@@ -1,0 +1,7 @@
+- (void) forwardInvocation: (NSInvocation*)anInvocation
+{
+  if ([${1:anObject} respondsToSelector: [anInvocation selector]])
+    return [anInvocation invokeWithTarget: $1];
+  else
+    return [self doesNotRecognizeSelector: [anInvocation selector]];
+}

@@ -1,0 +1,3 @@
+#name : assert ! exp
+# --
+assert ! ${1:expression}, "${2:Failure message.}"$0

@@ -1,0 +1,5 @@
+#name : do
+# --
+do |${1:item}|
+$0`(indent-according-to-mode)`
+end

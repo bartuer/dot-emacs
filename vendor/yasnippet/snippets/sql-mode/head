@@ -1,0 +1,3 @@
+# name: select ss sql console
+# --
+select ${1:*} from ${2:table} LIMIT 10;

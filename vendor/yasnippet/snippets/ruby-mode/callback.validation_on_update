@@ -1,0 +1,5 @@
+# name: validation_on_update callback model api api rails 
+# (rdoc "ActiveRecord::Callbacks")
+# (link "~/scripts/cheat-sheet" 8626)
+# --
+${1:before}_validation_on_update :${2:method} callbackdo

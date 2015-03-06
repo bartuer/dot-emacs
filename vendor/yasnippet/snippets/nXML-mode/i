@@ -1,0 +1,4 @@
+# name : image
+# --
+<img src="/images/${1:name}.png" alt="large">
+<img src="/images/$1.png"  height="40" width="40" alt="little">

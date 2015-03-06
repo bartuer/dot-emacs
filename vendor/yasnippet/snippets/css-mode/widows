@@ -1,0 +1,4 @@
+# name : widows
+# (css-find "widows")
+# --
+widows :$0 5 ;

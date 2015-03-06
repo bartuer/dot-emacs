@@ -1,0 +1,3 @@
+# name: down prototype dom object
+# --
+down('${1:cssrule}', ${2:1})

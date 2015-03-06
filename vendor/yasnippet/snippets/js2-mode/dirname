@@ -1,0 +1,3 @@
+# name: current dir
+# --
+path.resolve(__dirname, "${1:name}")$0

@@ -1,0 +1,4 @@
+# name : html escaper view api rails
+# (rdoc "ERB::Util#html_escape")
+# --
+h(${1:content})

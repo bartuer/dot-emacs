@@ -1,0 +1,6 @@
+# name: syntax checker use clang
+# --
+CHECKER=clang
+SYNTAX_CHECK_FLAG=--analyze -fno-caret-diagnostics -fno-color-diagnostics -fno-show-column -I. -I${1:include}
+check-syntax:
+	$(CHECKER) $(SYNTAX_CHECK_FLAG)  $(CHK_SOURCES)

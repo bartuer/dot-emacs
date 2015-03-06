@@ -1,0 +1,1 @@
+#define ${1:macro} ${2:value}

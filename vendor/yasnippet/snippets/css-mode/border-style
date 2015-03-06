@@ -1,0 +1,4 @@
+# name : border-style
+# (css-find "border-style")
+# --
+border-style :$0 border-style ;

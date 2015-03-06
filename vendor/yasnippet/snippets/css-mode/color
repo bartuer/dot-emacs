@@ -1,0 +1,4 @@
+# name : color
+# (css-find "color")
+# --
+color :$0 color ;

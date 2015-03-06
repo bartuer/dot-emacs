@@ -1,0 +1,3 @@
+# name: message ! send message
+# --
+${1:who} ! $0${2:{}}

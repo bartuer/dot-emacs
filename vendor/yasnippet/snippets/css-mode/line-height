@@ -1,0 +1,4 @@
+# name : line-height
+# (css-find "line-height")
+# --
+line-height :$0 50% 5 5 normal ;

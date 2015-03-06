@@ -1,0 +1,7 @@
+#name : jspec spec describe
+# --
+describe('${2:case}', function () {
+    it('${3:should success}', function () {
+        expect(true).to.equal(true);
+    });
+});

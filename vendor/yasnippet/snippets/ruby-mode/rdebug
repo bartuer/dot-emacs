@@ -1,0 +1,4 @@
+# name : require debug
+# --
+require 'rubygems'
+require 'ruby-debug' ; Debugger.start

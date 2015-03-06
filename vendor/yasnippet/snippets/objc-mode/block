@@ -1,0 +1,3 @@
+# name: block define lambda
+# --
+typedef ${2:void} (^${1:name})($0);

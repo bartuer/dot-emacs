@@ -1,0 +1,4 @@
+# name : float
+# (css-find "float")
+# --
+float :$0 none right left ;

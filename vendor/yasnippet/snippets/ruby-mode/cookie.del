@@ -1,0 +1,5 @@
+# name : delete cookies controller api rails
+# (link "~/local/src/rails/actionpack/test/controller/cookie_test.rb" 802)
+# (rdoc "ActionController::Cookies")
+# --
+cookies.delete :${1:key}, :domain => '${2:example.com}'

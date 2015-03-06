@@ -1,0 +1,3 @@
+# name: div create string
+# --
+var ${1:name} = dom.div("$0");

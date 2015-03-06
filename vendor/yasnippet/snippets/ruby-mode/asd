@@ -1,0 +1,5 @@
+#name : rails controller assert_difference
+# --
+assert_difference('${1:Class}.count',${2: -1}) do
+  $0
+end   

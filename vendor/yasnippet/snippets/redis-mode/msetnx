@@ -1,0 +1,4 @@
+# name : msetnx set a multiple keys to  multiple values in a single atomic operation if none of the keys already  exist
+# (link "~/local/src/redis/doc/MsetnxCommand.txt" 1)
+# --
+msetnx ${1:key1} ${2:value1} ${3:key2} ${4:value2} ${5:keyn} ${6:valuen}

@@ -1,0 +1,4 @@
+# name : dbsize return the number of keys in the current db
+# (link "~/local/src/redis/doc/DbsizeCommand.txt" 1)
+# --
+dbsize 

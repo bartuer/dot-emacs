@@ -1,0 +1,5 @@
+# name : debug view debug rails
+# --
+<h1>${1:val}</h1>
+<%= debug($1) %>
+

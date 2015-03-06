@@ -1,0 +1,5 @@
+#name : test case
+# --
+class ${1:Name}Test < Test::Unit::TestCase
+  $0
+end

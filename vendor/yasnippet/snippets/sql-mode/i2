@@ -1,0 +1,3 @@
+# name: sql insert 2 value
+# --
+INSERT INTO ${1:table} VALUES(${2:v1}, ${3:v2});

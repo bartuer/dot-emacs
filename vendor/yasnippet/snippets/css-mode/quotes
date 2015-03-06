@@ -1,0 +1,4 @@
+# name : quotes
+# (css-find "quotes")
+# --
+quotes :$0 none string string ;

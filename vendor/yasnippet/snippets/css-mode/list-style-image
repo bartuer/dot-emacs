@@ -1,0 +1,4 @@
+# name : list-style-image
+# (css-find "list-style-image")
+# --
+list-style-image :$0 none uri ;

@@ -1,0 +1,10 @@
+# name: request prototype ajax get js source
+# --
+var g = new Ajax.Request("/javascripts/${1:filename}.js", {
+  asynchronous: true,
+  method: 'get',
+  evalJS: true,
+  onComplete: function(r) {
+    $0
+  }
+});

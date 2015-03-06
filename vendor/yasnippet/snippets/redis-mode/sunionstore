@@ -1,0 +1,4 @@
+# name : sunionstore Compute the union between the Sets  stored at key1 key2 ... keyN and store the resulting Set at dstkey
+# (link "~/local/src/redis/doc/SunionstoreCommand.txt" 1)
+# --
+sunionstore ${1:dstkey} ${2:key1} ${3:key2} ${4:keyn}

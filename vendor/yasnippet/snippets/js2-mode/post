@@ -1,0 +1,12 @@
+# name: request prototype ajax post
+# --
+var p = new Ajax.Request("${1:url}", {
+  asynchronous: true,
+  contentType:  'application/x-www-form-urlencoded',
+  encoding: 'UTF-8',
+  method: 'post',
+  parameters: llit$0,
+  onComplete: function(r) {
+    var t = r.responseText;
+  }
+});

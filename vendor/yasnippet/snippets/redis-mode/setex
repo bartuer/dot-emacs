@@ -1,0 +1,4 @@
+# name : setex set+expire combo command
+# (link "~/local/src/redis/doc/SetexCommand.txt" 1)
+# --
+setex ${1:key} ${2:time} ${3:value}

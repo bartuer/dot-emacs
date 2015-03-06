@@ -1,0 +1,5 @@
+# name: rake file task
+# --
+file "${1:file}" => ["${2:dependency}"] do |t|
+  $0
+end

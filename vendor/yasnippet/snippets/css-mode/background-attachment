@@ -1,0 +1,4 @@
+# name : background-attachment
+# (css-find "background-attachment")
+# --
+background-attachment :$0 fixed scroll ;

@@ -1,0 +1,4 @@
+# name : caption-side
+# (css-find "caption-side")
+# --
+caption-side :$0 bottom top ;

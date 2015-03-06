@@ -1,0 +1,3 @@
+# name: to array 
+# --
+Array.prototype.slice.call(${1:nodelist})

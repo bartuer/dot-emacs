@@ -1,0 +1,4 @@
+# name : highlight formatter view api rails
+# (rdoc "ActionView::Helpers::TextHelper#highlight")
+# --
+highlight(${1:text}, ${2:phrase})

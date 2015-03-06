@@ -1,0 +1,4 @@
+# name : direction
+# (css-find "direction")
+# --
+direction :$0 rtl ltr ;

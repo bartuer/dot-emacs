@@ -1,0 +1,4 @@
+# name : play-during
+# (css-find "play-during")
+# --
+play-during :$0 none auto repeat mix uri ;

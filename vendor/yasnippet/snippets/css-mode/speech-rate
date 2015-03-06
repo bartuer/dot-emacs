@@ -1,0 +1,4 @@
+# name : speech-rate
+# (css-find "speech-rate")
+# --
+speech-rate :$0 slower faster x-fast fast medium slow x-slow 5 ;

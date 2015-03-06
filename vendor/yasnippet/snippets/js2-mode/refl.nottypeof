@@ -1,0 +1,3 @@
+#name : not typeof
+# --
+typeof !(${1:obj} !== '${2:type}')

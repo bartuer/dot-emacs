@@ -1,0 +1,5 @@
+#name : receive 
+# --
+receive
+    pattern$0
+end

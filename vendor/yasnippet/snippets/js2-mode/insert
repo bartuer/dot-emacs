@@ -1,0 +1,4 @@
+# name: insert prototype dom tree
+# (link "~/local/src/prototype/src/dom/dom.js" 9281)
+# --
+insert(${1:content})

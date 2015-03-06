@@ -1,0 +1,3 @@
+# name: replace prototype dom tree
+# --
+replace('${1:content}')

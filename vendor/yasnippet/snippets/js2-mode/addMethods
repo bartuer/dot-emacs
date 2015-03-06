@@ -1,0 +1,3 @@
+# name: addMethods prototype dom event extension extend
+# --
+addMethods('${1:DIV}', ${2:mymethod})

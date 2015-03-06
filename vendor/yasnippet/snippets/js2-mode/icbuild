@@ -1,0 +1,7 @@
+# name: build dom element class and id
+# --
+var ${1:name} = div('$1');
+attr($1, {'id':'$1'});
+mount(${2:mount_point}, $1);
+
+$0

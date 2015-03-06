@@ -1,0 +1,4 @@
+# name : font-style
+# (css-find "font-style")
+# --
+font-style :$0 oblique italic normal ;

@@ -1,0 +1,4 @@
+# name : sinter Return the intersection between the Sets stored at  key1 key2 ... keyN
+# (link "~/local/src/redis/doc/SinterCommand.txt" 1)
+# --
+sinter ${1:key1} ${2:key2} ${3:keyn}

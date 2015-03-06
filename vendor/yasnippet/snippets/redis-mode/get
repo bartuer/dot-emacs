@@ -1,0 +1,4 @@
+# name : get Retrieve the value of the specified hash field.
+# (link "~/local/src/redis/doc/GetCommand.txt" 1)
+# --
+get ${1:key} ${2:field}

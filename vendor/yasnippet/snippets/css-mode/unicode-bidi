@@ -1,0 +1,4 @@
+# name : unicode-bidi
+# (css-find "unicode-bidi")
+# --
+unicode-bidi :$0 bidi-override embed normal ;

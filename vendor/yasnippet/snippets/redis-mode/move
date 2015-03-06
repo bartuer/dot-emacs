@@ -1,0 +1,4 @@
+# name : move move the key from the currently selected db to the db having  as index dbindex
+# (link "~/local/src/redis/doc/MoveCommand.txt" 1)
+# --
+move ${1:key} ${2:dbindex}

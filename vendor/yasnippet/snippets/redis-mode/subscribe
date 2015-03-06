@@ -1,0 +1,4 @@
+# name : subscribe subscribe message
+# (link "~/local/src/redis/doc/SubscribeCommand.txt" 1)
+# --
+subscribe ${1:channel1} ${2:channel2} ${3:channeln}

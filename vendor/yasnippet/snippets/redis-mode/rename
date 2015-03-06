@@ -1,0 +1,4 @@
+# name : rename rename the old key in the new onedestroing the newname key if it already exists
+# (link "~/local/src/redis/doc/RenameCommand.txt" 1)
+# --
+rename ${1:oldname } ${2:newname}

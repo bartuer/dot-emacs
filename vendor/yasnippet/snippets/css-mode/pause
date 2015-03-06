@@ -1,0 +1,4 @@
+# name : pause
+# (css-find "pause")
+# --
+pause :$0 50% time ;

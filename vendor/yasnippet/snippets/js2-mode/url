@@ -1,0 +1,5 @@
+# name: nodejs url parse url
+# --
+var urlparts = url.parse(req.url, true);
+var path = urlparts['pathname']
+$0

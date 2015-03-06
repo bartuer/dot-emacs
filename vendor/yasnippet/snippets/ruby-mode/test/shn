@@ -1,0 +1,3 @@
+#name : should_not
+# --
+${1:actual}.should_not ${2:condition}$0

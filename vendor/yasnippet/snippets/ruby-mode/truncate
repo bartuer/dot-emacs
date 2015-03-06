@@ -1,0 +1,4 @@
+# name : truncate formatter view api rails
+# (rdoc "ActionView::Helpers::TextHelper#truncate")
+# --
+truncate(${1:text})

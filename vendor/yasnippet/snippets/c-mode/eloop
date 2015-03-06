@@ -1,0 +1,59 @@
+# name: ev eloop loop
+# --
+/* global declare begin */
+ev_timer timeout_watcher;
+static ev_idle repeat_watcher;
+static ev_async ready_watcher;
+static ev_io ${1:io}_watcher;
+static struct ev_loop *loop;
+
+static void
+$1_cb (EV_P_ ev_io *w, int revents)
+{
+  printf("w->fd: %d\n",w->fd);
+}
+
+static void
+timeout_cb (EV_P_ ev_timer *w, int revents)
+{
+  printf("timeout\n");
+  ev_break (EV_A_ EVBREAK_ONE);
+}
+
+static void
+repeat (EV_P_ ev_idle *w, int revents)
+{
+  if (eio_poll () != -1) {
+    ev_idle_stop (EV_A_ w);
+  }
+}
+
+static void
+ready (EV_P_ ev_async *w, int revents)
+{
+  if (eio_poll () == -1) {
+    ev_idle_start (EV_A_ &repeat_watcher);
+  }
+}
+
+static void
+want_poll (void)
+{
+  ev_async_send (loop, &ready_watcher);
+}
+/* global declare end */
+loop = EV_DEFAULT;
+ev_timer_init (&timeout_watcher, timeout_cb, 1, 0.); /* 0.005 repeat after 5 msec */
+ev_timer_start (loop, &timeout_watcher);
+ev_io_init (&$1_watcher, $1_cb, ${2:file_descriptor}, ${3:EV__IOFDSET|EV_WRITE});
+ev_io_start (loop, &$1_watcher);
+
+ev_idle_init (&repeat_watcher, repeat);
+ev_async_init (&ready_watcher, ready);
+ev_async_start (loop, &ready_watcher);
+
+if (eio_init (want_poll, 0)) {
+  abort ();
+}
+
+ev_run (loop, 0);

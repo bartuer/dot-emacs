@@ -1,0 +1,11 @@
+#name : self <NSMutableCopying>
+# --
+- (id) mutableCopyWithZone:(NSZone *)zone
+{
+  ${1:class} *copy = [[[self class] allocWithZone:zone]
+                        init];
+  // deep: init value
+  // shallow:
+  $0
+  return copy;
+}

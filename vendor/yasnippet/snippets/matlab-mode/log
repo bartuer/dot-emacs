@@ -1,0 +1,3 @@
+# name: log printf
+# --
+printf("${1:var} : %${2:type}\n", $1)

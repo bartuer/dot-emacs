@@ -1,0 +1,4 @@
+# name : smembers Return all the members of the Set value at key
+# (link "~/local/src/redis/doc/SmembersCommand.txt" 1)
+# --
+smembers ${1:key}

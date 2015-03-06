@@ -1,0 +1,4 @@
+# name : border-bottom-style
+# (css-find "border-bottom-style")
+# --
+border-bottom-style :$0 border-style ;

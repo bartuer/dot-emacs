@@ -1,0 +1,5 @@
+# name: save v[*] c[.] b[+] e[-] Crud model controller api rails 
+# (rdoc "ActiveRecord::Base.save")
+# (link "~/local/src/rails/activerecord/lib/active_record/base.rb-marks" 21)
+# --
+${1:instance}.save$0

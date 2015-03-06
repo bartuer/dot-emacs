@@ -1,0 +1,4 @@
+# name : visibility
+# (css-find "visibility")
+# --
+visibility :$0 collapse hidden visible ;

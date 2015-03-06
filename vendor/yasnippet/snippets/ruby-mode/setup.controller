@@ -1,0 +1,6 @@
+#name : rails setup controller skip authorize
+# --
+def setup
+  @request.session[:user_id] = 1  
+  $0
+end

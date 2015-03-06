@@ -1,0 +1,3 @@
+# name: jspec expect visible be_visible
+# --
+expect('${1:element}').to(be_visible);

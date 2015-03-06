@@ -1,0 +1,4 @@
+# name : content
+# (css-find "content")
+# --
+content :$0 no-close-quote no-open-quote close-quote open-quote identifier attr 5 uri string none normal ;

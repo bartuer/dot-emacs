@@ -1,0 +1,5 @@
+# -*- mode: org; require-final-newline: nil; backup-inhibited: t -*-
+#name: commit git diff
+# --
+:Commit:   (git-link "${1:dir}" "${2:head}")
+

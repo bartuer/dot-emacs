@@ -1,0 +1,4 @@
+#name : rdoc
+=begin rdoc
+  $0
+=end

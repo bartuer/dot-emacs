@@ -1,0 +1,4 @@
+# name : expire set a time to live in seconds on a key
+# (link "~/local/src/redis/doc/ExpireCommand.txt" 1)
+# --
+expire 

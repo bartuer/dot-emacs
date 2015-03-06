@@ -1,0 +1,6 @@
+# name : set cookies controller api rails
+# (link "~/local/src/rails/actionpack/test/controller/cookie_test.rb" 226)
+# (rdoc "ActionController::Cookies")
+# (yas/tap) cookies[:${7:key}] = {, :value a, :path 'p', :domain 'gnu.org', :expires 1.year.from.now, :secure true, :httponly true,}
+# --
+cookies[:${7:key}] = {${1:`(yas/p ":value" "a")`}$0, ${2:`(yas/p ":path" "'p'")`}, ${3:`(yas/p ":domain" "'gnu.org'")`}, ${4:`(yas/p ":expires" "1.year.from.now")`}, ${5:`(yas/p ":secure" "true")`}, ${6:`(yas/p ":httponly" "true")`}}

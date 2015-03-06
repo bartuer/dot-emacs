@@ -1,0 +1,4 @@
+# name : voice-family
+# (css-find "voice-family")
+# --
+voice-family :$0 generic-voice specific-voice generic-voice specific-voice ;

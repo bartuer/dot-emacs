@@ -1,0 +1,9 @@
+#name : define map
+#contributor : Bartuer
+# --
+(defvar ${1:name}-map
+  (let ((map (make-keymap)))
+    (define-key map "${2:key}" '${3:func})
+    map)
+  "${4:doc}"
+    )

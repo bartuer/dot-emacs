@@ -1,0 +1,15 @@
+#name : <html>...</html>
+# --
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>${1:title} </title>
+  <script src="./${2:source}"></script>
+</head>
+<body>
+    <h1>${3:head}</h1>
+    <p >${4:description}</p>
+</body>
+</html>
+
+

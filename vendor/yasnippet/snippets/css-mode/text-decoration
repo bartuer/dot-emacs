@@ -1,0 +1,4 @@
+# name : text-decoration
+# (css-find "text-decoration")
+# --
+text-decoration :$0 blink line-through overline underline none ;

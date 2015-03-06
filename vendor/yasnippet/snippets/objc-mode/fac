@@ -1,0 +1,21 @@
+# name : factory
+# using id to static typing the instance call
+# call the self's alloc, then subclass's behavior is expected
+# delay release
+# and not handle alloc fail here, should  release memory in init.
+# --
+$0+ (id) ${1:class}With${2:$(capitalize text)}:(${3:type_of_para} *)${2:para};//move me to header
++ (id) $1With${2:$(capitalize text)}:($3 *)$2
+{
+  id newInstance = [[self alloc] init];
+  if(newInstance) {
+    [newInstance ${4:setFunction}:$2];
+    return [newInstance autorelease];
+  }
+  else {
+    fprintf(stderr, "%s:%d %s alloc and init failed",
+          __FILE__, __LINE__,
+          [NSStringFromClass(self) UTF8String]);
+    return nil;
+  }
+}

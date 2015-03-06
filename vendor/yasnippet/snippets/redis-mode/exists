@@ -1,0 +1,4 @@
+# name : exists Test for existence of a specified field in a hash
+# (link "~/local/src/redis/doc/ExistsCommand.txt" 1)
+# --
+exists ${1:key} ${2:field}

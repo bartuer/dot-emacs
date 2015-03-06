@@ -1,0 +1,5 @@
+# name: rake task
+# --
+task :${1:task} => [:${2:subtask}] do |t|
+  $0
+end

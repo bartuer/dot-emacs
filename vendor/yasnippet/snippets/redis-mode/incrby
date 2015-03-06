@@ -1,0 +1,4 @@
+# name : incrby Increment the integer value of the hash at _key_ on  _field_ with _integer_.
+# (link "~/local/src/redis/doc/IncrbyCommand.txt" 1)
+# --
+incrby ${1:key} ${2:field} ${3:integer}

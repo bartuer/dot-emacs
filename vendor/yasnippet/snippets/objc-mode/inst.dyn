@@ -1,0 +1,7 @@
+#name : dynamically binding
+# --
+id ${2:instance} = [[${1:Type} alloc] init];
+if ($2) {
+  $0
+  [$2 release];
+}

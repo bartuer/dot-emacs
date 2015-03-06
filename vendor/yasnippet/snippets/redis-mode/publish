@@ -1,0 +1,4 @@
+# name : publish publish message
+# (link "~/local/src/redis/doc/PublishCommand.txt" 1)
+# --
+publish ${1:channel} ${2:message}

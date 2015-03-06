@@ -1,0 +1,3 @@
+# name : action array rails
+# --
+[:${1:action}, :${2:action}, :${3:action}]

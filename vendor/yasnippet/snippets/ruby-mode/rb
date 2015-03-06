@@ -1,0 +1,9 @@
+#name : /usr/bin/env ruby
+# --
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'fileutils'
+include FileUtils
+
+$0
+puts $stdin.read

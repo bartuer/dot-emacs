@@ -1,0 +1,4 @@
+# name : word-spacing
+# (css-find "word-spacing")
+# --
+word-spacing :$0 5 normal ;

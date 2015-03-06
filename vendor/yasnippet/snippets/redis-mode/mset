@@ -1,0 +1,4 @@
+# name : mset Set the hash fields to their respective values.
+# (link "~/local/src/redis/doc/MsetCommand.txt" 1)
+# --
+mset ${1:key} ${2:field1} ${3:value1} ${4:fieldn} ${5:valuen}

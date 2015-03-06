@@ -1,0 +1,13 @@
+#name : if(okay)[...]else
+# --
+if ([${1:receiver} respondsToSelector:@selector(${2:aSymbol})])
+{
+  [$1 $2];
+}
+else
+{
+  fprintf(strerr, "%s not response to %s",
+          [NSStringFromClass([$1 class]) UTF8String],
+          [NSStringFromSelector(@selector($2)) UTF8String]);
+}
+$0

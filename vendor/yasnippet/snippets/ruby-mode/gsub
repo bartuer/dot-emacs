@@ -1,0 +1,3 @@
+#name : gsub
+# --
+gsub(/${1:regexp}/,'${2:substitution}')

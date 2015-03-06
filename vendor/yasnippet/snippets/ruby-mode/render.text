@@ -1,0 +1,8 @@
+# name : text render controller api rails
+# rende :text is the most brutal method
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 3160)
+# (link "~/local/src/rails/actionpack/test/controller/render_test.rb" 21684)
+# (rdoc "ActionController::Base#render")
+# (yas/tap) render, :text 'hey', :status 404, :layout true
+# --
+render ${1:`(yas/p ":text" "'hey'")`}$0, ${2:`(yas/p ":status" "404")`}, ${3:`(yas/p ":layout" "true")`}  :text => proc { |response, output| output.write("Hello from code!") }

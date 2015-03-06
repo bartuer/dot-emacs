@@ -1,0 +1,3 @@
+#name : rails controller assert_response 200 300-399 404 500-599 
+# --
+assert_response :success :redirect :missing :error

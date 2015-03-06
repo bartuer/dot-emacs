@@ -1,0 +1,38 @@
+# name : callback object model api rails
+# (link "~/local/src/rails3-tut-code/e1/ar/encrypt.rb" 790)
+# how to debug what callbacks will be called ? see:
+# (link "/Library/Ruby/Gems/1.8/gems/activesupport-2.3.4/lib/active_support/callbacks.rb" 2136)
+# --
+class ${1:`(capitalize (replace-regexp-in-string ".rb" "" (file-name-nondirectory (buffer-file-name))))`}
+
+  def initialize(attrs_to_manage)
+    @attrs_to_manage = attrs_to_manage
+  end
+
+  def before_save(model)
+    @attrs_to_manage.each do |field|
+      
+    end
+  end
+
+  def after_save(model)
+    @attrs_to_manage.each do |field|
+      
+    end
+  end
+
+  
+  alias_method :after_find, :after_save
+end
+
+class ActiveRecord::Base
+  def self.${3:callback}(*attr_names)
+   ${2:`(replace-regexp-in-string ".rb" "" (file-name-nondirectory (buffer-file-name)))`}  = $1.new(attr_names)
+    
+    before_save encrypter
+    after_save  encrypter
+    after_find  encrypter
+
+    define_method(:after_find) { }
+  end
+end

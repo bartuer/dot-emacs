@@ -1,0 +1,14 @@
+# name: sql create table
+# --
+BEGIN TRANSACTION;
+
+DROP TABLE '$1';
+CREATE TABLE '${1:table}' (
+  'id' int(11) NOT NULL,
+  c$0
+  PRIMARY KEY  ('id')
+);
+
+i5
+SELECT * FROM $1;
+COMMIT;

@@ -1,0 +1,4 @@
+# name : richness
+# (css-find "richness")
+# --
+richness :$0 5 ;

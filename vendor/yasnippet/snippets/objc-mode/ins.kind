@@ -1,0 +1,3 @@
+#name : isKindOfClass
+# --
+[${1:instance} isKindOfClass:[${2:classname} class]]

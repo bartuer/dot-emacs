@@ -1,0 +1,6 @@
+# name: js range
+# --
+var size = ${1:size};
+while(size--) {
+    $0;
+}

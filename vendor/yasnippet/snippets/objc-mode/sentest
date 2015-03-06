@@ -1,0 +1,17 @@
+#name : sentest
+# --
+#import "GTMSenTestCase.h"
+#import "${1:Class}.h"
+
+@interface $1Test : SenTestCase 
+{
+    
+}
+
+@end
+
+#import "$1Test.h"
+
+@implementation $1Test
+
+@end

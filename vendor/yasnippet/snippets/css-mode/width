@@ -1,0 +1,4 @@
+# name : width
+# (css-find "width")
+# --
+width :$0 auto 50% 5 ;

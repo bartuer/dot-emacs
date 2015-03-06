@@ -1,0 +1,10 @@
+# name: my view
+# --
+function ${1:ViewName}Class() {
+    Inherit([ViewClass()], function () {
+        var self = this;
+        self.prototype.render = function () {
+            $0                                                                
+        };
+    });
+}

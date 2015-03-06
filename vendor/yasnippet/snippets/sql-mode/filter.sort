@@ -1,0 +1,3 @@
+# name: select sort order by  sql console
+# --
+ORDER BY ${1:column} ${2:DESC/ASC}

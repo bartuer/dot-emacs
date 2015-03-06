@@ -1,0 +1,3 @@
+#name : assert_equal_float
+# --
+assert_equal ${1:expression}, ${2:value}$0

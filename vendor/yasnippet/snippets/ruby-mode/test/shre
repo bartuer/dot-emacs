@@ -1,0 +1,3 @@
+#name : should_receive
+# --
+should_receive(:${1:method})$0

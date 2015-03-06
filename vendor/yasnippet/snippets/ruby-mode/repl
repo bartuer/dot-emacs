@@ -1,0 +1,24 @@
+# name : repl test controller rails 
+# --
+require 'test_helper'
+class ${1:name}Test < ActionController::TestCase
+  tests `(yas-ruby-current-class-name)`
+
+  def setup
+    @request.host = "www.example.com"
+  end
+
+  def test_with_this_controller
+    @request.accept = "text/json"
+    get :index
+    @response.body # =>
+  end
+
+  def test_with_another_controller
+    @controller = ${2:another}Controller.new
+
+    @request.accept = "text/json"
+    xhr :get, :index
+    @response.body # =>
+  end
+end

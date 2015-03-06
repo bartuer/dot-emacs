@@ -1,0 +1,4 @@
+# name : clear
+# (css-find "clear")
+# --
+clear :$0 both right left none ;

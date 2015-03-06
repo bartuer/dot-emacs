@@ -1,0 +1,4 @@
+#name create element by id
+# --
+var ${1:name} = div();
+attr($1, {'id':'$1'});

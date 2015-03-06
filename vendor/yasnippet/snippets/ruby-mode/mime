@@ -1,0 +1,10 @@
+# name : respond_to mime format render content_type accept controller api rails 
+# (link "~/local/src/rails/actionpack/lib/action_controller/mime_responds.rb-marks" 21)
+# (link "~/local/src/rails/actionpack/test/controller/mime_responds_test.rb-marks" 21)
+# (rdoc "ActionController::MimeResponds::InstanceMethods#respond_to")
+# (shell-command "cd ~/local/src/baza; git-diff d6455 44c56") 
+# --
+respond_to do |format|
+  format.html
+  format.${1:content_type} { render :$1 => @${2:model}.to_$1 }
+end

@@ -1,0 +1,5 @@
+#name : assert_query
+# --
+assert_queries(${1:0}) do
+  $0
+end

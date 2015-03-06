@@ -1,0 +1,9 @@
+# name : chrome remote debugger run  stab
+# need set 1000 ms to have chance reload the page
+# --
+function debugger_run() {
+  debugger;
+  setTimeout(debugger_run, 1000);
+}
+
+debugger_run();

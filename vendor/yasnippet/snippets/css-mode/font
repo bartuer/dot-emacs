@@ -1,0 +1,4 @@
+# name : font
+# (css-find "font")
+# --
+font :$0 status-bar small-caption message-box menu icon caption generic-family family-name 50% 5 relative-size 12px 900 800 700 600 500 400 300 200 100 lighter bolder bold normal small-caps oblique italic ;

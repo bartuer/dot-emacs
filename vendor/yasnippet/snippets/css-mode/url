@@ -1,0 +1,4 @@
+# name : url
+# (css-find "url")
+# --
+url(${1:link}) ${2:no-repeat repeat-x}

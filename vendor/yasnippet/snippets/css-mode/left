@@ -1,0 +1,4 @@
+# name : left
+# (css-find "left")
+# --
+left :$0 auto 50% 5 ;

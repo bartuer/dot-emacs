@@ -1,0 +1,3 @@
+# name: fire prototype dom event extension extend
+# --
+fire('${1:eventName}', llit, ${2:false})

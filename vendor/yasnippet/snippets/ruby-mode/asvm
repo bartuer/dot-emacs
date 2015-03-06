@@ -1,0 +1,3 @@
+#name : assert_valid_model
+# --
+assert_valid_model ${1:model}$0

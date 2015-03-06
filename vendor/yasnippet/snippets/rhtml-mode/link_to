@@ -1,0 +1,6 @@
+# name: link_to linker view api rails
+# (rdoc "ActionView::Helpers::UrlHelper#link_to")
+# it supports both older-style controller/action/id arguments and
+# newer RESTful routes, and prefer RESTful arguments
+# --
+<%= link_to lt$0 %>

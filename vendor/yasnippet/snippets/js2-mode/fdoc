@@ -1,0 +1,10 @@
+# name: jsdoc
+# --
+/**
+ * ${1:desc}
+ *
+ * @param {${2:name}} $0
+ *
+ * @return {${type}}
+ */
+ 

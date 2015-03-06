@@ -1,0 +1,5 @@
+# name : observer controller api rails
+# (link "~/local/src/rails/activerecord/lib/active_record/observer.rb" 5474)
+# (rdoc "ActiveRecord::Observer")
+# --
+observer :${1:method}

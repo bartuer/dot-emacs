@@ -1,0 +1,5 @@
+# name: observe prototype dom event extension extend
+# (link "~/local/src/prototype/src/dom/event.js" 12371)
+# (link "~/local/src/prototype/src/dom/event.js" 16)
+# --
+observe('${1:eventName}', l1$0)

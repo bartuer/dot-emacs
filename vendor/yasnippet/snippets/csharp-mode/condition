@@ -1,0 +1,4 @@
+# name: if condition surround
+# type: command
+# --
+${1:$((lambda () (surround "if( )")))}

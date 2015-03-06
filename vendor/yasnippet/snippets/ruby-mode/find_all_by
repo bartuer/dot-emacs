@@ -1,0 +1,4 @@
+# name: find_all_by crud model controller api rails 
+# (rdoc "ActiveRecord::Base")
+# --
+find_all_by_${1:attribute}($1)

@@ -1,0 +1,14 @@
+#name : assign
+# --
+@dynamic $2;
+
+- (${1:id}) ${2:value}
+{
+  return $2;
+}
+
+- (void) set${2:$(capitalize text)}:($1)aValue
+{
+  $2 = aValue;
+}
+$0

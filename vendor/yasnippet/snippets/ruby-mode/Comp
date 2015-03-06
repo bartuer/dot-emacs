@@ -1,0 +1,7 @@
+#name : Comparable then def <=>
+# --
+include Comparable
+
+def <=> other
+  $0
+end

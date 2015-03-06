@@ -1,0 +1,5 @@
+# name: stopObserving prototype dom event extension extend
+# (link "~/local/src/prototype/src/dom/event.js" 19827)
+# (link "~/local/src/prototype/src/dom/event.js" 16)
+# --
+stopObserving('${1:eventName}', l1$0)

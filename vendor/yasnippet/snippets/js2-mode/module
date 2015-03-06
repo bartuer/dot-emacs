@@ -1,0 +1,23 @@
+#name : singleton global hide private module closure
+# --
+function ${1:module_name}() {
+    var self = this;
+    self.className = '$1';
+    
+    function $1Interface() {}
+
+    Object.defineProperty($1Interface.prototype, 'classsName', {
+        get: function () {
+            return self.className;
+        },
+        set: function (value) {
+            self.className = value;
+        }
+    });
+
+    $1Interface.prototype.help  = function () {
+        return "var o = new $1(); // then explore it's property and method";
+    };
+    
+    return new $1Interface();
+};

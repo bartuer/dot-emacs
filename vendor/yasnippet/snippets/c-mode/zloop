@@ -1,0 +1,15 @@
+# name: zloop event loop zeromq 0mq
+# --
+Bool verbose = 1;
+zloop_t *loop = zloop_new ();
+assert (loop);
+zloop_set_verbose (loop, verbose);
+
+zmq_pollitem_t ${1:event_name} = { ${2:socket}, ${3:0}, ZMQ_POLLIN };
+assert(zloop_poller (loop, &$1, ${4:callback}, NULL) == 0);
+zloop_start (loop);
+
+zloop_destroy (&loop);
+assert (loop == NULL);
+
+

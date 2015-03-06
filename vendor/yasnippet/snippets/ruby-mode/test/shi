@@ -1,0 +1,3 @@
+#name : should include
+# --
+${1:actual}.should include(${2:expected_list})

@@ -1,0 +1,4 @@
+# name : set Set the hash field to the specified value. Creates the  hash if needed.
+# (link "~/local/src/redis/doc/SetCommand.txt" 1)
+# --
+set ${1:key} ${2:field} ${3:value}

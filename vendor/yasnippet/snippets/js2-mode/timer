@@ -1,0 +1,21 @@
+#name : timer closure
+# --
+var ${1:timer} = function (t) {
+  var pace = 1;
+  var tick = function () {
+    t.callback(t.target); 
+    if (pace < t.step) {
+      pace += 1;
+      setTimeout(tick, t.interval);
+    }
+  };
+  setTimeout(tick, t.interval);
+};
+
+${1:timer}({step: 10,
+            interval: 100,
+            target: {body: document.body},
+            callback: function (obj) {
+              obj.body$0;// do some thing with obj here
+            }
+           });

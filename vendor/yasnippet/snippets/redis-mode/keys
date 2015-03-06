@@ -1,0 +1,4 @@
+# name : keys Return all the fields in a hash.
+# (link "~/local/src/redis/doc/KeysCommand.txt" 1)
+# --
+keys ${1:key}

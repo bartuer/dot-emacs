@@ -1,0 +1,4 @@
+# name : font-weight
+# (css-find "font-weight")
+# --
+font-weight :$0 900 800 700 600 500 400 300 200 100 lighter bolder bold normal ;

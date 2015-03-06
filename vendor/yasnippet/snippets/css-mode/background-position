@@ -1,0 +1,4 @@
+# name : background-position
+# (css-find "background-position")
+# --
+background-position :$0 bottom center top right center left bottom center top 5 50% right center left 5 50% ;
