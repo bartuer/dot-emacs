@@ -1,13 +1,15 @@
+
 ;;; csharp-mode.el --- C# mode derived mode
 
 ;; Author     : Dylan R. E. Moonfire (original)
-;; Maintainer : Dino Chiesa <dpchiesa@hotmail.com>
+;; Maintainer : Jostein Kjønigsen <jostein@gmail.com>
 ;; Created    : Feburary 2005
-;; Modified   : May 2011
-;; Version    : 0.8.6
+;; Modified   : November 2014
+;; Version: 20150226.15
+;; X-Original-Version    : 0.8.8
 ;; Keywords   : c# languages oop mode
-;; X-URL      : http://code.google.com/p/csharpmode/
-;; Last-saved : <2011-May-21 20:28:30>
+;; X-URL      : https://github.com/josteink/csharp-mode
+;; Last-saved : <2014-Nov-29 13:56:00>
 
 ;;
 ;; This program is free software; you can redistribute it and/or modify
@@ -28,8 +30,8 @@
 ;;; Commentary:
 ;;
 ;;    This is a major mode for editing C# code. It performs automatic
-;;    indentation of C# syntax; font locking; and integration with compile.el;
-;;    flymake.el; yasnippet.el; and imenu.el.
+;;    indentation of C# syntax; font locking; and integration with
+;;    imenu.el.
 ;;
 ;;    csharp-mode requires CC Mode 5.30 or later.  It works with
 ;;    cc-mode 5.31.3, which is current at this time.
@@ -48,22 +50,8 @@
 ;;
 ;;   - automagic code-doc generation when you type three slashes.
 ;;
-;;   - intelligent insertion of matched pairs of curly braces.
-;;
-;;   - compile tweaks. Infers the compile command from special comments
-;;     in the file header.  Also, sets the regex for next-error, so that
-;;     compile.el can handle csc.exe output.
-;;
-;;   - flymake integration
-;;       - select flymake command from code comments
-;;       - infer flymake command otherwise (presence of makefile, etc)
-;;       - Turn off query-on-exit-flag for the flymake process.
-;;       - define advice to flymake-goto-line , to allow it to goto the
-;;         appropriate column for the error on a given line. This works
-;;         with `flymake-goto-next-error' etc.
-;;
-;;   - yasnippet integration
-;;       - preloaded snippets
+;;   - compatible with electric-pair-mode for intelligent insertion
+;;     of matched braces, quotes, etc.
 ;;
 ;;   - imenu integration - generates an index of namespaces, classes,
 ;;     interfaces, methods, and properties for easy navigation within
@@ -89,11 +77,6 @@
 ;;      "function that runs when csharp-mode is initialized for a buffer."
 ;;      (turn-on-auto-revert-mode)
 ;;      (setq indent-tabs-mode nil)
-;;      (require 'flymake)
-;;      (flymake-mode 1)
-;;      (require 'yasnippet)
-;;      (yas/minor-mode-on)
-;;      (require 'rfringe)
 ;;      ...insert more code here...
 ;;      ...including any custom key bindings you might want ...
 ;;   )
@@ -105,103 +88,6 @@
 ;;
 ;;  Mostly C# mode will "just work."  Use `describe-mode' to see the
 ;;  default keybindings and the highlights of the mode.
-;;
-;;
-;;  Flymake Integration
-;;  ----------------------------
-;;
-;;  You can use flymake with csharp mode to automatically check the
-;;  syntax of your csharp code, and highlight errors.  To do so, add a
-;;  comment line like this to each .cs file that you use flymake with:
-;;
-;;   //  flymake: c:\.net3.5\csc.exe /t:module /nologo /R:Foo.dll @@FILE@@
-;;
-;;  That lines specifies a command "stub".  Flymake appends the name of
-;;  the file to compile, and then runs the command to check
-;;  syntax. Flymake assumes that syntax errors will be noted in the
-;;  output of the command in a form that fits one of the regexs in the
-;;  `compilation-error-regexp-alist-alist'. Check the flymake module for
-;;  more information on that.
-;;
-;;  Some rules for the command:
-;;
-;;    1. it must appear all on a single line.
-;;
-;;    2. csharp-mode generally looks for the marker line in the first N
-;;       lines of the file, where N is set in
-;;       `csharp-cmd-line-limit'.  See the documentation on that
-;;       variable for more information.
-;;
-;;    3. the command SHOULD use @@FILE@@ in place of the name of the
-;;       source file to be compiled, normally the file being edited.
-;;       This is because normally flymake saves a copy of the buffer
-;;       into a temporary file with a unique name, and then compiles
-;;       that temporary file. The token @@FILE@@ is replaced by
-;;       csharp-mode with the name of the temporary file created by
-;;       flymake, before invoking the command.
-;;
-;;    4. The command should include /R options specifying external
-;;       libraries that the code depends on.
-;;
-;;  If you have no external dependencies, then you need not specify any
-;;  flymake command at all. csharp-mode will implicitly act as if you had
-;;  specified the command:
-;;
-;;      // flymake: c:\.net3.5\csc.exe /t:module /nologo @@FILE@@
-;;
-;;
-;;  If you use csc.exe as the syntax check tool (as almost everyone
-;;  will), the /t:module is important. csharp-mode assumes that the
-;;  syntax-check compile command will produce a file named
-;;  NAME.netmodule, which is the default when using /t:module. (Remember
-;;  than NAME is dynamically generated).  csharp-mode will remove the
-;;  generated netmodule file after the syntax check is complete. If you
-;;  don't specify /t:module, then csharp-mode won't know what file to
-;;  delete.
-;;
-;;  csharp-mode also fiddles with some other flymake things.  In
-;;  particular it: adds .cs to the flymake "allowed filename masks";
-;;  adds parsing for csc error messages; and adds advice to the error
-;;  parsing logic. This all should be pretty benign for all other
-;;  flymake buffers.  But it might not be.
-;;
-;;  You can explicitly turn the flymake integration for C# off by
-;;  setting `csharp-want-flymake-fixup' to nil.
-;;
-;;
-;;  Compile Integration
-;;  ----------------------------
-;;
-;;  csharp-mode binds the function `csharp-invoke-compile-interactively'
-;;  to "\C-x\C-e" .  This function attempts to intellgently guess the
-;;  format of the compile command to use for a buffer.  It looks in the
-;;  comments at the head of the buffer for a line that begins with
-;;  compile: .  If found, csharp-mode suggests the text that follows as
-;;  the compilation command when running `compile' .  If such a line is
-;;  not found, csharp-mode falls back to a msbuild or nmake command.
-;;  See the documentation on `csharp-cmd-line-limit' for further
-;;  information.
-;;
-;;  Also, csharp-mode installs an error regexp for csc.exe into
-;;  `compilation-error-regexp-alist-alist', which allows `next-error'
-;;  and `previous-error' (defined in compile.el) to navigate to the next
-;;  and previous compile errors in the cs buffer, after you've run `compile'.
-;;
-;;
-;;  YASnippet integration
-;;  -----------------------------
-;;
-;;  csharp-mode defines some built-in snippets for
-;;  convenience.  For example, if statements, for, foreach, and
-;;  so on.  You can see them on the YASnippet menu that is displayed
-;;  when a csharp-mode buffer is opened.  csharp-mode defines this
-;;  snippets happens only if ya-snippet is available. (It is done in an
-;;  `eval-after-load' clause.)  The builtin snippets will not overwrite
-;;  snippets that use the same name, if they are defined in the normal
-;;  way (in a compiled bundle) with ya-snippet.
-;;
-;;  You can explicitly turn off ya-snippet integration. See the var,
-;;  `csharp-want-yasnippet-fixup'.
 ;;
 ;;
 ;;  imenu integration
@@ -377,13 +263,21 @@
 ;;          - imenu: split menus now have better labels, are sorted correctly.
 ;;
 ;;    0.8.6 DPC 2011 May ??
-;;          -
-
+;;          - extern keyword
+;;
+;;    0.8.7 2014 November 29
+;;          - Fix broken cl-dependency in emacs24.4 and defadvice for tooltips.
+;;
+;;    0.8.8 2014 December 3
+;;          - Fix broken byte-compile.
+;;          - Add extra C# keywords.
+;;          - Call prog-mode hooks.
+;;
 
 (require 'cc-mode)
 
-(message  (concat "Loading " load-file-name))
-
+;; cc-defs in emacs 24.4 depends on cl-macroexpand-all, but does not load 'cl itself.
+(require 'cl)
 
 ;; ==================================================================
 ;; c# upfront stuff
@@ -429,6 +323,7 @@
 
 
 
+
 ;; These are only required at compile time to get the sources for the
 ;; language constants.  (The load of cc-fonts and the font-lock
 ;; related constants could additionally be put inside an
@@ -446,6 +341,26 @@
     (load "cc-langs" nil t)))
 
 (eval-and-compile
+  ;; ==================================================================
+  ;; constants used in this module
+  ;; ==================================================================
+
+  (defconst csharp-enum-decl-re
+    (concat
+     "\\<enum[ \t\n\r\f\v]+"
+     "\\([[:alpha:]_][[:alnum:]_]*\\)"
+     "[ \t\n\r\f\v]*"
+     "\\(:[ \t\n\r\f\v]*"
+     "\\("
+     (c-make-keywords-re nil
+			 (list "sbyte" "byte" "short" "ushort" "int" "uint" "long" "ulong"))
+     "\\)"
+     "\\)?")
+    "Regex that captures an enum declaration in C#"
+    )
+
+  ;; ==================================================================
+
   ;; Make our mode known to the language constant system.  Use Java
   ;; mode as the fallback for the constants we don't change here.
   ;; This needs to be done also at compile time since the language
@@ -460,33 +375,6 @@
 
 
 
-;; ==================================================================
-;; constants used in this module
-;; ==================================================================
-
-;;(error (byte-compile-dest-file))
-;;(error (c-get-current-file))
-
-(defconst csharp-aspnet-directive-re
-  "<%@.+?%>"
-  "Regex for matching directive blocks in ASP.NET files (.aspx, .ashx, .ascx)")
-
-
-(defconst csharp-enum-decl-re
-  (concat
-   "\\<enum[ \t\n\r\f\v]+"
-   "\\([[:alpha:]_][[:alnum:]_]*\\)"
-   "[ \t\n\r\f\v]*"
-   "\\(:[ \t\n\r\f\v]*"
-   "\\("
-   (c-make-keywords-re nil
-     (list "sbyte" "byte" "short" "ushort" "int" "uint" "long" "ulong"))
-   "\\)"
-   "\\)?")
-  "Regex that captures an enum declaration in C#"
-  )
-
-;; ==================================================================
 
 
 
@@ -511,23 +399,17 @@ close-brace) appears.  The concept is used to allow proper
 indenting of blocks of code: Where a vsemi appears, the following
 line will not indent further.
 
-A vsemi appears in 3 cases in C#:
+A vsemi appears in 2 cases in C#:
 
  - after an attribute that decorates a class, method, field, or
    property.
 
  - in an object initializer, before the open-curly?
 
- - after an ASPNET directive, that appears in a aspx/ashx/ascx file
-
 An example of the former is  [WebMethod] or [XmlElement].
-An example of the latter is something like this:
-
-    <%@ WebHandler Language=\"C#\" Class=\"Handler\" %>
 
 Providing this function allows the indenting in csharp-mode
-to work properly with code that includes attributes and ASPNET
-directives.
+to work properly with code that includes attributes.
 
 "
   (save-excursion
@@ -541,11 +423,6 @@ directives.
               "\\(?:[A-Za-z_][[:alnum:]]*\\.\\)*"
               "[A-Za-z_][[:alnum:]]*[\ t\n\f\v\r]*"))
              (looking-at "[ \t\n\f\v\r]*{"))
-        t)
-
-       ;; put a vsemi after an ASPNET directive, like
-       ;; <%@ WebHandler Language="C#" Class="Handler" %>
-       ((looking-back (concat csharp-aspnet-directive-re "$") nil t)
         t)
 
        ;; put a vsemi after an attribute, as with
@@ -663,161 +540,19 @@ comment at the start of cc-engine.el for more info."
       rtn))
 
 
+(defun csharp-is-square-parentasis-block-p ()
+  "Attempts to safely assess if the current point is at the opening of
+a square parentasis block [ ... ]."
+  (let* ((start (point)) ;; variables used to hold our position, so that we know that
+	 (end))          ;; our code isn't stuck trying to look for a non-existant sexp.
+    (and (eq (char-after) 91) ;; open square
+	 (while (and (eq (char-after) 91)
+		     (not (eq start end)))
+	   (c-safe (c-forward-sexp 1))
+	   (setq end (point)))
+	 (eq (char-before) 93))) ;; close square
+  )
 
-(defun csharp-insert-open-brace ()
-  "Intelligently insert a pair of curly braces. This fn should be
-bound to the open-curly brace, with
-
-    (local-set-key (kbd \"{\") 'csharp-insert-open-brace)
-
-The default binding for an open curly brace in cc-modes is often
-`c-electric-brace' or `skeleton-pair-insert-maybe'.  The former
-can be configured to insert newlines around braces in various
-syntactic positions.  The latter inserts a pair of braces and
-then does not insert a newline, and does not indent.
-
-This fn provides another option, with some additional
-intelligence for csharp-mode.  When you type an open curly, the
-appropriate pair of braces appears, with spacing and indent set
-in a context-sensitive manner:
-
- - Within a string literal, you just get a pair of braces, and
-   point is set between them. This works for String.Format()
-   purposes.
-
- - Following = or [], as in an array assignment, you get a pair
-   of braces, with two intervening spaces, with a semincolon
-   appended. Point is left between the braces.
-
- - Following \"new Foo\", it's an object initializer. You get:
-   newline, open brace, newline, newline, close, semi.  Point is
-   left on the blank line between the braces. Unless the object
-   initializer is within an array initializer, in which case, no
-   newlines, and the semi is replaced with a comma. (Try it to
-   see what this means).
-
- - Following => , implying a lambda, you get an open/close pair,
-   with two intervening spaces, no semicolon, and point on the
-   2nd space.
-
- - Otherwise, you get a newline, the open curly, followed by
-   an empty line and the closing curly on the line following,
-   with point on the empty line.
-
-
-There may be another way to get this to happen appropriately just
-within emacs, but I could not figure out how to do it.  So I
-wrote this alternative.
-
-    "
-  (interactive)
-  (let
-      (tpoint
-       (in-string (string= (csharp-in-literal) "string"))
-       (preceding3
-        (save-excursion
-          (and
-           (skip-chars-backward " \t")
-           (> (- (point) 2) (point-min))
-           (buffer-substring-no-properties (point) (- (point) 3)))))
-       (one-word-back
-        (save-excursion
-          (backward-word 2)
-          (thing-at-point 'word))))
-
-    (cond
-
-     ;; Case 1: inside a string literal?
-     ;; --------------------------------------------
-     ;; If so, then just insert a pair of braces and put the point
-     ;; between them.  The most common case is a format string for
-     ;; String.Format() or Console.WriteLine().
-     (in-string
-      (self-insert-command 1)
-      (insert "}")
-      (backward-char))
-
-     ;; Case 2: the open brace starts an array initializer.
-     ;; --------------------------------------------
-     ;; When the last non-space was an equals sign or square brackets,
-     ;; then it's an initializer.
-     ((save-excursion
-        (and (c-safe (backward-sexp) t)
-             (looking-at "\\(\\w+\\b *=\\|[[]]+\\)")))
-      (self-insert-command 1)
-      (insert "  };")
-      (backward-char 3))
-
-     ;; Case 3: the open brace starts an instance initializer
-     ;; --------------------------------------------
-     ;; If one-word-back was "new", then it's an object initializer.
-     ((string= one-word-back "new")
-      (csharp-log 2 "object initializer")
-      (setq tpoint (point)) ;; prepare to indent-region later
-      (backward-word 2)
-      (c-backward-syntactic-ws)
-      (if (or (eq (char-before) ?,)       ;; comma
-              (and (eq (char-before) 123) ;; open curly
-                   (progn (backward-char)
-                          (c-backward-syntactic-ws)
-                          (looking-back "\\[\\]"))))
-          (progn
-            ;; within an array - emit no newlines
-            (goto-char tpoint)
-            (self-insert-command 1)
-            (insert "  },")
-            (backward-char 3))
-
-        (progn
-          (goto-char tpoint)
-          (newline)
-          (self-insert-command 1)
-          (newline-and-indent)
-          (newline)
-          (insert "};")
-          (c-indent-region tpoint (point))
-          (forward-line -1)
-          (indent-according-to-mode)
-          (end-of-line))))
-
-
-     ;; Case 4: a lambda initialier.
-     ;; --------------------------------------------
-     ;; If the open curly follows =>, then it's a lambda initializer.
-     ((string= (substring preceding3 -2) "=>")
-      (csharp-log 2 "lambda init")
-      (self-insert-command 1)
-      (insert "  }")
-      (backward-char 2))
-
-     ;; else, it's a new scope. (if, while, class, etc)
-     (t
-      (save-excursion
-        (csharp-log 2 "new scope")
-        (set-mark (point)) ;; prepare to indent-region later
-        ;; check if the prior sexp is on the same line
-        (if (save-excursion
-              (let ((curline (line-number-at-pos))
-                    (aftline (progn
-                               (if (c-safe (backward-sexp) t)
-                                   (line-number-at-pos)
-                                 -1))))
-                (= curline aftline)))
-            (newline))
-        (self-insert-command 1)
-        (c-indent-line-or-region)
-        (end-of-line)
-        (newline)
-        (insert "}")
-        (c-indent-command) ;; not sure of the difference here
-        ;; (c-indent-line-or-region)
-        (forward-line -1)
-        (end-of-line)
-        (newline-and-indent)
-        ;; point ends up on an empty line, within the braces, properly indented
-        (setq tpoint (point)))
-
-      (goto-char tpoint)))))
 
 
 ;; ==================================================================
@@ -1222,10 +957,7 @@ wrote this alternative.
 
                                 (if (or
                                      (eq (char-after) ?{) ;; open curly
-                                     (and (eq (char-after) 91) ;; open square
-                                          (while (eq (char-after) 91)
-                                            (c-safe (c-forward-sexp 1)))
-                                          (eq (char-before) 93)) ;; close square
+                                     (csharp-is-square-parentasis-block-p)
                                      (and (eq (char-after) 40) ;; open paren
                                           (c-safe (c-forward-sexp 1) t)))
 
@@ -1492,103 +1224,6 @@ wrote this alternative.
                     ))
                 nil))
 
-
-           ;; Case 6: directive blocks for .aspx/.ashx/.ascx
-           ,`((lambda (limit)
-                (let ((parse-sexp-lookup-properties
-                       (cc-eval-when-compile
-                         (boundp 'parse-sexp-lookup-properties))))
-
-                  (while (re-search-forward csharp-aspnet-directive-re limit t)
-                    (csharp-log 3 "aspnet template? - %d limit(%d)" (match-beginning 1)
-                                limit)
-
-                    (unless
-                        (progn
-                          (goto-char (match-beginning 0))
-                          (c-skip-comments-and-strings limit))
-
-                        (save-match-data
-                          (let ((end-open (+ (match-beginning 0) 3))
-                                (beg-close (- (match-end 0) 2)))
-                            (c-put-font-lock-face (match-beginning 0)
-                                                  end-open
-                                                  'font-lock-preprocessor-face)
-
-                            (c-put-font-lock-face beg-close
-                                                  (match-end 0)
-                                                  'font-lock-preprocessor-face)
-
-                            ;; fontify within the directive
-                            (while (re-search-forward
-                                    ,(concat
-                                      "\\("
-                                      (c-lang-const c-symbol-key)
-                                      "\\)"
-                                      "=?"
-                                      )
-                                    beg-close t)
-
-                            (c-put-font-lock-face (match-beginning 1)
-                                                  (match-end 1)
-                                                  'font-lock-keyword-face)
-                            (c-skip-comments-and-strings beg-close))
-                            ))
-                        (goto-char (match-end 0)))))
-                nil))
-
-
-;;            ;; Case 5: #if
-;;            ,@(when t
-;;                `((,(byte-compile
-;;                     `(lambda (limit)
-;;                        (let ((parse-sexp-lookup-properties
-;;                               (cc-eval-when-compile
-;;                                 (boundp 'parse-sexp-lookup-properties))))
-;;                          (while (re-search-forward
-;;                                  "\\<\\(#if\\)[ \t\n\r\f\v]+\\([A-Za-z_][[:alnum:]]*\\)"
-;;                                  limit t)
-;;
-;;                            (csharp-log 3 "#if directive - %d" (match-beginning 1))
-;;
-;;                            (unless
-;;                                (progn
-;;                                  (goto-char (match-beginning 0))
-;;                                  (c-skip-comments-and-strings limit))
-;;
-;;                              (save-match-data
-;;                                (c-put-font-lock-face (match-beginning 2)
-;;                                                      (match-end 2)
-;;                                                      'font-lock-variable-name-face)
-;;                                (goto-char (match-end 0))))))
-;;                        nil))
-;;                   )))
-
-
- ;;           ,`(,(c-make-font-lock-search-function
- ;;                (concat "\\<new"
- ;;                        "[ \t\n\r\f\v]+"
- ;;                        "\\(\\(?:"
- ;;                        (c-lang-const c-symbol-key)
- ;;                        "\\.\\)*"
- ;;                        (c-lang-const c-symbol-key)
- ;;                        "\\)"
- ;;                        "[ \t\n\r\f\v]*"
- ;;                        "\\(?:"
- ;;                        "( *)[ \t\n\r\f\v]*"          ;; optional ()
- ;;                        "\\)?"
- ;;                        "{")
- ;;                '((c-font-lock-declarators limit t nil)
- ;;                  (save-match-data
- ;;                    (goto-char (match-end 0))
- ;;                    (c-put-char-property (1- (point)) 'c-type
- ;;                                         'c-decl-id-start)
- ;;                    (c-forward-syntactic-ws))
- ;;                  (goto-char (match-end 0)))))
-
-
-
-
            ;; Fontify labels after goto etc.
            ,@(when (c-lang-const c-before-label-kwds)
                `( ;; (Got three different interpretation levels here,
@@ -1852,8 +1487,9 @@ wrote this alternative.
   csharp '("namespace"))
 
 (c-lang-defconst c-other-kwds
-  csharp '("sizeof" "typeof" "is" "as" "yield"
-           "where" "select" "in" "from"))
+  csharp '("sizeof" "typeof" "is" "as" "yield" "extern"
+           "where" "select" "in" "from" "let" "orderby" "ascending" "descending"
+	   "await" "async" "var"))
 
 (c-lang-defconst c-overloadable-operators
   ;; EMCA-344, S14.2.1
@@ -1908,118 +1544,9 @@ Most other csharp functions are not instrumented.
 
 
 ;;;###autoload
-(defcustom csharp-want-flymake-fixup t
-  "*Whether to enable the builtin C# support for flymake. This is meaningful
-only if flymake is loaded."
-  :type 'boolean :group 'csharp)
-
-;;;###autoload
-(defcustom csharp-want-yasnippet-fixup t
-  "*Whether to enable the builtin C# support for yasnippet. This is meaningful
-only if flymake is loaded."
-  :type 'boolean :group 'csharp)
-
-
-;;;###autoload
 (defcustom csharp-want-imenu t
   "*Whether to generate a buffer index via imenu for C# buffers."
   :type 'boolean :group 'csharp)
-
-
-;;;###autoload
-(defcustom csharp-make-tool "nmake.exe"
-  "*The make tool to use. Defaults to nmake, found on path. Specify
-a full path or alternative program name, to tell csharp-mode to use
-a different make tool in compile commands.
-
-See also, `csharp-msbuild-tool'.
-
-"
-  :type 'string :group 'csharp)
-
-
-;;;###autoload
-(defcustom csharp-msbuild-tool "msbuild.exe"
-  "*The tool to use to build .csproj files. Defaults to msbuild, found on
-path. Specify a full path or alternative program name, to tell csharp-mode
-to use a different make tool in compile commands.
-
-See also, `csharp-make-tool'.
-
-"
-  :type 'string :group 'csharp)
-
-
-;;;###autoload
-(defcustom csharp-cmd-line-limit 28
-  "The number of lines at the top of the file to look in, to find
-the command that csharp-mode will use to compile the current
-buffer, or the command \"stub\" that csharp-mode will use to
-check the syntax of the current buffer via flymake.
-
-If the value of this variable is zero, then csharp-mode looks
-everywhere in the file.  If the value is positive, then only in
-the first N lines. If negative, then only in the final N lines.
-
-The line should appear in a comment inside the C# buffer.
-
-
-Compile
---------
-
-In the case of compile, the compile command must be prefixed with
-\"compile:\".  For example,
-
- // compile: csc.exe /r:Hallo.dll Arfie.cs
-
-
-This command will be suggested as the compile command when the
-user invokes `compile' for the first time.
-
-
-Flymake
---------
-
-In the case of flymake, the command \"stub\" string must be
-prefixed with \"flymake:\".  For example,
-
- // flymake: DOTNETDIR\csc.exe /target:netmodule /r:foo.dll @@FILE@@
-
-In the case of flymake, the string should NOT include the name of
-the file for the buffer being checked. Instead, use the token
-@@FILE@@ .  csharp-mode will replace this token with the name of
-the source file to compile, before passing the command to flymake
-to run it.
-
-If for some reason the command is invalid or illegal, flymake
-will report an error and disable itself.
-
-It might be handy to run fxcop, for example, via flymake.
-
- // flymake: fxcopcmd.exe /c  /f:MyLibrary.dll
-
-
-
-In all cases
-------------
-
-Be sure to specify the proper path for your csc.exe, whatever
-version that might be, or no path if you want to use the system
-PATH search.
-
-If the buffer depends on external libraries, then you will want
-to include /R arguments to that csc.exe command.
-
-To be clear, this variable sets the number of lines to search for
-the command.  This cariable is an integer.
-
-If the marker string (either \"compile:\" or \"flymake:\"
-is present in the given set of lines, csharp-mode will take
-anything after the marker string as the command to run.
-
-"
-  :type 'integer   :group 'csharp)
-
 
 
 (defconst csharp-font-lock-keywords-1 (c-lang-const c-matchers-1 csharp)
@@ -2058,35 +1585,6 @@ anything after the marker string as the command to run.
   "Keymap used in csharp-mode buffers.")
 
 
-(defvar csharp--yasnippet-has-been-fixed nil
-  "indicates whether yasnippet has been patched for use with csharp.
-Intended for internal use only.")
-
-(defvar csharp--flymake-has-been-installed  nil
-  "one-time use boolean, to check whether csharp tweaks for flymake (advice
-etc) have been installed.")
-
-(defvar csharp-flymake-csc-arguments
-  (list "/t:module" "/nologo")
-  "A list of arguments to use with the csc.exe
-compiler, when using flymake with a
-direct csc.exe build for syntax checking purposes.")
-
-
-(defvar csharp-flymake-aux-error-info nil
-  "a list of auxiliary flymake error info items. Each item in the
-list is a pair, consisting of a line number and a column number.
-This info is set by advice to flymake-parse-line, and used by
-advice attached to flymake-goto-line, to navigate to the proper
-error column when possible. ")
-
-
-(defvar csharp-flymake-csc-error-pattern
-  "^[ \t]*\\([_A-Za-z0-9][^(]+\\.cs\\)(\\([0-9]+\\)[,]\\([0-9]+\\)) ?: \\(\\(error\\|warning\\) +:? *C[SA][0-9]+ *:[ \t\n]*\\(.+\\)\\)"
-  "The regex pattern for C# compiler error messages. Follows
-the same form as an entry in `flymake-err-line-patterns'. The
-value is a STRING, a regex.")
-
 ;; TODO
 ;; Defines our constant for finding attributes.
 ;;(defconst csharp-attribute-regex "\\[\\([XmlType]+\\)(")
@@ -2103,576 +1601,6 @@ value is a STRING, a regex.")
 ;; ==================================================================
 ;; end of c# values for "language constants" defined in cc-langs.el
 ;; ==================================================================
-
-
-
-
-
-;; ========================================================================
-;; Flymake integration
-
-(defun csharp-flymake-init ()
-  (csharp-flymake-init-impl
-   'flymake-create-temp-inplace t t 'csharp-flymake-get-cmdline))
-
-(defun csharp-flymake-init-impl (create-temp-f use-relative-base-dir use-relative-source get-cmdline-f)
-  "Create syntax check command line for a directly checked source file.
-Use CREATE-TEMP-F for creating temp copy."
-  (let* ((args nil)
-        (temp-source-file-name  (flymake-init-create-temp-buffer-copy create-temp-f)))
-    (setq args (flymake-get-syntax-check-program-args
-                temp-source-file-name "."
-                use-relative-base-dir use-relative-source
-                get-cmdline-f))
-    args))
-
-
-(defun csharp-flymake-cleanup ()
-  "Delete the temporary .netmodule file created in syntax checking
-a C# buffer, then call through to flymake-simple-cleanup."
-
-  (if flymake-temp-source-file-name
-      (progn
-        (let* ((netmodule-name
-                (concat (file-name-sans-extension flymake-temp-source-file-name)
-                        ".netmodule"))
-               (expanded-netmodule-name (expand-file-name netmodule-name ".")))
-          (if (file-exists-p expanded-netmodule-name)
-              (flymake-safe-delete-file expanded-netmodule-name)))
-        ))
-  (flymake-simple-cleanup))
-
-
-(defun csharp-split-string-respecting-quotes (s)
-  "splits a string into tokens, respecting double quotes
-For example, the string 'This is \"a string\"' will be split into 3 tokens.
-
-More pertinently, the string
-   'csc /t:module /R:\"c:\abba dabba\dooo\Foo.dll\"'
-
-...will be split into 3 tokens.
-
-This fn also removes quotes from the tokens that have them. This is for
-compatibility with flymake and the process-start fn.
-
-"
-  (let ((local-s s)
-        (my-re-1 "[^ \"]*\"[^\"]+\"\\|[^ \"]+")
-        (my-re-2 "\\([^ \"]*\\)\"\\([^\"]+\\)\"")
-        (tokens))
-    (while (string-match my-re-1 local-s)
-      (let ((token (match-string 0 local-s))
-            (remainder (substring local-s (match-end 0))))
-        (if (string-match my-re-2 token)
-            (setq token (concat (match-string 1 token) (match-string 2 token))))
-        ;;(message "token: %s" token)
-        (setq tokens (append tokens (list token)))
-        (setq local-s remainder)))
-    tokens))
-
-
-(defun csharp-get-value-from-comments (marker-string line-limit)
-  "gets a string from the header comments in the current buffer.
-
-This is used to extract the flymake command and the compile
-command from the comments.
-
-It looks for \"marker-string:\" and returns the string that
-follows it, or returns nil if that string is not found.
-
-eg, when marker-string is \"flymake\", and the following
-string is found at the top of the buffer:
-
-     flymake: csc.exe /r:Hallo.dll
-
-...then this command will return the string
-
-     \"csc.exe /r:Hallo.dll\"
-
-It's ok to have whitespace between the marker and the following
-colon.
-
-"
-
-  (let (start search-limit found)
-    ;; determine what lines to look in
-    (save-excursion
-      (save-restriction
-        (widen)
-        (cond ((> line-limit 0)
-               (goto-char (setq start (point-min)))
-               (forward-line line-limit)
-               (setq search-limit (point)))
-              ((< line-limit 0)
-               (goto-char (setq search-limit (point-max)))
-               (forward-line line-limit)
-               (setq start (point)))
-              (t                        ;0 => no limit (use with care!)
-               (setq start (point-min))
-               (setq search-limit (point-max))))))
-
-    ;; look in those lines
-    (save-excursion
-      (save-restriction
-        (widen)
-        (let ((re-string
-               (concat "\\b" marker-string "[ \t]*:[ \t]*\\(.+\\)$")))
-          (if (and start
-                   (< (goto-char start) search-limit)
-                   (re-search-forward re-string search-limit 'move))
-
-              (buffer-substring-no-properties
-               (match-beginning 1)
-               (match-end 1))))))))
-
-
-
-
-(defun csharp-replace-command-tokens (explicitly-specified-command)
-  "Replace tokens in the flymake or compile command extracted from the
-buffer, to allow specification of the original and modified
-filenames.
-
-  @@ORIG@@ - gets replaced with the original filename
-  @@FILE@@ - gets replaced with the name of the temporary file
-      created by flymake
-
-"
-  (let ((massaged-command explicitly-specified-command))
-    (if (string-match "@@SRC@@" massaged-command)
-        (setq massaged-command
-              (replace-match
-               (file-relative-name flymake-temp-source-file-name) t t massaged-command)))
-    (if (string-match "@@ORIG@@" massaged-command)
-        (setq massaged-command
-              (replace-match
-               (file-relative-name buffer-file-name) t t massaged-command)))
-    massaged-command))
-
-
-;;(setq flymake-log-level 3)
-
-(defun csharp-flymake-get-final-csc-arguments (initial-arglist)
-  "Gets the command used by csc.exe for flymake runs.
-This may inject a /t:module into an arglist, where it is not
-present.
-
-This fn burps if a different /t: argument is found.
-
-"
-  (interactive)
-  (let ((args initial-arglist)
-        arg
-        (found nil))
-    (while args
-      (setq arg (car args))
-      (cond
-       ((string-equal arg "/t:module") (setq found t))
-       ((string-match "^/t:" arg)
-        (setq found t)
-        (message "csharp-mode: WARNING /t: option present in arglist, and not /t:module; fix this.")))
-
-      (setq args (cdr args)))
-
-    (setq args
-          (if found
-              initial-arglist
-            (append (list "/t:module") initial-arglist)))
-
-    (if (called-interactively-p 'any)
-        (message "result: %s" (prin1-to-string args)))
-
-    args))
-
-
-(defun csharp-flymake-get-cmdline (source base-dir)
-  "Gets the cmd line for running a flymake session in a C# buffer.
-This gets called by flymake itself.
-
-The fn looks in the buffer for a line that looks like:
-
-  flymake: <command goes here>
-
-  (It should be embedded into a comment)
-
-Typically the command will be a line that runs nmake.exe,
-msbuild.exe, or csc.exe, with various options. It should
-eventually run the CSC.exe compiler, or something else that emits
-error messages in the same form as the C# compiler, like FxCopCmd.exe
-
-Some notes on implementation:
-
-  1. csharp-mode copies the buffer to a temporary file and
-     compiles *that*.  This temporary file has a different name
-     than the actual file name for the buffer - _flymake gets
-     appended to the basename.  Therefore, you should specify
-     Foo_flymake.cs for the filename, if you want to explicitly
-     refer to it.
-
-     If you want to refer to it implicitly, you can use the special
-     token \"@@SRC@@\" in the command. It will get replaced with the
-     name of the temporary file at runtime. If you want to refer to
-     the original name of the buffer, use @@ORIG@@.
-
-  2. In general, when running the compiler, you should use a
-     target type of \"module\" (eg, /t:module) to allow
-     csharp-mode to clean up the products of the build.
-
-  3. See `csharp-cmd-line-limit' for a way to restrict where
-     csharp-mode will search for the command.
-
-  4. If this string is not found, then this fn will fallback to
-     a generic, generated csc.exe command.
-
-"
-  (let ((explicitly-specified-command
-         (csharp-get-value-from-comments "flymake" csharp-cmd-line-limit)))
-
-    (cond
-     (explicitly-specified-command
-
-      ;; the marker string was found in the buffer
-      (let ((tokens (csharp-split-string-respecting-quotes
-                      (csharp-replace-command-tokens explicitly-specified-command))))
-
-        (list (car tokens) (cdr tokens))))
-
-        ;; ;; implicitly append? the name of the temporary source file
-        ;; (list (car tokens) (append (cdr tokens) (list flymake-temp-source-file-name)))))
-
-     (t
-      ;; fallback
-      (list "csc.exe"
-            (append (csharp-flymake-get-final-csc-arguments
-                     csharp-flymake-csc-arguments)
-                    (list source)))))))
-
-
-;; (defun csharp-flymake-get-cmdline (source base-dir)
-;;   "Gets the cmd line for running a flymake session in a C# buffer.
-;; This gets called by flymake itself.
-;;
-;; The fn looks in the buffer for a line that looks like:
-;;
-;;   flymake: <command goes here>
-;;
-;;   (It should be embedded into a comment)
-;;
-;; Typically the command will be a line that runs nmake.exe,
-;; msbuild.exe, or cscc.exe, with various options. It should
-;; eventually run the CSC.exe compiler, or something else that emits
-;; error messages in the same form as the C# compiler.
-;;
-;; In general, when running the compiler, you should use a target
-;; type of \"module\" (eg, /t:module) to allow csharp-mode to
-;; clean up the products of the build.
-;;
-;; See `csharp-cmd-line-limit' for a way to restrict where
-;; csharp-mode will search for the command.
-;;
-;; If this string is not found, then this fn will fallback to a
-;; generic, generated csc.exe command.
-;;
-;; "
-;;   (let ((explicitly-specified-command
-;;          (let ((line-limit csharp-cmd-line-limit)
-;;                start search-limit found)
-;;            ;; determine what lines to look in
-;;            (save-excursion
-;;              (save-restriction
-;;                (widen)
-;;                (cond ((> line-limit 0)
-;;                       (goto-char (setq start (point-min)))
-;;                       (forward-line line-limit)
-;;                       (setq search-limit (point)))
-;;                      ((< line-limit 0)
-;;                       (goto-char (setq search-limit (point-max)))
-;;                       (forward-line line-limit)
-;;                       (setq start (point)))
-;;                      (t                        ;0 => no limit (use with care!)
-;;                       (setq start (point-min))
-;;                       (setq search-limit (point-max))))))
-;;
-;;            ;; look in those lines
-;;            (save-excursion
-;;              (save-restriction
-;;                (widen)
-;;                (if (and start
-;;                         (< (goto-char start) search-limit)
-;;                         (re-search-forward "\\bflymake-command[ \t]*:[ \t]*\\(.+\\)$" search-limit 'move))
-;;
-;;                    (buffer-substring-no-properties
-;;                     (match-beginning 1)
-;;                     (match-end 1))))))))
-;;
-;;     (cond
-;;      (explicitly-specified-command
-;;       ;; the marker string was found in the buffer
-;;       (let ((tokens (csharp-split-string-respecting-quotes
-;;                      explicitly-specified-command)))
-;;         ;; implicitly append the name of the temporary source file
-;;         (list (car tokens) (append (cdr tokens) (list flymake-temp-source-file-name)))))
-;;
-;;      (t
-;;       ;; fallback
-;;       (list "csc.exe"
-;;             (append (csharp-flymake-get-final-csc-arguments
-;;                      csharp-flymake-csc-arguments)
-;;                     (list source)))))))
-
-
-
-
-
-(defun csharp-flymake-install ()
-  "Change flymake variables and fns to work with C#.
-
-This fn does these things:
-
-1. add a C# entry to the flymake-allowed-file-name-masks,
-   or replace it if it already exists.
-
-2. add a C# entry to flymake-err-line-patterns.
-   This isn't strictly necessary because of item #4.
-
-3. override the definition for flymake-process-sentinel
-   to NOT check the process status on exit. MSBuild.exe
-   sets a non-zero status code when compile errors occur,
-   which causes flymake to disable itself with the regular
-   flymake-process-sentinel.
-
-4. redefine flymake-start-syntax-check-process to unset the
-   query-on-exit flag for flymake processes. This allows emacs to
-   exit even if flymake is currently running.
-
-5. provide advice to flymake-parse-line and
-   flymake-parse-err-lines, specifically set up for C#
-   buffers. This allows optimized searching for errors in csc.exe
-   output, and storing column numbers, for use in #6.
-
-6. define advice to flymake-goto-line , to allow it to goto the
-   appropriate column for the error on a given line. This advice
-   looks in flymake-er-info, a list, and uses the heuristic that
-   the first error that matches the given line number, is the error
-   we want. This will break if there is more than one error on a
-   single line.
-
-"
-
-  (flymake-log 2 "csharp-flymake-install")
-
-  (or csharp--flymake-has-been-installed
-      (progn
-
-  ;; 1. add a C# entry to the flymake-allowed-file-name-masks
-  (let* ((key "\\.cs\\'")
-         (csharpentry (assoc key flymake-allowed-file-name-masks)))
-    (if csharpentry
-        (setcdr csharpentry '(csharp-flymake-init csharp-flymake-cleanup))
-      (add-to-list
-       'flymake-allowed-file-name-masks
-       (list key 'csharp-flymake-init 'csharp-flymake-cleanup))))
-
-
-  ;; 2. add a C# entry to flymake-err-line-patterns
-  ;;
-  ;; The value of each entry is a list, (STRING IX1 IX2 IX3 IX4), where
-  ;; STRING is the regex, and the other 4 values are indexes into the
-  ;; regex captures for the filename, line, column, and error text,
-  ;; respectively.
-  (add-to-list
-   'flymake-err-line-patterns
-   (list csharp-flymake-csc-error-pattern 1 2 3 4))
-
-
-
-  ;; 3.  override the definition for flymake-process-sentinel
-  ;;
-  ;; DPC - 2011 Feb 26
-  ;; Redefining a function is a bit unusual, but I think it is necessary
-  ;; to remove the check on process exit status.  For VBC.exe, it gives
-  ;; a 1 status when compile errors result. Likewise msbuild.exe.  This
-  ;; means flymake turns itself off, which we don't want. This really
-  ;; ought to be tunable in flymake, but I guess no one asked for that
-  ;; feature yet.
-  (defun flymake-process-sentinel (process event)
-    "Sentinel for syntax check buffers."
-    (when (memq (process-status process) '(signal exit))
-      (let* ((exit-status       (process-exit-status process))
-             (command           (process-command process))
-             (source-buffer     (process-buffer process))
-             (cleanup-f         (flymake-get-cleanup-function (buffer-file-name source-buffer))))
-
-        (flymake-log 2 "process %d exited with code %d"
-                     (process-id process) exit-status)
-        (condition-case err
-            (progn
-              (flymake-log 3 "cleaning up using %s" cleanup-f)
-              (when (buffer-live-p source-buffer)
-                (with-current-buffer source-buffer
-                  (funcall cleanup-f)))
-
-              (delete-process process)
-              (setq flymake-processes (delq process flymake-processes))
-
-              (when (buffer-live-p source-buffer)
-                (with-current-buffer source-buffer
-
-                  (flymake-parse-residual)
-                  ;;(flymake-post-syntax-check exit-status command)
-                  (flymake-post-syntax-check 0 command)
-                  (setq flymake-is-running nil))))
-          (error
-           (let ((err-str (format "Error in process sentinel for buffer %s: %s"
-                                  source-buffer (error-message-string err))))
-             (flymake-log 0 err-str)
-             (with-current-buffer source-buffer
-               (setq flymake-is-running nil))))))))
-
-
-  ;; 4. redefine this fn - the reason is to allow exit without query on
-  ;; flymake processes.  Not sure why this is not the default.
-  (defun flymake-start-syntax-check-process (cmd args dir)
-    "Start syntax check process."
-    (let* ((process nil))
-      (condition-case err
-          (progn
-            (when dir
-              (let ((default-directory dir))
-                (flymake-log 3 "starting process on dir %s" default-directory)))
-            (setq process (apply 'start-process "flymake-proc" (current-buffer) cmd args))
-
-            ;; dino - exit without query on active flymake processes
-            (set-process-query-on-exit-flag process nil)
-
-            (set-process-sentinel process 'flymake-process-sentinel)
-            (set-process-filter process 'flymake-process-filter)
-            (push process flymake-processes)
-
-            (setq flymake-is-running t)
-            (setq flymake-last-change-time nil)
-            (setq flymake-check-start-time (flymake-float-time))
-
-            (flymake-report-status nil "*")
-            (flymake-log 2 "started process %d, command=%s, dir=%s"
-                         (process-id process) (process-command process)
-                         default-directory)
-            process)
-        (error
-         (let* ((err-str (format "Failed to launch syntax check process '%s' with args %s: %s"
-                                 cmd args (error-message-string err)))
-                (source-file-name buffer-file-name)
-                (cleanup-f        (flymake-get-cleanup-function source-file-name)))
-           (flymake-log 0 err-str)
-           (funcall cleanup-f)
-           (flymake-report-fatal-status "PROCERR" err-str))))))
-
-
-  ;; 5. define some advice for the error parsing
-  (defadvice flymake-parse-err-lines-remove (before
-                                      csharp-flymake-parse-line-patch-1
-                                      activate compile)
-    (if (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
-        ;; clear the auxiliary line information list, when a new parse
-        ;; starts.
-        (setq csharp-flymake-aux-error-info nil)))
-
-  (defadvice flymake-parse-line-remove (around
-                                 csharp-flymake-parse-line-patch-2
-                                 activate compile)
-    ;; This advice will run in all buffers.  Let's may sure we
-    ;; actually execute the important stiff only when a C# buffer is active.
-    (if (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
-
-        (let (raw-file-name
-              e-text
-              result
-              (pattern (list csharp-flymake-csc-error-pattern 1 2 3 4))
-              (line-no 0)
-              (col-no 0)
-              (err-type "e"))
-          (if (string-match (car pattern) line)
-              (let* ((file-idx (nth 1 pattern))
-                     (line-idx (nth 2 pattern))
-                     (col-idx (nth 3 pattern))
-                     (e-idx (nth 4 pattern)))
-                (flymake-log 3 "parse line: fx=%s lx=%s ex=%s"
-                             file-idx line-idx e-idx)
-                (setq raw-file-name (if file-idx (match-string file-idx line) nil))
-                (setq line-no       (if line-idx (string-to-number (match-string line-idx line)) 0))
-                (setq col-no        (if col-idx  (string-to-number (match-string col-idx line)) 0))
-                (setq e-text      (if e-idx
-                                      (match-string e-idx line)
-                                    (flymake-patch-e-text (substring line (match-end 0)))))
-                (or e-text (setq e-text "<no error text>"))
-                (if (and e-text (string-match "^[wW]arning" e-text))
-                    (setq err-type "w"))
-                (flymake-log 3 "parse line: fx=%s/%s lin=%s/%s col=%s/%s text=%s"
-                             file-idx raw-file-name
-                             line-idx line-no
-                             col-idx (prin1-to-string col-no)
-                             e-text)
-
-                ;; add one entry to the list of auxiliary error information.
-                (add-to-list 'csharp-flymake-aux-error-info
-                             (list line-no col-no))
-
-                (setq ad-return-value
-                      (flymake-ler-make-ler raw-file-name line-no err-type e-text nil))
-                )))
-
-      ;; else - not in a C# buffer
-      ad-do-it))
-
-
-  ;; 6. finally, define some advice for the line navigation.  It moves
-  ;; to the proper column, given the line number containing the
-  ;; error. It first calls the normal `flymake-goto-line', and assumes
-  ;; that the result is that the cursor is on the line that contains the
-  ;; error.  At exit from that fn, the column is not important. This advice
-  ;; sets the column.
-  (defadvice flymake-goto-line-remove (around
-                                csharp-flymake-goto-line-patch
-                                activate compile)
-    ;; This advice will run in all buffers.  Let's may sure we
-    ;; actually execute the important stuff only when a C# buffer is active.
-    ad-do-it
-    (if (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
-        (let* ((lno (ad-get-arg 0))
-              (epair (assoc lno csharp-flymake-aux-error-info)))
-          (if epair
-              (forward-char (- (cadr epair) (current-column) 1))))))
-
-
-  ;; 7. finally, set the flag
-  (setq csharp--flymake-has-been-installed t))))
-
-
-
-;; Need to temporarily turn off flymake while reverting.
-;; There' some kind of race-condition where flymake is trying
-;; to compile while the buffer is being changed, and that
-;; causes flymake to choke.
-(defadvice revert-buffer (around
-                          csharp-advise-revert-buffer
-                          activate compile)
-  (let ((is-flymake-enabled
-         (and (fboundp 'flymake-mode)
-              flymake-mode)))
-    ;; disable
-    (if is-flymake-enabled
-        (flymake-mode-off))
-
-    ;; revert
-    ad-do-it
-
-    ;; enable
-    (if is-flymake-enabled
-        (flymake-mode-on))))
-
-;; ++++++++++++++++++++++
-
-
 
 
 ;; ========================================================================
@@ -3226,600 +2154,6 @@ to the beginning of the prior namespace.
 ;; that all submenus must appear at the top of any menu. Why?  I don't
 ;; know. This advice disables that weirdness in C# buffers.
 
-(defadvice imenu--split-menu (around
-                              csharp--imenu-split-menu-patch
-                              activate compile)
-  ;; This advice will run in all buffers.  Let's may sure we
-  ;; actually execute the important bits only when a C# buffer is active.
-  (if (and (string-match "\\.[Cc][Ss]$"  (file-relative-name buffer-file-name))
-           (boundp 'csharp-want-imenu)
-           csharp-want-imenu)
-      (let ((menulist (copy-sequence menulist))
-            keep-at-top)
-        (if (memq imenu--rescan-item menulist)
-            (setq keep-at-top (list imenu--rescan-item)
-                  menulist (delq imenu--rescan-item menulist)))
-        ;; This is the part from the original imenu code
-        ;; that puts submenus at the top.  huh? why?
-        ;; --------------------------------------------
-        ;; (setq tail menulist)
-        ;; (dolist (item tail)
-        ;;   (when (imenu--subalist-p item)
-        ;;     (push item keep-at-top)
-        ;;     (setq menulist (delq item menulist))))
-        (if imenu-sort-function
-            (setq menulist (sort menulist imenu-sort-function)))
-        (if (> (length menulist) imenu-max-items)
-            (setq menulist
-                  (mapcar
-                   (lambda (menu)
-                     (cons (format "From: %s" (caar menu)) menu))
-                   (imenu--split menulist imenu-max-items))))
-        (setq ad-return-value
-              (cons title
-                    (nconc (nreverse keep-at-top) menulist))))
-    ;; else
-    ad-do-it))
-
-
-;;
-;; I used this to examine the performance of the imenu scanning.
-;; It's not necessary during normal operation.
-;;
-;; (defun csharp-imenu-begin-profile ()
-;;   "turn on profiling"
-;;   (interactive)
-;;   (let ((fns '(csharp--on-class-open-curly-p
-;;              csharp--on-namespace-open-curly-p
-;;              csharp--on-ctor-open-curly-p
-;;              csharp--on-enum-open-curly-p
-;;              csharp--on-intf-open-curly-p
-;;              csharp--on-prop-open-curly-p
-;;              csharp--on-indexer-open-curly-p
-;;              csharp--on-defun-open-curly-p
-;;              csharp--imenu-create-index-helper
-;;              looking-back
-;;              looking-at)))
-;;     (if (fboundp 'elp-reset-all)
-;;         (elp-reset-all))
-;;     (mapc 'elp-instrument-function fns)))
-
-
-
-(defun csharp--imenu-remove-param-names-from-paramlist (s)
-  "The input string S is a parameter list, of the form seen in a
-C# method.  TYPE1 NAME1 [, TYPE2 NAME2 ...]
-
-This fn returns a string of the form TYPE1 [, TYPE2...]
-
-Upon entry, it's assumed that the parens included in S.
-
-"
-  (if (string= s "()")
-      s
-    (save-match-data
-      (let* (new
-             (state 0)  ;; 0 => ws, 1=>slurping param...
-             c
-             cs
-             nesting
-             need-type
-             ix2
-             (s2 (substring s 1 -1))
-             (len (length s2))
-             (i (1- len)))
-
-        (while (> i 0)
-          (setq c (aref s2 i) ;; current character
-                cs (char-to-string c)) ;; s.t. as a string
-
-          (cond
-
-           ;; backing over whitespace "after" the param
-           ((= state 0)
-            (cond
-             ;; more ws
-             ((string-match "[ \t\f\v\n\r]" cs)
-              t)
-             ;; a legal char for an identifier
-             ((string-match "[A-Za-z_0-9]" cs)
-              (setq state 1))
-             (t
-              (error "unexpected char (A)"))))
-
-
-           ;; slurping param name
-           ((= state 1)
-            (cond
-             ;; ws signifies the end of the param
-             ((string-match "[ \t\f\v\n\r]" cs)
-              (setq state 2))
-             ;; a legal char for an identifier
-             ((string-match "[A-Za-z_0-9]" cs)
-              t)
-             (t
-              (error "unexpected char (B)"))))
-
-
-           ;; ws between typespec and param name
-           ((= state 2)
-            (cond
-             ((string-match "[ \t\f\v\n\r]" cs)
-              t)
-             ;; non-ws indicates the type spec is beginning
-             (t
-              (incf i)
-              (setq state 3
-                    need-type nil
-                    nesting 0
-                    ix2 i))))
-
-
-           ;; slurping type
-           ((= state 3)
-            (cond
-             ((= ?> c) (incf nesting))
-             ((= ?< c)
-              (decf nesting)
-              (setq need-type t))
-
-             ;; ws or comma maybe signifies the end of the typespec
-             ((string-match "[ \t\f\v\n\r,]" cs)
-              (if (and (= nesting 0) (not need-type))
-                  (progn
-                    (setq new (cons (substring s2 (1+ i) ix2) new))
-                    (setq state
-                          (if (= c ?,) 0 4)))))
-
-             ((string-match "[A-Za-z_0-9]" cs)
-              (setq need-type nil))))
-
-
-           ;; awaiting comma or b-o-s
-           ((= state 4)
-            (cond
-
-             ((= ?, c)
-              (if  (= nesting 0)
-                  (setq state 0)))
-
-             ((string-match "[ \t\f\v\n\r]" cs)
-              t)
-
-             ((= 93 c) (incf nesting)) ;; sq brack
-             ((= 91 c)  ;; open sq brack
-              (decf nesting))
-
-             ;; handle this (extension methods), out, ref, params
-             ((and (>= i 5)
-                   (string= (substring s2 (- i 5) (1+ i)) "params"))
-              (setf (car new) (concat "params " (car new)))
-              (setq i (- i 5)))
-
-             ((and (>= i 3)
-                   (string= (substring s2 (- i 3) (1+ i)) "this"))
-              (setf (car new) (concat "this " (car new)))
-              (setq i (- i 3)))
-
-             ((and (>= i 2)
-                   (string= (substring s2 (- i 2) (1+ i)) "ref"))
-              (setf (car new) (concat "ref " (car new)))
-              (setq i (- i 2)))
-
-             ((and (>= i 2)
-                   (string= (substring s2 (- i 2) (1+ i)) "out"))
-              (setf (car new) (concat "out " (car new)))
-              (setq i (- i 2)))
-
-             (t
-              (error "unexpected char (C)"))))
-           )
-
-          (decf i))
-
-        (if (and (= state 3) (= nesting 0))
-            (setq new (cons (substring s2 i ix2) new)))
-
-        (concat "("
-                (if new
-                    (mapconcat 'identity new ", ")
-                  "")
-                ")")))))
-
-
-(defun csharp--imenu-item-basic-comparer (a b)
-  "Compares the car of each element, assumed to be a string."
-  (string-lessp (car a) (car b)))
-
-
-(defun csharp--imenu-get-method-name-from-sig (sig)
-  "Extract a method name with its parameter list from a method
-signature, SIG. This is used to aid in sorting methods by name,
-and secondarily by parameter list.
-
-For this input:
-
-    private Dict<String, int>  DoSomething(int, string)
-
-...the output is:
-
-   DoSomething(int, string)
-
-"
-  (let* (c
-         result
-         (state 0)
-         (len (length sig))
-         (i (1- len)))
-    (while (> i 0)
-      (setq c (aref sig i))
-
-      (cond
-       ((and (= state 0) (= c 40))
-        (setq state 1))
-
-       ((and (= state 1) (or (= c 9) (= c 32)))
-        (setq result (substring sig (1+ i))
-              i 0)))
-      (decf i))
-    result))
-
-
-
-(defun csharp--imenu-item-method-name-comparer (a b)
-  "Compares the method names in the respective cars of each element.
-
-The car of each element is assumed to be a string with multiple
-tokens in it, representing a method signature, including access
-modifier, return type, and parameter list (surrounded by parens).
-If the method takes no params, then it's just an empty pair of
-parens.
-
-This fn extracts the method name and param list from that
-signature and compares *that*.
-
-"
-  (let ((methoda (csharp--imenu-get-method-name-from-sig (car a)))
-        (methodb (csharp--imenu-get-method-name-from-sig (car b))))
-    ;;(csharp-log -1 "compare '%s' <> '%s'" methoda methodb)
-    (string-lessp methoda methodb)))
-
-
-
-(defun csharp--imenu-create-index-helper (&optional parent-ns indent-level
-                                                    consider-usings consider-namespaces)
-  "Helper fn for `csharp-imenu-create-index'.
-
-Scans a possibly narrowed section of a c# buffer.  It finds
-namespaces, classes, structs, enums, interfaces, and methods
-within classes and structs.
-
-The way it works: it looks for an open-curly.  If the open-curly
-is a namespace or a class, it narrows to whatever is inside the
-curlies, then recurses.
-
-Otherwise (the open-curly is neither of those things), this fn
-tries to recognize the open-curly as the beginning of an enum,
-method, or interface.
-
-If it succeeds, then a menu item is created for the thing. Then
-it jumps to the matching close-curly, and continues. Stop when no
-more open-curlies are found.
-
-"
-
-  ;; A C# module consists of zero of more explicitly denoted (and
-  ;; possibly nested) namespaces. In the absence of an
-  ;; explicitly-denoted namespace, the global namespace is implicitly
-  ;; applied.  Within each namespace there can be zero or more
-  ;; "container" things - like class, struct, or interface; each with
-  ;; zero or more indexable items - like methods, constructors.
-  ;; and so on.
-
-  ;; This fn parses the module and indexes those items, creating a
-  ;; hierarchically organized list to describe them.  Each container
-  ;; (ns/class/struct/etc) is represented on a separate submenu.
-
-  ;; It works like this:
-  ;; (start at the top of the module)
-  ;;
-  ;; 1. look for a using clause
-  ;;    yes - insert an item in the menu; move past all using clauses.
-  ;;
-  ;; 2. go to next open curly
-  ;;
-  ;; 2. beginning of a container? (a class or namespace)
-  ;;
-  ;;    yes - narrow, and recurse
-  ;;
-  ;;    no - create a menu item for the thing, whatever it is.  add to
-  ;;         the submenu. Go to the end of the thing (to the matching
-  ;;         close curly) then goto step 1.
-  ;;
-
-  (let (container-name
-        (pos-last-curly -1)
-        this-flavor
-        this-item
-        this-menu
-        found-usings
-        done)
-
-    (while (not done)
-
-      ;; move to the next thing
-      (c-forward-syntactic-ws)
-      (cond
-       ((and consider-usings
-             (re-search-forward (csharp--regexp 'using-stmt) (point-max) t))
-        (goto-char (match-beginning 1))
-        (setq found-usings t
-              done nil))
-
-       ((re-search-forward "{" (point-max) t)
-        (if (= pos-last-curly (point))
-            (progn
-              ;;(csharp-log -1 "imenu: No advance? quitting (%d)" (point))
-              (setq done t)) ;; haven't advanced- likely a loop
-
-          (setq pos-last-curly (point))
-          (let ((literal (csharp-in-literal)))
-            ;; skip over comments?
-            (cond
-
-             ((memq literal '(c c++))
-              (while (memq literal '(c c++))
-                (end-of-line)
-                (forward-char 1)
-                (setq literal (csharp-in-literal)))
-              (if (re-search-forward "{" (point-max) t)
-                  (forward-char -1)
-                ;;(csharp-log -1 "imenu: No more curlies (A) (%d)" (point))
-                (setq done t)))
-
-             ((eq literal 'string)
-              (if  (re-search-forward "\"" (point-max) t)
-                  (forward-char 1)
-                ;;(csharp-log -1 "imenu: Never-ending string? posn(%d)" (point))
-                (setq done t)))
-
-             (t
-              (forward-char -1)))))) ;; backup onto the curly
-
-       (t
-        ;;(csharp-log -1 "imenu: No more curlies (B) posn(%d)" (point))
-        (setq done t)))
-
-
-      (if (not done)
-          (cond
-
-           ;; case 1: open curly for an array initializer
-           ((looking-back "\\[\\][ \t\n\r]*")
-            (forward-sexp 1))
-
-           ;; case 2: just jumped over a string
-           ((looking-back "\"")
-            (forward-char 1))
-
-           ;; case 3: at the head of a block of using statements
-           (found-usings
-            (setq found-usings nil
-                  consider-usings nil) ;; only one batch
-            (let ((first-using (match-beginning 1))
-                  (count 0)
-                  marquis
-                  ;; don't search beyond next open curly
-                  (limit (1-
-                          (save-excursion
-                            (re-search-forward "{" (point-max) t)))))
-
-              ;; count the using statements
-              (while (re-search-forward (csharp--regexp 'using-stmt) limit t)
-                (incf count))
-
-              (setq marquis (if (eq count 1) "using (1)"
-                              (format "usings (%d)" count)))
-              (push (cons marquis first-using) this-menu)))
-
-
-           ;; case 4: an interface or enum inside the container
-           ;; (must come before class / namespace )
-           ((or (csharp--on-intf-open-curly-p)
-                (csharp--on-enum-open-curly-p))
-              (setq consider-namespaces nil
-                    consider-usings nil
-                    this-menu
-                    (append this-menu
-                            (list
-                             (cons (concat
-                                    (match-string-no-properties 1) ;; thing flavor
-                                    " "
-                                    (match-string-no-properties 2)) ;; intf name
-                                   (match-beginning 1)))))
-              (forward-sexp 1))
-
-
-           ;; case 5: at the start of a container (class, namespace)
-           ((or (and consider-namespaces (csharp--on-namespace-open-curly-p))
-                (csharp--on-class-open-curly-p)
-                (csharp--on-genclass-open-curly-p))
-
-            ;; produce a fully-qualified name for this thing
-            (if (string= (match-string-no-properties 1) "namespace")
-                (setq this-flavor (match-string-no-properties 1)
-                      this-item (match-string-no-properties 2))
-              (setq this-flavor (match-string-no-properties 2)
-                    this-item (match-string-no-properties 3)
-                    consider-usings nil
-                    consider-namespaces nil))
-
-            (setq container-name (if parent-ns
-                                     (concat parent-ns "." this-item)
-                                   this-item))
-
-            ;; create a submenu
-            (let (submenu
-                  (top (match-beginning 1))
-                  (open-curly (point))
-                  (close-curly (save-excursion
-                                 (forward-sexp 1)
-                                 (point))))
-              (setq submenu
-                    (list
-                     (concat this-flavor " " container-name)
-                     (cons "(top)" top)))
-
-              ;; find all contained items
-              (save-restriction
-                (narrow-to-region (1+ open-curly) (1- close-curly))
-
-                (let* ((yok (string= this-flavor "namespace"))
-                       (child-menu
-                        (csharp--imenu-create-index-helper container-name
-                                                           (concat indent-level "  ")
-                                                           yok yok)))
-                  (if child-menu
-                      (setq submenu
-                            (append submenu
-                                    (sort child-menu
-                                          'csharp--imenu-item-basic-comparer))))))
-              (setq submenu
-                    (append submenu
-                            (list (cons "(bottom)" close-curly))))
-
-              (setq this-menu
-                    (append this-menu (list submenu)))
-
-              (goto-char close-curly)))
-
-
-           ;; case 6: a property
-           ((csharp--on-prop-open-curly-p)
-            (setq consider-namespaces nil
-                  consider-usings nil
-                  this-menu
-                  (append this-menu
-                          (list
-                           (cons (concat
-                                  "prop "
-                                  (match-string-no-properties 3)) ;; prop name
-                                 (match-beginning 1)))))
-            (forward-sexp 1))
-
-
-           ;; case 7: an indexer
-           ((csharp--on-indexer-open-curly-p)
-            (setq consider-namespaces nil
-                    consider-usings nil
-                    this-menu
-                    (append this-menu
-                            (list
-                             (cons (concat
-                                    "indexer "
-                                    (match-string-no-properties 4)) ;; index type
-                                   (match-beginning 1)))))
-            (forward-sexp 1))
-
-
-           ;; case 8: a constructor inside the container
-           ((csharp--on-ctor-open-curly-p)
-            (setq consider-namespaces nil
-                  consider-usings nil
-                  this-menu
-                  (append this-menu
-                          (list
-                           (cons (concat
-                                  "ctor "
-                                  (match-string-no-properties 2) ;; ctor name
-                                  (csharp--imenu-remove-param-names-from-paramlist
-                                   (match-string-no-properties 3))) ;; ctor params
-                                 (match-beginning 1)))))
-            (forward-sexp 1))
-
-
-           ;; case 9: a method inside the container
-           ((csharp--on-defun-open-curly-p)
-            (setq consider-namespaces nil
-                  consider-usings nil
-                  this-menu
-                  (append this-menu
-                          (list
-                           (cons (concat
-                                  "method "
-                                  (match-string-no-properties 2) ;; return type
-                                  " "
-                                  (match-string-no-properties 3) ;; func name
-                                  (csharp--imenu-remove-param-names-from-paramlist
-                                   (match-string-no-properties 4))) ;; fn params
-                                 (match-beginning 1)))))
-            (forward-sexp 1))
-
-
-           ;; case 10: unknown open curly - just jump over it.
-           ((looking-at "{")
-            (forward-sexp 1))
-
-           ;; case 11: none of the above. shouldn't happen?
-           (t
-            (forward-char 1)))))
-
-    this-menu))
-
-
-;; =======================================================
-;; DPC Thu, 19 May 2011  11:25
-;; There are two challenges with the imenu support: generating the
-;; index, and generating a reasonable display for the index.  The index
-;; generation is pretty straightforward: use regexi to locate
-;; interesting stuff in the buffer.
-;;
-;; The menu generation is a little trickier.  Long lists of methods
-;; mixed with properties and interfaces (etc) will be displayed in the
-;; menu but will look Very Bad. Better to organize the menu into
-;; submenus, organized primarily by category.  Also the menus should be
-;; sorted, for ease of human scanning.  The next section of logic is
-;; designed to do the stuff for the menu generation.
-
-
-(defcustom csharp-imenu-max-similar-items-before-extraction 6
-  "The maximum number of things of a particular
-category (constructor, property, method, etc) that will be
-separely displayed on an imenu without factoring them into a
-separate submenu.
-
-For example, if a module has 3 consructors, 5 methods, and 7
-properties, and the value of this variable is 4, then upon
-refactoring, the constructors will remain in the toplevel imenu
-and the methods and properties will each get their own
-category-specific submenu.
-
-See also `csharp-imenu-min-size-for-sub-submenu'.
-
-For more information on how csharp-mode uses imenu,
-see `csharp-want-imenu', and `csharp-mode'.
-"
-  :type 'integer
-  :group 'csharp)
-
-
-(defcustom csharp-imenu-min-size-for-sub-submenu 18
-  "The minimum number of imenu items  of a particular
-category (constructor, property, method, etc) that will be
-broken out into sub-submenus.
-
-For example, if a module has 28 properties, then the properties will
-be placed in a submenu, and then that submenu with be further divided
-into smaller submenus.
-
-See also `csharp-imenu-max-similar-items-before-extraction'
-
-For more information on how csharp-mode uses imenu,
-see `csharp-want-imenu', and `csharp-mode'.
-"
-  :type 'integer
-  :group 'csharp)
-
 
 (defun csharp--first-word (s)
   "gets the first word from the given string.
@@ -3835,85 +2169,6 @@ It had better be a string!"
    ((string= s "ctor") "constructors")
    (t (concat s "s"))))
 
-
-(defun csharp--imenu-counts (list)
-  "Returns an alist, each item is a cons cell where the car is a
-unique first substring of an element of LIST, and the cdr is the
-number of occurrences of that substring in elements in the
-list.
-
-For a complicated imenu generated for a large C# module, the result of
-this fn will be something like this:
-
-    ((\"(top)\"        . 1)
-     (\"properties\"   . 38)
-     (\"methods\"      . 12)
-     (\"constructors\" . 7)
-     (\"(bottom)\"     . 1))
-
-"
-  (flet ((helper (list new)
-                 (if (null list) new
-                   (let* ((elt (car list))
-                          (topic (csharp--make-plural (csharp--first-word (car elt))))
-                          (xelt (assoc topic new)))
-                     (helper (cdr list)
-                             (if xelt
-                                 (progn (incf (cdr xelt)) new)
-                               (cons (cons topic 1) new)))))))
-    (nreverse (helper list nil))))
-
-
-
-(defun csharp--imenu-get-submenu-size (n)
-  "Gets the preferred size of submenus given N, the size of the
-flat, unparceled menu.
-
-Suppose there are 50 properties in a given C# module. This fn maps
-from that number, to the maximum size of the submenus into which the
-large set of properties should be broken.
-
-Currently the submenu size for 50 is 12.  To change this, change
-the lookup table.
-
-The reason it's a lookup table and not a simple arithmetic
-function: I think it would look silly to have 2 submenus each
-with 24 items.  Sixteen or 18 items on a submenu seems fine when
-you're working through 120 items total. But if you have only 28
-items, better to have 3 submenus with 10 and 9 items each.  So
-it's not a linear function. That's what this lookup tries to do.
-
-"
-  (let ((size-pairs '((100 . 22)
-                      (80 . 20)
-                      (60 . 18)
-                      (40 . 15)
-                      (30 . 14)
-                      (24 . 11)
-                      (0  . 9)))
-        elt
-        (r 0))
-
-    (while (and size-pairs (eq r 0))
-      (setq elt (car size-pairs))
-      (if (> n (car elt))
-          (setq r (cdr elt)))
-      (setq size-pairs (cdr size-pairs)))
-    r))
-
-
-
-(defun csharp--imenu-remove-category-names (menu-list)
-  "Input is a list, each element is (LABEL . LOCATION). This fn
-returns a modified list, with the first word - the category name
-- removed from each label.
-
-"
-  (mapcar (lambda (elt)
-            (let ((tokens (split-string (car elt) "[ \t]" t)))
-              (cons (mapconcat 'identity (cdr tokens) " ")
-                    (cdr elt))))
-          menu-list))
 
 (defun string-indexof (s c)
   "Returns the index of the first occurrence of character C in string S.
@@ -3938,7 +2193,7 @@ Returns nil if not found.
 See also, `string-indexof'
 
 "
-  (let ((i (length s))
+  (let ((i (1- (length s)))
         ix c2)
     (while (and (>= i 0) (not ix))
       (setq c2 (aref s i))
@@ -3948,311 +2203,6 @@ See also, `string-indexof'
     ix))
 
 
-(defun csharp--imenu-submenu-label (sig flavor)
-  "generate a submenu label from the given signature, SIG.
-The sig is a method signature, property type-and-name,
-constructor, and so on, indicated by FLAVOR.
-
-This fn returns a simple name that can be used in the label for a
-break out submenu.
-
-"
-  (if (string= flavor "method")
-      (let ((method-name (csharp--imenu-get-method-name-from-sig sig)))
-        (substring method-name 0 (string-indexof method-name 40)))
-    (substring sig (1+ (string-lastindexof sig 32)))))
-
-
-
-
-(defun csharp--imenu-break-one-menu-into-submenus (menu-list)
-  "Parcels a flat list MENU-LIST up into smaller sublists. It tries
-to balance the number of sublists and the size of each sublist.
-
-The max size of any sublist will be about 20 (arbitrary) and the
-min size will be 7 or so. See `csharp--imenu-get-submenu-size'
-for how this is done.
-
-It does this destructively, using `nbutlast'.
-
-Returns a new list, containing sublists.
-"
-
-  (let ((len (length menu-list))
-        (counts (csharp--imenu-counts menu-list)))
-
-    (cond
-     ;; a small number, and all the same flavor
-     ((and (< len csharp-imenu-min-size-for-sub-submenu) (= (length counts) 1))
-      (csharp--imenu-remove-category-names
-       (sort menu-list
-             (if (string= (caar counts) "methods")
-                 'csharp--imenu-item-method-name-comparer
-               'csharp--imenu-item-basic-comparer))))
-
-     ;; is the length already pretty short?
-     ((< len csharp-imenu-min-size-for-sub-submenu)
-      menu-list)
-
-     ((/= (length counts) 1)
-      menu-list)
-
-     (t
-      (let* ((lst    (sort menu-list
-                           (if (string= (caar counts) "methods")
-                               'csharp--imenu-item-method-name-comparer
-                             'csharp--imenu-item-basic-comparer)))
-             new
-             (sz     (csharp--imenu-get-submenu-size len)) ;; goal max size of sublist
-             (n      (ceiling (/ (* 1.0 len) sz))) ;; total number of sublists
-             (adj-sz (ceiling (/ (* 1.0 len) n)))  ;; maybe a little less than sz
-             (nsmall (mod (- adj-sz (mod len adj-sz)) adj-sz)) ;; num of (n-1) lists
-             (i      0)
-             (base-name (csharp--first-word (caar lst)))
-             label
-             chunksz
-             this-chunk)
-
-        (while lst
-          (setq chunksz (if (> nsmall i) (1- adj-sz) adj-sz)
-                this-chunk (csharp--imenu-remove-category-names
-                            (nthcdr (- len chunksz) lst))
-                lst (nbutlast lst chunksz)
-                ;;label (format "%s %d" plural-name (- n i))
-                label (concat "from " (csharp--imenu-submenu-label (caar this-chunk) base-name))
-                new (cons (cons label this-chunk) new)
-                len (- len chunksz))
-          (incf i))
-        new)))))
-
-
-
-(defun csharp--imenu-break-into-submenus (menu-list)
-  "For an imenu menu-list with category-based submenus,
-possibly break a submenu into smaller sublists, based on size.
-
-"
-  (mapcar (lambda (elt)
-            (if (imenu--subalist-p elt)
-                (cons (car elt)
-                      (csharp--imenu-break-one-menu-into-submenus (cdr elt)))
-              elt))
-          menu-list))
-
-
-
-
-
-(defun csharp--imenu-reorg-alist-intelligently (menu-alist)
-  "Accepts an imenu alist. Returns an alist, reorganized.
-Things get sorted, factored out into category submenus,
-and split into multiple submenus, where conditions warrant.
-
-For example, suppose this imenu alist is generated from a scan:
-
-    ((\"usings (4)\" . 1538)
-     (\"namespace Ionic.Zip\"
-      (\"(top)\" . 1651)
-      (\"partial class Ionic.Zip.ZipFile\"
-       (\"(top)\" . 5473)
-       (\"prop FullScan\" . 8036)
-           ...
-       (\"prop Comment\" . 21118)
-       (\"prop Verbose\" . 32278)
-       (\"method override String ToString\" . 96577)
-       (\"method internal void NotifyEntryChanged\" . 97608)
-          ....
-       (\"method internal void Reset\" . 98231)
-       (\"ctor ZipFile\" . 103598)
-           ...
-       (\"ctor ZipFile\" . 109723)
-       (\"ctor ZipFile\" . 116487)
-       (\"indexer int\" . 121232)
-       (\"indexer String\" . 124933)
-       (\"(bottom)\" . 149777))
-      (\"public enum Zip64Option\" . 153839)
-      (\"enum AddOrUpdateAction\" . 154815)
-      (\"(bottom)\" . 154893)))
-
-
-This is displayed as a toplevel menu with 2 items; the namespace
-menu has 5 items (top, bottom, the 2 enums, and the class).  The
-class menu has 93 items. It needs to be reorganized to be more usable.
-
-After transformation of the alist through this fn, the result is:
-
-    ((\"usings (4)\" . 1538)
-     (\"namespace Ionic.Zip\"
-      (\"(top)\" . 1651)
-      (\"partial class Ionic.Zip.ZipFile\"
-       (\"(top)\" . 5473)
-       (\"properties\"
-        (\"WriteStream\" . 146489)
-        (\"Count\" . 133827)
-            ....
-        (\"BufferSize\" . 12837)
-        (\"FullScan\" . 8036))
-       (\"methods\"
-        (\"virtual void Dispose\" . 144389)
-        (\"void RemoveEntry\" . 141027)
-           ....
-        (\"method override String ToString\" . 96577)
-        (\"method bool ContainsEntry\" . 32517))
-       (\"constructors\"
-        (\"ZipFile\" . 116487)
-           ....
-        (\"ZipFile\" . 105698)
-        (\"ZipFile\" . 103598))
-       (\"indexer int\" . 121232)
-       (\"indexer String\" . 124933)
-       (\"(bottom)\" . 149777))
-      (\"public enum Zip64Option\" . 153839)
-      (\"enum AddOrUpdateAction\" . 154815)
-      (\"(bottom)\" . 154893)))
-
-All menus are the same except the class menu, which has been
-organized into subtopics, each of which gets its own cascaded
-submenu.  If the submenu itself holds more than
-`csharp-imenu-max-similar-items-before-extraction' items that are
-all the same flavor (properties, methods, etc), thos get split
-out into multiple submenus.
-
-"
-  (let ((counts (csharp--imenu-counts menu-alist)))
-    (flet ((helper
-            (list new)
-            (if (null list)
-                new
-              (let* ((elt (car list))
-                     (topic (csharp--make-plural (csharp--first-word (car elt))))
-                     (xelt (assoc topic new)))
-                (helper
-                 (cdr list)
-                 (if xelt
-                     (progn
-                       (rplacd xelt (cons elt (cdr xelt)))
-                       new)
-                   (cons
-
-                    (cond
-                     ((> (cdr (assoc topic counts))
-                         csharp-imenu-max-similar-items-before-extraction)
-                      (cons topic (list elt)))
-
-                     ((imenu--subalist-p elt)
-                      (cons (car elt)
-                            (csharp--imenu-reorg-alist-intelligently (cdr elt))))
-                     (t
-                      elt))
-
-                    new)))))))
-
-      (csharp--imenu-break-into-submenus
-       (nreverse (helper menu-alist nil))))))
-
-
-
-
-(defun csharp-imenu-create-index ()
-  "This function is called by imenu to create an index for the
-current C# buffer, conforming to the format specified in
-`imenu--index-alist' .
-
-See `imenu-create-index-function' for background information.
-
-To produce the index, which lists the classes, functions,
-methods, and properties for the current buffer, this function
-scans the entire buffer.
-
-This can take a long time for a large buffer. The scan uses
-regular expressions that attempt to match on the general-case C#
-syntax, for classes and functions, generic types, base-classes,
-implemented interfaces, and so on. This can be time-consuming.
-For a large source file, say 160k, it can take 10 seconds or more.
-The UI hangs during the scan.
-
-imenu calls this fn when it feels like it, I suppose when it
-thinks the buffer has been updated. The user can also kick it off
-explicitly by selecting *Rescan* from the imenu menu.
-
-After generating the hierarchical list of props, methods,
-interfaces, classes, and namespaces, csharp-mode re-organizes the
-list as appropriate:
-
- - it extracts sets of like items into submenus. All properties
-   will be placed on a submenu. See
-   `csharp-imenu-max-similar-items-before-extraction' for a way
-   to tune this.
-
- - it converts those submenus into sub-submenus, if there are more than
-   `csharp-imenu-min-size-for-sub-submenu' items.
-
- - it sorts each set of items on the outermost menus lexicographically.
-
-The result of these transformations is what is provided to imenu
-to generate the visible menus.  Just FYI - the reorganization of
-the scan results is much much faster than the actual generation
-of the scan results. If you're looking to save time, the re-org
-logic is not where the cost is.
-
-imenu itself likes to sort the menus. See `imenu--split-menu' and
-also `csharp--imenu-split-menu-patch', which is advice that
-attempts to disable the weird re-jiggering that imenu performs.
-
-"
-  ;; I think widen/narrow causes the buffer to be marked as
-  ;; modified. This is a bit surprising, but I have no other
-  ;; explanation for the source of the problem.
-  ;; So I use `c-save-buffer-state' so that the buffer is not
-  ;; marked modified when the scan completes.
-
-  (c-save-buffer-state ()
-      (save-excursion
-        (save-restriction
-          (widen)
-          (goto-char (point-min))
-
-          (let ((index-alist
-                 (csharp--imenu-create-index-helper nil "" t t)))
-
-            (csharp--imenu-reorg-alist-intelligently index-alist)
-
-            ;;index-alist
-
-            ;; What follows is No longer used.
-            ;; =======================================================
-
-            ;; If the index menu contains exactly one element, and it is
-            ;; a namespace menu, then remove it.  This simplifies the
-            ;; menu, and results in no loss of information: all types
-            ;; get fully-qualified names anyway. This will probably
-            ;; cover the majority of cases; often a C# source module
-            ;; defines either one class, or a set of related classes
-            ;; inside a single namespace.
-
-            ;; To remove that namespace, we need to prune & graft the tree.
-            ;; Remove the ns hierarchy level, but also remove the 1st and
-            ;; last elements in the sub-menu, which represent the top and
-            ;; bottom of the namespace.
-
-            ;; (if (and
-            ;;      (= 1 (length index-alist))
-            ;;      (consp (car index-alist))
-            ;;      (let ((tokens (split-string
-            ;;                     (car (car index-alist))
-            ;;                     "[ \t]" t)))
-            ;;        (and (<= 1 (length tokens))
-            ;;             (string= (downcase
-            ;;                       (nth 0 tokens)) "namespace"))))
-            ;;
-            ;;     (let (elt
-            ;;           (newlist (cdar index-alist)))
-            ;;       (setf (car (car newlist))  (car (car index-alist)))
-            ;;       newlist)
-            ;;
-            ;;   index-alist)
-
-            )))))
 
 
 ;; ==================================================================
@@ -5209,6 +3159,74 @@ The return value is meaningless, and is ignored by cc-mode.
 ;;                ;; irrelevant menu alternatives.
 ;;                (cons "C#" (c-lang-const c-mode-menu csharp)))
 
+;;; Compilation regexps
+;; When invoked by MSBuild, csc’s errors look like this:
+;; subfolder\file.cs(6,18): error CS1006: Name of constructor must
+;; match name of class [c:\Users\user\project.csproj]
+
+(defun csharp--compilation-error-file-resolve ()
+  ;; http://stackoverflow.com/a/18049590/429091
+  (cons (match-string 1) (file-name-directory (match-string 4))))
+
+(defconst csharp-compilation-re-msbuild-error
+  (concat
+   "^[[:blank:]]*"
+   "\\([^(\r\n)]+\\)(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?): "
+   "error [[:alnum:]]+: [^[\r\n]+\\[\\([^]\r\n]+\\)\\]$")
+  "Regexp to match compilation error from msbuild.")
+
+(defconst csharp-compilation-re-msbuild-warning
+  (concat
+   "^[[:blank:]]*"
+   "\\([^(\r\n)]+\\)(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?): "
+   "warning [[:alnum:]]+: [^[\r\n]+\\[\\([^]\r\n]+\\)\\]$")
+  "Regexp to match compilation warning from msbuild.")
+
+(defconst csharp-compilation-re-xbuild-error
+  (concat
+   "^[[:blank:]]*"
+   "\\([^(\r\n)]+\\)(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?): "
+   "error [[:alnum:]]+: .+$")
+  "Regexp to match compilation error from xbuild.")
+
+(defconst csharp-compilation-re-xbuild-warning
+  (concat
+   "^[[:blank:]]*"
+   "\\([^(\r\n)]+\\)(\\([0-9]+\\)\\(?:,\\([0-9]+\\)\\)?): "
+   "warning [[:alnum:]]+: .+$")
+  "Regexp to match compilation warning from xbuild.")
+
+(eval-after-load 'compile
+  (lambda ()
+    (dolist
+        (regexp
+         `((xbuild-error
+            ,csharp-compilation-re-xbuild-error
+            1 2 3 2)
+           (xbuild-warning
+            ,csharp-compilation-re-xbuild-warning
+            1 2 3 1)
+           (msbuild-error
+            ,csharp-compilation-re-msbuild-error
+            csharp--compilation-error-file-resolve
+            2
+            3
+            2
+            nil
+            (1 compilation-error-face)
+            (4 compilation-error-face))
+           (msbuild-warning
+            ,csharp-compilation-re-msbuild-warning
+            csharp--compilation-error-file-resolve
+            2
+            3
+            1
+            nil
+            (1 compilation-warning-face)
+            (4 compilation-warning-face))))
+      (add-to-list 'compilation-error-regexp-alist-alist regexp)
+      (add-to-list 'compilation-error-regexp-alist (car regexp)))))
+
 ;;; Autoload mode trigger
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.cs$" . csharp-mode))
@@ -5216,14 +3234,14 @@ The return value is meaningless, and is ignored by cc-mode.
 
 (c-add-style "C#"
              '("Java"
-               (c-basic-offset . 8)
+               (c-basic-offset . 4)
                (c-comment-only-line-offset . (0 . 0))
                (c-offsets-alist . (
                                    (access-label          . -)
                                    (arglist-close         . c-lineup-arglist)
                                    (arglist-cont          . 0)
                                    (arglist-cont-nonempty . c-lineup-arglist)
-                                   (arglist-intro         . +)
+                                   (arglist-intro         . c-lineup-arglist-intro-after-paren)
                                    (block-close           . 0)
                                    (block-open            . 0)
                                    (brace-entry-open      . 0)
@@ -5273,84 +3291,13 @@ The return value is meaningless, and is ignored by cc-mode.
                                    (statement-cont        . +)
                                    (stream-op             . c-lineup-streamop)
                                    (string                . c-lineup-dont-change)
-                                   (substatement          . 0)
+                                   (substatement          . +)
                                    (substatement-open     . 0)
                                    (template-args-cont c-lineup-template-args +)
                                    (topmost-intro         . 0)
-                                   (topmost-intro-cont    . 0)
+                                   (topmost-intro-cont    . +)
                                    ))
                ))
-
-
-
-(defun csharp-guess-compile-command ()
-  "set `compile-command' intelligently depending on the
-current buffer, or the contents of the current directory.
-"
-  (interactive)
-  (set (make-local-variable 'compile-command)
-
-       (cond
-        ((or (file-expand-wildcards "*.csproj" t)
-             (file-expand-wildcards "*.vcproj" t)
-             (file-expand-wildcards "*.vbproj" t)
-             (file-expand-wildcards "*.shfbproj" t)
-             (file-expand-wildcards "*.sln" t))
-         (concat csharp-msbuild-tool " "))
-
-        ;; sometimes, not sure why, the buffer-file-name is
-        ;; not set.  Can use it only if set.
-        (buffer-file-name
-         (let ((filename (file-name-nondirectory buffer-file-name)))
-           (cond
-
-            ;; editing a c# file - check for an explicitly-specified command
-            ((string-equal (substring buffer-file-name -3) ".cs")
-             (let ((explicitly-specified-command
-                    (csharp-get-value-from-comments "compile" csharp-cmd-line-limit)))
-
-
-               (if explicitly-specified-command
-                   (csharp-replace-command-tokens explicitly-specified-command)
-                   (concat csharp-make-tool " " ;; assume a makefile exists
-                           (file-name-sans-extension filename)
-                           ".exe"))))
-
-            ;; something else - do a typical .exe build
-            (t
-             (concat csharp-make-tool " "
-                     (file-name-sans-extension filename)
-                     ".exe")))))
-        (t
-         ;; punt
-         (concat csharp-make-tool " ")))))
-
-
-
-(defun csharp-invoke-compile-interactively ()
-  "fn to wrap the `compile' function.  This simply
-checks to see if `compile-command' has been previously set, and
-if not, invokes `csharp-guess-compile-command' to set the value.
-Then it invokes the `compile' function, interactively.
-
-The effect is to guess the compile command only once, per buffer.
-
-I tried doing this with advice attached to the `compile'
-function, but because of the interactive nature of the fn, it
-didn't work the way I wanted it to. So this fn should be bound to
-the key sequence the user likes for invoking compile, like ctrl-c
-ctrl-e.
-
-"
-  (interactive)
-  (cond
-   ((not (boundp 'csharp-local-compile-command-has-been-set))
-    (csharp-guess-compile-command)
-    (set (make-local-variable 'csharp-local-compile-command-has-been-set) t)))
-  ;; local compile command has now been set
-  (call-interactively 'compile))
-
-
 
 
 ;;; The entry point into the mode
@@ -5380,10 +3327,6 @@ To run your own logic after csharp-mode starts, do this:
     (turn-on-font-lock)
     (turn-on-auto-revert-mode) ;; helpful when also using Visual Studio
     (setq indent-tabs-mode nil) ;; tabs are evil
-    (flymake-mode 1)
-    (yas/minor-mode-on)
-    (require 'rfringe)  ;; handy for flymake
-    (require 'flymake-cursor) ;; also handy for flymake
     ....your own code here...
   )
   (add-hook  'csharp-mode-hook 'my-csharp-mode-fn t)
@@ -5392,67 +3335,11 @@ To run your own logic after csharp-mode starts, do this:
 The function above is just a suggestion.
 
 
-Compile integration:
-========================
-
-csharp-mode binds the function `csharp-invoke-compile-interactively' to
-\"\C-x\C-e\" .  This function attempts to intellgently guess the format of the
-compile command to use for a buffer.  It looks in the comments at the head of
-the buffer for a line that begins with compile: .  For exammple:
-
-  // compile: csc.exe /t:library /r:Mylib.dll Foo.cs
-
-If csharp-mode finds a line like this, it will suggest the text that follows
-as the compilation command when running `compile' for the first time.  If such
-a line is not found, csharp-mode falls back to a msbuild or nmake command.
-See the documentation on `csharp-cmd-line-limit' for further information. If
-you don't want this magic, then you can just run `compile' directly, rather
-than `csharp-invoke-compile-interactively' .
-
-This mode will also automatically add a symbol and regexp to the
-`compilation-error-regexp-alist' and`compilation-error-regexp-alist-alist'
-respectively, for Csc.exe error and warning messages. If you invoke `compile',
-then `next-error' should work properly for error messages produced by csc.exe.
-
-
-Flymake Integraiton
-========================
-
-You can use flymake with csharp mode to automatically check the syntax of your
-csharp code, and highlight errors.  To do so, add a comment line like this to
-each .cs file that you use flymake with:
-
-   //  flymake: csc.exe /t:module /R:Foo.dll @@FILE@@
-
-csharp-mode replaces special tokens in the command with different values:
-
-  @@ORIG@@ - gets replaced with the original filename
-  @@FILE@@ - gets replaced with the name of the temporary file
-      created by flymake. This is usually what you want in place of the
-      name of the file to be compiled.
-
-See the documentation on `csharp-cmd-line-limit' for further information.
-
-You may also want to run a syntax checker, like fxcop:
-
-   //  flymake: fxcopcmd.exe /c /F:MyLibrary.dll
-
-In this case you don't need either of the tokens described above.
-
-If the module has no external dependencies, then you need not specify any
-flymake command at all. csharp-mode will implicitly act as if you had
-specified the command:
-
-     // flymake: csc.exe /t:module /nologo @@FILE@@
-
-It looks for the EXE on the path.  You can specify a full path if you like.
-
-
-YASnippet and IMenu Integraiton
+IMenu Integraiton
 ===============================
 
-Check the menubar for menu entries for YASnippet and Imenu; the latter
-is labelled \"Index\".
+Check the menubar for menu entries for Imenu; It is labelled
+\"Index\".
 
 The Imenu index gets computed when the file is .cs first opened and loaded.
 This may take a moment or two.  If you don't like this delay and don't
@@ -5486,6 +3373,14 @@ Key bindings:
     ;; customized values for our language.
     (c-init-language-vars csharp-mode)
 
+    ;; Set style to c# style unless a file local variable or default
+    ;; style is found, in which case it should be set after
+    ;; calling `c-common-init' below.
+    (unless (or c-file-style
+                (stringp c-default-style)
+                (assq 'csharp-mode c-default-style))
+      (c-set-style "c#" t))
+    
     ;; `c-common-init' initializes most of the components of a CC Mode
     ;; buffer, including setup of the mode menu, font-lock, etc.
     ;; There's also a lower level routine `c-basic-common-init' that
@@ -5493,39 +3388,7 @@ Key bindings:
     ;; analysis and similar things working.
     (c-common-init 'csharp-mode)
 
-    ;; compile
-    ;; (local-set-key "\C-j"  'csharp-invoke-compile-interactively)
-    (local-set-key "\C-j"  'compile)
-
-    ;; to allow next-error to work with csc.exe:
-    (setq compilation-scroll-output t)
-
-    ;; csc.exe, the C# Compiler, produces errors like this:
-    ;; file.cs(6,18): error CS1006: Name of constructor must match name of class
-    (if (boundp 'compilation-error-regexp-alist-alist)
-        (progn
-          (add-to-list
-           'compilation-error-regexp-alist-alist
-           '(ms-csharp "^[ \t]*\\([-_:A-Za-z0-9][^\n(]*\\.\\(?:cs\\|xaml\\)\\)(\\([0-9]+\\)[,]\\([0-9]+\\)) ?: \\(error\\|warning\\) CS[0-9]+:" 1 2 3))
-          (add-to-list
-           'compilation-error-regexp-alist
-           'ms-csharp)))
-
-    ;; flymake
-    ;; (eval-after-load "flymake"
-    ;;   '(progn
-    ;;      (if csharp-want-flymake-fixup
-    ;;          (csharp-flymake-install))))
-    (flymake-mode t)
-
-    (eval-after-load  "yasnippet"
-      '(progn
-         (if csharp-want-yasnippet-fixup
-             (csharp-yasnippet-fixup))))
-
-
     (local-set-key (kbd "/") 'csharp-maybe-insert-codedoc)
-    (local-set-key (kbd "{") 'csharp-insert-open-brace)
 
     ;; Need the following for parse-partial-sexp to work properly with
     ;; verbatim literal strings Setting this var to non-nil tells
@@ -5552,7 +3415,10 @@ Key bindings:
         (speedbar-add-supported-extension '(".cs"))) ;; idempotent
 
     (c-update-modeline)
-    (c-run-mode-hooks 'c-mode-common-hook 'csharp-mode-hook)
+    ;; run prog-mode-hooks if available
+    (if (boundp 'prog-mode-hook)
+	(c-run-mode-hooks 'prog-mode-hook 'c-mode-common-hook 'csharp-mode-hook)
+      (c-run-mode-hooks 'c-mode-common-hook 'csharp-mode-hook))
 
     ;; maybe do imenu scan after hook returns
     (if csharp-want-imenu
@@ -5576,337 +3442,6 @@ Key bindings:
 
     (set (make-local-variable 'comment-auto-fill-only-comments) t)
     )
-
-
-
-
-  ;; =======================================================
-  ;;
-  ;; This section attempts to workaround an anomalous display behavior
-  ;; for tooltips.  It's not strictly necessary, only for aesthetics.  The
-  ;; issue is that tooltips can get clipped.  This is the topic of Emacs
-  ;; bug #5908, unfixed in v23 and present in v22.
-
-
-  (defadvice tooltip-show (before
-                           flymake-for-csharp-fixup-tooltip
-                           (arg &optional use-echo-area)
-                           activate compile)
-    (progn
-      (if ;;(and (not use-echo-area) (eq major-mode 'csharp-mode))
-          (not use-echo-area)
-          (let ((orig (ad-get-arg 0)))
-            (ad-set-arg 0 (concat " " (cheeso-string-trim (cheeso-reform-string 74 orig) ?\ )))
-            ))))
-
-
-
-
-;; ========================================================================
-;; YA-snippet integration
-
-(defun csharp-yasnippet-fixup ()
-  "Sets snippets into ya-snippet for C#, if yasnippet is loaded,
-and if the snippets do not already exist.
-"
-  (if (not csharp--yasnippet-has-been-fixed)
-      (if (fboundp 'yas/snippet-table-fetch)
-          ;; yasnippet is present
-          (let ((snippet-table (yas/snippet-table 'csharp-mode))
-                (keymap (if yas/use-menu
-                            (yas/menu-keymap-for-mode 'csharp-mode)
-                          nil))
-                (yas/require-template-condition nil)
-                (builtin-snips
-                 '(
-  ("xmls" "{
-      XmlSerializer s1 = new XmlSerializer(typeof(${1:type}));
-
-      // use this to \"suppress\" the default xsd and xsd-instance namespaces
-      XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-      ns.Add(\"\", \"\");
-
-      s1.Serialize(new XTWFND(System.Console.Out), object, ns);
-      System.Console.WriteLine(\"\\n\");
-}
-
-  $0
-  /// XmlTextWriterFormattedNoDeclaration
-  /// helper class : eliminates the XML Documentation at the
-  /// start of a XML doc.
-  /// XTWFND = XmlTextWriterFormattedNoDeclaration
-  /// usage:       s1.Serialize(new XTWFND(System.Console.Out), thing, ns);
-
-  public class XTWFND : System.Xml.XmlTextWriter
-  {
-    public XTWFND(System.IO.StringWriter w) : base(w) { Formatting=System.Xml.Formatting.Indented;  }
-    public XTWFND(System.IO.TextWriter w) : base(w) { Formatting = System.Xml.Formatting.Indented; }
-    public XTWFND(System.IO.Stream s) : base(s, null) { Formatting = System.Xml.Formatting.Indented; }
-    public XTWFND(string filename) : base(filename, null) { Formatting = System.Xml.Formatting.Indented; }
-    public override void WriteStartDocument() { }
-  }
-
-" "xmlserializer { ... }" nil)
-  ("wl" "System.Console.WriteLine(${0://thing to do});
-" "WriteLine( ... );" nil)
-  ("while" "while (${1:condition})
-{
-    ${0://thing to do}
-}" "while (...) { ... }" nil)
-  ("using" "using (${1:type} ${2:var} = new ${1:type}(${4:ctor args}))
-{
-    ${5:// body...}
-}" "using ... { ... }" nil)
-  ("try" "try
-{
-  $0
-}
-catch (System.Exception exc1)
-{
-  throw new Exception(\"uncaught exception\", exc1);
-}" "try { ... } catch { ... }" nil)
-  ("sum" "/// <summary>
-///  ${1:description}
-/// </summary>
-///
-/// <remarks>
-///  ${2:comments}
-/// </remarks>
-" "/// <summary>..." nil)
-  ("sing" "#region Singleton ${1:className}
-public sealed class $1
-{
-    private readonly static $1 _instance = new $1();
-    public static $1 Instance  { get { return _instance; } }
-    static $1() { /* required for lazy init */ }
-    private $1()
-    {
-        // implementation here
-    }
-}
-
-#endregion
-" "public sealed class Singleton {...}" nil)
-  ("setting" " #region Property${1:PropName}
-
-    private string default$1 = ${2:defaultValue};
-    private string _$1;
-    public string $1
-    {
-        get
-        {
-                if (_$1 == null)
-                {
-                    _$1 = System.Configuration.ConfigurationManager.AppSettings[\"$1\"];
-
-                    if (string.IsNullOrEmpty(_$1))
-                    {
-                        _$1 = default$1;
-                    }
-                }
-                return this._$1;
-            }
-        set
-        {
-            string new$1 = value;
-            // optional validation:
-            //Validation.EnforceXxxx(new$1, \"$1\");
-            _$1 = new$1;
-        }
-    }
-
-#endregion
-" "config setting" nil)
-  ("prop" "private ${1:Type} _${2:Name};
-public ${1:Type} ${2:Name}
-{
-  get
-  {
-    ${3://get impl}
-  }
-
-  set
-  {
-    ${4://get impl}
-  }
-
-}" "property ... { ... }" nil)
-  ("pa" "        for (int i=0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-            case \"-?\":
-            case \"-help\":
-                throw new ArgumentException(args[i]);
-
-            default: // positional args
-                if ($2 != 0)
-                    // we have all the args we need
-                    throw new ArgumentException(args[i]);
-
-                if ($1 == null)
-                    $1 = args[i];
-
-                else
-                    $2 = System.Int32.Parse(args[i]);
-
-                break;
-            }
-        }
-
-        // check values
-        if ($1 == null)
-            throw new ArgumentException();
-
-        if ($2 == 0)
-            throw new ArgumentException();
-
-
-" "switch(args[0]) {...}" nil)
-  ("openread" "        using(Stream src = File.OpenRead($1))
-        {
-          using(Stream dest= File.Create($2))
-          {
-            if (compress)
-              Compress(src, dest);
-            else
-              Decompress(src, dest);
-          }
-        }
-" "File.OpenRead(...)" nil)
-  ("ofd" "var dlg = new System.Windows.Forms.OpenFileDialog();
-dlg.Filter = \"${1:filter string}\"; // ex: \"C# (*.cs)|*.cs|Text (*.txt)|*.txt\";
-if (dlg.ShowDialog() == DialogResult.OK)
-{
-    string fileName = dlg.FileName;
-    $0
-}
-" "new OpenFileDialog; if (DialogResult.OK) { ... }" nil)
-  ("ife" "if (${1:predicate})
-{
-  ${2:// then clause}
-}
-else
-{
-  ${3:// else clause}
-}" "if (...) { ... } else { ... }" nil)
-  ("fore" "foreach (${1:type} ${2:var} in ${3:IEnumerable})
-{
-    ${4:// body...}
-}" "foreach ... { ... }" nil)
-  ("for" "for (int ${1:index}=0; $1 < ${2:Limit}; $1++)
-{
-    ${3:// body...}
-}" "for (...) { ... }" nil)
-  ("fbd" "using (FolderBrowserDialog dialog = new FolderBrowserDialog())
-{
-    dialog.Description = \"Open a folder which contains the xml output\";
-    dialog.ShowNewFolderButton = false;
-    dialog.RootFolder = Environment.SpecialFolder.MyComputer;
-    if(dialog.ShowDialog() == DialogResult.OK)
-    {
-        string folder = dialog.SelectedPath;
-        foreach (string fileName in Directory.GetFiles(folder, \"*.xml\", SearchOption.TopDirectoryOnly))
-        {
-            SQLGenerator.GenerateSQLTransactions(Path.GetFullPath(fileName));
-        }
-    }
-}
-
-" "new FolderBrowserDialog; if (DialogResult.OK) { ... }" nil)
-  ("doc" "/// <summary>
-/// ${1:summary}
-/// </summary>
-///
-/// <remarks>
-/// ${2:remarks}
-/// </remarks>
-$0" "XML Documentation" nil)
-  ("conv" "  List<String> Values = new List<String>() { \"7\", \"13\", \"41\", \"3\" };
-
-  // ConvertAll maps the given delegate across all the List elements
-  var foo = Values.ConvertAll((s) => { return System.Convert.ToInt32(s); }) ;
-
-  System.Console.WriteLine(\"typeof(foo) = {0}\", foo.GetType().ToString());
-
-  Array.ForEach(foo.ToArray(),Console.WriteLine);
-" "ConvertAll((s) => { ... });" nil)
-  ("cla" "public class ${1:Classname}
-{
-  // default ctor
-  public ${1:Classname}()
-  {
-  }
-
-  ${2:// methods here}
-}" "class ... { ... }" nil)
-  ("ca" "  List<String> Values = new List<String>() { \"7\", \"13\", \"41\", \"3\" };
-
-  // ConvertAll maps the given delegate across all the List elements
-  var foo = Values.ConvertAll((s) => { return System.Convert.ToInt32(s); }) ;
-
-  System.Console.WriteLine(\"typeof(foo) = {0}\", foo.GetType().ToString());
-
-  Array.ForEach(foo.ToArray(),Console.WriteLine);
-" "ConvertAll((s) => { ... });" nil)
-  ("ass" "
-
-[assembly: AssemblyTitle(\"$1\")]
-[assembly: AssemblyCompany(\"${2:YourCoName}\")]
-[assembly: AssemblyProduct(\"${3}\")]
-[assembly: AssemblyCopyright(\"Copyright © ${4:Someone} 2011\")]
-[assembly: AssemblyTrademark(\"\")]
-[assembly: AssemblyCulture(\"\")]
-[assembly: AssemblyConfiguration(\"\")]
-[assembly: AssemblyDescription(\"${5}\")]
-[assembly: AssemblyVersion(\"${6:1.0.1.0}\")]
-[assembly: AssemblyFileVersion(\"${7:1.0.1.0}\")]
-
-" "assembly info" nil)
-  )))
-
-            (setq csharp--yasnippet-has-been-fixed t)
-
-            (add-to-list 'yas/known-modes 'csharp-mode)
-
-            ;; It's possible that Csharp-mode is not on the yasnippet menu
-            ;; Install it here.
-            (when yas/use-menu
-              (define-key
-                yas/menu-keymap
-                (vector 'csharp-mode)
-                `(menu-item "C#" ,keymap)))
-
-            ;; Insert the snippets from above into the table if they
-            ;; are not already defined.
-            (mapcar
-             '(lambda (item)
-                (let* ((full-key (car item))
-                       (existing-snip
-                        (yas/snippet-table-fetch snippet-table full-key)))
-                  (if (not existing-snip)
-                      (let* ((key (file-name-sans-extension full-key))
-                             (name (caddr item))
-                             (condition (nth 3 item))
-                             (template (yas/make-template (cadr item)
-                                                          (or name key)
-                                                          condition)))
-                        (yas/snippet-table-store snippet-table
-                                                 full-key
-                                                 key
-                                                 template)
-                        (when yas/use-menu
-                          (define-key keymap (vector (make-symbol full-key))
-                            `(menu-item ,(yas/template-name template)
-                                        ,(yas/make-menu-binding (yas/template-content template))
-                                        :keys ,(concat key yas/trigger-symbol))))))))
-             builtin-snips)))))
-
-
-
-
-(message  (concat "Done loading " load-file-name))
-
 
 (provide 'csharp-mode)
 
