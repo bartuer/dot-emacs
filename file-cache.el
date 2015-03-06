@@ -5,6 +5,18 @@
                                 "~/etc/el/vendor/fsharp-mode"
                                 "~/local/share/doc/fsharp/project"
                                 "~/org"
+                                "~/local/src/march_market/"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare/WEA_PhotoShare_WeChatWebRoleContent"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Business"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/css"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/image"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/js"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Logging"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Properties"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/SQL"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Tencent"
+                                "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Utility"
                                 "~/local/src/ypdj/doc"
                                 "~/local/src/ypdj/hack/be/azure_appush"
                                 "~/local/src/ypdj/hack/be/azure_appush/lib"
@@ -29,4 +41,3 @@
                                 "~/local/src/ypdj/hack/fe/components/view"
                                 "~/local/src/ypdj/hack/fe/layout"
 ))
-

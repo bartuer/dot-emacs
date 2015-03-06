@@ -406,6 +406,5 @@
      (widget-field ((t (:background "yellow3" :foreground "black"))))
      (widget-inactive ((t (:foreground "yellow"))))
      (widget-single-line-field ((t (:background "green3" :foreground "black"))))
-     (yas/field-highlight-face ((t (:background "blue"))))
-     (yas/mirror-highlight-face ((t (:background "blue")))))))
+)))
 (add-to-list 'color-themes '(bartuer-main-theme  "Main" "Bartuer"))
