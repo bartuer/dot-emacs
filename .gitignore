@@ -1,6 +1,8 @@
 *.elc
 .DS_Store
 emacs-nox.exe.stackdump
+/vendor/yasnippet-0.5
+/vendor/company-0.5
 /vendor/ruby-mode/.svn/all-wcprops
 /vendor/ruby-mode/.svn/entries
 /vendor/ruby-mode/.svn/format
