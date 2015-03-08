@@ -398,15 +398,13 @@ default POS is current position."
     (shell-command-on-region start end "tidy -i -xml -q -utf8 2>/dev/null" t)
     (indent-rigidly start (point) indent-col)
     (delete-backward-char 1))
-  (dom-tree))
+  )
 
 (defun xml-augment-hook ()
   (set (make-local-variable 'forward-sexp-function) 'xml-forward-adapt)
   ;; for html, implement indent region by indent line , will call too
   ;; much sgml-calculate-indent
-  (set (make-local-variable 'indent-region-function) 'xml-indent-region)
   (set (make-local-variable 'imenu-create-index-function) 'xml-imenu)
-  (define-key sgml-mode-map "\C-\M-h" 'xml-mark-sexp)
   (define-key html-mode-map "\C-\M-h" 'xml-mark-sexp) ;that would be shadow if not do this
   (define-key sgml-mode-map "\C-\M-u" 'xml-up)
   (define-key sgml-mode-map "\C-\M-d" 'xml-down)

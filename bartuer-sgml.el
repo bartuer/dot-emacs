@@ -1,6 +1,8 @@
 
 (defun bartuer-sgml-load ()
   "html mode modification"
+  (flyspell-mode-off)
+  (emmet-mode)
   (define-key html-mode-map "\C-cj" 'js-smart-toggle)
   (define-key sgml-mode-map "\C-cj" 'js-smart-toggle)
   (define-key html-mode-map "\C-c\C-j" 'js-toggle)
