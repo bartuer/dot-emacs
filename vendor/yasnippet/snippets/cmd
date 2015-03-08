@@ -1,5 +1,0 @@
-# name: cmd
-# --
-# name: shell ${1:`(file-name-nondirectory (buffer-file-name))`} ${2:describe_name}
-# --
-${3:module}:${4:signature}

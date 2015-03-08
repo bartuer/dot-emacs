@@ -21,6 +21,12 @@
 (key-chord-define-global "jf" 'er/expand-region)
 (key-chord-define-global "hg" 'er/contract-region)
 (space-chord-define-global "j" 'ace-jump-mode)
+
+(space-chord-define-global "o" 'helm-occur)
+(space-chord-define-global "f" 'helm-multi-files)
+(space-chord-define-global "t" 'helm-top)
+(space-chord-define-global "g" 'helm-google-suggest)
+
 (require 'expand-region)
 
 (require 'ace-jump-mode)
@@ -1158,7 +1164,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
 (add-hook 'sql-mode-hook 'bartuer-sql-load)
 
-(add-to-list 'auto-mode-alist '("\\html$" . nxml-mode))
+(require 'xml-augment)
+(add-to-list 'auto-mode-alist '("\\html$" . html-mode))
 ;; (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
 ;; (add-hook 'sgml-mode-hook 'bartuer-sgml-load)
 
