@@ -1,0 +1,31 @@
+# name: gulp gulpfile
+# --
+var gulp = require('gulp');
+var browserSync = require('browser-sync');
+var fs = require('fs');
+var minifyJs = require('gulp-uglifyjs');
+var minifyCss = require('gulp-minify-css');
+
+
+gulp.task('browser-sync-server', function () {
+    browserSync({
+        server : {
+            baseDir: "./"
+        }
+    });
+});
+
+gulp.task('browser-reload', function () {
+   browserSync.reload(); 
+});
+
+gulp.task('repl', ['browser-sync-server'], function () {
+    gulp.watch(["./**/*.css",
+                "./**/*.js",
+                "./**/*.html"
+                ], ['browser-reload']);
+});
+
+gulp.task('default', ['browser-sync-server', 'repl'], function () {
+});
+

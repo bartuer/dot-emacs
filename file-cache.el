@@ -6,6 +6,7 @@
                                 "~/local/share/doc/fsharp/project"
                                 "~/org"
                                 "~/local/src/march_market/"
+                                "~/local/src/march_market/photoSlide"
                                 "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare/WEA_PhotoShare_WeChatWebRoleContent"
                                 "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole"
                                 "~/local/src/march_market/EDU/EDUCore/WEA_PhotoShare_WeChatWebRole/Business"
