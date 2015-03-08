@@ -32,7 +32,7 @@
   (key-chord-define csharp-mode-map "ff" 'omnisharp-navigate-to-solution-file-then-file-member)
   (key-chord-define csharp-mode-map "dd" 'omnisharp-go-to-definition-other-window)
   (key-chord-define csharp-mode-map "rr" 'omnisharp-add-reference)
-  (key-chord-define csharp-mode-map "ii" 'omnisharp-current-type-documentation
+  (key-chord-define csharp-mode-map "ii" 'omnisharp-current-type-documentation)
   (key-chord-define csharp-mode-map "tt" 'omnisharp-navigate-to-type-in-current-file)
   (key-chord-define csharp-mode-map "oo" 'omnisharp-show-overloads-at-point)
   (key-chord-define csharp-mode-map "cc" 'omnisharp-fix-code-issue-at-point)
