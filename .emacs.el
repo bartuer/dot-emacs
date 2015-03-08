@@ -109,12 +109,16 @@
 
 
 (global-set-key "\r" 'newline-and-indent) ;depend on if this line is a comment
-(global-set-key "\C-i" '(lambda ()
-                          (interactive)
-                          (if (not (window-minibuffer-p))
-                              (cond ((indent-for-tab-command))
-                                    (t (indent-relative-maybe))
-                                    (t (indent-for-comment))))))
+
+(defun default-tab-behavior ()
+  (interactive)
+  (if (not (window-minibuffer-p))
+      (cond ((indent-for-tab-command))
+            (t (indent-relative-maybe))
+            (t (indent-for-comment)))))
+
+  
+(global-set-key "\C-i" ' default-tab-behavior)
 
 (require 'smart-tabs-mode)
 
@@ -768,7 +772,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'yas-after-exit-snippet-hook (lambda ()
                                             (flymake-mode t)))
 
-(defalias 'y (lambda () (yas-reload-all)))
+(defalias 'y 'yas-reload-all)
 
 (require 'rinari nil t)
 (add-hook 'rinari-minor-mode-hook (lambda ()
