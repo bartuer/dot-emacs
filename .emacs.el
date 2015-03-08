@@ -624,8 +624,8 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq-default ido-mode 'both)
   (ido-mode 1))
 
-;; (require 'xml-augment nil t)
-;; (add-hook 'sgml-mode-hook 'xml-augment-hook)
+(require 'xml-augment nil t)
+(add-hook 'sgml-mode-hook 'xml-augment-hook)
 
 (require 'bartuer-filecache nil t)
 (bartuer-filecache-load)
@@ -1159,15 +1159,15 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'js2-mode-hook 'bartuer-js-load)
 
 
-
 (add-to-list 'auto-mode-alist '("\\.sql$" . sql-mode))
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
 (add-hook 'sql-mode-hook 'bartuer-sql-load)
 
-(require 'xml-augment)
+(require 'emmet-mode nil t)
+
 (add-to-list 'auto-mode-alist '("\\html$" . html-mode))
-;; (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
-;; (add-hook 'sgml-mode-hook 'bartuer-sgml-load)
+(autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
+(add-hook 'sgml-mode-hook 'bartuer-sgml-load)
 
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
