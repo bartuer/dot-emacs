@@ -22,7 +22,9 @@
 (key-chord-define-global "hg" 'er/contract-region)
 (space-chord-define-global "j" 'ace-jump-mode)
 
-(space-chord-define-global "o" 'helm-occur)
+(require 'color-moccur)
+(require 'moccur-edit)
+(space-chord-define-global "o" 'moccur)
 (space-chord-define-global "f" 'helm-multi-files)
 (space-chord-define-global "t" 'helm-top)
 (space-chord-define-global "g" 'helm-google-suggest)
