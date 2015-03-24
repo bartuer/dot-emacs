@@ -1,12 +1,8 @@
-
 (defun bartuer-sgml-load ()
   "html mode modification"
   (flyspell-mode-off)
   (emmet-mode)
-  (define-key html-mode-map "\C-cj" 'js-smart-toggle)
-  (define-key sgml-mode-map "\C-cj" 'js-smart-toggle)
-  (define-key html-mode-map "\C-c\C-j" 'js-toggle)
-  (define-key sgml-mode-map "\C-c\C-j" 'js-toggle)
+  (setq indent-region-function nil)
   (define-key sgml-mode-map "\C-\M-f" 'sgml-skip-tag-forward)
   (define-key sgml-mode-map "\C-\M-b" 'sgml-skip-tag-backward)
   (define-key sgml-mode-map "\C-\M-k" 'sgml-delete-tag)

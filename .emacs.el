@@ -22,12 +22,13 @@
 (key-chord-define-global "hg" 'er/contract-region)
 (space-chord-define-global "j" 'ace-jump-mode)
 
-(require 'color-moccur)
-(require 'moccur-edit)
-(space-chord-define-global "o" 'moccur)
 (space-chord-define-global "f" 'helm-multi-files)
 (space-chord-define-global "t" 'helm-top)
 (space-chord-define-global "g" 'helm-google-suggest)
+
+(require 'color-moccur)
+(require 'moccur-edit)
+(space-chord-define-global "o" 'moccur)
 
 (require 'expand-region)
 
@@ -626,9 +627,6 @@ If give a negative ARG, will undo the last mark action, thus the
   (setq-default ido-mode 'both)
   (ido-mode 1))
 
-(require 'xml-augment nil t)
-(add-hook 'sgml-mode-hook 'xml-augment-hook)
-
 (require 'bartuer-filecache nil t)
 (bartuer-filecache-load)
 
@@ -1167,7 +1165,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'emmet-mode nil t)
 
-(add-to-list 'auto-mode-alist '("\\html$" . html-mode))
+(add-to-list 'auto-mode-alist '("\\.html$" . html-mode))
 (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
 (add-hook 'sgml-mode-hook 'bartuer-sgml-load)
 

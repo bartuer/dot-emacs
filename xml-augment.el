@@ -168,13 +168,7 @@
 ;; (set (make-local-variable 'forward-sexp-function) 'xml-forward-sexp)
 (defun dom-tree ()
   (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (setq dom-tree (xml-to-sexp)))
-  (with-current-buffer (get-buffer-create
-                        "*dom-tree*")
-    (delete-region (point-min) (point-max))
-    (insert (format "%S" dom-tree))))
+  )
     
 (defun pos-inside (pos range)
   (if (consp range)
@@ -395,7 +389,7 @@ default POS is current position."
   "using tidy to indent the whole buffer"
   (interactive)
   (let ((indent-col (current-column)))
-    (shell-command-on-region start end "tidy -i -xml -q -utf8 2>/dev/null" t)
+    (shell-command-on-region start end "tidy  -q -utf8 2>/dev/null" t)
     (indent-rigidly start (point) indent-col)
     (delete-backward-char 1))
   )
