@@ -610,6 +610,10 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
+  (define-key input-decode-map "\e\eOA" [(meta up)])
+  (define-key input-decode-map "\e\eOB" [(meta down)])
+  (define-key js2-mode-map [(meta down)] 'js2r-move-line-down)
+  (define-key js2-mode-map [(meta up)] 'js2r-move-line-up)
   (js2r-add-keybindings-with-prefix "\C-c \C-m")
   )
 

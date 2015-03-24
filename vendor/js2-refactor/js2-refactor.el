@@ -159,8 +159,8 @@
   (define-key js2-mode-map (funcall key-fn "sl") 'js2r-forward-slurp)
   (define-key js2-mode-map (funcall key-fn "ba") 'js2r-forward-barf)
   (define-key js2-mode-map (funcall key-fn "k") 'js2r-kill)
-  (define-key js2-mode-map (kbd "<C-S-down>") 'js2r-move-line-down)
-  (define-key js2-mode-map (kbd "<C-S-up>") 'js2r-move-line-up))
+  (define-key js2-mode-map (kbd "M-down") 'js2r-move-line-down)
+  (define-key js2-mode-map (kbd "<M-up>") 'js2r-move-line-up))
 
 ;;;###autoload
 (defun js2r-add-keybindings-with-prefix (prefix)
