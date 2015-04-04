@@ -3,6 +3,8 @@
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
 var fs = require('fs');
+var concat = require('gulp-concat');
+var shell = require('gulp-shell');
 var minifyJs = require('gulp-uglifyjs');
 var minifyCss = require('gulp-minify-css');
 

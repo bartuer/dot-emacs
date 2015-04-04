@@ -1,3 +1,0 @@
-# name : console log iphone debug
-# --
-console.log('$1:'+${1:obj});

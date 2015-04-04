@@ -1,5 +1,5 @@
 #name: lambda function
 # --
 function () {
-  $0
+    $0
 }

@@ -1,0 +1,43 @@
+# name: gulp with server gulpserver
+# --
+var gulp = require('gulp');
+var browserSync = require('browser-sync');
+var fs = require('fs');
+var concat = require('gulp-concat');
+var shell = require('gulp-shell');
+var minifyJs = require('gulp-uglifyjs');
+var minifyCss = require('gulp-minify-css');
+var server = require('gulp-develop-server');
+
+gulp.task('server:start', function () {
+    server.listen( { path : './app.js' });
+});
+
+gulp.task('server:restart', function () {
+    gulp.watch( ['./app.js'], server.restart);
+});
+
+gulp.task('browser-sync-server', function () {
+    browserSync({
+        minify : true,
+        tunnel : 'photo',
+        proxy: "localhost:3333"
+    });
+});
+
+gulp.task('browser-reload', function () {
+    browserSync.reload(); 
+});
+
+gulp.task('repl', ['browser-sync-server'], function () {
+    gulp.watch(["./**/*.css",
+                "./**/*.js",
+                "./**/*.html",
+                "./*.js",
+                "./*.css",
+                "./*.html"
+               ], ['browser-reload']);
+});
+
+gulp.task('default', ['browser-sync-server', 'repl', 'server:start'], function () {
+});

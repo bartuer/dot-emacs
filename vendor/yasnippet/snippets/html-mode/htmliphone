@@ -8,9 +8,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
-<title></title>
+<script src="$1.js"></script>
+<link rel=stylesheet href="$1.css" type="text/css" media="screen" />
+<title>${1:app}</title>
 </head>
 <body>
-<script src="/js/dist/dev.package.js"></script>
 </body>
 </html>
