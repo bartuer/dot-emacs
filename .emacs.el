@@ -21,7 +21,6 @@
 (key-chord-define-global "jf" 'er/expand-region)
 (key-chord-define-global "hg" 'er/contract-region)
 (space-chord-define-global "j" 'ace-jump-mode)
-
 (space-chord-define-global "f" 'helm-multi-files)
 (space-chord-define-global "t" 'helm-top)
 (space-chord-define-global "g" 'helm-google-suggest)
