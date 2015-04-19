@@ -1,4 +1,4 @@
-#name : while
+#name : dowhile
 # --
 do {
   $0;

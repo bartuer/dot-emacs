@@ -16,7 +16,7 @@ mainly minimize css file by `css-min', for css validation see
 css imenu build see `css-extract-keyword-list'
 "
   (interactive)
-  (flymake-mode t)
+  (flymake-mode nil)
   (emmet-mode)
   (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
   )

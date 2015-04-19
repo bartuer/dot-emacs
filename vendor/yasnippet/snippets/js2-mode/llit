@@ -1,3 +1,6 @@
 #name: object literal without object assign new line
 # --
-{${2:name}: ${3:l} , l:$0}
+{
+    ${2:name}: ${3:l},
+    l:$0
+}

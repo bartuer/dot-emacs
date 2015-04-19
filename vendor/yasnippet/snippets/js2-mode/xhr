@@ -1,0 +1,13 @@
+# name: xhr ajax 
+# --
+ajaxReq({
+    url    : ${1:url},
+    method : 'GET',
+    header : {Accept : 'application/json, text/javascript'} 
+})$0.then(
+function(response) {
+    
+},
+function(e) {
+    debug(e);
+});

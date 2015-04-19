@@ -1366,3 +1366,4 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'uuid)
 (require 'dos)
 (require 'everything)
+(require 'restclient)

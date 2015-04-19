@@ -69,7 +69,12 @@
   (unless (setq squirrelfish-process (get-buffer-process "*squirrelfish*"))
     (setq squirrelfish-process (get-buffer-process (make-comint "squirrelfish" "squirrelfish"))))
   squirrelfish-process)
-    
+
+(defun phantomjs ()
+  (unless (setq phantomjs-process (get-buffer-process "*phantomjs*"))
+    (setq phantomjs-process (get-buffer-process (make-comint "phantomjs" "phantomjs"))))
+  phantomjs-process)
+
 (defun spidermonkey ()
   (unless (setq spidermonkey-process (get-buffer-process "*spidermonkey*"))
     (setq spidermonkey-process (get-buffer-process (make-comint "spidermonkey" "spidermonkey-nanojit"))))
@@ -97,7 +102,7 @@
   "setup the connection to jsh"
   (interactive)
   (let* ((jsh (ido-completing-read "js shell to connect:" 
-                                   (list  "slime" "node-d8" "chromium" "iv8" "squirrelfish" "MozRepl"  "rhino" "spidermonkey" ) nil t))
+                                   (list  "slime" "phantomjs"  "rhino" "spidermonkey" ) nil t))
          (js-buffer (current-buffer)))
 
     (if (equal jsh "slime")

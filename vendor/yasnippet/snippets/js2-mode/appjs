@@ -1,23 +1,23 @@
 # name: nodeserver appjs
 # --
-var fs = require('fs');
+var fs      = require('fs');
 var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
-var port = process.env.PORT || ${1:3333};
-
-var oauth = require('adal-node').AuthenticationContext;
-var https = require('https');
-
+var app     = express();
+var server  = require('http').createServer(app);
+var port    = process.env.PORT || 3333;
 var Promise = require('es6-promise').Promise;
-var async = require('async');
+var async   = require('async');
+
+var oauth   = require('adal-node').AuthenticationContext;
+var https   = require('https');
+
+app.use(express.static(__dirname + '/public'));
+app.use(require('express-promise')());
+
+app.get('/hi', function (req, res) {
+    res.json({msg:'echo, hi$0'});
+});
 
 server.listen(port, function () {
     console.log('Server listening at port %d', port); 
-});
-
-app.use(express.static(__dirname + '/${2:public}'));
-
-app.get('/hi', function (req, res) {
-    res.end(JSON.stringify({msg:'echo, hi$0'}));
 });
