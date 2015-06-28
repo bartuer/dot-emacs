@@ -91,6 +91,15 @@
        (buffer-substring-no-properties start end))
       (message "Sent buffer"))))
 
+(defun slime-js-send-region ()
+  (interactive)
+  (save-excursion
+    (let ((start (region-beginning))
+          (end (region-end)))
+      (message "send buffer to swank server")
+      (slime-js-eval
+       (buffer-substring-no-properties start end))
+      (message "Sent region"))))
 
 (defun bartuer-jslime ()
   (interactive)
@@ -561,7 +570,7 @@ can bind C-j in comint buffer"
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
   (yas-minor-mode-on)
-  (flymake-mode t)
+  ;; (flymake-mode t)
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
   ;; (make-local-variable 'suite-list)

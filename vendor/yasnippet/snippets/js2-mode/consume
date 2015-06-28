@@ -1,0 +1,13 @@
+# name: consume highland 
+# --
+return source.consume(function(err, x, push, next) {
+    if (err) { 
+        push(err, null);
+        next();
+    } else if (x === _.nil) {
+        push(null, x);
+    } else {
+        $0push(null, {});
+        next();
+    }
+});

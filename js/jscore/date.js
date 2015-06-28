@@ -62,8 +62,3 @@ date.getYear = function () {
 
 };
 t.getYear();                     //#=> 111
-
-
-
-
-

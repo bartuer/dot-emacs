@@ -16,18 +16,15 @@
 (global-set-key "\C-xp" 'mc/edit-lines)
 
 (require 'key-chord)
-(require 'space-chord)
 (key-chord-mode 1)
 (key-chord-define-global "jf" 'er/expand-region)
 (key-chord-define-global "hg" 'er/contract-region)
-(space-chord-define-global "j" 'ace-jump-mode)
-(space-chord-define-global "f" 'helm-multi-files)
-(space-chord-define-global "t" 'helm-top)
-(space-chord-define-global "g" 'helm-google-suggest)
+(key-chord-define-global ",." 'ace-jump-mode)
 
 (require 'color-moccur)
 (require 'moccur-edit)
-(space-chord-define-global "o" 'moccur)
+
+(require 'dash-at-point)
 
 (require 'expand-region)
 
@@ -942,9 +939,11 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'redis nil t)
 (require 'css-mode nil t)
+(require 'less-css-mode nil t)
 (autoload 'bartuer-css-load "~/etc/el/bartuer-css.el" t)
 (add-hook 'css-mode-hook 'bartuer-css-load)
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
+(add-to-list 'auto-mode-alist '("\.less$" . less-css-mode))
 
 (autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
   "mode for yaml file" t nil)
@@ -1367,3 +1366,4 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'dos)
 (require 'everything)
 (require 'restclient)
+(define-key global-map "\M-o" 'moccur)

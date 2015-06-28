@@ -1,0 +1,7 @@
+# name: combiner 
+# --
+var ${1:name} = combiner.obj([
+    gulp.src(['']),
+]);
+$1.on('error', console.error.bind(console));
+return $1;

@@ -1,0 +1,3 @@
+# name: attr textContent
+# --
+.attr('textContent', ${1:})$0

@@ -29,7 +29,8 @@
 
 var EventEmitter = require("events").EventEmitter;
 var Script = require('vm').Script;
-var evalcx = Script.runInContext;
+var vm = require('vm');
+var evalcx = vm.runInContext;
 var util = require("util");
 var url = require("url");
 var assert = require("assert");
@@ -287,7 +288,7 @@ Remote.prototype.sendResult = function sendResult (id, values) {
 };
 
 function DefaultRemote () {
-  this.context = Script.createContext();
+  this.context = vm.createContext();
   for (var i in global) this.context[i] = global[i];
   this.context.module = module;
   this.context.require = function(id, options) {
