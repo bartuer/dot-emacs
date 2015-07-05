@@ -365,7 +365,6 @@ If give a negative ARG, will undo the last mark action, thus the
               (lambda ()
                 (define-key diff-mode-map "\M-k" 'other-window)
                 (define-key diff-mode-map "\M-h" 'diff-hunk-kill))))
-(global-set-key "\M-o" 'kill-sentence)
 
 (require 'binary-diff)
 
@@ -647,7 +646,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (when (require 'anything-show-completion nil t)
   (progn
-    (use-anything-show-completion 'rct-complete-symbol--anything
+    (use-anything-show-completion 'rct-complete-symbol--anything 
                                   '(length pattern))
     ))
 
