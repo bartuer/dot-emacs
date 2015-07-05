@@ -511,8 +511,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\M-." 'anything-etags-select-from-here)
 (load "~/etc/el/bartuer-etags.el")
 
-(require 'helm-config)
-
 (load "~/etc/el/anything-c-source-mark-ring.el")
 (defun anything-imenu-jump (p)
   "(number-or-marker-p p), need move window first"
