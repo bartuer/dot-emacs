@@ -71,3 +71,10 @@
     (replace-regexp " | " "    " nil s (that-line-end l))
     )
   )
+
+(defun bartuer-c-load ()
+  "mode hooks for c/cc"
+  (interactive)
+  (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+  (define-key c-mode-base-map "\C-\M-i" 'ac-complete-clang)
+  )

@@ -29,6 +29,11 @@
 (require 'expand-region)
 
 (require 'ace-jump-mode)
+
+(electric-pair-mode t)
+
+(require 'auto-complete-clang)
+
 (global-set-key "\C-c " 'ace-jump-mode)
 
 (defun cygw2u (path)
@@ -1051,6 +1056,9 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (global-set-key "\C-cj" 'bartuer-toggle-header)
 (global-set-key "\C-c\C-j" 'bartuer-toggle-header)
+
+(load "~/etc/el/bartuer-c.el")
+(add-hook 'cc-mode-hook 'bartuer-c-load)
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
