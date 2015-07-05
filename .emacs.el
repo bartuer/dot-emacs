@@ -531,8 +531,8 @@ If give a negative ARG, will undo the last mark action, thus the
                                       (setq alist
                                             (assoc elem alist)))
                                     path)))
-          (anything-imenu-jump (cdr
-                                (assoc (car (last path)) alist)))
+          (anything-imenu-jump (overlay-start (cdr
+                                (assoc (car (last path)) alist))) )
           )
       (let ((position (cdr
                        (assoc elm alist))))
