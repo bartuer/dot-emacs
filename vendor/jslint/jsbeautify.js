@@ -1063,7 +1063,7 @@ function parse_opts(args) {
 }
 
 
-var sys = require('sys');
+var sys = require('util');
 var fs = require('fs');
 
 function do_js_beautify() {
