@@ -2,6 +2,6 @@
 # --
 try {
     $0;
-} catch(e) {
+} catch (e) {
     debug(e);
 }

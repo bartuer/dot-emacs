@@ -98,7 +98,7 @@
 
 (defun yasnippet-complete-js (msg)
   "constructure an snippet according to the js signature string"
-  (flymake-mode nil)
+  ;; (flymake-mode nil)
   (setq js-message-length (length msg))
   (cond ((string-match "(" msg)
          (setq signature-template
@@ -118,13 +118,8 @@
                 msg )))
         (t
          (setq signature-template msg)))
-  
-  (insert "anythingetagsjs")
-  (yas--define 'js2-mode
-              "anythingetagsjs"
-              signature-template)
-  (message (format "js-complete:%s" msg))
-  (yas-expand))
+  (insert signature-template)
+  )
 
 (defun yasnippet-complete-erlang (arglist)
   "constructure an snippet according to the erlang signature string"

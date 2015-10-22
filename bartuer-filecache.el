@@ -43,7 +43,6 @@ directory, select directory. Lastly the file is opened."
                                          "~/scripts"
                                          "~/local/share/doc/"
                                          "~/local/share/"
-                                         "/tmp"
                                          "~/local/share/info"))
          (load "~/etc/el/file-cache.el")
          (add-hook 'kill-buffer-hook 'file-cache-add-this-file)
@@ -51,7 +50,3 @@ directory, select directory. Lastly the file is opened."
          )))
 
 (provide 'bartuer-filecache)
-
-
-
-

@@ -1,3 +1,4 @@
+
 (require 'moz nil t)
 (require 'bartuer-js-inf nil t)
 (require 'js2-refactor)
@@ -367,38 +368,6 @@ behavior."
            )
          ))
 
-
-(defun js-correct (&optional start end)
-  "correct js files
-wrap block add semicolon correct plus and equal"
-  (interactive)
-  (when (eq start nil)
-    (setq start (region-beginning))
-    (setq end (region-end)))
-  (let ((content (buffer-substring (point-min) (point-max))))
-    (with-current-buffer
-        (get-buffer-create (concat (buffer-name) "-correct"))
-      (delete-region (point-min) (point-max))
-      (insert content)
-      (let ((indent-col (current-column)))
-        (write-region start end "/tmp/d8-temp.js")
-        (shell-command-on-region start end "~/local/bin/uki_jscorrect" t)))
-    (ediff-buffers (get-buffer (buffer-name))
-                   (get-buffer-create (concat (buffer-name) "-correct")))))
-
-(defun js-indent (&optional start end)
-  "invoke jsindent to indent"
-  (interactive)
-  (when (eq start nil)
-    (setq start (region-beginning))
-    (setq end (region-end)))
-  (let ((indent-col (current-column)))
-    (write-region start end "/tmp/d8-temp.js")
-    (shell-command-on-region start end "~/local/bin/uki_jsindent" t)
-    (indent-rigidly start (point) indent-col)
-    )
-  )
-  
 (defun js-to-json (&optional start end)
   "convert region to json string"
   (interactive)
@@ -561,53 +530,45 @@ can bind C-j in comint buffer"
   )
 
 (eval-after-load 'tern '(progn (require 'tern-auto-complete) (tern-ac-setup)))
+
+(defun web-beautify-format-region-js (beg end)
+  "By PROGRAM, format each line in the BEG .. END region."
+  (let* ((program (locate-file  "js-beautify.js" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/"))))
+    (save-excursion
+      (apply 'call-process-region beg end program t
+             (list t nil) t web-beautify-args))))
+
+
 (defun bartuer-js-load ()
   "for javascript language
 "
   (unless (fboundp 'jxmp)
     (load "~/etc/el/jcodetools/jcodetools.el"))
+
   (require 'flyspell nil t)
+
   (when (fboundp 'flyspell-prog-mode)
     (flyspell-prog-mode))
   (yas-minor-mode-on)
-  ;; (flymake-mode t)
+
   (setq js2-mode-show-overlay t)
   (setq js2-mirror-mode nil)
-  ;; (make-local-variable 'suite-list)
-  ;; (js-find-suite)
-  ;; (make-local-variable 'live-edit-string)
-  ;; (js-find-live-edit-string)
   (set-up-slime-js-ac)
   (slime-js-minor-mode)
-  (defalias  'pa (lambda () (interactive)
-                 (js2-parse-mode)))
-  (defalias  'pu (lambda () (interactive)
-                 (push-mode)))
-
-  (defalias  'slimepu (lambda () (interactive)
-                        (slime-push-mode)))
-
-  ;; (reload-mode t)
-  ;; TODO need more stable message queue, then push will be cheap
-  ;; (push-mode t)
-
+  
   (make-local-variable 'js2-mode-show-node)
   (setq js2-mode-show-node nil)
 
-  (when (> (buffer-size) 15000)         ;the limitation of js2 parser
-      (require 'espresso nil t)
-      (setq indent-line-function 'espresso-indent-line)
-      (define-key js2-mode-map "\C-m" 'newline))
-  (set (make-local-variable 'indent-region-function) 'js-indent)
+  (set (make-local-variable 'indent-region-function) 'web-beautify-format-region-js)
+
+  (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
+  (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
+  (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
 
   (define-key js2-mode-map "\C-c\C-s" 'connect-jsh)
   (define-key js2-mode-map "\C-\M-x" 'js-send-last-sexp-and-go)
   (define-key js2-mode-map "\C-c\C-e" 'send-expression-jsh)
   (define-key js2-mode-map "\C-c\C-l" 'send-current-line-jsh)
-
-  (define-key js2-mode-map "\C-cj" 'js-smart-toggle)
-  (define-key js2-mode-map "\C-c\C-j" 'js-toggle)
-  (define-key js2-mode-map "\C-c\C-u" 'js2-show-element)
 
   (define-key js2-mode-map "\C-c\C-\M-n" 'js2-next-error)
 
@@ -623,7 +584,7 @@ can bind C-j in comint buffer"
   (define-key input-decode-map "\e\eOB" [(meta down)])
   (define-key js2-mode-map [(meta down)] 'js2r-move-line-down)
   (define-key js2-mode-map [(meta up)] 'js2r-move-line-up)
-  (js2r-add-keybindings-with-prefix "\C-c \C-m")
+  (add-hook 'before-save-hook 'web-beautify-js-buffer t t)
   )
 
 

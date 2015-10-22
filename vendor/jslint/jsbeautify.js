@@ -1010,18 +1010,18 @@ function js_beautify(js_source_text, options) {
 */
 
 function print_usage() {
-    print("Usage: java org.mozilla.javascript.tools.shell.Main beautify-cl.js [options] [file || URL]\n");
-    print("Reads from standard input if no file or URL is specified.\n");
-    print("Options:");
-    print("-i NUM\tIndent size (1 for TAB)");
-    print("-b\tPut braces on own line (Allman / ANSI style)");
-    print("-a\tIndent arrays");
-    print("-n\tPreserve newlines");
-    print("-p\tJSLint-pedantic mode, currently only adds space between \"function ()\"");
-    print("-h\tPrint this help\n");
-    print("Examples:");
-    print("beautify-cl.js -i 2 example.js");
-    print("beautify-cl.js -i 1 http://www.example.org/example.js\n");
+    console.log("Usage: java org.mozilla.javascript.tools.shell.Main beautify-cl.js [options] [file || URL]\n");
+    console.log("Reads from standard input if no file or URL is specified.\n");
+    console.log("Options:");
+    console.log("-i NUM\tIndent size (1 for TAB)");
+    console.log("-b\tPut braces on own line (Allman / ANSI style)");
+    console.log("-a\tIndent arrays");
+    console.log("-n\tPreserve newlines");
+    console.log("-p\tJSLint-pedantic mode, currently only adds space between \"function ()\"");
+    console.log("-h\tPrint this help\n");
+    console.log("Examples:");
+    console.log("beautify-cl.js -i 2 example.js");
+    console.log("beautify-cl.js -i 1 http://www.example.org/example.js\n");
 }
 
 

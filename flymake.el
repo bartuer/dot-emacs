@@ -1853,13 +1853,13 @@ Use CREATE-TEMP-F for creating temp copy."
     (list (expand-file-name "~/etc/el/vendor/css-validate/css-flymake") (list local-file))))
 
 ;;;; for js
-(defun flymake-jslint-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-		     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-		      temp-file
-		      (file-name-directory buffer-file-name))))
-    (list (expand-file-name "~/local/bin/uki_jsflymake") (list (expand-file-name local-file)) )))
+;; (defun flymake-jslint-init ()
+;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;; 		     'flymake-create-temp-inplace))
+;;          (local-file (file-relative-name
+;; 		      temp-file
+;; 		      (file-name-directory buffer-file-name))))
+;;     (list (expand-file-name "~/local/bin/uki_jsflymake") (list (expand-file-name local-file)) )))
 
 (add-to-list 'flymake-err-line-patterns 
              '("^Lint at line \\([[:digit:]]+\\) \\(character\\) \\([[:digit:]]+: .+\\)$"  
@@ -1867,7 +1867,7 @@ Use CREATE-TEMP-F for creating temp copy."
 
 
 ;;;; for ruby
-(defun flymake-ruby-init ()             
+(defun flymake-ruby-init ()
   (let* ((temp-file   (flymake-init-create-temp-buffer-copy
                        'flymake-create-temp-inplace))
 	 (local-file  (file-relative-name
