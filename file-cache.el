@@ -1,7 +1,6 @@
 (file-cache-add-directory-list (list
                                 "~"
-                                "/volumes/Shennong/Shared/a/front_end"
-                                "/volumes/Shennong/Shared/a/front_end/public"
+                                "~/org"
                                 "~/etc/el"
                                 "~/org"
                                 "/vagrant/sfm/server/FaceMask" 

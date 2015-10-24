@@ -8,7 +8,7 @@
 ;; Package-Requires: ((slime-repl "20100404") (slime "20100404"))
 
 ;;; Licence: 
-;; Copyright (c) 2010 Ivan Shvedunov. All rights reserved.
+;; Copyright (c) 2010, 2015 Ivan Shvedunov. All rights reserved.
 ;;
 ;; Redistribution and use in source and binary forms, with or without
 ;; modification, are permitted provided that the following conditions
@@ -259,8 +259,6 @@ Null prefix argument turns off the mode."
   nil
   " slime-js"
   '(("\C-\M-x"  . slime-js-send-defun)
-    ("\C-c\C-c" . slime-js-send-defun)
-    ;; ("\C-c\C-r" . slime-eval-region)
     ("\C-c\C-z" . slime-switch-to-output-buffer)))
 
 ;; TBD: dabbrev in repl:

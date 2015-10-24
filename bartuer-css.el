@@ -1,13 +1,3 @@
-(defun css-min ()
-  "invoke yuicompress minimize current buffer"
-  (let ((file-name (replace-regexp-in-string ".css" "_min.css"  (buffer-file-name))))
-        (unless (eq 0 (shell-command (concat
-                                      "~/etc/el/vendor/yui/css-min "
-                                      (buffer-file-name)  " " file-name) nil))
-          (message "minimize css failed")
-          )
-  ))
-
 (defun bartuer-css-load ()
   "css mode modification
 
@@ -19,6 +9,7 @@ css imenu build see `css-extract-keyword-list'
   (flymake-mode nil)
   (emmet-mode)
   (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
+  (add-hook 'before-save-hook 'web-beautify-css-buffer t t)
   )
 
 (require 'bartuer-page nil t)

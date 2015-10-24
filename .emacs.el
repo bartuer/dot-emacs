@@ -1,3 +1,4 @@
+
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
@@ -10,18 +11,17 @@
 
 (require 'phi-search)
 (require 'multiple-cursors)
+
 (global-set-key "\C-xx" 'mc/mark-all-dwim)
 (global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
 (global-set-key "\C-xy" 'mc/insert-numbers)
 (global-set-key "\C-xp" 'mc/edit-lines)
-
-(require 'key-chord)
-(key-chord-mode 1)
-(key-chord-define-global "jf" 'er/expand-region)
-(key-chord-define-global "hg" 'er/contract-region)
-(key-chord-define-global ",." 'ace-jump-mode)
+(global-set-key "\C-x-" 'er/expand-region)
+(global-set-key "\C-x+" 'er/contract-region)
+(global-set-key "\C-xs" 'ace-jump-mode)
 
 (require 'color-moccur)
+
 (require 'moccur-edit)
 
 (require 'dash-at-point)
@@ -111,6 +111,7 @@
 (autoload 'guess-style-guess-variable "guess-style")
 (autoload 'guess-style-guess-all "guess-style" nil t)
 (global-guess-style-info-mode 1)
+
 (defun ttt()
   (interactive)
   (whitespace-mode)
@@ -252,6 +253,10 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'e 'eval-current-buffer)
 
 
+(require 'flymake-jslint)
+(lintnode-start)
+(require 'web-beautify)
+
 (require 'powershell)
 (require 'powershell-mode)
 (add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
@@ -312,7 +317,6 @@ If give a negative ARG, will undo the last mark action, thus the
   (require 'htmlize nil t)
   (require 'color-theme nil t)
   (load "~/etc/el/auto-install/bartuer-theme.el")
-  (color-theme-select)
   )
 
 (global-set-key "\M-8" 'find-file)
@@ -438,7 +442,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key [(f8)] 'info-lookup-symbol)
 (defalias 'm 'flymake-mode)
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
+;;; jslint
+(require 'flymake-jslint)
+(lintnode-start)
 
+(add-hook
+ 'eshell-mode-hook
+ (lambda ()
+   (setq pcomplete-cycle-completions nil)))
 
 (require 'google-define nil t)
 (defalias 'gd 'google-define)
@@ -449,6 +460,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (if (fboundp 'server-start)
     (server-start))
+
 (if (fboundp 'show-paren-mode)
     (show-paren-mode 1))
 (if (fboundp 'winner-mode)
@@ -517,16 +529,23 @@ If give a negative ARG, will undo the last mark action, thus the
 (load "~/etc/el/bartuer-etags.el")
 
 (load "~/etc/el/anything-c-source-mark-ring.el")
+
 (defun anything-imenu-jump (p)
   "(number-or-marker-p p), need move window first"
-  (if (> p 100)
-      (set-window-start (selected-window) (- p 100))
-    (set-window-start (selected-window) 1))
-  (goto-char p)
+  (interactive)
+  (if (overlayp p)
+        (setq jump-pos (overlay-start p))
+      (setq jump-pos p)
+      (if (> jump-pos 100)
+          (set-window-start (selected-window) (- jump-pos 100))
+          (set-window-start (selected-window) 1))
+      )
+      (goto-char jump-pos)
   )
 
 (defun anything-c-imenu-kiss-action (elm)
   "The kiss action for `anything-c-source-imenu'."
+  (interactive)
   (push-mark)
   (let ((path (split-string elm anything-c-imenu-delimiter))
         (alist anything-c-cached-imenu-alist))
@@ -717,10 +736,10 @@ If give a negative ARG, will undo the last mark action, thus the
   (shell-command-on-region (point-min) (point-max) "html2text -nobs -style pretty"
                            (get-buffer-create "html-text"))
   (with-current-buffer "html-text"
-    (replace-regexp "" "'" nil (point-min) (point-max))
-    (replace-regexp "" "\"" nil (point-min) (point-max))
-    (replace-regexp "" "\"" nil (point-min) (point-max))
-    (replace-regexp "
+    (replace-match "" "'" nil (point-min) (point-max))
+    (replace-match "" "\"" nil (point-min) (point-max))
+    (replace-match "" "\"" nil (point-min) (point-max))
+    (replace-match "
 \\([A-Z]\\)" "
 
 \\&" nil (point-min) (point-max))
@@ -938,6 +957,7 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for commonlisp mode" t nil)
 (add-hook 'commonlisp-mode-hook 'bartuer-commonlisp-load)
 (slime-setup '(slime-js slime-repl))
+(setenv "NODE_NO_READLINE" "1")
 
 (require 'redis nil t)
 (require 'css-mode nil t)
@@ -951,6 +971,8 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for yaml file" t nil)
 (require 'yaml-mode nil t)
 (add-to-list 'auto-mode-alist '("\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\.yaml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\.sls$" . yaml-mode))
 
 (autoload 'bartuer-rhtml-load "~/etc/el/bartuer-rhtml.el" "mode for rhtml" nil t)
 (require 'rhtml-mode nil t)
@@ -1005,7 +1027,7 @@ If give a negative ARG, will undo the last mark action, thus the
                            (concat (substring (buffer-file-name) 0 -1) "mm")))
               (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp"))
               (dot-cc-file (concat (substring (buffer-file-name) 0 -1) "cc")))
-              (if (mapcan (lambda (f)
+              (if (mapcar (lambda (f)
                             (file-exists-p f)) dot-m-file)
                   (progn
                     (objc-mode)
@@ -1154,23 +1176,24 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'video nil t)
 
+
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
+(require 'bartuer-js)
 (autoload 'bartuer-js-load "bartuer-js.el" nil t)
 (add-hook 'js2-mode-hook 'bartuer-js-load)
-
 
 (add-to-list 'auto-mode-alist '("\\.sql$" . sql-mode))
 (autoload 'bartuer-sql-load "bartuer-sql.el" "for sql mode" t)
 (add-hook 'sql-mode-hook 'bartuer-sql-load)
 
 (require 'emmet-mode nil t)
-
+(require 'bartuer-sgml nil t)
 (add-to-list 'auto-mode-alist '("\\.html$" . html-mode))
 (autoload 'bartuer-sgml-load "bartuer-sgml.el" "for sgml" t)
-(add-hook 'sgml-mode-hook 'bartuer-sgml-load)
+(add-hook 'html-mode-hook 'bartuer-sgml-load)
 
 (autoload 'bartuer-txt-load "bartuer-txt.el" "for text mode" t)
 (add-hook 'text-mode-hook 'bartuer-txt-load)
@@ -1361,11 +1384,6 @@ If give a negative ARG, will undo the last mark action, thus the
   (perform-replace regexp (cons 'replace-eval-replacement to-expr)
 		   t 'literal delimited nil nil (point-min) (point-max))
 )
-
-(defun hacker-news ()
-  (interactive)
-  (require 'hackernews)
-  (hackernews))
 
 (require 'uuid)
 (require 'dos)

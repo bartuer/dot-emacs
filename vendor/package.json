@@ -1,0 +1,19 @@
+{
+  "author": "Bartuer <bartuer@gmail.com>",
+  "name": "bartuer-emacs-nodejs-service",
+  "description": "nodejs service for bartuer .emacs",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bartuer/dot-emacs.git"
+  },
+  "dependencies": {
+    "js-beautify": "^1.5.10",
+    "lintnode": "^0.2.12"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
