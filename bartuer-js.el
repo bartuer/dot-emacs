@@ -316,14 +316,20 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-b" 'slime-js-send-buffer)
   (define-key js2-mode-map "\C-c\C-r" 'slime-js-send-region)
   (define-key js2-mode-map "\C-\M-u" 'slime-js-start-of-toplevel-form)
-  (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
+  ;; (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
+
   (define-key js2-mode-map "\C-j" 'bartuer-jslime)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
+
   (define-key input-decode-map "\e\eOA" [(meta up)])
   (define-key input-decode-map "\e\eOB" [(meta down)])
   (define-key js2-mode-map [(meta down)] 'js2r-move-line-down)
   (define-key js2-mode-map [(meta up)] 'js2r-move-line-up)
+  (define-key js2-mode-map "\C-\M-r" 'js2r-unwrap)
+  (define-key js2-mode-map "\C-c\C-c" 'js2r-log-this)
+  (define-key js2-mode-map "\M-S" 'js2r-split-string)
+  
   (add-hook 'before-save-hook 'web-beautify-js-buffer t t)
   )
 
