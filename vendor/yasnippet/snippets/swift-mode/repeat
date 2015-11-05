@@ -1,0 +1,5 @@
+# name: repeat while dowhile
+# --
+repeat {
+    $0
+} while ${1:condition}

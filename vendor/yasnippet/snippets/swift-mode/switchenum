@@ -1,0 +1,6 @@
+# name: switch on enum
+# --
+switch ${1:enum_instance} {
+    case let .${2:enum_subtype}(${3:enum_field_name}):
+        $0
+}

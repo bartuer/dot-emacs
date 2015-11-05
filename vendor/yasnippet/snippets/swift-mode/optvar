@@ -1,0 +1,3 @@
+# name: optional var 
+# --
+var ${1:name}: ${2:Type?} = ${3:value}

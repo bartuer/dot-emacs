@@ -1,0 +1,5 @@
+# name: extension 
+# --
+extension ${1:Class/Enum/Struct}: ${2:Protocol} {
+    $0
+}

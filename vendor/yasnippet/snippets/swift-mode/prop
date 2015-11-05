@@ -1,0 +1,11 @@
+# name: property 
+# --
+var ${1:propertyName}: ${2:Type} {
+    get {
+        $0  
+    }
+
+    set {
+       ${3:varname} = newValue
+    }   
+}

@@ -1,0 +1,6 @@
+# name: enum define
+# --
+enum ${1:SuperType} {
+     case ${2:SubType1}(${3:FieldType1})
+     case ${4:SubType2}(${5:FieldType2})
+}

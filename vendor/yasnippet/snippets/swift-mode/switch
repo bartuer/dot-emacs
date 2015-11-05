@@ -1,0 +1,10 @@
+# name: switch 
+# --
+switch ${1:input} {
+    case ${2:condition1} :
+        
+    case ${3:condition2} :
+
+    default :
+        $0
+}

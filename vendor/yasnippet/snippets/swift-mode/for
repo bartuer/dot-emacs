@@ -1,0 +1,5 @@
+# name: for in 
+# --
+for (${1:ele_key},${2:ele_val}) in ${3:collection} {
+    $0
+}

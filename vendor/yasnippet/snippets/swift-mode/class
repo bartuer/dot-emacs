@@ -1,0 +1,5 @@
+# name: class 
+# --
+class ${1:Name}: ${2:Super/Protocol} {
+    $0prop
+}

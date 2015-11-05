@@ -1,0 +1,13 @@
+# name: typed enum 
+# --
+enum ${1:Name}: ${2:Type/Protocol} {
+    case ${3:Key} = ${4:value}
+    func toString() -> String {
+        switch self {
+               case .$3:
+                   return "$3"
+                default:
+                    return String(self.rawValue)
+        }       
+    }   
+}

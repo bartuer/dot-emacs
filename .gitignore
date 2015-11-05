@@ -57,3 +57,4 @@ emacs-nox.exe.stackdump
 /vendor/erlang/share/distel/ebin/distel_ie.beam
 /vendor/erlang/share/distel/ebin/fdoc.beam
 /vendor/erlang/share/distel/ebin/otp_doc.beam
+/vendor/node_modules

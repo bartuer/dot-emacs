@@ -1,0 +1,11 @@
+# name: subscript sub
+# --
+subscript(i: Int) -> ${1:Class} {
+    get {
+        return ${2:collection}[i]
+    }
+
+    set {
+        $2[i] = newValue
+    }
+}

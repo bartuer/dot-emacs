@@ -555,8 +555,11 @@ If give a negative ARG, will undo the last mark action, thus the
                                       (setq alist
                                             (assoc elem alist)))
                                     path)))
-          (anything-imenu-jump (overlay-start (cdr
-                                (assoc (car (last path)) alist))) )
+          (let* ((pos (cdr
+                       (assoc (car (last path)) alist))))
+            (if (overlayp pos)
+                (anything-imenu-jump (overlay-start pos))
+              (anything-imenu-jump pos)))
           )
       (let ((position (cdr
                        (assoc elm alist))))
@@ -658,6 +661,10 @@ If give a negative ARG, will undo the last mark action, thus the
     (use-anything-show-completion 'anything-etags-complete-objc-message
                                   '(message-length))
     ))
+
+(require 'flycheck nil t)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(require 'swift-mode nil t)
 
 (require 'json nil t)
 (when (require 'anything-show-completion nil t)

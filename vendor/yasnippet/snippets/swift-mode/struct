@@ -1,0 +1,5 @@
+# name: struct 
+# --
+struct ${1:Name}: ${2:Super/Protocol} {
+    prop$0
+}
