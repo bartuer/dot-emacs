@@ -661,8 +661,8 @@ We try to constraint those lookups by reasonable number of lines.")
 
    (flycheck-define-checker swift
      "Flycheck plugin for for Apple's Swift programming language."
-     :command ("swift"
-               "-frontend" "-parse"
+     :command ("swiftc" 
+               "-parse"
                (option "-sdk" flycheck-swift-sdk-path)
                (option-list "-F" flycheck-swift-framework-search-paths)
                ;; Swift compiler will complain about redeclaration
@@ -680,13 +680,12 @@ We try to constraint those lookups by reasonable number of lines.")
                           (eq (string-match ".#" path) nil)
                           (eq (string-match file path) nil)))
                      (file-expand-wildcards flycheck-swift-linked-sources)))))
-               (option "-target" flycheck-swift-target)
                (option "-import-objc-header" flycheck-swift-import-objc-header)
                (eval
                 (cl-mapcan
                  #'(lambda (path) (list "-Xcc" (concat "-I" path)))
                  flycheck-swift-cc-include-search-paths))
-               "-primary-file" source)
+                source)
      :error-patterns
      ((error line-start (file-name) ":" line ":" column ": "
              "error: " (message) line-end)

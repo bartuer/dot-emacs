@@ -1,0 +1,7 @@
+# name: try 
+# --
+do {
+  try
+} catch {
+  
+}
