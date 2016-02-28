@@ -1,0 +1,3 @@
+# name: global jslint global
+# --
+/*global require, module, console, debug, exports, process, Buffer, setImmediate, setTimeout, setInterval, clearInterval */

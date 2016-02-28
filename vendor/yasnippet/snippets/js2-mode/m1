@@ -1,0 +1,15 @@
+#name : singleton global hide private module closure
+# --
+function ${1:module_name}(option) {
+    var self = this;
+    
+    function $1Interface(option) {
+        self.data = option;
+    }
+
+    $1Interface.prototype.render  = function () {
+        return "";
+    };
+    
+    return new $1Interface(option);
+}

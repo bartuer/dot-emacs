@@ -4953,7 +4953,6 @@ SYMBOL with `flycheck-def-executable-var'."
         (parser (plist-get properties :error-parser))
         (filter (plist-get properties :error-filter))
         (predicate (plist-get properties :predicate)))
-
     `(progn
        (flycheck-def-executable-var ,symbol ,(car command))
 

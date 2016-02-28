@@ -1,7 +1,12 @@
+
+;;; Bartuer-js --- For editing javascript
+
+
 (require 'moz nil t)
 (require 'bartuer-js-inf nil t)
-(require 'js2-refactor)
+(require 'js2-refactor nil t)
 
+;;; Code:
 (defvar suite-list nil)
 
 (defvar live-edit-string "")
@@ -326,6 +331,7 @@ can bind C-j in comint buffer"
   (define-key input-decode-map "\e\eOB" [(meta down)])
   (define-key js2-mode-map [(meta down)] 'js2r-move-line-down)
   (define-key js2-mode-map [(meta up)] 'js2r-move-line-up)
+
   (define-key js2-mode-map "\C-\M-r" 'js2r-unwrap)
   (define-key js2-mode-map "\C-c\C-c" 'js2r-log-this)
   (define-key js2-mode-map "\M-S" 'js2r-split-string)

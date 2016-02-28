@@ -3,8 +3,8 @@
                                 "~/org"
                                 "~/etc/el"
                                 "~/org"
+                                "~/etc/el/vendor/swift-mode" 
                                 "~/local/src/swift"
-                                "~/local/src/swift" 
                                 "~/local/src/swift/avcapture_osx.playground" 
                                 "~/local/src/swift/avcapture_osx.playground/playground.xcworkspace" 
                                 "~/local/src/swift/avcapture_osx.playground/playground.xcworkspace/xcuserdata" 
@@ -43,5 +43,14 @@
                                 "~/local/src/swift/Swift Standard Library.playground/playground.xcworkspace" 
                                 "~/local/src/swift/Swift Standard Library.playground/playground.xcworkspace/xcuserdata" 
                                 "~/local/src/swift/Swift Standard Library.playground/playground.xcworkspace/xcuserdata/bartuer.xcuserdatad" 
-                                "~/local/src/swift/Swift Standard Library.playground/Sources" 
+                                "~/local/src/swift/Swift Standard Library.playground/Sources"
+                                "~/local/src/selfie/jxcore/deps/leveldown-mobile"
+                                "~/local/src/selfie/jxcore-addon"
+                                ))
+(eval-after-load
+       "filecache"
+       '(progn
+          (message "Loading file cache...")
+          (file-cache-add-directory-using-find
+           "~/local/src/swift")
 ))

@@ -1,4 +1,3 @@
-
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
 
@@ -9,30 +8,30 @@
   (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages"))
   )
 
-(require 'phi-search)
-(require 'multiple-cursors)
+(require 'phi-search nil t)
+(require 'multiple-cursors nil t)
 
 (global-set-key "\C-xx" 'mc/mark-all-dwim)
 (global-set-key "\C-xj" 'mc/mark-all-in-region-regexp)
 (global-set-key "\C-xy" 'mc/insert-numbers)
 (global-set-key "\C-xp" 'mc/edit-lines)
-(global-set-key "\C-x-" 'er/expand-region)
-(global-set-key "\C-x+" 'er/contract-region)
+(global-set-key "\C-x[" 'er/expand-region)
+(global-set-key "\C-x]" 'er/contract-region)
 (global-set-key "\C-xs" 'ace-jump-mode)
 
-(require 'color-moccur)
+(require 'color-moccur nil t)
 
-(require 'moccur-edit)
+(require 'moccur-edit nil t)
 
-(require 'dash-at-point)
+(require 'dash-at-point nil t)
 
-(require 'expand-region)
+(require 'expand-region nil t)
 
-(require 'ace-jump-mode)
+(require 'ace-jump-mode nil t)
 
 (electric-pair-mode t)
 
-(require 'auto-complete-clang)
+(require 'auto-complete-clang nil t)
 
 (global-set-key "\C-c " 'ace-jump-mode)
 
@@ -662,8 +661,6 @@ If give a negative ARG, will undo the last mark action, thus the
                                   '(message-length))
     ))
 
-(require 'flycheck nil t)
-(add-hook 'after-init-hook #'global-flycheck-mode)
 (require 'swift-mode nil t)
 
 (require 'json nil t)
@@ -1187,6 +1184,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+(require 'gyp)
 
 (require 'bartuer-js)
 (autoload 'bartuer-js-load "bartuer-js.el" nil t)
@@ -1397,3 +1395,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'everything)
 (require 'restclient)
 (define-key global-map "\M-o" 'moccur)
+(require 'flycheck nil t)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+

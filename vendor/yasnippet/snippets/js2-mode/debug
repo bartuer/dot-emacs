@@ -1,0 +1,4 @@
+# name: debug 
+# --
+var debug = require('debug')("${1:module_name}");
+req$0

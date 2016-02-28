@@ -1,0 +1,5 @@
+# name: png_image
+# --
+${1:selector} {
+    background-image: url(data:image/png;base64,$0 )
+}
