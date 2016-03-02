@@ -1,0 +1,5 @@
+# name: shell task map
+# --
+shell.task(${1:array}.map(function (${2:element}) {
+    return $2$0;                                 
+}));

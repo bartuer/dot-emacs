@@ -1,0 +1,5 @@
+# name: shell task
+# --
+return gulp.src('gulpfile.js', {read: false}).pipe(shell([
+    $0
+]));
