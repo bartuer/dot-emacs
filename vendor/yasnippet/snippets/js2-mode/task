@@ -1,4 +1,4 @@
-# name: taks gulp
+# name: task gulp
 # --
 gulp.task('${1:task}', function () {
     $0;

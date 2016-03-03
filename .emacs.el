@@ -254,6 +254,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'flymake-jslint)
 (lintnode-start)
+(require 'swanknode)
+(swanknode-start)
 (require 'web-beautify)
 
 (require 'powershell)
