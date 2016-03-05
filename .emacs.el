@@ -948,6 +948,7 @@ If give a negative ARG, will undo the last mark action, thus the
   "mode for python mode" t nil)
 (add-hook 'python-mode-hook 'bartuer-python-load)
 (add-to-list 'auto-mode-alist '("\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\.gyp$" . gyp-mode))
 
 
 (require 'slime)
@@ -1086,7 +1087,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-c\C-j" 'bartuer-toggle-header)
 
 (load "~/etc/el/bartuer-c.el")
-(add-hook 'cc-mode-hook 'bartuer-c-load)
+(add-hook 'c-mode-hook 'bartuer-c-load)
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)

@@ -76,5 +76,10 @@
   "mode hooks for c/cc"
   (interactive)
   (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+                                        ; \C-\C load tag and search in anything
+                                        ; \M-, tag-loop-continue
+                                        ; \M-* tag jump
+  (define-key c-mode-base-map "\C-x," 'tags-search)
+  (define-key c-mode-base-map "\C-x." 'tags-query-replace)
   (define-key c-mode-base-map "\C-\M-i" 'ac-complete-clang)
   )
