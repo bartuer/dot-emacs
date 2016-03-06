@@ -518,6 +518,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'flyspell-mode-hook 'bartuer-flyspell-load)
 (global-set-key "\C-c\C-\M-n" 'flyspell-goto-next-error)
 
+(require 'ggtags nil t)
 ;; M-TAB do the tags and symbol complete
 (defalias 'tl (quote (lambda ()
                        (interactive)
