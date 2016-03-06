@@ -74,3 +74,4 @@ vendor/node_modules/js-beautify
 /vendor/node_modules/lintnode/package.json
 /vendor/node_modules/lintnode/views/layout.haml
 /vendor/node_modules/lintnode/views/upload.haml
+/vendor/irony-mode/server_build

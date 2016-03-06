@@ -31,6 +31,7 @@
 (defun bartuer-c-common ()
   "for c and C++ language
 "
+  (interactive)
   (require 'make-mode)
   ;; (c-subword-mode 1)
   ;; is it possible to guess the code style ?
@@ -43,11 +44,20 @@
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-j" 'recompile)
   (define-key c-mode-base-map "\C-c\C-c" 'c-load-etags)
+  (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+                                        ; \C-\C load tag and search in anything
+                                        ; \M-, tag-loop-continue
+                                        ; \M-* tag jump
+  (define-key c-mode-base-map "\C-x," 'tags-search)
+  (define-key c-mode-base-map "\C-x." 'tags-query-replace)
+  (define-key c-mode-base-map "\C-\M-\\" 'clang-format-region)
 
   (hs-minor-mode t)
+  (irony-mode)
   (add-to-list 'ac-sources 'ac-source-gtags)
   (add-to-list 'ac-sources 'ac-source-semantic)
   )
+
 
 (defun that-line-end (n)
   "track region end"
@@ -72,15 +82,4 @@
     )
   )
 
-(defun bartuer-c-load ()
-  "mode hooks for c/cc"
-  (interactive)
-  (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
-                                        ; \C-\C load tag and search in anything
-                                        ; \M-, tag-loop-continue
-                                        ; \M-* tag jump
-  (define-key c-mode-base-map "\C-x," 'tags-search)
-  (define-key c-mode-base-map "\C-x." 'tags-query-replace)
-  (define-key c-mode-base-map "\C-\M-\\" 'clang-format-region)
-  (define-key c-mode-base-map "\C-\M-i" 'ac-complete-clang)
-  )
+(provide 'bartuer-c)

@@ -1086,9 +1086,13 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-cj" 'bartuer-toggle-header)
 (global-set-key "\C-c\C-j" 'bartuer-toggle-header)
 
-(reuire 'clang-format nil t)
+(require 'clang-format nil t)
+
 (load "~/etc/el/bartuer-c.el")
-(add-hook 'c-mode-hook 'bartuer-c-load)
+(require 'bartuer-c nil t)
+(autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
+(add-hook 'c-mode-common-hook 'bartuer-c-common)
+
 
 (load "~/etc/el/bartuer-objc.el")
 (add-hook 'objc-mode-hook 'bartuer-objc-load)
@@ -1169,9 +1173,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist
              '("\\.lua$" . lua-mode))
 
-(autoload 'bartuer-c-common "bartuer-c.el" "for c and c++ language" t)
-(add-hook 'c-mode-common-hook 'bartuer-c-common)
-
 (autoload 'bartuer-gdb-load "bartuer-gdb.el" "for gdb" t)
 (add-hook 'gud-mode-hook 'bartuer-gdb-load)
 (add-to-list 'auto-mode-alist
@@ -1188,6 +1189,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+
 (require 'gyp)
 
 (require 'bartuer-js)
@@ -1399,6 +1401,21 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'everything)
 (require 'restclient)
 (define-key global-map "\M-o" 'moccur)
+
+(require 'irony nil t)
+(require 'irony-cdb nil t)
+(require 'flycheck-irony nil t)
+(eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+(defun bartuer-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'bartuer-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
 (require 'flycheck nil t)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
