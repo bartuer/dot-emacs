@@ -81,5 +81,6 @@
                                         ; \M-* tag jump
   (define-key c-mode-base-map "\C-x," 'tags-search)
   (define-key c-mode-base-map "\C-x." 'tags-query-replace)
+  (define-key c-mode-base-map "\C-\M-\\" 'clang-format-region)
   (define-key c-mode-base-map "\C-\M-i" 'ac-complete-clang)
   )

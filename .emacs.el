@@ -1086,6 +1086,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-cj" 'bartuer-toggle-header)
 (global-set-key "\C-c\C-j" 'bartuer-toggle-header)
 
+(reuire 'clang-format nil t)
 (load "~/etc/el/bartuer-c.el")
 (add-hook 'c-mode-hook 'bartuer-c-load)
 
