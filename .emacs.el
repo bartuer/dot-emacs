@@ -929,8 +929,6 @@ If give a negative ARG, will undo the last mark action, thus the
   '(progn (ac-ispell-setup))
  )
 
-(semantic-mode 1)
-(global-ede-mode 1)
 
 (require 'bartuer-erlang nil t)
 (autoload 'bartuer-erlang-load "~/etc/el/bartuer-erlang.el"
@@ -1057,7 +1055,7 @@ If give a negative ARG, will undo the last mark action, thus the
         ((or
           (string-equal (substring (buffer-file-name) -3) ".cc")
           (string-equal (substring (buffer-file-name) -3) ".mm"))
-         (concat (substring (buffer-file-name) 0 -2) "h"))
+         (concat (substring (buffer-file-name) 0 -2) "hh"))
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
              (equal major-mode 'objc-mode))
          (list
@@ -1070,6 +1068,11 @@ If give a negative ARG, will undo the last mark action, thus the
              (equal major-mode 'c++-mode))
          (list (concat (substring (buffer-file-name) 0 -1) "cpp")
                (concat (substring (buffer-file-name) 0 -1) "cc")
+               ))
+        ((and (string-equal (substring (buffer-file-name) -3) ".hh")
+             (equal major-mode 'c++-mode))
+         (list (concat (substring (buffer-file-name) 0 -2) "cpp")
+               (concat (substring (buffer-file-name) 0 -2) "cc")
                ))))
 
 (defun bartuer-toggle-header ()
