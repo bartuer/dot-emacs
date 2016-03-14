@@ -33,7 +33,6 @@
 "
   (interactive)
   (require 'make-mode)
-  (semantic-mode nil)
   ;; (c-subword-mode 1)
   ;; is it possible to guess the code style ?
   ;; now I using the c-file-style in file varible
@@ -47,6 +46,10 @@
   (define-key c-mode-base-map "\C-c\C-c" 'anything-etags-select)
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-c\C-c" 'c-load-etags)
+  (define-key input-decode-map "\e\eOA" [(meta up)])
+  (define-key input-decode-map "\e\eOB" [(meta down)])
+  (define-key c-mode-base-map [(meta down)] 'move-line-down)
+  (define-key c-mode-base-map [(meta up)] 'move-line-up)
   (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
                                         ; \C-\C load tag and search in anything
                                         ; \M-, tag-loop-continue
@@ -64,7 +67,7 @@
 
   (eldoc-mode t)                        ; show function definition in mini buffer, depend on auto generated gtags
   (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-  (define-key c-mode-base-map "\M-RET" 'ggtags-find-tag-dwim)
+  (define-key c-mode-base-map "\C-xt" 'ggtags-find-tag-dwim)
   
   (irony-mode t)                                         ; for syntax diagnose, depend on compile command json
   (add-to-list 'ac-sources 'ac-source-gtags)
