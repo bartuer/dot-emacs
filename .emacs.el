@@ -1028,13 +1028,13 @@ If give a negative ARG, will undo the last mark action, thus the
   (if (and (buffer-file-name)
            (string-equal (substring (buffer-file-name) -2) ".h"))
       (progn
-        (let ((dot-m-file (list
+        (let* ((dot-m-file (list
                            (concat (substring (buffer-file-name) 0 -1) "m")
                            (concat (substring (buffer-file-name) 0 -1) "mm")))
               (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp"))
               (dot-cc-file (concat (substring (buffer-file-name) 0 -1) "cc")))
-              (if (mapcar (lambda (f)
-                            (file-exists-p f)) dot-m-file)
+              (if (car (mapcar (lambda (f)
+                            (file-exists-p f)) dot-m-file)) 
                   (progn
                     (objc-mode)
                     )
@@ -1055,7 +1055,9 @@ If give a negative ARG, will undo the last mark action, thus the
         ((or
           (string-equal (substring (buffer-file-name) -3) ".cc")
           (string-equal (substring (buffer-file-name) -3) ".mm"))
-         (concat (substring (buffer-file-name) 0 -2) "hh"))
+         (list (concat (substring (buffer-file-name) 0 -2) "hh")
+               (concat (substring (buffer-file-name) 0 -2) "h")
+               ) )
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
              (equal major-mode 'objc-mode))
          (list
@@ -1065,9 +1067,11 @@ If give a negative ARG, will undo the last mark action, thus the
              (equal major-mode 'c-mode))
          (concat (substring (buffer-file-name) 0 -1) "c"))
         ((and (string-equal (substring (buffer-file-name) -2) ".h")
-             (equal major-mode 'c++-mode))
+              (or (equal major-mode 'c++-mode)
+                  (equal major-mode 'objc-mode)) )
          (list (concat (substring (buffer-file-name) 0 -1) "cpp")
                (concat (substring (buffer-file-name) 0 -1) "cc")
+               (concat (substring (buffer-file-name) 0 -1) "m")
                ))
         ((and (string-equal (substring (buffer-file-name) -3) ".hh")
              (equal major-mode 'c++-mode))
@@ -1106,7 +1110,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'fsharp-mode)
 (load "~/etc/el/bartuer-fsharp.el")
 (add-hook 'fsharp-mode-hook 'bartuer-fsharp-load)
-(add-to-list 'auto-mode-alist '("\\fs$" . fsharp-mode))
+(add-to-list 'auto-mode-alist '("\\fs$" . fshrarp-mode))
 
 (defun mac-control ()
   "insert key symbol for shift"
