@@ -323,7 +323,8 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-\M-u" 'slime-js-start-of-toplevel-form)
   ;; (define-key js2-mode-map "\C-c\C-c" 'anything-js-browser)
 
-  (define-key js2-mode-map "\C-j" 'bartuer-jslime)
+  ;; (define-key js2-mode-map "\C-j" 'bartuer-jslime)
+  (define-key js2-mode-map "\M-j" 'dabbrev-expand)
   (define-key js2-mode-map "\M-r" 'js-find-file-in-project)
   (define-key js2-mode-map "\C-\M-i" 'anything-complete-js)
 

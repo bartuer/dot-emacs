@@ -18,8 +18,8 @@
                    (list "."
                          "../src/"
                          "../../src"
-                         "../../src"
                          "../../../src"
+                         "../../../../src"
                          ".."
                          "../.."
                          "../../.."
@@ -29,7 +29,7 @@
   )
 
 (defun bartuer-c-common ()
-  "for c and C++ language
+  "for c and C++ language.
 "
   (interactive)
   (require 'make-mode)
@@ -60,6 +60,7 @@
   (hs-minor-mode t)
 
   (add-hook 'before-save-hook 'clang-format-buffer t t) ; format code style according to .clang-format in path
+
   (define-key c-mode-base-map "\C-\M-\\" 'clang-format-region)
 
   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)

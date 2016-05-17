@@ -258,6 +258,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (swanknode-start)
 (require 'web-beautify)
 
+(autoload 'glsl-mode "glsl-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
+
 (require 'powershell)
 (require 'powershell-mode)
 (add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
@@ -444,8 +450,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'm 'flymake-mode)
 (defalias 'a 'apropos)                  ;C-u C-h a for command and function
 ;;; jslint
-(require 'flymake-jslint)
-(lintnode-start)
+
 
 (add-hook
  'eshell-mode-hook
@@ -800,7 +805,8 @@ If give a negative ARG, will undo the last mark action, thus the
                                (message "load yas")
                                (yas-load-directory "~/etc/el/vendor/yasnippet/snippets")))
 (add-hook 'yas-after-exit-snippet-hook (lambda ()
-                                            (flymake-mode t)))
+                                         (cond (not (eq major-mode "js2-mode")) (flymake-mode t))
+                                            ))
 
 (defalias 'y 'yas-reload-all)
 

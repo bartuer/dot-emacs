@@ -1,6 +1,6 @@
 ;;; irony.el --- C/C++ minor mode powered by libclang
 
-;; Copyright (C) 2011-2014  Guillaume Papin
+;; Copyright (C) 2011-2014, 2016  Guillaume Papin
 
 ;; Author: Guillaume Papin <guillaume.papin@epitech.eu>
 ;; Version: 0.2.0-cvs4
@@ -555,7 +555,7 @@ list (and undo information is not kept).")
             (start-process-shell-command
              "Irony"                    ;process name
              irony--server-buffer       ;buffer
-             (format "%s -i 2> %s"      ;command
+             (format "%s -i -d 2> %s"      ;command
                      (shell-quote-argument irony--server-executable)
                      (expand-file-name
                       (format-time-string "irony.%Y-%m-%d_%Hh-%Mm-%Ss.log")

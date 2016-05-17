@@ -11,5 +11,3 @@ css imenu build see `css-extract-keyword-list'
   (define-key css-mode-map "{" 'css-mode-electric-insert-close-brace)
   (add-hook 'before-save-hook 'web-beautify-css-buffer t t)
   )
-
-(require 'bartuer-page nil t)
