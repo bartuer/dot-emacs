@@ -1,0 +1,6 @@
+# name: jslocalmethod
+# --
+JS_LOCAL_METHOD(${1:name}) {
+    $0
+}
+JS_METHOD_END

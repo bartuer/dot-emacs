@@ -1,0 +1,5 @@
+# name: category hhhhh describe_name
+# --
+for ($(1:index) = 0; $i < $(2: size); $i++){
+    $0
+}

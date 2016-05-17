@@ -1,0 +1,26 @@
+# name: react class
+# --
+/*jslint
+   browser, es6, devel, multivar
+ */
+
+import React from "react";
+import './${2:style_name}.less';
+
+const ${1:ClassName} =  React.createClass({
+    componentDidMount: function () {
+        ff
+    },
+    
+    render() {
+        const ${5:child} = re$0
+        
+        return React.createElement(
+             ${3:type},
+             ${4:option},
+             $5
+        );
+    } 
+});
+
+export default $1;

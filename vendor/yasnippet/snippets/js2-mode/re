@@ -1,0 +1,7 @@
+# name: react create element
+# --
+React.createElement(
+    ${1:type},
+    ${2:option},
+    $0
+);

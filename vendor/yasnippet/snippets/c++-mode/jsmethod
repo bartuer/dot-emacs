@@ -1,0 +1,6 @@
+# name: jsmethod
+# --
+JS_METHOD(${1:clsname}, ${2:name}) {
+    $0
+}
+JS_METHOD_END
