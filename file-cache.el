@@ -140,9 +140,3 @@
                                 "/Users/bartuer/local/src/selfie/selfie_server/app/nav.android/CenterPanel/TopTabBar"
                                 "/Users/bartuer/local/src/selfie/selfie_server/app/nav.android/LeftPanel"
                                 ))
-(eval-after-load
-       "filecache"
-       '(progn
-          (file-cache-add-directory-using-find
-           "~/local/src/swift")
-))
