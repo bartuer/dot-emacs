@@ -1,0 +1,29 @@
+# name: nodejs http post
+# --
+
+var payload = {
+
+};
+var body = JSON.stringify(payload);
+
+var req = http.request({
+    port: ${1:port},
+    hostname: 'localhost',
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+    },
+    path: '/${2:path}'
+}, (resp) => {
+    var content = "";
+    resp.on('data', (chunk) => {
+        content += chunk;
+    });
+    resp.on('end', () => {
+        console.log(content);
+    });
+});
+
+req.on('error', console.error);
+req.end(body);

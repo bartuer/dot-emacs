@@ -1,0 +1,13 @@
+# name: rx for widget widgetrx
+# --
+/*global module */
+import * as com from 'common';
+
+module.exports = function (m, stream) {
+    const events = stream;
+    events
+        .map(e => e.event)
+        .onValue(v => {
+            console.log(v);
+        }); 
+};

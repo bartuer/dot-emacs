@@ -1,0 +1,54 @@
+# name: widget react
+# --
+import * as com from 'common';
+import ${1:WidgetName}Handler from '$1.do';
+import 'css/$1.less';
+
+const model = {};
+
+const $1 = com.view({
+    getInitialState: () => {
+        return {
+            value: model.v
+        };
+    },
+    render() {
+        return com.el();
+    }
+});
+
+const Rx$1 = com.observableComponent($1, ['onChange']);
+
+class $1Widget {
+    constructor(option) {
+        this.container = option.container;
+        if (option.handler) {
+            option.handler(option.model, option.events);
+        }
+        this.render(option.config);
+        com.bodyEvents.forEach(function (name) {
+            document.body.addEventListener(name, function (e) {
+                e.preventDefault();
+            });
+        });
+    }
+
+    render(config) {
+        com.ReactDOM.render(
+            com.el(Rx$1, config || {}),
+            this.container
+        );
+    }
+
+    destroy() {
+        com.ReactDOM.unmountComponentAtNode(this.container);
+    }
+}
+
+
+module.exports = {
+    $1Widget: $1Widget,
+    $1Handler: $1Handler,
+    $1Event: com.streamEvent(Rx$1),
+    $1Model: model
+};
