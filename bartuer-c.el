@@ -63,14 +63,17 @@
 
   (define-key c-mode-base-map "\C-\M-\\" 'clang-format-region)
 
+  (add-to-list 'flycheck-checkers 'c/c++-clangcheck)
+  
   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
                   (ggtags-mode 1))
 
+  (flycheck-select-checker 'c/c++-clangcheck)
+  
   (eldoc-mode t)                        ; show function definition in mini buffer, depend on auto generated gtags
   (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
   (define-key c-mode-base-map "\C-xt" 'ggtags-find-tag-dwim)
   
-  (irony-mode t)                                         ; for syntax diagnose, depend on compile command json
   (add-to-list 'ac-sources 'ac-source-gtags)
   )
 

@@ -1416,20 +1416,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'restclient)
 (define-key global-map "\M-o" 'moccur)
 
-(require 'irony nil t)
-(require 'irony-cdb nil t)
-(require 'flycheck-irony nil t)
-(eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-(defun bartuer-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'bartuer-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
 (require 'flycheck nil t)
+(require 'flycheck-clangcheck nil t)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
