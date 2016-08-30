@@ -1,7 +1,7 @@
 ;; erlang.el --- Major modes for editing and running Erlang
 ;; %CopyrightBegin%
 ;;
-;; Copyright Ericsson AB 1996-2010. All Rights Reserved.
+;; Copyright Ericsson AB 1996-2010, 2016. All Rights Reserved.
 ;;
 ;; The contents of this file are subject to the Erlang Public License,
 ;; Version 1.1, (the "License"); you may not use this file except in
@@ -897,7 +897,7 @@ behaviour.")
   "Non-nil means use `compilation-minor-mode' in Erlang shell.")
 
 
-(defvar erlang-skel-file "erlang-skels"
+(defvar erlang-skel-file (concat (file-name-directory (or load-file-name buffer-file-name)) "erlang-skels")
   "The type of erlang-skeletons that should be used, default
    uses edoc type, for the old type, standard comments,
    set \"erlang-skels-old\" in your .emacs and restart.
@@ -905,7 +905,7 @@ behaviour.")
    Or define your own and set the variable to that file.")
 
 ;; Tempo skeleton templates:
-(load erlang-skel-file)
+;; (load erlang-skel-file)
 
 ;; Font-lock variables
 
