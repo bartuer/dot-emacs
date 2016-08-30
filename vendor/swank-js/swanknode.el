@@ -18,7 +18,7 @@
 (defun swanknode-start ()
   "Start the swanknode server."
   (interactive)
-  (start-process "swanknode-server" "*swanknode*" "~/etc/el/vendor/swank-js/swank.js"
+  (start-process "swanknode-server" "*swanknode*" "node" (concat (file-name-directory (or load-file-name buffer-file-name)) "swank.js")
                  ))
 
 (provide 'swanknode)
