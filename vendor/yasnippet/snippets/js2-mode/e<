@@ -1,3 +1,0 @@
-# name: e< jspec expect compare less_than
-# --
-expect(${1:val1}).to(be_less_than, ${2:val2});

@@ -1,3 +1,0 @@
-# name: key and value
-# --
-${1:key}: ${2:value}

@@ -1,3 +1,0 @@
-#name : Array Hash join to string
-# --
-${1:Container}$0 * "${2:,}"
