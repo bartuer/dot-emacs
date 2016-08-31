@@ -279,7 +279,7 @@ If give a negative ARG, will undo the last mark action, thus the
             (ansi-color-for-comint-mode-on)))
 (global-set-key [(f5)] 'compile)
 (global-set-key "\M-3" 'shell-command)
-(global-set-key "\M-1" 'shell)
+(global-set-key "\M-1" (if (string= system-type "windows-nt") 'powershell 'shell))
 (global-set-key "\M-5" 'everything-find-file)
 (global-set-key "\M-6" 'nav-toggle)
 
@@ -1255,8 +1255,8 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (autoload 'bartuer-elisp-load "bartuer-elisp.el" "for edit elisp" t)
 (add-hook 'elisp-mode-hook 'bartuer-elisp-load)
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+;; (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+;; (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 
 (require 'ess-site nil t)
