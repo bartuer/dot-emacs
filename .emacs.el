@@ -69,7 +69,7 @@
                                         (get-char-property (point) 'face))))
             (if face (message "Face: %s" face) (message "No face at %d" pos))))
 
-(if(fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (string= 'system-type "windows-nt") (menu-bar-mode 1) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (fset 'yes-or-no-p 'y-or-n-p)
