@@ -296,7 +296,7 @@ can bind C-j in comint buffer"
     (flyspell-prog-mode))
   (yas-minor-mode-on)
 
-  (setq js2-mode-show-overlay t)
+  (setq js2-mode-show-overlay nil)
   (setq js2-mirror-mode nil)
   (set-up-slime-js-ac)
   (slime-js-minor-mode)
