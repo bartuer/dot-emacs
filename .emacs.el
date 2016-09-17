@@ -69,7 +69,7 @@
                                         (get-char-property (point) 'face))))
             (if face (message "Face: %s" face) (message "No face at %d" pos))))
 
-(if (string= 'system-type "windows-nt") (menu-bar-mode 1) (menu-bar-mode -1))
+(if (string= system-type "windows-nt") (menu-bar-mode -1) (menu-bar-mode -1))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -279,7 +279,7 @@ If give a negative ARG, will undo the last mark action, thus the
             (ansi-color-for-comint-mode-on)))
 (global-set-key [(f5)] 'compile)
 (global-set-key "\M-3" 'shell-command)
-(global-set-key "\M-1" (if (string= system-type "windows-nt") 'powershell 'shell))
+(global-set-key "\M-1" (if (string= system-type "windows-nt") 'shell 'shell))
 (global-set-key "\M-5" 'everything-find-file)
 (global-set-key "\M-6" 'nav-toggle)
 
