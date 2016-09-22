@@ -70,6 +70,7 @@
             (if face (message "Face: %s" face) (message "No face at %d" pos))))
 
 (if (string= system-type "windows-nt") (menu-bar-mode -1) (menu-bar-mode -1))
+(if (string= system-type "windows-nt") (setq find-program "findnix") (setq find-program "find"))
 (if(fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if(fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (fset 'yes-or-no-p 'y-or-n-p)
