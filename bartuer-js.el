@@ -278,10 +278,19 @@ can bind C-j in comint buffer"
 
 (defun web-beautify-format-region-js (beg end)
   "By PROGRAM, format each line in the BEG .. END region."
-  (let* ((program (locate-file  "js-beautify.js" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/"))))
+  (let* ((program
+          (if (string= system-type "windows-nt")
+              (locate-file  "js-beautify.bat" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/"))
+            (locate-file  "js-beautify.js" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/")))
+          ))
     (save-excursion
       (apply 'call-process-region beg end program t
              (list t nil) t web-beautify-args))))
+
+
+(defun web-beautify-js-buffer-win ()
+  "Format the current buffer according to the js-beautify command."
+  (web-beautify-format-buffer (locate-file  "js-beautify.bat" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/")) "js"))
 
 
 (defun bartuer-js-load ()
@@ -337,7 +346,9 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-c\C-c" 'js2r-log-this)
   (define-key js2-mode-map "\M-S" 'js2r-split-string)
   
-  (add-hook 'before-save-hook 'web-beautify-js-buffer t t)
+  (add-hook 'before-save-hook (if (string= system-type "windows-nt")
+                                  'web-beautify-js-buffer-win
+                                  'web-beautify-js-buffer) t t)
   )
 
 
