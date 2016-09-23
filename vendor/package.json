@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "js-beautify": "^1.5.10",
-    "lintnode": "^0.2.12"
+    "lintnode": "^0.2.12",
+    "socket.io": "^1.4.8"
   },
   "devDependencies": {},
   "optionalDependencies": {},

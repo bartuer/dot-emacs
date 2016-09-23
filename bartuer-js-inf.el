@@ -89,7 +89,7 @@
           (pop-to-buffer js-buffer t)
           )
       (progn
-        (slime-connect "localhost" "4005" nil t)
+        (slime-connect "localhost" 4005 nil t)
         (with-current-buffer js-buffer
           (slime-js-minor-mode 1)
           (pop-to-buffer js-buffer t)
