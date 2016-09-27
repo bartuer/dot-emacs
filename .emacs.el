@@ -761,7 +761,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (defun html-2-md ()
   "invoke html2text.py to see document in markdown"
-  (shell-command-on-region (point-min) (point-max) "html2text.py"
+  (shell-command-on-region (point-min) (point-max) (if (string= system-type "windows-nt") "html2text.exe" "html2text.py")
                            (get-buffer-create "html-markdown"))
   (with-current-buffer "html-markdown"
                        (markdown-mode)
@@ -773,14 +773,11 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (defalias 'u (lambda (url-content-insert-location)
                (interactive "surl: ")
-
-               (shell-command  (concat "curl -n --ntlm -k " url-content-insert-location " 2>/dev/null")
+               (shell-command  (concat "curl -n --ntlm -k " url-content-insert-location (if (string= system-type "windows-nt") " 2>nul" " 2>/dev/null"))
                                (get-buffer-create "preview-url") (get-buffer "*Shell Command Output*"))
+               
                (with-current-buffer "preview-url"
                  (goto-char (point-min))
-                 (if (search-forward "html" (point-max) t)
-                     (html-2-txt)
-                     )
                  (if (search-forward "html" (point-max) t)
                      (html-2-md)
                      )
