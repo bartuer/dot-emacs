@@ -1,32 +1,38 @@
-echo "Setup Git"
-git config --global user.email "bazhou@microsoft.com"
-git config --global user.name "Bartuer Zhou"
-git config --global push.default simple
-echo "Update yum"
-sudo yum update;
+# echo "Setup Git"
+# git config --global user.email "bazhou@microsoft.com"
+# git config --global user.name "Bartuer Zhou"
+# git config --global push.default simple
+# echo "Update yum"
+# sudo yum update;
 
-echo "Install ASpell Package"
-# install aspell
-sudo yum install aspell aspell-en.x86_64 -y;
+# echo "Install ASpell Package"
+# # install aspell
+# sudo yum install aspell aspell-en.x86_64 -y;
 
-echo "Install SBCL CommonLisp Package"
-#install SBCL
-sudo yum install sbcl -y
+# echo "Install SBCL CommonLisp Package"
+# #install SBCL
+# sudo yum install sbcl -y
 
-echo "Install R Package" 
-#install R
-sudo yum install R -y
+# echo "Install R Package" 
+# #install R
+# sudo yum install R -y
 
-echo "Install JS/NodeJs/npm (via nvm)"
-# install nvm/choose nodejs
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
+# echo "Install JS/NodeJs/npm (via nvm)"
+# # install nvm/choose nodejs
+# curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
 
-export NVM_DIR="/home/bazhou/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+# export NVM_DIR="/home/bazhou/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-nvm install 6.0 && nvm use 6.0
+# nvm install 6.0 && nvm use 6.0
 
-# install gulp
-npm install -g gulp
+# # install gulp
+# npm install -g gulp
+
+echo "Clone Emacs for dot-emacs"
+# clone emacs package
+mkdir -p ~/etc
+cd ~/etc
+git clone https://github.com/bartuer/dot-emacs.git el
 
 echo "Compile Emacs"
 # compile/install emacs
