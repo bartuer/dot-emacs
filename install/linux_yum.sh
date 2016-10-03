@@ -1,7 +1,7 @@
 echo "Setup Git"
 git config --global user.email "bazhou@microsoft.com"
 git config --global user.name "Bartuer Zhou"
-
+git config --global push.default simple
 echo "Update yum"
 sudo yum update;
 
