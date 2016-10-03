@@ -41,7 +41,7 @@ echo "Compile Emacs"
 # cd ~/local/src
 # curl -O https://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.gz
 # tar -xzf emacs-24.5.tar.gz 
-cd emacs-24.5
+cd ~/local/src/emacs-24.5
 cp ~/etc/el/install/emacs.config.log configure.sh
 chmod +x configure.sh
 ./configure.sh
