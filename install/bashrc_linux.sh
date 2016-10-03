@@ -1,4 +1,7 @@
 
+export NVM_DIR="/home/bazhou/.nvm" 
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
 function post {
     curl -H "Content-Type: application/json" -d @-  $1
 }

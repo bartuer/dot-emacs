@@ -20,7 +20,9 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | b
 
 export NVM_DIR="/home/bazhou/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-nvm install 6.0 && nvm use 6.0
+nvm install 6.0
+
+nvm use 6.0
 
 # install gulp
 npm install -g gulp
@@ -45,6 +47,7 @@ chmod +x configure.sh
 make && make install
 
 echo "Post Configure for Emacs"
+mkdir -p ~/local/bin/
 cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin
 ln -s ~/local/share/emacs/24.5 ~/local/share/emacs/current
 
