@@ -43,6 +43,7 @@ curl -O https://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.gz
 tar -xzf emacs-24.5.tar.gz 
 cp ~/etc/el/install/emacs.config.log configure.sh
 chmod +x configure.sh
+cd emacs-24.5
 ./configure.sh
 make && make install
 
