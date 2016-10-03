@@ -14,4 +14,4 @@ alias ss='source ~/.bashrc'
 
 export NPM_CONFIG_ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/"
 export GZIP_ENV="--rsyncable"
-export PATH=~/local/bin:~/scripts:$PATH
+export PATH=~/.nvm;~/local/bin:~/scripts:$PATH
