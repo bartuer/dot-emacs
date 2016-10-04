@@ -44,7 +44,7 @@ cd ~/local/src/emacs-24.5
 cp ~/etc/el/install/emacs.config.log configure.sh
 chmod +x configure.sh
 ./configure.sh
-make && make install
+make -j && make install
 
 echo "Post Configure for Emacs"
 mkdir -p ~/local/bin/
@@ -59,10 +59,9 @@ npm install
 
 #link .emacs.el
 cd ~
-ln -s ~/.emacs.el ~/etc/el/.emacs.el
+ln -s ~/etc/el/.emacs.el ~/.emacs.el 
 
 #add bashrc shortcut
-echo "" >> ~/.bashrc
 cat ~/etc/el/install/bashrc_linux.sh >> ~/.bashrc
 source ~/.bashrc
 
