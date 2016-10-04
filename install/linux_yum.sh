@@ -49,8 +49,13 @@ make -j && make install
 echo "Post Configure for Emacs"
 mkdir -p ~/local/bin/
 cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy
+<<<<<<< HEAD
 chmod +x ~/local/bin/pbcopy
 cp ~/etc/el/install/killemacs ~/local/bin
+=======
+cp ~/etc/el/install/killemacs ~/local/bin/killemacs
+cp ~/etc/el/install/quote0 ~/local/bin/quote0
+>>>>>>> 9f28dd05af37d46d6cef527365c7e2ee9246cdc0
 ln -s ~/local/share/emacs/24.5 ~/local/share/emacs/current
 
 # install emacs js package
