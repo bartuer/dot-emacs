@@ -48,7 +48,8 @@ make && make install
 
 echo "Post Configure for Emacs"
 mkdir -p ~/local/bin/
-cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin
+cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy
+chmod +x ~/local/bin/pbcopy
 cp ~/etc/el/install/killemacs ~/local/bin
 ln -s ~/local/share/emacs/24.5 ~/local/share/emacs/current
 
