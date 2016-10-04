@@ -794,6 +794,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'gist nil t)
 (require 'pastie nil t)
 
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(require 'docker nil t)
 
 (require 'yasnippet)
 (yas--initialize)
