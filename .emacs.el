@@ -796,6 +796,10 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(require 'docker-images nil t)
+(require 'docker-containers nil t)
+(require 'docker-volumes nil t)
+(require 'docker-networks nil t)
 (require 'docker nil t)
 
 (require 'yasnippet)
