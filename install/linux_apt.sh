@@ -2,18 +2,18 @@ echo "Setup Git"
 git config --global user.email "bazhou@microsoft.com"
 git config --global user.name "Bartuer Zhou"
 git config --global push.default simple
-echo "Update yum"
-sudo yum update;
+echo "Update apt"
+sudo apt update;
 
 echo "Install ASpell Package"
-sudo yum install aspell aspell-en.x86_64 -y;
+sudo apt install aspell aspell-en -y;
 
 echo "Install SBCL CommonLisp Package"
-sudo yum install sbcl -y
+sudo apt install sbcl -y
 
 echo "Install R Package" 
 
-sudo yum install R -y
+sudo apt install R -y
 
 echo "Install JS/NodeJs/npm (via nvm)"
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
@@ -35,7 +35,7 @@ git clone https://github.com/bartuer/dot-emacs.git el
 
 echo "Compile Emacs"
 # compile/install emacs
-sudo yum install ncurses-devel.x86_64 xclip -y
+sudo apt install libncurses5-dev xclip -y
 mkdir -p ~/local/src
 cd ~/local/src
 curl -O https://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.gz
