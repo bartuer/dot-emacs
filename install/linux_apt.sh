@@ -13,7 +13,7 @@ sudo apt install sbcl -y
 
 echo "Install R Package" 
 
-sudo apt install R -y
+sudo apt install r-base -y
 
 echo "Install JS/NodeJs/npm (via nvm)"
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
