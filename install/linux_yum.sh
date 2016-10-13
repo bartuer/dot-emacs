@@ -18,7 +18,7 @@ sudo yum install R -y
 echo "Install JS/NodeJs/npm (via nvm)"
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
 
-export NVM_DIR="/home/bazhou/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+export NVM_DIR="/home/$(whoami)/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 nvm install 6.0
 
