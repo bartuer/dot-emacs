@@ -46,7 +46,7 @@
         ))
     (setq last-post-command-position (point)))
 
-
+(global-set-key "\C-cd" `dash-at-point)
 (require 'expand-region nil t)
 
 (require 'ace-jump-mode nil t)
