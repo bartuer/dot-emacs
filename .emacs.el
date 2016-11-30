@@ -1,5 +1,13 @@
+;;; package --- Summary
+;;; Commentary:
+;;; 
+;;; code:
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
+
+(defun cygw2u (path)
+  (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
+  )
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -25,6 +33,20 @@
 
 (require 'dash-at-point nil t)
 
+(defvar last-post-command-position 0
+    "Holds the cursor position from the last run of post-command-hooks.")
+
+(make-variable-buffer-local 'last-post-command-position)
+
+(defun dash-doc-query ()
+    (unless (equal (point) last-post-command-position)
+      (let ((my-current-word (thing-at-point 'word)))
+        (message "%s" my-current-word)
+        (dash-at-point-run-search my-current-word)
+        ))
+    (setq last-post-command-position (point)))
+
+
 (require 'expand-region nil t)
 
 (require 'ace-jump-mode nil t)
@@ -34,10 +56,6 @@
 (require 'auto-complete-clang nil t)
 
 (global-set-key "\C-c " 'ace-jump-mode)
-
-(defun cygw2u (path)
-  (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
-  )
 
 (defun cygu2w (path)
   (concat "C:\\cygwin64" (subst-char-in-string ?/ ?\\ path)) 
@@ -307,12 +325,20 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (require 'bartuer-dired nil t)
 
+
+(defun shell-instead-dired ()
+  (interactive)
+  (let ((dired-buffer (current-buffer)))
+    (shell (concat default-directory "-shell"))
+    (delete-other-windows)))
+
 (add-hook 'dired-load-hook (lambda ()
                              (load "dired-x")
                              ))
 
 (add-hook 'dired-mode-hook (lambda ()
                              (define-key dired-mode-map " " 'do-ql-dwim)
+                             (define-key dired-mode-map "c" 'shell-instead-dired)                             
                              (define-key dired-mode-map "w" 'dired-copy-filename-as-kill-fix)
                              ))
 

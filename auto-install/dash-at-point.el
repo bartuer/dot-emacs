@@ -1,6 +1,6 @@
 ;;; dash-at-point.el --- Search the word at point with Dash
 
-;; Copyright (C) 2013 Shinji Tanaka
+;; Copyright (C) 2013, 2016 Shinji Tanaka
 ;; Author:  Shinji Tanaka <shinji.tanaka@gmail.com>
 ;; Created: 17 Feb 2013
 ;; Version: 0.0.5
@@ -96,8 +96,7 @@ Nil means use the modern mode ('dash-plugin://').
     (html-mode . "html,svg,css,bootstrap,foundation,awesome,javascript,jquery,jqueryui,jquerym,angularjs,backbone,marionette,meteor,moo,prototype,ember,lodash,underscore,sencha,extjs,knockout,zepto,cordova,phonegap,yui")
     (jade-mode . "jade")
     (java-mode . "java,javafx,grails,groovy,playjava,spring,cvj,processing,javadoc")
-    (js2-mode . "javascript,backbone,angularjs")
-    (js3-mode . "nodejs")
+    (js2-mode . "javascript,nodejs")
     (latex-mode . "latex")
     (less-css-mode . "less")
     (lua-mode . "lua,corona")
@@ -213,16 +212,9 @@ the combined docset.")
 
 (defun dash-at-point-run-search (search-string &optional docset)
   "Directly execute search for SEARCH-STRING in Dash."
-  (start-process "Dash" nil "open"
-		 (if dash-at-point-legacy-mode
-		     (concat "dash://"
-			     (when docset
-			       (concat docset ":"))
-			     search-string)
-		   (concat "dash-plugin://"
-			   (when docset
-			     (concat "keys=" docset "&"))
-			   "query=" (url-hexify-string search-string)))))
+  (message "%s" search-string)
+  (start-process "Dash" "dap" "~/etc/el/bin/dash.sh" (if docset docset "")  (url-hexify-string search-string)
+                 ))
 
 ;;;###autoload
 (defun dash-at-point (&optional edit-search)
