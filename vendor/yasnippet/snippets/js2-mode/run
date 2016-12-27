@@ -1,0 +1,11 @@
+# name: run gulp
+# --
+var run = require('child-process-promise').spawn;
+
+gulp.task('run', function () {
+    run('${1:cmd}', ['${2:opt}'], {
+        capture: ['stdout', 'stderr']
+    }).then(result => {
+        return result.stdout.toString();
+    }).then(console.log).catch(console.error);
+});

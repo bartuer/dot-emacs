@@ -39,7 +39,8 @@
                                 "~/local/src/jxfacecore/deps/facecore/deps/facedps/VisionTools"
                                 "~/local/src/jxfacecore/deps/facecore/deps/facedps/FaceDpsLib/AutoFix"
                                 "~/local/src/selfie_server/lib/worker"
-                                
+                                "~/local/src/ksedu/applications/jxcore/deps/node-ffi/src"
+                                "~/local/src/ksedu/applications/jxcore/deps/node-ffi/test"
                                 ))
 (provide 'file-cache)
 ;;; file-cache.el ends here

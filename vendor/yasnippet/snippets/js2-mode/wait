@@ -1,0 +1,3 @@
+# name: wait wait hold process
+# --
+require('net').createServer().listen(0, function () {});
