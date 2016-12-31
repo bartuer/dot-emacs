@@ -40,7 +40,9 @@
   (define-key c-mode-base-map "\C-i" 'bartuer-c-indent)
   (define-key makefile-mode-map "\C-j" 'recompile)
   (define-key c-mode-base-map "\C-j" 'recompile)
-  
+  (define-key c-mode-base-map "\C-c\C-o" (lambda () (interactive) (if (hs-already-hidden-p)
+                                                         (hs-show-block)
+                                                       (hs-hide-block))))
   (define-key c-mode-base-map "\M-j" 'dabbrev-expand)
   (define-key c-mode-base-map "\C-m" 'c-context-line-break)
   (define-key c-mode-base-map "\C-c\C-c" 'anything-etags-select)
