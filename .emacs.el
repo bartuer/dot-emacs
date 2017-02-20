@@ -984,6 +984,9 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\.css$" . css-mode))
 (add-to-list 'auto-mode-alist '("\.less$" . less-css-mode))
 
+(require 'hcl-mode nil t)
+(autoload 'hcl-mode "~/etc/el/auto-install/hcl-mode.el"
+  "mode for nomad and hcl file" t nil)
 (autoload 'yaml-mode "~/etc/el/vendor/yaml-mode/trunk/yaml-mode.el"
   "mode for yaml file" t nil)
 (require 'yaml-mode nil t)
