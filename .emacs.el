@@ -973,6 +973,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'erlang-mode-hook 'bartuer-erlang-load)
 (add-to-list 'auto-mode-alist '("\.erl$" . erlang-mode))
 
+
 (require 'bartuer-lua nil t)
 (autoload 'bartuer-lua-load "~/etc/el/bartuer-lua.el"
   "mode for lua mode" t nil)

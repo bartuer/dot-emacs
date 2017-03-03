@@ -1,6 +1,6 @@
 ;;; flycheck.el --- Modern on-the-fly syntax checking for GNU Emacs -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2012-2015 Sebastian Wiesner <swiesner@lunaryorn.com>
+;; Copyright (c) 2012-2015, 2017 Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Copyright (C) 2013, 2014 Free Software Foundation, Inc.
 ;;
 ;; Author: Sebastian Wiesner <swiesner@lunaryorn.com>
@@ -6333,7 +6333,7 @@ See URL `http://lesscss.org'."
   "A Lua syntax checker using the Lua compiler.
 
 See URL `http://www.lua.org/'."
-  :command ("luac" "-p" source)
+  :command ("luajit" "-bl" source ">/dev/null")
   :error-patterns
   ((error line-start
           ;; Skip the name of the luac executable.  We also skip the file name,

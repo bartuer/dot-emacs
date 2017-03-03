@@ -1,0 +1,9 @@
+# name: lua ifel 
+# --
+if ${1:cond} then
+  $0
+elseif ${2:cond} then
+
+else
+
+end

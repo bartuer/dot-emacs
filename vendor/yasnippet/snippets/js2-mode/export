@@ -1,5 +1,15 @@
-# name: nodejs export
+# name: __esModule export ES6
 # --
-module.exports = function () {
+/*global define, require, module, console, debug, exports, process, Buffer, setImmediate, setTimeout, setInterval, clearInterval */
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.${1:name} = global.$1 || {})));
+}(this, (function (exports) {
+    'use strict';
+    exports.info = "$1";
     $0
-};
+    Object.defineProperty(exports, '__esModule', {
+        value: true
+    });
+})));

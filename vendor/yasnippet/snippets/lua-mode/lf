@@ -1,0 +1,6 @@
+# name: local function
+# --
+local ${1:name}
+$1 = function (${2:argument})
+  $0
+end

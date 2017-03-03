@@ -1,0 +1,3 @@
+# name: require req 
+# --
+require('${1:module}')
