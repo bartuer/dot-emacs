@@ -1,0 +1,4 @@
+# name: print p 
+# --
+print(${1:content})
+$0

@@ -1,0 +1,5 @@
+# name: repeat do
+# --
+repeat
+  $0
+until $1

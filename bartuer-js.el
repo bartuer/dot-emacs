@@ -292,6 +292,9 @@ can bind C-j in comint buffer"
   "Format the current buffer according to the js-beautify command."
   (web-beautify-format-buffer (locate-file  "js-beautify.bat" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/")) "js"))
 
+(defun web-beautify-js-buffer ()
+  "Format the current buffer according to the js-beautify command."
+  (web-beautify-format-buffer (locate-file  "js-beautify.js" (list "~/etc/el/vendor/node_modules/js-beautify/js/bin/")) "js"))
 
 (defun bartuer-js-load ()
   "for javascript language
@@ -345,7 +348,9 @@ can bind C-j in comint buffer"
   (define-key js2-mode-map "\C-\M-r" 'js2r-unwrap)
   (define-key js2-mode-map "\C-c\C-c" 'js2r-log-this)
   (define-key js2-mode-map "\M-S" 'js2r-split-string)
-  
+
+  ;; (add-to-list 'post-command-hook #'dash-doc-query)
+
   (add-hook 'before-save-hook (if (string= system-type "windows-nt")
                                   'web-beautify-js-buffer-win
                                   'web-beautify-js-buffer) t t)

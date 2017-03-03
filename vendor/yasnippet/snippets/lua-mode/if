@@ -1,0 +1,7 @@
+# name: lua if 
+# --
+if $1 then
+  $0
+else
+
+end
