@@ -6333,7 +6333,7 @@ See URL `http://lesscss.org'."
   "A Lua syntax checker using the Lua compiler.
 
 See URL `http://www.lua.org/'."
-  :command ("luacheck" "--no-color" source )
+  :command ("luajit" "-bl" source)
   :error-patterns
   ((error line-start
           ;; Skip the name of the luac executable.  We also skip the file name,
