@@ -1,0 +1,7 @@
+# name: function template ft
+# --
+function ${1:name}(${2:opt}){
+    EventEmitter.call(this);
+    $0
+    return this;
+}
