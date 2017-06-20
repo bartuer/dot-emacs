@@ -4,7 +4,10 @@
   "for lua languaage"
   (interactive)
   (add-hook 'before-save-hook (lambda ()
-                                (indent-region (point-min) (point-max))))
+                                (when (eq major-mode 'lua-mode)
+                                  (indent-region (point-min) (point-max))
+                                  )
+                                ))
   )
 
 (provide 'bartuer-lua)

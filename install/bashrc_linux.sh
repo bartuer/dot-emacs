@@ -2,8 +2,16 @@
 export NVM_DIR="/home/bazhou/.nvm" 
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+function httpserver {
+    docker run --rm -p $2:80 -v $1:/opt --restart always -d busybox httpd -f -h /opt -p 80
+}
+
 function post {
     curl -H "Content-Type: application/json" -d @-  $1
+}
+
+function tojson {
+    awk '{print $1, $2}' - |jq -R .|jq  -s '.' --indent 0
 }
 
 alias g='gulp'

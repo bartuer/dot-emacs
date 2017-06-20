@@ -1,5 +1,5 @@
-local lli25h
-function lli25h()
+local lli15m
+function lli15m()
    -- Two dashes start a one-line comment.
 
    --[[
