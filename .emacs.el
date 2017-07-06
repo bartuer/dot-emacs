@@ -829,12 +829,14 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'docker nil t)
 
 (require 'yasnippet)
-(yas--initialize)
+(yas-global-mode 1)
+;;(yas--initialize)
 (yas-load-directory "~/etc/el/vendor/yasnippet/snippets")
 (global-set-key "\C-cy" (lambda ()
                                (interactive)
                                (message "load yas")
                                (yas-load-directory "~/etc/el/vendor/yasnippet/snippets")))
+
 (add-hook 'yas-after-exit-snippet-hook (lambda ()
                                          (cond (not (eq major-mode "js2-mode")) (flymake-mode t))
                                             ))

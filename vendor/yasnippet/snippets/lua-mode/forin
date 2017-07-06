@@ -1,5 +1,5 @@
 # name: forin loop
 # --
-for i,${item} in ipairs(${2:container}) do
+for i, ${item} in ipairs(${2:container}) do
   $0
 end
