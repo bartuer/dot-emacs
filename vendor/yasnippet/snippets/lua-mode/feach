@@ -1,0 +1,5 @@
+# name: for each loop
+# --
+for k, v in pairs(${1:table}) do
+  $0
+end

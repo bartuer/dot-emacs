@@ -1,5 +1,5 @@
 # contributor: Anders Bach Nielsen <abachn@abachn.net>
-# name: <div...>...</div>
-# key: div
+# name: <tag>...</tag>
+# key: tag
 # --
-<div$1>$0</div>
+<${1:tag}>$2</$1>$0

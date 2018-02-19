@@ -1,3 +1,5 @@
-#name : <td>...</td>
+# contributor: Anders Bach Nielsen <abachn@abachn.net>
+# name: <td>...</td>
+# key: td
 # --
-<td>$1</td>
+<td$1>$2</td>
