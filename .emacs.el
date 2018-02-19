@@ -835,6 +835,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-cy" (lambda ()
                                (interactive)
                                (message "load yas")
+mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDUN5H+NwJiEzImPdw90dtHSgI5WbWqByLRR9yuIfWMz/MTEH5JnXQogsfZ9DPoVm6jhBqV7u4KDxdXflB78if4=
                                (yas-load-directory "~/etc/el/vendor/yasnippet/snippets")))
 
 (add-hook 'yas-after-exit-snippet-hook (lambda ()
@@ -1296,12 +1297,12 @@ If give a negative ARG, will undo the last mark action, thus the
 ;; (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 
-(require 'ess-site nil t)
-(autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
-(autoload 'bartuer-ess-help-load "bartuer-ess.el" "for statistic language" t)
-(add-hook 'ess-mode-hook 'bartuer-ess-load)
-(add-hook 'ess-help-mode-hook 'bartuer-ess-help-load)
-(defalias 'ess 'ess-switch-to-end-of-ESS)
+;; (require 'ess-site nil t)
+;; (autoload 'bartuer-ess-load "bartuer-ess.el" "for statistic language" t)
+;; (autoload 'bartuer-ess-help-load "bartuer-ess.el" "for statistic language" t)
+;; (add-hook 'ess-mode-hook 'bartuer-ess-load)
+;; (add-hook 'ess-help-mode-hook 'bartuer-ess-help-load)
+;; (defalias 'ess 'ess-switch-to-end-of-ESS)
 
 (require 'org-ascii nil t)
 (require 'bartuer-mail nil t)
