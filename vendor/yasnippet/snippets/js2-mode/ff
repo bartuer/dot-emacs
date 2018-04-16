@@ -7,7 +7,5 @@ fetch(${1:url}).then(resp => {
         throw (new Error('response error'));
     }
 }).then(result => {
-    this.setState({
-        $0: result
-    });
+     
 }, this).catch(console.error);

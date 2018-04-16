@@ -4,7 +4,7 @@
 ;;; code:
 (setq custom-file "~/etc/el/bartuer-custom.el")
 (load custom-file)
-(menu-bar-mode -1)
+
 (defun cygw2u (path)
   (mapconcat (lambda (x) x) (split-string (car (cdr (split-string path "C:\\\\cygwin64")) )  "\\\\") "/" )
   )
