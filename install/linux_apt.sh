@@ -38,9 +38,9 @@ echo "Compile Emacs"
 sudo apt-get install libncurses5-dev xclip -y
 mkdir -p ~/local/src
 cd ~/local/src
-curl -O https://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.gz
-tar -xzf emacs-24.5.tar.gz 
-cd ~/local/src/emacs-24.5
+curl -O https://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.gz
+tar -xzf emacs-25.3.tar.gz 
+cd ~/local/src/emacs-25.3
 cp ~/etc/el/install/emacs.config.log configure.sh
 chmod +x configure.sh
 ./configure.sh
@@ -55,7 +55,7 @@ sudo cp ~/etc/el/install/killemacs /usr/bin
 sudo cp ~/etc/el/install/quote0 /usr/bin
 sudo cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy
 
-ln -s ~/local/share/emacs/24.5 ~/local/share/emacs/current
+ln -s ~/local/share/emacs/25.3 ~/local/share/emacs/current
 
 # install emacs js package
 cd ~/etc/el/vendor
