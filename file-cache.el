@@ -1,8 +1,7 @@
 (file-cache-add-directory-list (list
                                 "~"
-                                "~/org"
+                                "~/icloud/org"
                                 "~/etc/el"
-                                "~/org"
                                 "~/etc/el/vendor/swank-js"
                                 "~/"
                                 "~/local/src"

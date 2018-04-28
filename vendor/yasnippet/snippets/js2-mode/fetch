@@ -1,0 +1,18 @@
+# name: fetch fetch_resource
+# --
+fetch(${1:url}, {
+        method: 'POST',
+        headers: {},
+        body: JSON.stringify({})
+    })
+    .then(resp => {
+        if (resp.ok) {
+            return resp.json();
+        } else {
+            throw (resp.status);
+        }
+    })
+    .catch(err => console.error)
+    .then(function (json_resp) {
+        $0
+    });

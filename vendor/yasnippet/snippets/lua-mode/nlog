@@ -1,0 +1,3 @@
+# name: ngx.log
+# --
+ngx.log(ngx.WARN, '${1:var}', $1)
