@@ -1,1 +1,1 @@
-./configure --prefix=/home/$(whoami)/local 
+./configure --prefix=/home/$(whoami)/local --with-tiff=no
