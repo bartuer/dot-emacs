@@ -1,1 +1,1 @@
-./configure --prefix=/home/$(whoami)/local --with-tiff=no
+./configure --prefix=/home/$(whoami)/local --with-tiff=no --with-dbus --with-xft --with-xpm --with-xim --with-gconf --with-gnutls

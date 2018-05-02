@@ -15,9 +15,10 @@ function tojson {
 }
 
 alias g='gulp'
-alias e='~/local/bin/emacs-25.3 --daemon -nw -fg yellow'
+alias e='~/local/bin/emacs-25.3 --daemon '
 alias ec='~/local/bin/emacsclient -t'
-alias ed='~/local/bin/emacs-25.3 --debug-init -nw -fg yellow'
+alias ef="~/local/bin/emacscleint -c"
+alias ed='~/local/bin/emacs-25.3 --debug-init '
 alias ss='source ~/.bashrc'
 
 export NPM_CONFIG_ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/"
