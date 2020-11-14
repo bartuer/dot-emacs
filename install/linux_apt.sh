@@ -6,7 +6,7 @@ echo "Update apt"
 sudo apt-get update
 
 echo "Install ASpell Package"
-sudo apt-get install aspell aspell-en -y
+sudo apt-get install aspell aspell-en gnutls-dev -y
 
 echo "Install SBCL CommonLisp Package"
 sudo apt-get install sbcl -y
