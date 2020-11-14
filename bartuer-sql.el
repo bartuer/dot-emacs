@@ -624,7 +624,7 @@
          ))
   )
 
-(defun quote-value (field, field_types)
+(defun quote-value ()
   (cond
    ((and
      (equal

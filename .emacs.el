@@ -983,6 +983,7 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (add-hook 'lua-mode-hook 'bartuer-lua-load)
 (add-to-list 'auto-mode-alist '("\.lua$" . lua-mode))
 
+
 (require 'bartuer-python nil t)
 (autoload 'bartuer-python-load "~/etc/el/bartuer-python.el"
   "mode for python mode" t nil)

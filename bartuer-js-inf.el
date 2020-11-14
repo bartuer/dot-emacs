@@ -1,7 +1,7 @@
 (defvar js-process nil)
 
-(defun bartuer-jsh
-  (make-network-process :name "io" :host "192.168.1.2" :service "8889"))
+(defun bartuer-jsh ()
+  (make-network-process :name "io" :buffer nil :host "192.168.1.2" :service "8889" ))
 
 (defvar rhino-navigator-env "~/etc/el/js/env.js")
 (defun rhino ()
