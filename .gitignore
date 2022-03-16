@@ -104,6 +104,5 @@ emacs-nox.exe.stackdump
 /vendor/node_modules/accepts
 /vendor/node_modules/after
 /vendor/node_modules/backo2
-
-
+.yas-compiled-snippets.el
 vendor/yasnippet.2012
