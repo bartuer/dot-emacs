@@ -106,3 +106,6 @@ emacs-nox.exe.stackdump
 /vendor/node_modules/backo2
 .yas-compiled-snippets.el
 vendor/yasnippet.2012
+vendor/yasnippet.2012
+gdb/bartuer-gdb-data-explore.el
+gdb/gdb-ui.el
