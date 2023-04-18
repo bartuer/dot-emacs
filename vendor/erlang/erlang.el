@@ -1,7 +1,7 @@
 ;; erlang.el --- Major modes for editing and running Erlang
 ;; %CopyrightBegin%
 ;;
-;; Copyright Ericsson AB 1996-2010, 2016. All Rights Reserved.
+;; Copyright Ericsson AB 1996-2010, 2016, 2023. All Rights Reserved.
 ;;
 ;; The contents of this file are subject to the Erlang Public License,
 ;; Version 1.1, (the "License"); you may not use this file except in
@@ -5379,7 +5379,7 @@ Simplified version of a combination `defalias' and `make-obsolete',
 it assumes that NEWDEF is loaded."
   (defalias sym (symbol-function newdef))
   (if (fboundp 'make-obsolete)
-      (make-obsolete sym newdef)))
+      (make-obsolete sym newdef "")))
 
 
 (erlang-obsolete 'calculate-erlang-indent 'erlang-calculate-indent)
