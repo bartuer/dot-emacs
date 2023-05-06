@@ -15,7 +15,9 @@
           (concat (file-name-directory (buffer-file-name))
                   (ido-completing-read
                    "TAGS location:"
-                   (list "."
+                   (list "/"
+                         "/home/bazhou/local/src/glibc/glibc_src"
+                         "."
                          "../src/"
                          "../../src"
                          "../../../src"
