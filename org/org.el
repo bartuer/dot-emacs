@@ -1,6 +1,6 @@
 ;;; org.el --- Outline-based notes management and organizer
 ;; Carstens outline-mode for keeping track of everything.
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2024
 ;;   Free Software Foundation, Inc.
 ;;
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
@@ -6961,7 +6961,7 @@ even level numbers will become the next higher odd number."
 (if (boundp 'define-obsolete-function-alias)
     (if (or (featurep 'xemacs) (< emacs-major-version 23))
 	(define-obsolete-function-alias 'org-get-legal-level
-	  'org-get-valid-level)
+	  'org-get-valid-level "28.1")
       (define-obsolete-function-alias 'org-get-legal-level
 	'org-get-valid-level "23.1")))
 
