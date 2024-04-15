@@ -1,0 +1,1 @@
+tar -czf /tmp/emacs_29.1_20.04.tar.gz -T /tar.list.wo_dir
