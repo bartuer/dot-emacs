@@ -12345,7 +12345,6 @@ root/etc/el/auto-install/themes/color-theme-library.el
 root/etc/el/auto-install/anything-config.el
 root/etc/el/auto-install/rdebug-gud.el
 root/etc/el/auto-install/rdebug-regexp.el
-root/etc/el/sqlite-mode.el
 root/etc/el/imenu+.el
 root/etc/el/bartuer-scheme.el
 root/etc/el/bartuer-rst.el
