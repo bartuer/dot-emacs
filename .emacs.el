@@ -524,7 +524,6 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'sqlite-mode nil t)
 (add-to-list 'auto-mode-alist '("\.db$" . sqlite-mode))
 (add-to-list 'auto-mode-alist '("\.sqlite$" . sqlite-mode))
-(add-hook 'sqlite-mode-hook 'bartuer-sqlite-load)
 
 (defun postfix ()
   (interactive)
