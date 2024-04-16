@@ -271,6 +271,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'e 'eval-current-buffer)
 
 (setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
+(require 'treesit-mode-bind)
+(treesit-mode-bind)
 
 (require 'flymake-jslint)
 (lintnode-start)
