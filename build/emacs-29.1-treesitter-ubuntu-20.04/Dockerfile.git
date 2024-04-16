@@ -14,3 +14,5 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         
 
 RUN git config --global --add safe.directory /root/etc/el
+RUN git config --global user.name "Bartuer Zhou"
+RUN git config --global user.email "bartuer@gmail.com"

@@ -270,6 +270,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-j" 'eval-last-sexp)
 (defalias 'e 'eval-current-buffer)
 
+(setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
 
 (require 'flymake-jslint)
 (lintnode-start)
