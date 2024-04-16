@@ -48,12 +48,12 @@ RUN git clone https://github.com/tree-sitter/tree-sitter.git \
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig 
 
-RUN mkdir -p ~/etc
-COPY ./el /root/etc/el
+# RUN mkdir -p ~/etc
+# COPY ./el /root/etc/el
 
-# RUN mkdir -p ~/etc && \
-#     cd ~/etc && \
-#     git clone https://github.com/bartuer/dot-emacs.git el
+RUN mkdir -p ~/etc && \
+    cd ~/etc && \
+    git clone https://github.com/bartuer/dot-emacs.git el
 
 RUN mkdir -p ~/local/src && \
     cd ~/local/src && \
