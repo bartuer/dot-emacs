@@ -19,3 +19,10 @@
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+
+(treesit-language-available-p 'python)
+(treesit-language-available-p 'rust)
+(treesit-language-available-p 'cpp)
+(treesit-language-available-p 'javascript)
+(treesit-language-available-p 'typescript)
+(treesit-language-available-p 'go)
