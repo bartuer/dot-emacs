@@ -12131,7 +12131,9 @@ root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/tar.list.wo_dir
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/tar.sh
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/fix.sh
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/pack.sh
+root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/run.sh
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/.bashrc
+root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/.dockerignore
 root/etc/el/tree-sitter/libtree-sitter-yaml.so
 root/etc/el/tree-sitter/libtree-sitter-bash.so
 root/etc/el/tree-sitter/libtree-sitter-toml.so
