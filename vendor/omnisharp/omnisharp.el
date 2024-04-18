@@ -1,6 +1,6 @@
 ;; -*- mode: Emacs-Lisp; lexical-binding: t; -*-
 ;;; omnisharp.el --- Omnicompletion (intellisense) and more for C#
-;; Copyright (C) 2013 Mika Vilpas (GPLv3)
+;; Copyright (C) 2013, 2024 Mika Vilpas (GPLv3)
 ;; Author: Mika Vilpas
 ;; Version: 3.4
 ;; Url: https://github.com/sp3ctum/omnisharp-emacs
@@ -932,7 +932,8 @@ type errors."
                    output checker buffer))
 
   :predicate (lambda () omnisharp-mode)
-  :next-checkers ((no-errors . csharp-omnisharp-curl-code-issues)))
+  :next-checkers ((no-errors . csharp-omnisharp-curl-code-issues))
+  :modes omnisharp-mode)
 
 (flycheck-define-checker csharp-omnisharp-curl-code-issues
   "Reports code issues (refactoring suggestions) that the user can
@@ -942,7 +943,6 @@ then accept and have fixed automatically."
              (omnisharp--get-curl-command-arguments-string-for-api-name
               (omnisharp--get-common-params)
               "getcodeissues")))
-
   :error-patterns ((warning line-start
                             (file-name) ":"
                             line ":"
@@ -952,7 +952,9 @@ then accept and have fixed automatically."
   :error-parser (lambda (output checker buffer)
                   (omnisharp--flycheck-error-parser-raw-json
                    output checker buffer 'info))
-  :predicate (lambda () omnisharp-mode))
+  :predicate (lambda () omnisharp-mode)
+  :modes omnisharp-mode
+  )
 
 (flycheck-define-checker csharp-omnisharp-curl-semantic-errors
   "Reports semantic errors (type errors) that prevent successful
@@ -972,7 +974,8 @@ compilation."
   :error-parser (lambda (output checker buffer)
                   (omnisharp--flycheck-error-parser-raw-json
                    output checker buffer 'info))
-  :predicate (lambda () omnisharp-mode))
+  :predicate (lambda () omnisharp-mode)
+  :modes omnisharp-mode)
 
 (defun omnisharp--flycheck-error-parser-raw-json
   (output checker buffer &optional error-level)

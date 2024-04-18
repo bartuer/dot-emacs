@@ -23,6 +23,7 @@
 (treesit-language-available-p 'python)
 (treesit-language-available-p 'rust)
 (treesit-language-available-p 'cpp)
+(treesit-language-available-p 'c)
 (treesit-language-available-p 'javascript)
 (treesit-language-available-p 'typescript)
 (treesit-language-available-p 'go)
