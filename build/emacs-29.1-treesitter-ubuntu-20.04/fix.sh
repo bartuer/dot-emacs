@@ -1,1 +1,1 @@
-docker run -it -v ${PWD}/../el:/root/etc/el -v ${PWD}/:/opt -v ${PWD}/../.ssh:/root/.ssh ubuntu:20.04git /bin/bash
+docker run -it -v ${PWD}/../el:/root/etc/el -v ${PWD}/:/opt -v ${PWD}/../.ssh:/root/.ssh ubuntu:20.04git bash -c "tar zxf /opt/emacs_29.1_20.04.tar.gz -C / && source ~/.bashrc && /bin/bash"
