@@ -1,1 +1,1 @@
-kill -s KILL $(ps -aux |grep "emacs.* --daemon"|grep -v 'grep'|awk '{print $1}')
+kill -s KILL $(ps -aux |grep "emacs.* --daemon"|grep -v 'grep'|awk '{print $2}')
