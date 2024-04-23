@@ -275,10 +275,12 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'treesit-mode-bind)
 (treesit-mode-bind)
 
+(require 'markdown-mode)
 (use-package eglot
   :ensure t
   :config
   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
+  (setq eldoc-echo-area-use-multiline-p nil)
 
   :hook
   ((python-mode . eglot-ensure)
@@ -571,7 +573,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (defalias 'ts 'tags-search)
 (defalias 'tq 'tags-query-replace)
 (defalias 'im 'imenu)
-(global-set-key "\M-." 'anything-etags-select-from-here)
+(global-set-key "\C-c\M-." 'anything-etags-select-from-here)
+(global-set-key "\M-." 'xref-find-definitions)
 (load "~/etc/el/bartuer-etags.el")
 
 (load "~/etc/el/anything-c-source-mark-ring.el")
