@@ -12130,7 +12130,7 @@ root/etc/el/tree-sitter/libtree-sitter-bash.so
 root/etc/el/tree-sitter/libtree-sitter-toml.so
 root/etc/el/tree-sitter/libtree-sitter-tsx.so
 root/etc/el/tree-sitter/libtree-sitter-typescript.so
-root/etc/el/tree-sitter/compile.el.gz
+root/etc/el/tree-sitter/treesit-compile.el.gz
 root/etc/el/tree-sitter/libtree-sitter-go.so
 root/etc/el/tree-sitter/libtree-sitter-markdown.so
 root/etc/el/tree-sitter/libtree-sitter-html.so

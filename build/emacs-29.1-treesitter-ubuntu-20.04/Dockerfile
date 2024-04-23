@@ -48,13 +48,6 @@ RUN git clone https://github.com/tree-sitter/tree-sitter.git \
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig 
 
-# RUN mkdir -p ~/etc
-# COPY ./el /root/etc/el
-
-RUN mkdir -p ~/etc && \
-    cd ~/etc && \
-    git clone https://github.com/bartuer/dot-emacs.git el
-
 RUN mkdir -p ~/local/src && \
     cd ~/local/src && \
     curl -O https://ftp.gnu.org/gnu/emacs/emacs-29.1.tar.gz && \
@@ -66,7 +59,15 @@ RUN cd ~/local/src/emacs-29.1 && \
     ./configure --prefix=/root/local --with-native-compilation --with-tree-sitter --with-tiff=no --without-dbus --without-xft --without-xpm --without-xim --without-gconf --with-gnutls --with-json --without-mailutils --without-jpeg --without-tiff --without-gif --without-png --without-rsvg --without-lcms2 --without-libsystemd --without-cairo --without-xml2 --without-native-image-api --without-xft --without-harfbuzz --without-libotf --without-toolkit-scroll-bars --without-xaw3d --without-xim --without-xdbe --without-gpm --without-gsettings --without-selinux --without-libgmp --without-kerberos --without-kerberos5 --without-hesiod --with-sound=no --with-x-toolkit=no --with-x=no CFLAGS=-O3 && \
     mkdir -p ~/local/share && \
     make -j && make install && \
-    mkdir -p ~/local/bin/ && \
+    mkdir -p ~/local/bin/
+
+# RUN mkdir -p ~/etc
+# COPY ./el /root/etc/el
+
+RUN echo "repo"
+RUN mkdir -p ~/etc && \
+    cd ~/etc && \
+    git clone https://github.com/bartuer/dot-emacs.git el && \
     cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy && \
     cp ~/etc/el/install/killemacs ~/local/bin/killemacs && \
     cp ~/etc/el/install/quote0 ~/local/bin/quote0 && \
