@@ -1,6 +1,6 @@
 ;;; combobulate.el --- edit and navigate text by syntactic constructs  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-23  Mickey Petersen
+;; Copyright (C) 2021-24  Mickey Petersen
 
 ;; Author: Mickey Petersen <mickey at masteringemacs.org>
 ;; Package-Requires: ((emacs "29"))
@@ -103,7 +103,7 @@
     (define-key map (kbd "M-a") #'combobulate-navigate-logical-previous)
     (define-key map (kbd "M-e") #'combobulate-navigate-logical-next)
     (define-key map (kbd "M-h") #'combobulate-mark-node-dwim)
-    (define-key map (kbd "M-k") #'combobulate-kill-node-dwim)
+    ;; (define-key map (kbd "M-k") #'combobulate-kill-node-dwim)
     map))
 
 (when combobulate-key-prefix
