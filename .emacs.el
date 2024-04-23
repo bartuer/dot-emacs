@@ -275,6 +275,15 @@ If give a negative ARG, will undo the last mark action, thus the
 (require 'treesit-mode-bind)
 (treesit-mode-bind)
 
+(use-package eglot
+  :ensure t
+  :config
+  (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
+
+  :hook
+  ((python-mode . eglot-ensure)
+   (python-ts-mode . eglot-ensure)))
+
 (require 'flymake-jslint)
 (lintnode-start)
 (require 'swanknode)

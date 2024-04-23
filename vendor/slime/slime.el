@@ -1,7 +1,7 @@
 ;;; slime.el --- Superior Lisp Interaction Mode for Emacs
 ;;
 ;;;; License
-;;     Copyright (C) 2003  Eric Marsden, Luke Gorrie, Helmut Eller
+;;     Copyright (C) 2003, 2024  Eric Marsden, Luke Gorrie, Helmut Eller
 ;;     Copyright (C) 2004,2005,2006  Luke Gorrie, Helmut Eller
 ;;     Copyright (C) 2007,2008,2009  Helmut Eller, Tobias C. Rittweiler
 ;;
@@ -680,13 +680,6 @@ This list of flushed between commands."))
 ;;; file should use these functions when applicable.
 ;;;
 ;;;;; Syntactic sugar
-
-(defmacro* when-let ((var value) &rest body)
-  "Evaluate VALUE, if the result is non-nil bind it to VAR and eval BODY.
-
-\(fn (VAR VALUE) &rest BODY)"
-  `(let ((,var ,value))
-     (when ,var ,@body)))
 
 (put 'when-let 'lisp-indent-function 1)
 

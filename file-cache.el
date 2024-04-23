@@ -13,6 +13,7 @@
                                 "~/local/src/ksedu/applications/jxcore/deps/node-ffi/src"
                                 "~/local/src/ksedu/applications/jxcore/deps/node-ffi/test"
                                 "~/local/src/prophetnet_docker/kernel/examples/seq2seq"
+                                "/opt/miniconda/lib/python3.8/site-packages/src/lasertag/src/lasertag/lasertag/conversation"
                                 ))
 (provide 'file-cache)
 ;;; file-cache.el ends here

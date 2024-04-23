@@ -66,7 +66,7 @@
        (tsx-ts-mode . combobulate-mode))
       ;; Amend this to the directory where you keep Combobulate's source
       ;; code.
-      :load-path ("path-to-git-checkout-of-combobulate")))
+      :load-path ("~/etc/el/tree-sitter/combobulate")))
   
   )
 
