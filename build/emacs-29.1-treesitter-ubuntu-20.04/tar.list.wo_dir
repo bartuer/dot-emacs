@@ -10218,10 +10218,6 @@ root/etc/el/vendor/omnisharp/omnisharp-auto-complete-actions.el
 root/etc/el/vendor/web-beautify/web-beautify-autoloads.el
 root/etc/el/vendor/web-beautify/web-beautify-pkg.el
 root/etc/el/vendor/web-beautify/web-beautify.el
-root/etc/el/vendor/cheat/cheat.el
-root/etc/el/vendor/let-alist/let-alist-autoloads.el
-root/etc/el/vendor/let-alist/let-alist-pkg.el
-root/etc/el/vendor/let-alist/let-alist.el
 root/etc/el/vendor/popup/popup-autoloads.el
 root/etc/el/vendor/popup/popup.el
 root/etc/el/vendor/popup/popup-pkg.el
@@ -12134,7 +12130,7 @@ root/etc/el/tree-sitter/libtree-sitter-bash.so
 root/etc/el/tree-sitter/libtree-sitter-toml.so
 root/etc/el/tree-sitter/libtree-sitter-tsx.so
 root/etc/el/tree-sitter/libtree-sitter-typescript.so
-root/etc/el/tree-sitter/compile.el
+root/etc/el/tree-sitter/compile.el.gz
 root/etc/el/tree-sitter/libtree-sitter-go.so
 root/etc/el/tree-sitter/libtree-sitter-markdown.so
 root/etc/el/tree-sitter/libtree-sitter-html.so
