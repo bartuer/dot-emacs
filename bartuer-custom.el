@@ -582,6 +582,7 @@
      (php-mode . php)
      (qss-mode . css)
      (prisma-mode . prisma)
+     (python-ts-mode . python)
      (python-mode . python)
      (pygn-mode . pgn)
      (racket-mode . racket)
