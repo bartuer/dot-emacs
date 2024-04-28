@@ -37,6 +37,7 @@
                (bash-mode . bash-ts-mode)
                (css-mode . css-ts-mode)
                (json-mode . json-ts-mode)
+               (tsx-mode . tsx-ts-mode)
                (js-json-mode . json-ts-mode)))
       (add-to-list 'major-mode-remap-alist mapping))
     :config

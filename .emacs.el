@@ -279,12 +279,16 @@ If give a negative ARG, will undo the last mark action, thus the
 (use-package eglot
   :ensure t
   :config
-  (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
+  (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
+  (add-to-list 'eglot-server-programs '(typescript-mode . ("typescript-language-server"
+                                                           "--stdio")))
   (setq eldoc-echo-area-use-multiline-p nil)
 
   :hook
   ((python-mode . eglot-ensure)
-   (python-ts-mode . eglot-ensure)))
+   (python-ts-mode . eglot-ensure)
+   (typescript-mode . eglot-ensure)
+   (typescript-ts-mode . eglot-ensure)))
 
 (require 'flymake-jslint)
 (lintnode-start)
@@ -1364,11 +1368,9 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
-;; (require 'typescript)
-;; (autoload 'typescript-mode "typescript.el"
-;;   "Major mode for TypeScript files" t)
-;; (setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
 
+(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.tsx\\'" . tsx-mode) auto-mode-alist))
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
