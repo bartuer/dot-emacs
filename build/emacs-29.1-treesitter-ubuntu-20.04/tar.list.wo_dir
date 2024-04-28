@@ -7176,7 +7176,6 @@ root/etc/el/vendor/tsc/tsc-dyn.so
 root/etc/el/vendor/tsc/tsc-obsolete.el
 root/etc/el/vendor/tsc/tsc-pkg.el
 root/etc/el/vendor/tsc/tsc.el
-        
 root/etc/el/vendor/yasnippet/snippets/redis-mode/lindex
 root/etc/el/vendor/yasnippet/snippets/redis-mode/del
 root/etc/el/vendor/yasnippet/snippets/redis-mode/sismember
