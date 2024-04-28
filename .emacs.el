@@ -270,25 +270,26 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-j" 'eval-last-sexp)
 (defalias 'e 'eval-current-buffer)
 
-(require 'use-package)
-(setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
-(require 'treesit-mode-bind)
-(treesit-mode-bind)
+(when (>= emacs-major-version 29)
+  (require 'use-package)
+  (setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
+  (require 'treesit-mode-bind)
+  (treesit-mode-bind)
 
-(require 'markdown-mode)
-(use-package eglot
-  :ensure t
-  :config
-  (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
-  (add-to-list 'eglot-server-programs '(typescript-mode . ("typescript-language-server"
-                                                           "--stdio")))
-  (setq eldoc-echo-area-use-multiline-p nil)
+  (require 'markdown-mode)
+  (use-package eglot
+    :ensure t
+    :config
+    (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
+    (add-to-list 'eglot-server-programs '(typescript-mode . ("typescript-language-server"
+                                                             "--stdio")))
+    (setq eldoc-echo-area-use-multiline-p nil)
 
-  :hook
-  ((python-mode . eglot-ensure)
-   (python-ts-mode . eglot-ensure)
-   (typescript-mode . eglot-ensure)
-   (typescript-ts-mode . eglot-ensure)))
+    :hook
+    ((python-mode . eglot-ensure)
+     (python-ts-mode . eglot-ensure)
+     (typescript-mode . eglot-ensure)
+     (typescript-ts-mode . eglot-ensure))))
 
 (require 'flymake-jslint)
 (lintnode-start)
