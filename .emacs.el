@@ -1364,10 +1364,10 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (setq auto-mode-alist (cons '("\\.haml\\'" . haml-mode) auto-mode-alist))
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
-(require 'typescript)
-(autoload 'typescript-mode "typescript.el"
-  "Major mode for TypeScript files" t)
-(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
+;; (require 'typescript)
+;; (autoload 'typescript-mode "typescript.el"
+;;   "Major mode for TypeScript files" t)
+;; (setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
 
 (put 'dired-find-alternate-file 'disabled nil)
 

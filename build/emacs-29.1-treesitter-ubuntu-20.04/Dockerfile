@@ -64,7 +64,7 @@ RUN cd ~/local/src/emacs-29.1 && \
 # RUN mkdir -p ~/etc
 # COPY ./el /root/etc/el
 
-RUN echo "repo"
+RUN echo "repo 61337e"
 RUN mkdir -p ~/etc && \
     cd ~/etc && \
     git clone https://github.com/bartuer/dot-emacs.git el && \

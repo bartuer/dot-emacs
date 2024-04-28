@@ -12293,7 +12293,6 @@ root/etc/el/auto-install/guess-style.el
 root/etc/el/auto-install/moccur-edit.el
 root/etc/el/auto-install/dash-at-point.el
 root/etc/el/auto-install/restclient.el
-root/etc/el/auto-install/typescript.el
 root/etc/el/auto-install/anything-match-plugin.el
 root/etc/el/auto-install/flycheck-clangcheck.el
 root/etc/el/auto-install/journalctl-mode.el
