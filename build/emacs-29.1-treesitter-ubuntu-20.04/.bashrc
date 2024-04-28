@@ -105,6 +105,12 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 export PATH=$PATH:~/local/bin
 
+export NVM_VERSION=0.39.5
+export NODE_VERSION=18.17.0
+export NVM_DIR=/usr/local/nvm
+export NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+export PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:/opt/miniconda/bin:~/local/bin:$PATH
+
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
 alias ec='~/local/bin/emacsclient -t'
