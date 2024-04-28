@@ -13,7 +13,6 @@
   (require 'package)
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-  (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages"))
   )
 
 (require 'phi-search nil t)
@@ -273,8 +272,11 @@ If give a negative ARG, will undo the last mark action, thus the
 (when (>= emacs-major-version 29)
   (require 'use-package)
   (setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
+  (require 'tree-sitter)
+  (require 'tree-sitter-langs)
   (require 'treesit-mode-bind)
   (treesit-mode-bind)
+  (add-hook 'combobulate-after-setup-hook #'tree-sitter-hl-mode)
 
   (require 'markdown-mode)
   (use-package eglot
