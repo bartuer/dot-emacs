@@ -15,6 +15,8 @@
                                 "~/local/src/prophetnet_docker/kernel/examples/seq2seq"
                                 "/opt/miniconda/lib/python3.8/site-packages/src/lasertag/src/lasertag/lasertag/conversation"
                                 "/src/alwf/workflows/forms-ai/src"
+                                "/mnt/c/alwf/workflows/forms-insights/src/"
+                                "/mnt/c/alwf/workflows/forms-ai/src/"
                                 "~/etc/el/tree-sitter/combobulate"
                                 "~/etc/el/tree-sitter"
                                 ))

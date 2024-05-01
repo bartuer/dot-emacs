@@ -269,6 +269,20 @@ If give a negative ARG, will undo the last mark action, thus the
 (global-set-key "\C-j" 'eval-last-sexp)
 (defalias 'e 'eval-current-buffer)
 
+(require 'bartuer-typescript nil t)
+(autoload 'bartuer-typescript-load "~/etc/el/bartuer-typescript.el"
+  "mode for typescript mode" t nil)
+(add-hook 'typescript-mode-hook 'bartuer-typescript-load)
+(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.tsx\\'" . tsx-mode) auto-mode-alist))
+
+(require 'bartuer-python nil t)
+(autoload 'bartuer-python-load "~/etc/el/bartuer-python.el"
+  "mode for python mode" t nil)
+(add-hook 'python-mode-hook 'bartuer-python-load)
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.gyp$" . gyp-mode))
+
 (when (>= emacs-major-version 29)
   (require 'use-package)
   (setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
@@ -285,8 +299,10 @@ If give a negative ARG, will undo the last mark action, thus the
     (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
     (add-to-list 'eglot-server-programs '(typescript-mode . ("typescript-language-server"
                                                              "--stdio")))
-    (setq eldoc-echo-area-use-multiline-p nil)
 
+    (eldoc-doc-buffer)
+    (setq eldoc-echo-area-use-multiline-p nil)
+                                                             
     :hook
     ((python-mode . eglot-ensure)
      (python-ts-mode . eglot-ensure)
@@ -1009,13 +1025,6 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (autoload 'go-mode "go-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
 
-(require 'bartuer-python nil t)
-(autoload 'bartuer-python-load "~/etc/el/bartuer-python.el"
-  "mode for python mode" t nil)
-(add-hook 'python-mode-hook 'bartuer-python-load)
-(add-to-list 'auto-mode-alist '("\.py$" . python-mode))
-(add-to-list 'auto-mode-alist '("\.gyp$" . gyp-mode))
-
 
 (require 'slime)
 
@@ -1372,8 +1381,7 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (autoload 'haml-mode "haml-mode.el" "for haml language" t)
 
 
-(setq auto-mode-alist (cons '("\\.ts\\'" . typescript-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.tsx\\'" . tsx-mode) auto-mode-alist))
+
 (put 'dired-find-alternate-file 'disabled nil)
 
 (put 'upcase-region 'disabled nil)

@@ -12245,6 +12245,7 @@ root/etc/el/vendor/csharp-mode/csharp-mode.el
 root/etc/el/vendor/csharp-mode/csharp-mode-pkg.el
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/Dockerfile
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/Dockerfile.git
+root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/Dockerfile.py
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/build.sh
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/tar.list.wo_dir
 root/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/tar.sh
@@ -12523,6 +12524,7 @@ root/etc/el/bartuer-php.el
 root/etc/el/bartuer-matlab.el
 root/etc/el/conf-mode.el
 root/etc/el/bartuer-python.el
+root/etc/el/bartuer-typescript.el
 root/etc/el/auto-install.el
 root/etc/el/gdb/sphinx-json.gdb
 root/etc/el/gdb/dbg_agent.gdb
