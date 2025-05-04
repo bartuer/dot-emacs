@@ -309,10 +309,10 @@ If give a negative ARG, will undo the last mark action, thus the
      (typescript-mode . eglot-ensure)
      (typescript-ts-mode . eglot-ensure))))
 
-(require 'flymake-jslint)
-(lintnode-start)
-(require 'swanknode)
-(swanknode-start)
+;(require 'flymake-jslint)
+;(lintnode-start)
+;(require 'swanknode)
+;(swanknode-start)
 (require 'web-beautify)
 
 (autoload 'glsl-mode "glsl-mode" nil t)
