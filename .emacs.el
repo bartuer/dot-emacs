@@ -285,7 +285,7 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (when (>= emacs-major-version 29)
   (require 'use-package)
-  (setq treesit-extra-load-path  `("~/etc/el/tree-sitter/"))
+  (setq treesit-extra-load-path  `("~/.emacs.d/tree-sitter/"))
   (require 'tree-sitter)
   (require 'tree-sitter-langs)
   (require 'treesit-mode-bind)
