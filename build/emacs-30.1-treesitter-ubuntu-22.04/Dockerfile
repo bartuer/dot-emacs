@@ -92,4 +92,4 @@ RUN mkdir -p /root/.ssh
 COPY config /root/.ssh/config
 
 EXPOSE 22
-ENTRYPOINT ["/bin/entry.sh"]
+ENTRYPOINT ["/bin/entry"]
