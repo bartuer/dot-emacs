@@ -27,6 +27,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         sbcl \
         xclip \
         texinfo \
+        netcat \
+        clang-tools \
         openssh-server \ 
         openssh-client 
         
