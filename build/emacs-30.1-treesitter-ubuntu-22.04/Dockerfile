@@ -27,7 +27,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         sbcl \
         xclip \
         texinfo \
-        openssh-client openssh-server
+        openssh-server \ 
+        openssh-client 
         
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa \
         && apt-get update  && DEBIAN_FRONTEND=noninteractive \
