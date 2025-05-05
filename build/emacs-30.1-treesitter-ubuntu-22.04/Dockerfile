@@ -30,9 +30,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         openssh-server \ 
         openssh-client 
         
-RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa \
-        && apt-get update  && DEBIAN_FRONTEND=noninteractive \
-        && apt-get install -y gcc-10 libgccjit0 libgccjit-10-dev
+        
+RUN  apt-get update  && DEBIAN_FRONTEND=noninteractive \
+         && apt-get install -y gcc-10 libgccjit0 libgccjit-10-dev
 
 ENV CC="gcc-10"
 
