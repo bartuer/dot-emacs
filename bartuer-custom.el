@@ -11,7 +11,8 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f"
+    "#f6f3e8"])
  '(auto-compression-mode t nil (jka-compr))
  '(auto-revert-verbose nil)
  '(before-save-hook '(copyright-update time-stamp))
@@ -20,13 +21,9 @@
  '(c-mode-common-hook
    '(ac-cc-mode-setup
      (lambda nil
-       (dolist
-           (k
-            '(":" ">" ";" "<" "{" "}"))
-         (define-key
-          (symbol-value
-           (make-local-variable 'yas-keymap))
-          k 'self-insert-command)))
+       (dolist (k '(":" ">" ";" "<" "{" "}"))
+         (define-key (symbol-value (make-local-variable 'yas-keymap))
+                     k 'self-insert-command)))
      bartuer-c-load bartuer-c-common))
  '(calendar-latitude 40)
  '(calendar-longitude 116)
@@ -38,37 +35,50 @@
  '(comint-completion-autolist t)
  '(comint-input-autoexpand t)
  '(company-backends
-   '(company-emacs-eclim company-elisp company-css company-semantic company-clang company-xcode company-ropemacs
-                         (company-gtags company-etags company-dabbrev-code company-pysmell company-keywords)
-                         company-oddmuse company-files company-dabbrev company-nxml company-ispell company-abbrev))
+   '(company-emacs-eclim company-elisp company-css company-semantic
+                         company-clang company-xcode company-ropemacs
+                         (company-gtags company-etags
+                                        company-dabbrev-code
+                                        company-pysmell
+                                        company-keywords)
+                         company-oddmuse company-files company-dabbrev
+                         company-nxml company-ispell company-abbrev))
  '(compilation-ask-about-save nil)
  '(compilation-auto-jump-to-first-error t)
  '(compilation-error-regexp-alist
    '(("^ *at \\(.*? (\\|\\)\\(.+.js\\):\\([0-9]+\\):\\([0-9]+\\))*" 2 3 4)
      ("^[^\0-@]+ \"\\([^\"\12]+\\)\", [^\0-@]+ \\([0-9]+\\)[-,:]" 1 2)
      ("^\\(.*\\):\\[\\([0-9]*\\),\\([0-9]*\\)\\]" 1 2 3)
-     ("At \\(.*\\):\\([0-9]+\\) char:\\([0-9]+\\)" 1 2)
-     absoft ada aix ant bash borland python-tracebacks-and-caml comma cucumber msft edg-1 edg-2 epc ftnchek iar ibm irix java jikes-file maven jikes-line gcc-include ruby-Test::Unit lcc makepp mips-1 mips-2 msft omake oracle perl php rxp sparc-pascal-file sparc-pascal-line sparc-pascal-example sun sun-ada watcom 4bsd gcov-file gcov-header gcov-nomark gcov-called-line gcov-never-called perl--Pod::Checker perl--Test perl--Test2 perl--Test::Harness weblint))
+     ("At \\(.*\\):\\([0-9]+\\) char:\\([0-9]+\\)" 1 2) absoft ada aix
+     ant bash borland python-tracebacks-and-caml comma cucumber msft
+     edg-1 edg-2 epc ftnchek iar ibm irix java jikes-file maven
+     jikes-line gcc-include ruby-Test::Unit lcc makepp mips-1 mips-2
+     msft omake oracle perl php rxp sparc-pascal-file
+     sparc-pascal-line sparc-pascal-example sun sun-ada watcom 4bsd
+     gcov-file gcov-header gcov-nomark gcov-called-line
+     gcov-never-called perl--Pod::Checker perl--Test perl--Test2
+     perl--Test::Harness weblint))
  '(csharp-mode-hook '(bartuer-csharp-load))
  '(current-language-environment "UTF-8")
  '(custom-enabled-themes '(wheatgrass))
  '(default-input-method "chinese-py-punct")
  '(describe-char-unidata-list
-   '(name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored old-name iso-10646-comment uppercase lowercase titlecase))
+   '(name general-category canonical-combining-class bidi-class
+          decomposition decimal-digit-value digit-value numeric-value
+          mirrored old-name iso-10646-comment uppercase lowercase
+          titlecase))
  '(desktop-path '("~/etc/el/session" "~" "."))
  '(dired-guess-shell-alist-user
    '(("\\.[0-9]$"
       (progn
         (require 'man)
-        (if
-            (Man-support-local-filenames)
-            "man -l" "cat * | groff -man -T utf8 | ul")))
+        (if (Man-support-local-filenames) "man -l"
+          "cat * | groff -man -T utf8 | ul")))
      ("\\.[0-9].gz$"
       (progn
         (require 'man)
-        (if
-            (Man-support-local-filenames)
-            "man -l" "gunzip -qc * | groff -man -T utf8 | ul")))))
+        (if (Man-support-local-filenames) "man -l"
+          "gunzip -qc * | groff -man -T utf8 | ul")))))
  '(dired-omit-files "^\\.#.*$\\|^#.*#$\\|^\\.$\\|^\\.DS_Store$\\|^\\.\\.$")
  '(django-test-setting "vote.tests.settings")
  '(docker-containers-inspect-arguments nil)
@@ -86,52 +96,62 @@
  '(everything-use-ftp t)
  '(fast-wiki-minor-mode-string " wk")
  '(file-cache-filter-regexps
-   '("~$" "\\.o$" "\\.exe$" "\\.a$" "\\.elc$" ",v$" "\\.output$" "\\.$" "#$" "\\.class$" "\\.DS_Store$" "\\.gif$" "\\.pdf$" "\\.png$" "\\.jpg$" "\\.gitignore$" "\\.#.*$"))
+   '("~$" "\\.o$" "\\.exe$" "\\.a$" "\\.elc$" ",v$" "\\.output$" "\\.$"
+     "#$" "\\.class$" "\\.DS_Store$" "\\.gif$" "\\.pdf$" "\\.png$"
+     "\\.jpg$" "\\.gitignore$" "\\.#.*$"))
  '(fill-column 70)
  '(find-function-C-source-directory "~/local/src/emacs-current/src" t)
  '(find-grep-options "-vE \".svn|drw|svn-base|*.pyc\"")
  '(find-ls-option '("-exec ls -ld {} \\;" . "-ld"))
  '(flycheck-checkers
-   '(ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd elixir emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-golint go-vet go-build go-test go-errcheck haml handlebars haskell-ghc haskell-hlint html-tidy javascript-jshint javascript-eslint javascript-gjslint json-jsonlint less lua perl perl-perlcritic php php-phpmd php-phpcs puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint rst rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby rust sass scala scala-scalastyle scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby swift))
+   '(ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine
+              chef-foodcritic coffee coffee-coffeelint coq css-csslint
+              d-dmd elixir emacs-lisp emacs-lisp-checkdoc erlang
+              eruby-erubis fortran-gfortran go-gofmt go-golint go-vet
+              go-build go-test go-errcheck haml handlebars haskell-ghc
+              haskell-hlint html-tidy javascript-jshint
+              javascript-eslint javascript-gjslint json-jsonlint less
+              lua perl perl-perlcritic php php-phpmd php-phpcs
+              puppet-parser puppet-lint python-flake8 python-pylint
+              python-pycompile r-lintr racket rpm-rpmlint rst
+              rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby
+              rust sass scala scala-scalastyle scss sh-bash
+              sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim
+              tex-chktex tex-lacheck texinfo verilog-verilator
+              xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby swift))
  '(flycheck-swift-sdk-path
    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk")
  '(flymake-allowed-file-name-masks
-   '(("\\.c\\'" flymake-simple-make-init)
-     ("\\.m\\'" flymake-objc-init)
-     ("Rakefile" flymake-ruby-init)
-     ("\\.rb\\'" flymake-ruby-init)
-     ("\\.js\\'" flymake-jslint-init)
-     ("\\.xml\\'" flymake-xml-init)
+   '(("\\.c\\'" flymake-simple-make-init) ("\\.m\\'" flymake-objc-init)
+     ("Rakefile" flymake-ruby-init) ("\\.rb\\'" flymake-ruby-init)
+     ("\\.js\\'" flymake-jslint-init) ("\\.xml\\'" flymake-xml-init)
      ("\\.plist\\'" flymake-xml-init)
-     ("\\.html?\\'" flymake-jslint-init)
-     ("\\.css" flymake-css-init)
+     ("\\.html?\\'" flymake-jslint-init) ("\\.css" flymake-css-init)
      ("\\.cs\\'" flymake-simple-make-init)
      ("\\.cpp\\'" flymake-simple-make-init)
      ("\\.p[ml]\\'" flymake-perl-init)
      ("\\.php[345]?\\'" flymake-php-init)
      ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup)
-     ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup)
+     ("\\.java\\'" flymake-simple-make-java-init
+      flymake-simple-java-cleanup)
      ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup)
      ("\\.tex\\'" flymake-simple-tex-init)
      ("\\.idl\\'" flymake-simple-make-init)))
  '(flymake-log-level -1)
  '(flymake-objc-compile-options '("-I." "-F../Frameworks" "-I../Classes"))
  '(flymake-proc-allowed-file-name-masks
-   '(("\\.c\\'" flymake-simple-make-init)
-     ("\\.m\\'" flymake-objc-init)
-     ("Rakefile" flymake-ruby-init)
-     ("\\.rb\\'" flymake-ruby-init)
-     ("\\.js\\'" flymake-jslint-init)
-     ("\\.xml\\'" flymake-xml-init)
+   '(("\\.c\\'" flymake-simple-make-init) ("\\.m\\'" flymake-objc-init)
+     ("Rakefile" flymake-ruby-init) ("\\.rb\\'" flymake-ruby-init)
+     ("\\.js\\'" flymake-jslint-init) ("\\.xml\\'" flymake-xml-init)
      ("\\.plist\\'" flymake-xml-init)
-     ("\\.html?\\'" flymake-jslint-init)
-     ("\\.css" flymake-css-init)
+     ("\\.html?\\'" flymake-jslint-init) ("\\.css" flymake-css-init)
      ("\\.cs\\'" flymake-simple-make-init)
      ("\\.cpp\\'" flymake-simple-make-init)
      ("\\.p[ml]\\'" flymake-perl-init)
      ("\\.php[345]?\\'" flymake-php-init)
      ("\\.h\\'" flymake-master-make-header-init flymake-master-cleanup)
-     ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup)
+     ("\\.java\\'" flymake-simple-make-java-init
+      flymake-simple-java-cleanup)
      ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup)
      ("\\.tex\\'" flymake-simple-tex-init)
      ("\\.idl\\'" flymake-simple-make-init)))
@@ -150,20 +170,26 @@
  '(global-mark-ring-max 32)
  '(global-semantic-idle-scheduler-mode nil)
  '(grep-find-command
-   (if
-       (string= system-type "windows-nt")
-       "findnix . -type f -a ! -name \"*.o\" -a ! -name \"*xcodeproject*\" -a ! -name \"node_modules\" -a ! -name \"private_modules\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" -a ! -name \"*_img.css\" |grep -vE \"BROWSE|Makefile|CMakeFiles|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |xargs  grep -niHE " "find . -type f  -a ! -name \"*.o\" -a ! -name \"*xcodeproject*\" -a ! -name \"node_modules\" -a ! -name \"private_modules\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" -a ! -name \"*_img.css\" |grep -vE \"BROWSE|Makefile|CMakeFiles|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |quote0|xargs -0 grep -niHE "))
+   (if (string= system-type "windows-nt")
+       "findnix . -type f -a ! -name \"*.o\" -a ! -name \"*xcodeproject*\" -a ! -name \"node_modules\" -a ! -name \"private_modules\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" -a ! -name \"*_img.css\" |grep -vE \"BROWSE|Makefile|CMakeFiles|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |xargs  grep -niHE "
+     "find . -type f  -a ! -name \"*.o\" -a ! -name \"*xcodeproject*\" -a ! -name \"node_modules\" -a ! -name \"private_modules\" -a ! -name \"*.pyc\" -a ! -name \"*.elc\" -a ! -name \"*.u.js\" -a ! -name \"*.g.js\" -a ! -name \"dev.package.js\" -a ! -name \"*_min.css\" -a ! -name \"*_img.css\" |grep -vE \"BROWSE|Makefile|CMakeFiles|TAGS|.svn|drw|.bzr|.git|svn-base|z.js|z_min.js\" |quote0|xargs -0 grep -niHE "))
  '(grep-highlight-matches t)
  '(gud-gdb-command-name
-   (concat "gdb -i=mi -silent -x ~/etc/el/gdb/init.gdb /opt/conda/bin/python"))
+   (concat
+    "gdb -i=mi -silent -x ~/etc/el/gdb/init.gdb /opt/conda/bin/python"))
  '(gud-pdb-command-name "python -m pdb")
  '(gud-rdebug-command-name
    "rdebug --emacs 3 ~/local/src/uki-tools/bin/uki run -- localhost:21119")
  '(gud-tooltip-echo-area t)
  '(hippie-expand-try-functions-list
-   '(try-complete-file-name-partially try-complete-file-name try-expand-line try-expand-all-abbrevs try-expand-list try-complete-lisp-symbol-partially try-complete-lisp-symbol))
+   '(try-complete-file-name-partially try-complete-file-name
+                                      try-expand-line
+                                      try-expand-all-abbrevs
+                                      try-expand-list
+                                      try-complete-lisp-symbol-partially
+                                      try-complete-lisp-symbol))
  '(hippie-expand-verbose t)
- '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load) t)
+ '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load))
  '(htmlize-html-charset "utf-8")
  '(htmlize-hyperlink-style
    "\12      a {\12        color: inherit;\12        background-color: #000000;\12        font: inherit;\12        text-decoration: inherit;\12      }\12      a:hover {\12        text-decoration: underline;\12      }\12")
@@ -172,163 +198,77 @@
  '(ibuffer-saved-filter-groups
    '(("normal"
       ("emacs"
-       (or
-        (mode . Custom-mode)
-        (mode . lisp-interaction-mode)
-        (mode . emacs-lisp-mode)))
+       (or (mode . Custom-mode) (mode . lisp-interaction-mode)
+           (mode . emacs-lisp-mode)))
       ("console"
-       (or
-        (mode . inferior-octave-mode)
-        (mode . calc-mode)
-        (mode . debugger-mode)
-        (mode . comint-mode)
-        (mode . reb-mode)
-        (mode . inferior-ess-mode)
-        (mode . inf-ruby-mode)
-        (mode . shell-mode)
-        (mode . inferior-moz-mode)))
+       (or (mode . inferior-octave-mode) (mode . calc-mode)
+           (mode . debugger-mode) (mode . comint-mode)
+           (mode . reb-mode) (mode . inferior-ess-mode)
+           (mode . inf-ruby-mode) (mode . shell-mode)
+           (mode . inferior-moz-mode)))
       ("result"
-       (or
-        (mode . anything-mode)
-        (mode . ediff-meta-mode)
-        (mode . ediff-mode)
-        (mode . occur-mode)
-        (mode . compilation-mode)
-        (name . "^\\*pP")
-        (mode . grep-mode)
-        (mode . completion-list-mode)
-        (mode . apropos-mode)
-        (name . "rct-result")
-        (name . "*rct-compilation*")
-        (name . "^\\*rake")
-        (mode . term-mode)))
+       (or (mode . anything-mode) (mode . ediff-meta-mode)
+           (mode . ediff-mode) (mode . occur-mode)
+           (mode . compilation-mode) (name . "^\\*pP")
+           (mode . grep-mode) (mode . completion-list-mode)
+           (mode . apropos-mode) (name . "rct-result")
+           (name . "*rct-compilation*") (name . "^\\*rake")
+           (mode . term-mode)))
       ("debugger"
-       (or
-        (name . "^*gud")
-        (name . "^*edebug")
-        (name . "^*locals")
-        (name . "^*register")
-        (name . "^*stack")
-        (name . "^*breakpoints")
-        (name . "^*input")
-        (name . "^*disassembly")
-        (name . "^*threads")
-        (name . "^*memory")
-        (name . "^*rdebug")))
-      ("log"
-       (or
-        (name . "\\.log$")
-        (name . "_log")))
+       (or (name . "^*gud") (name . "^*edebug") (name . "^*locals")
+           (name . "^*register") (name . "^*stack")
+           (name . "^*breakpoints") (name . "^*input")
+           (name . "^*disassembly") (name . "^*threads")
+           (name . "^*memory") (name . "^*rdebug")))
+      ("log" (or (name . "\\.log$") (name . "_log")))
       ("help"
-       (or
-        (name . "^readme")
-        (name . "^ri")
-        (mode . help-mode)
-        (mode . Info-mode)
-        (mode . Man-mode)
-        (mode . woman-mode)
-        (mode . ess-help-mode)))
-      ("irc"
-       (or
-        (mode . rcirc-mode)))
-      ("tags"
-       (or
-        (name . "^TAGS")
-        (mode . tags-table-mode)))
+       (or (name . "^readme") (name . "^ri") (mode . help-mode)
+           (mode . Info-mode) (mode . Man-mode) (mode . woman-mode)
+           (mode . ess-help-mode)))
+      ("irc" (or (mode . rcirc-mode)))
+      ("tags" (or (name . "^TAGS") (mode . tags-table-mode)))
       ("org"
-       (or
-        (name . "^\\*Org")
-        (mode . calendar-mode)
-        (mode . org-mode)))
+       (or (name . "^\\*Org") (mode . calendar-mode) (mode . org-mode)))
       ("ver"
-       (or
-        (mode . vc-annotate-mode)
-        (name . "^\\*VC")
-        (mode . vc-mode)
-        (name . "^\\*magit")))
-      ("dir"
-       (or
-        (mode . dired-mode)
-        (mode . archive-mode))))))
+       (or (mode . vc-annotate-mode) (name . "^\\*VC")
+           (mode . vc-mode) (name . "^\\*magit")))
+      ("dir" (or (mode . dired-mode) (mode . archive-mode))))))
  '(ibuffer-saved-filters
-   '(("irc"
-      (or
-       (mode . rcirc-mode)))
+   '(("irc" (or (mode . rcirc-mode)))
      ("console"
-      ((or
-        (mode . debugger-mode)
-        (mode . slime-repl-mode)
-        (mode . comint-mode)
-        (mode . reb-mode)
-        (mode . inferior-ess-mode)
-        (mode . inf-ruby-mode)
-        (mode . shell-mode)
-        (mode . inferior-moz-mode))))
-     ("tags"
-      (or
-       (name . "^TAGS")
-       (mode . tags-table-mode)))
+      ((or (mode . debugger-mode) (mode . slime-repl-mode)
+           (mode . comint-mode) (mode . reb-mode)
+           (mode . inferior-ess-mode) (mode . inf-ruby-mode)
+           (mode . shell-mode) (mode . inferior-moz-mode))))
+     ("tags" (or (name . "^TAGS") (mode . tags-table-mode)))
      ("emacs"
-      (or
-       (mode . Custom-mode)
-       (mode . lisp-interaction-mode)
-       (mode . emacs-lisp-mode)))
+      (or (mode . Custom-mode) (mode . lisp-interaction-mode)
+          (mode . emacs-lisp-mode)))
      ("result"
-      (or
-       (mode . anything-mode)
-       (mode . ediff-meta-mode)
-       (mode . ediff-mode)
-       (mode . occur-mode)
-       (mode . compilation-mode)
-       (name . "^\\*pP")
-       (mode . grep-mode)
-       (mode . completion-list-mode)
-       (mode . apropos-mode)
-       (name . "rct-result")
-       (name . "*rct-compilation*")
-       (name . "^\\*rake")
-       (mode . term-mode)))
+      (or (mode . anything-mode) (mode . ediff-meta-mode)
+          (mode . ediff-mode) (mode . occur-mode)
+          (mode . compilation-mode) (name . "^\\*pP")
+          (mode . grep-mode) (mode . completion-list-mode)
+          (mode . apropos-mode) (name . "rct-result")
+          (name . "*rct-compilation*") (name . "^\\*rake")
+          (mode . term-mode)))
      ("debugger"
-      (or
-       (name . "^*gud")
-       (name . "^*edebug")
-       (name . "^*locals")
-       (name . "^*register")
-       (name . "^*stack")
-       (name . "^*breakpoints")
-       (name . "^*input")
-       (name . "^*disassembly")
-       (name . "^*threads")
-       (name . "^*memory")
-       (name . "^*rdebug")))
-     ("log"
-      (or
-       (name . "\\.log$")
-       (name . "_log")))
+      (or (name . "^*gud") (name . "^*edebug") (name . "^*locals")
+          (name . "^*register") (name . "^*stack")
+          (name . "^*breakpoints") (name . "^*input")
+          (name . "^*disassembly") (name . "^*threads")
+          (name . "^*memory") (name . "^*rdebug")))
+     ("log" (or (name . "\\.log$") (name . "_log")))
      ("org"
-      ((or
-        (name . "^\\*Org")
-        (mode . calendar-mode)
-        (mode . org-mode))))
+      ((or (name . "^\\*Org") (mode . calendar-mode) (mode . org-mode))))
      ("ver"
-      ((or
-        (mode . vc-annotate-mode)
-        (name . "^\\*VC")
-        (mode . vc-mode)
-        (name . "^\\*magit"))))
+      ((or (mode . vc-annotate-mode) (name . "^\\*VC")
+           (mode . vc-mode) (name . "^\\*magit"))))
      ("help"
-      (or
-       (name . "^readme")
-       (name . "^ri")
-       (mode . help-mode)
-       (mode . Info-mode)
-       (mode . Man-mode)
-       (mode . woman-mode)
-       (mode . ess-help-mode)))
-     ("dir"
-      (or
-       (mode . dired-mode)
-       (mode . archive-mode)))))
+      (or (name . "^readme") (name . "^ri") (mode . help-mode)
+          (mode . Info-mode) (mode . Man-mode) (mode . woman-mode)
+          (mode . ess-help-mode)))
+     ("dir" (or (mode . dired-mode) (mode . archive-mode)))))
  '(icicle-apropos-cycle-next-keys '([next]))
  '(ido-create-new-buffer 'always)
  '(ido-enable-flex-matching t)
@@ -336,9 +276,9 @@
  '(ido-max-window-height 5)
  '(indent-tabs-mode nil)
  '(inferior-lisp-program
-   (if
-       (string= system-type "windows-nt")
-       "C:/Program Files/Steel Bank Common Lisp/1.3.8/sbcl.exe" "/usr/local/bin/sbcl") t)
+   (if (string= system-type "windows-nt")
+       "C:/Program Files/Steel Bank Common Lisp/1.3.8/sbcl.exe"
+     "/usr/local/bin/sbcl") t)
  '(isearch-resume-in-command-history t)
  '(ispell-complete-word-dict "~/etc/el/vendor/aspell/web2")
  '(ispell-dictionary "british")
@@ -353,22 +293,83 @@
  '(line-spacing 5)
  '(list-matching-lines-default-context-lines 0)
  '(load-path
-   '("~/etc/el/ess/" "~/etc/el/tree-sitter" "~/etc/el/vendor/use-package" "~/etc/el/vendor/markdown" "~/etc/el/vendor/tree-sitter" "~/etc/el/vendor/tsc" "~/etc/el/vendor/tree-sitter-langs" "~/etc/el/vendor/phi-search" "~/etc/el/vendor/expand-region" "~/etc/el/auto-install/async" "~/etc/el/auto-install/dash" "~/etc/el/auto-install/magit-popup" "~/etc/el/auto-install/tablist" "~/etc/el/vendor/docker" "~/etc/el/vendor/hn" "~/etc/el/vendor/multiple-cursors" "~/etc/el/vendor/tern" "~/etc/el/vendor/js2-mode" "~/etc/el/vendor/js2-refactor" "~/etc/el/s" "~/etc/el/vendor/dash" "~/etc/el/vendor/flycheck" "~/etc/el/vendor/helm" "~/etc/el/vendor/omnisharp" "~/etc/el/vendor/pkg-info" "~/etc/el/vendor/popup" "~/etc/el/vendor/auto-complete" "~/etc/el/vendor/csharp-mode" "~/etc/el/vendor/ggtags" "~/etc/el/vendor/web-beautify" "~/etc/el/vendor/epl" "~/etc/el/yasnippet" "~/etc/el/gdb" "~/etc/el/vendor/s" "~/etc/el/vendor/dash" "~/etc/el/vendor/swift-mode" "~/etc/el/vendor/fsharp-mode" "~/etc/el/vendor/lua-mode" "~/etc/el/vendor/nav" "~/etc/el/vendor/emmet" "~/etc/el/vendor/rinari/util/jump/" "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/" "~/etc/el/vendor/node_modules/lintnode" "~/etc/el" "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install" "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org" "~/etc/el/vendor/gist" "~/etc/el/vendor/magit" "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml" "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet" "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/irony-mode" "~/etc/el/vendor/erlang" "~/etc/el/vendor/erlang/share/distel/elisp" "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs" "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime" "~/etc/el/vendor/swank-js" "~/etc/el/vendor/company" "~/etc/el/vendor/auto-complete" "~/local/share/emacs/current/leim" "~/local/share/emacs/current/lisp" "~/local/share/emacs/current/lisp/calc" "~/local/share/emacs/current/lisp/vc" "~/local/share/emacs/current/lisp/cedet" "~/local/share/emacs/current/lisp/calendar" "~/local/share/emacs/current/lisp/emacs-lisp" "~/local/share/emacs/current/lisp/emulation" "~/local/share/emacs/current/lisp/erc" "~/local/share/emacs/current/lisp/eshell" "~/local/share/emacs/current/lisp/gnus" "~/local/share/emacs/current/lisp/international" "~/local/share/emacs/current/lisp/language" "~/local/share/emacs/current/lisp/mail" "~/local/share/emacs/current/lisp/mh-e" "~/local/share/emacs/current/lisp/net" "~/local/share/emacs/current/lisp/nxml" "~/local/share/emacs/current/lisp/nxml/char-name" "~/local/share/emacs/current/lisp/nxml/char-name/unicode" "~/local/share/emacs/current/lisp/obsolete" "~/local/share/emacs/current/lisp/org" "~/local/share/emacs/current/lisp/play" "~/local/share/emacs/current/lisp/progmodes" "~/local/share/emacs/current/lisp/textmodes" "~/local/share/emacs/current/lisp/toolbar" "~/local/share/emacs/current/lisp/url" "~/local/share/emacs/current/site-lisp" "~/local/share/emacs/current/site-lisp/emms" "~/local/share/emacs/site-lisp") t)
+   '("~/etc/el/ess/" "~/etc/el/tree-sitter" "~/etc/el/vendor/use-package"
+     "~/etc/el/vendor/markdown" "~/etc/el/vendor/tree-sitter"
+     "~/etc/el/vendor/tsc" "~/etc/el/vendor/tree-sitter-langs"
+     "~/etc/el/vendor/phi-search" "~/etc/el/vendor/expand-region"
+     "~/etc/el/auto-install/async" "~/etc/el/auto-install/dash"
+     "~/etc/el/auto-install/magit-popup"
+     "~/etc/el/auto-install/tablist" "~/etc/el/vendor/docker"
+     "~/etc/el/vendor/hn" "~/etc/el/vendor/multiple-cursors"
+     "~/etc/el/vendor/tern" "~/etc/el/vendor/js2-mode"
+     "~/etc/el/vendor/js2-refactor" "~/etc/el/s"
+     "~/etc/el/vendor/dash" "~/etc/el/vendor/flycheck"
+     "~/etc/el/vendor/helm" "~/etc/el/vendor/omnisharp"
+     "~/etc/el/vendor/pkg-info" "~/etc/el/vendor/popup"
+     "~/etc/el/vendor/auto-complete" "~/etc/el/vendor/csharp-mode"
+     "~/etc/el/vendor/ggtags" "~/etc/el/vendor/web-beautify"
+     "~/etc/el/vendor/epl" "~/etc/el/yasnippet" "~/etc/el/gdb"
+     "~/etc/el/vendor/s" "~/etc/el/vendor/dash"
+     "~/etc/el/vendor/swift-mode" "~/etc/el/vendor/fsharp-mode"
+     "~/etc/el/vendor/lua-mode" "~/etc/el/vendor/nav"
+     "~/etc/el/vendor/emmet" "~/etc/el/vendor/rinari/util/jump/"
+     "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/"
+     "~/etc/el/vendor/node_modules/lintnode" "~/etc/el"
+     "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install"
+     "~/etc/el/ess" "~/etc/el/icicles" "~/etc/el/org"
+     "~/etc/el/vendor/gist" "~/etc/el/vendor/magit"
+     "~/etc/el/vendor/rcodetools" "~/etc/el/vendor/rhtml"
+     "~/etc/el/vendor/textile-minor-mode/" "~/etc/el/vendor/yasnippet"
+     "~etc/el/vendor/yaml-mode/trunk" "~/etc/el/vendor/irony-mode"
+     "~/etc/el/vendor/erlang"
+     "~/etc/el/vendor/erlang/share/distel/elisp"
+     "~/etc/el/vendor/tuareg" "~/etc/el/vendor/matlab-emacs"
+     "~/etc/el/vendor/eclim" "~/etc/el/vendor/slime"
+     "~/etc/el/vendor/swank-js" "~/etc/el/vendor/company"
+     "~/etc/el/vendor/auto-complete"
+     "~/local/share/emacs/current/leim"
+     "~/local/share/emacs/current/lisp"
+     "~/local/share/emacs/current/lisp/calc"
+     "~/local/share/emacs/current/lisp/vc"
+     "~/local/share/emacs/current/lisp/cedet"
+     "~/local/share/emacs/current/lisp/calendar"
+     "~/local/share/emacs/current/lisp/emacs-lisp"
+     "~/local/share/emacs/current/lisp/emulation"
+     "~/local/share/emacs/current/lisp/erc"
+     "~/local/share/emacs/current/lisp/eshell"
+     "~/local/share/emacs/current/lisp/gnus"
+     "~/local/share/emacs/current/lisp/international"
+     "~/local/share/emacs/current/lisp/language"
+     "~/local/share/emacs/current/lisp/mail"
+     "~/local/share/emacs/current/lisp/mh-e"
+     "~/local/share/emacs/current/lisp/net"
+     "~/local/share/emacs/current/lisp/nxml"
+     "~/local/share/emacs/current/lisp/nxml/char-name"
+     "~/local/share/emacs/current/lisp/nxml/char-name/unicode"
+     "~/local/share/emacs/current/lisp/obsolete"
+     "~/local/share/emacs/current/lisp/org"
+     "~/local/share/emacs/current/lisp/play"
+     "~/local/share/emacs/current/lisp/progmodes"
+     "~/local/share/emacs/current/lisp/textmodes"
+     "~/local/share/emacs/current/lisp/toolbar"
+     "~/local/share/emacs/current/lisp/url"
+     "~/local/share/emacs/current/site-lisp"
+     "~/local/share/emacs/current/site-lisp/emms"
+     "~/local/share/emacs/site-lisp") t)
  '(lpr-command "~/scripts/pdfprint")
  '(mail-send-hook '(quote-encoded-subject))
  '(make-backup-files nil)
  '(markdown-command "markdown -x codehilite /dev/stdin")
  '(max-mini-window-height 0.7)
  '(mm-body-charset-encoding-alist
-   '((utf-8 . 7bit)
-     (iso-2022-jp-2 . 7bit)
-     (utf-16 . base64)
-     (utf-16be . base64)
-     (utf-16le . base64)))
+   '((utf-8 . 7bit) (iso-2022-jp-2 . 7bit) (utf-16 . base64)
+     (utf-16be . base64) (utf-16le . base64)))
  '(mode-line-format
-   '("%e" mode-line-front-space mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
-     (vc-mode vc-mode)
-     "  " mode-line-modes mode-line-misc-info system-name mode-line-end-spaces))
+   '("%e" mode-line-front-space mode-line-mule-info mode-line-client
+     mode-line-modified mode-line-remote
+     mode-line-frame-identification mode-line-buffer-identification
+     "   " mode-line-position (vc-mode vc-mode) "  " mode-line-modes
+     mode-line-misc-info system-name mode-line-end-spaces))
  '(mode-require-final-newline nil)
  '(next-line-add-newlines nil)
  '(next-screen-context-lines 0)
@@ -384,12 +385,9 @@
  '(org-completion-use-ido t)
  '(org-default-notes-file "~/icloud/org/note.org")
  '(org-file-apps
-   '((auto-mode . emacs)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     ("\\.pdf\\'" . default)
-     ("m4v" . "/usr/bin/qlmanage -p %s")
-     ("png" . "qlmanage -p %s")
+   '((auto-mode . emacs) ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default) ("\\.pdf\\'" . default)
+     ("m4v" . "/usr/bin/qlmanage -p %s") ("png" . "qlmanage -p %s")
      ("mov" . "qlmanage -p %s")))
  '(org-hide-leading-stars t)
  '(org-odd-levels-only t)
@@ -406,26 +404,18 @@
      ("~/local/src/baza/sbs.org" :tag . "beta")
      ("~/local/src/baza/sbs.org" :tag . "alpha")))
  '(org-tag-alist
-   '(("bug" . 98)
-     ("finding" . 102)
-     ("data" . 100)
-     ("push" . 112)
-     ("summary" . 115)
-     ("research" . 114)
-     ("fix" . 120)
-     ("meeting" . 109)
-     ("trip" . 116)
-     ("build" . 117)
-     ("buy" . 36)
-     ("baza" . 106)
-     ("hack" . 104)
-     ("feature" . 110)
+   '(("bug" . 98) ("finding" . 102) ("data" . 100) ("push" . 112)
+     ("summary" . 115) ("research" . 114) ("fix" . 120)
+     ("meeting" . 109) ("trip" . 116) ("build" . 117) ("buy" . 36)
+     ("baza" . 106) ("hack" . 104) ("feature" . 110)
      ("deployment" . 101)))
  '(org-todo-keyword-faces '(("ABORT" . "white")))
  '(org-todo-keywords '((sequence "TODO" "HALT" "ABORT" "DONE")))
  '(org-use-speed-commands t)
  '(package-selected-packages
-   '(typescript-mode tree-sitter-langs tree-sitter dap-mode go-guru go-mode latex-preview-pane latex-math-preview auctex json-snatcher chess))
+   '(typescript-mode tree-sitter-langs tree-sitter dap-mode go-guru
+                     go-mode latex-preview-pane latex-math-preview
+                     auctex json-snatcher chess))
  '(ps-lpr-command "lp")
  '(ps-multibyte-buffer 'bdf-font)
  '(push-minor-mode-string " Pu")
@@ -438,42 +428,28 @@
  '(rst-level-face-base-color "")
  '(safe-local-eval-forms
    '((add-hook 'write-file-hooks 'time-stamp)
-     (add-hook 'after-save-hook
-               (lambda nil
-                 (org-export-as-html 3)))
-     (lambda nil
-       (org-export-as-html 3))))
+     (add-hook 'after-save-hook (lambda nil (org-export-as-html 3)))
+     (lambda nil (org-export-as-html 3))))
  '(safe-local-variable-values
-   '((save-as-html lambda nil
-                   (org-export-as-html 3))
-     (write-contents-files lambda nil
-                           (org-export-as-html 3))
-     (erlang-indent-level . 4)
-     (erlang-indent-level . 2)
-     (require-final-newline)
-     (backup-inhibited . t)
+   '((save-as-html lambda nil (org-export-as-html 3))
+     (write-contents-files lambda nil (org-export-as-html 3))
+     (erlang-indent-level . 4) (erlang-indent-level . 2)
+     (require-final-newline) (backup-inhibited . t)
      (ruby-compilation-executable . "ruby")
      (ruby-compilation-executable . "ruby1.8")
      (ruby-compilation-executable . "ruby1.9")
      (ruby-compilation-executable . "rbx")
      (ruby-compilation-executable . "jruby")
-     (minor-mode . clearcase-dired)
-     (TeX-command-default . "CJKLaTeX")
+     (minor-mode . clearcase-dired) (TeX-command-default . "CJKLaTeX")
      (TeX-header-end . "%+ *[Ee]nd[ -]*[oO]f[ -]*[hH]eader")
      (TeX-trailer-start . "%+ *[Ss]tart[ -]*[oO]f[ -]*[tT]railer")
-     (TeX-command-default . "CLaTeX")
-     (TeX-master . t)))
+     (TeX-command-default . "CLaTeX") (TeX-master . t)))
  '(scroll-conservatively 10)
  '(search-whitespace-regexp "[ \11\12\15]+")
  '(semantic-mode nil)
  '(sgml-tag-alist
-   '(("!["
-      ("ignore" t)
-      ("include" t))
-     ("!attlist")
-     ("!doctype")
-     ("!element")
-     ("!entity")))
+   '(("![" ("ignore" t) ("include" t)) ("!attlist") ("!doctype")
+     ("!element") ("!entity")))
  '(show-paren-mode t)
  '(size-indication-mode t)
  '(smtpmail-auth-credentials "~/.authinfo")
@@ -486,136 +462,59 @@
  '(smtpmail-starttls-credentials '(("smtp.gmail.com" 587 "  " "")))
  '(swift-indent-switch-case-offset 4)
  '(tool-bar-mode nil)
+ '(tree-sitter-langs-grammar-dir "/root/.emacs.d/tree-sitter")
  '(tree-sitter-major-mode-language-alist
-   '((actionscript-mode . actionscript)
-     (ada-mode . ada)
-     (agda-mode . agda)
-     (agda2-mode . agda)
-     (arduino-mode . arduino)
-     (astro-mode . astro)
-     (fish-mode . fish)
-     (asm-mode . asm)
-     (fasm-mode . asm)
-     (masm-mode . asm)
-     (nasm-mode . asm)
-     (gas-mode . asm)
-     (sh-mode . bash)
-     (beancount-mode . beancount)
-     (bibtex-mode . bibtex)
-     (c-mode . c)
-     (caml-mode . ocaml)
-     (clojure-mode . clojure)
-     (lisp-mode . commonlisp)
-     (lisp-interaction-mode . commonlisp)
-     (csharp-mode . c-sharp)
-     (c++-mode . cpp)
-     (cmake-mode . cmake)
-     (d-mode . d)
-     (dart-mode . dart)
-     (dockerfile-mode . dockerfile)
-     (css-ts-mode . css)
-     (css-mode . css)
-     (csv-mode . csv)
-     (elm-mode . elm)
-     (elixir-mode . elixir)
-     (emacs-lisp-mode . elisp)
-     (erlang-mode . erlang)
-     (ess-r-mode . r)
-     (fennel-mode . fennel)
-     (f90-mode . fortran)
-     (fortran-mode . fortran)
-     (gdscript-mode . gdscript)
-     (git-commit-mode . gitcommit)
+   '((actionscript-mode . actionscript) (ada-mode . ada)
+     (agda-mode . agda) (agda2-mode . agda) (arduino-mode . arduino)
+     (astro-mode . astro) (fish-mode . fish) (asm-mode . asm)
+     (fasm-mode . asm) (masm-mode . asm) (nasm-mode . asm)
+     (gas-mode . asm) (sh-mode . bash) (beancount-mode . beancount)
+     (bibtex-mode . bibtex) (c-mode . c) (caml-mode . ocaml)
+     (clojure-mode . clojure) (lisp-mode . commonlisp)
+     (lisp-interaction-mode . commonlisp) (csharp-mode . c-sharp)
+     (c++-mode . cpp) (cmake-mode . cmake) (d-mode . d)
+     (dart-mode . dart) (dockerfile-mode . dockerfile)
+     (css-ts-mode . css) (css-mode . css) (csv-mode . csv)
+     (elm-mode . elm) (elixir-mode . elixir) (emacs-lisp-mode . elisp)
+     (erlang-mode . erlang) (ess-r-mode . r) (fennel-mode . fennel)
+     (f90-mode . fortran) (fortran-mode . fortran)
+     (gdscript-mode . gdscript) (git-commit-mode . gitcommit)
      (git-rebase-mode . git-rebase)
-     (gitattributes-mode . gitattributes)
-     (gitignore-mode . gitignore)
-     (gleam-mode . gleam)
-     (glsl-mode . glsl)
-     (go-mode . go)
-     (groovy-mode . groovy)
-     (jenkinsfile-mode . groovy)
-     (haskell-mode . haskell)
-     (haxe-mode . haxe)
-     (hcl-mode . hcl)
-     (terraform-mode . hcl)
-     (heex-mode . heex)
-     (hlsl-mode . hlsl)
-     (html-mode . html)
-     (markdown-mode . markdown)
-     (mhtml-mode . html)
-     (nix-mode . nix)
-     (jai-mode . jai)
-     (java-mode . java)
-     (javascript-mode . javascript)
-     (js-mode . javascript)
-     (js2-mode . javascript)
-     (js-ts-mode . javascript)
-     (js3-mode . javascript)
-     (json-ts-mode . json)
-     (json-mode . json)
-     (jsonc-mode . json)
-     (jsonnet-mode . jsonnet)
-     (julia-mode . julia)
-     (kotlin-mode . kotlin)
-     (latex-mode . latex)
-     (LaTeX-mode . latex)
-     (llvm-mode . llvm)
-     (llvm-mir-mode . llvm-mir)
-     (lua-mode . lua)
-     (magik-mode . magik)
-     (makefile-mode . make)
-     (makefile-automake-mode . make)
-     (makefile-gmake-mode . make)
-     (makefile-makepp-mode . make)
-     (makefile-bsdmake-mode . make)
-     (makefile-imake-mode . make)
-     (matlab-mode . matlab)
-     (mermaid-mode . mermaid)
-     (meson-mode . meson)
-     (ninja-mode . ninja)
-     (noir-mode . noir)
-     (ocaml-mode . ocaml)
-     (org-mode . org)
-     (pascal-mode . pascal)
-     (perl-mode . perl)
-     (cperl-mode . perl)
-     (php-mode . php)
-     (qss-mode . css)
-     (prisma-mode . prisma)
-     (python-ts-mode . python)
-     (python-mode . python)
-     (pygn-mode . pgn)
-     (racket-mode . racket)
-     (rjsx-mode . javascript)
-     (rst-mode . rst)
-     (ruby-mode . ruby)
-     (rust-ts-mode . rust)
-     (rust-mode . rust)
-     (rustic-mode . rust)
-     (scala-mode . scala)
-     (scheme-mode . scheme)
-     (solidity-mode . solidity)
-     (smithy-mode . smithy)
-     (sql-mode . sql)
-     (svelte-mode . svelte)
-     (swift-mode . swift)
-     (tablegen-mode . tablegen)
-     (toml-mode . toml)
-     (conf-toml-mode . toml)
-     (tcl-mode . tcl)
-     (tuareg-mode . ocaml)
-     (twig-mode . twig)
-     (typescript-mode . typescript)
-     (tsx-ts-mode . tsx)
-     (typescript-tsx-mode . tsx)
-     (typescript-ts-mode . typescript)
-     (typst-mode . typst)
-     (verilog-mode . verilog)
-     (vhdl-mode . vhdl)
-     (nxml-mode . xml)
-     (yaml-ts-mode . yaml)
-     (yaml-mode . yaml)
-     (k8s-mode . yaml)
+     (gitattributes-mode . gitattributes) (gitignore-mode . gitignore)
+     (gleam-mode . gleam) (glsl-mode . glsl) (go-mode . go)
+     (groovy-mode . groovy) (jenkinsfile-mode . groovy)
+     (haskell-mode . haskell) (haxe-mode . haxe) (hcl-mode . hcl)
+     (terraform-mode . hcl) (heex-mode . heex) (hlsl-mode . hlsl)
+     (html-mode . html) (markdown-mode . markdown) (mhtml-mode . html)
+     (nix-mode . nix) (jai-mode . jai) (java-mode . java)
+     (javascript-mode . javascript) (js-mode . javascript)
+     (js2-mode . javascript) (js-ts-mode . javascript)
+     (js3-mode . javascript) (json-ts-mode . json) (json-mode . json)
+     (jsonc-mode . json) (jsonnet-mode . jsonnet) (julia-mode . julia)
+     (kotlin-mode . kotlin) (latex-mode . latex) (LaTeX-mode . latex)
+     (llvm-mode . llvm) (llvm-mir-mode . llvm-mir) (lua-mode . lua)
+     (magik-mode . magik) (makefile-mode . make)
+     (makefile-automake-mode . make) (makefile-gmake-mode . make)
+     (makefile-makepp-mode . make) (makefile-bsdmake-mode . make)
+     (makefile-imake-mode . make) (matlab-mode . matlab)
+     (mermaid-mode . mermaid) (meson-mode . meson)
+     (ninja-mode . ninja) (noir-mode . noir) (ocaml-mode . ocaml)
+     (org-mode . org) (pascal-mode . pascal) (perl-mode . perl)
+     (cperl-mode . perl) (php-mode . php) (qss-mode . css)
+     (prisma-mode . prisma) (python-ts-mode . python)
+     (python-mode . python) (pygn-mode . pgn) (racket-mode . racket)
+     (rjsx-mode . javascript) (rst-mode . rst) (ruby-mode . ruby)
+     (rust-ts-mode . rust) (rust-mode . rust) (rustic-mode . rust)
+     (scala-mode . scala) (scheme-mode . scheme)
+     (solidity-mode . solidity) (smithy-mode . smithy)
+     (sql-mode . sql) (svelte-mode . svelte) (swift-mode . swift)
+     (tablegen-mode . tablegen) (toml-mode . toml)
+     (conf-toml-mode . toml) (tcl-mode . tcl) (tuareg-mode . ocaml)
+     (twig-mode . twig) (typescript-mode . typescript)
+     (tsx-ts-mode . tsx) (typescript-tsx-mode . tsx)
+     (typescript-ts-mode . typescript) (typst-mode . typst)
+     (verilog-mode . verilog) (vhdl-mode . vhdl) (nxml-mode . xml)
+     (yaml-ts-mode . yaml) (yaml-mode . yaml) (k8s-mode . yaml)
      (zig-mode . zig)))
  '(user-mail-address "bartuer@gmail.com")
  '(vc-handled-backends '(Git RCS CVS SVN SCCS Bzr Hg Arch))

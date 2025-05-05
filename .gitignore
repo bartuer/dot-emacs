@@ -113,3 +113,5 @@ gdb/gdb-ui.el
 /build/emacs-29.1-treesitter-ubuntu-20.04/emacs_29.1_20.04.tar.gz
 /build/el
 /build/.ssh
+vendor/tree-sitter-langs/bin
+vendor/elisp-tree-sitter

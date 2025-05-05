@@ -26,13 +26,25 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         r-base \
         sbcl \
         xclip \
-        texinfo
+        texinfo \
+        openssh-client openssh-server
         
 RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa \
         && apt-get update  && DEBIAN_FRONTEND=noninteractive \
         && apt-get install -y gcc-10 libgccjit0 libgccjit-10-dev
 
 ENV CC="gcc-10"
+
+
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+RUN git config --global --add safe.directory /root/etc/el
+RUN git config --global user.name "Bartuer Zhou"
+RUN git config --global user.email "bartuer@gmail.com"
+RUN git config --global core.pager cat 
+RUN git config --global http.proxy 'socks5://host.docker.internal:8080' 
 
 RUN git clone https://github.com/tree-sitter/tree-sitter.git \
     && cd /opt/tree-sitter \
@@ -76,4 +88,11 @@ RUN mkdir -p ~/local/share/emacs && \
     cd /root && \
     ln -s /root/etc/el/.emacs.el .emacs.el
 
+
 COPY .bashrc /root/.bashrc
+COPY entry.sh /bin/entry
+RUN mkdir -p /root/.ssh
+COPY config /root/.ssh/config
+
+EXPOSE 22
+ENTRYPOINT ["/bin/entry.sh"]
