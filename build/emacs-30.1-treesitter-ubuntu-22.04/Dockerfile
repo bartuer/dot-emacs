@@ -92,7 +92,7 @@ COPY .bashrc /root/.bashrc
 COPY entry.sh /bin/entry
 RUN mkdir -p /root/.ssh
 COPY config /root/.ssh/config
-
+COPY authorized_keys /root/.ssh/authorized_keys
 RUN mkdir -p /root/.emacs.d/tree-sitter/bin
 
 EXPOSE 22
