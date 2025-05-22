@@ -30,7 +30,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         netcat \
         clang-tools \
         openssh-server \ 
-        openssh-client 
+        openssh-client \
+        parallel \
+        file
         
         
 RUN  apt-get update  && DEBIAN_FRONTEND=noninteractive \

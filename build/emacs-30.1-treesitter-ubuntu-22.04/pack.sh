@@ -1,1 +1,1 @@
-docker run -w / -v ${PWD}/:/opt caapi/emacs30.1:22.04 /opt/tar.sh
+docker run -w / -v ${PWD}/:/opt caapi/arm64.emacs30.1:22.04  /opt/tar.sh
