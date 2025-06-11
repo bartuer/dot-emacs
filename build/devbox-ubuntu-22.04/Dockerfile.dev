@@ -1,0 +1,43 @@
+FROM ubuntu:22.04 as cpp_install
+
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essential ca-certificates clang clang-tools 
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y parallel file
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y cmake curl file gdb gnupg-agent
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y libblas-dev libgraphviz-dev
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y jq htop
+
+ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sort |tar czf $CPP_PKG -T -
+
+
+FROM ubuntu:22.04 as cpp
+ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+
+COPY --from=cpp_install $CPP_PKG $CPP_PKG
+
+RUN tar -zxf $CPP_PKG -C /
+
+RUN rm -rf /var/lib/apt/lists/* \
+    && apt-mark auto '.*' > /dev/null \
+    && find /usr/local -type f -executable -exec ldd '{}' ';' \
+      | awk '/=>/ { print $(NF-1) }' \
+      | sort -u \
+      | xargs -r dpkg-query --search \
+      | cut -d: -f1 \
+      | sort -u \
+      | xargs -r apt-mark manual \
+    && apt-get purge -y 
+
+# RUN rm $CPP_PKG
+# WORKDIR /root
+# RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+# RUN uv venv --python 3.12.8
+# COPY requirements.py312.txt /root/.local/requirements.py312.txt
+# RUN uv pip install -r /root/.local/requirements.py312.txt
+# RUN uv pip install setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable az-cli
+# RUN mkdir /root/.jupyter \
+#     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
+
+
