@@ -31,7 +31,8 @@ RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
 
 RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
     chmod +x $RUST_BIN/rust-analyzer
-RUN source $CARGO_HOME/env; cargo install wasm-pack cargo-generate wasm-bindgen-cli
+
+RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
 
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 RUN find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - 
