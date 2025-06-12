@@ -26,6 +26,7 @@ ENV RUSTUP_HOME=/root/.rustup \
     RUST_VERSION=1.87.0
 
 RUN tar zxf $CPP_PKG -C /
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y ca-certificates
 RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
 
 RUN curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
