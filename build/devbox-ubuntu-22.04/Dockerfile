@@ -22,7 +22,7 @@ ENV RUSTUP_HOME=/root/.rustup \
 
 RUN set -eux; \
     url="https://static.rust-lang.org/rustup/archive/$RUST_VERSION/$ARCH/rustup-init"; \
-    wget "$url"; \
+    curl -o "$url"; \
     chmod +x rustup-init; \
     ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host $ARCH; \
     rm rustup-init; \
