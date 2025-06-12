@@ -25,6 +25,7 @@ ENV RUSTUP_HOME=/root/.rustup \
     ARCH=aarch64-unknown-linux-gnu \
     RUST_VERSION=1.87.0
 
+RUN tar zxf $CPP_PKG -C /
 RUN set -eux; \
     url="https://static.rust-lang.org/rustup/archive/$RUST_VERSION/$ARCH/rustup-init"; \
     curl -o "$url"; \
