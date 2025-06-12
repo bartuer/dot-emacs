@@ -26,13 +26,7 @@ ENV RUSTUP_HOME=/root/.rustup \
     RUST_VERSION=1.87.0
 
 RUN tar zxf $CPP_PKG -C /
-RUN set -eux; \
-    url="https://static.rust-lang.org/rustup/archive/$RUST_VERSION/$ARCH/rustup-init"; \
-    curl -k -O "$url" ; \
-    chmod +x rustup-init; \
-    ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host $ARCH; \
-    rm rustup-init; \
-    chmod -R a+w $RUSTUP_HOME $CARGO_HOME;
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 RUN curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
     chmod +x $RUST_BIN/rust-analyzer
