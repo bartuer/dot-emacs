@@ -3,8 +3,8 @@ FROM ubuntu:22.04 AS cpp_install
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essential ca-certificates clang clang-tools clang-format
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y parallel file pkg-config libssl-dev
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essential ca-certificates clang clang-tools
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y parallel file pkg-config libssl-dev  clang-format
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y cmake curl file gdb gnupg-agent
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y libblas-dev libgraphviz-dev
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y jq htop linux-tools-common linux-tools-generic
