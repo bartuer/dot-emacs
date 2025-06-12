@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as cpp_install
+FROM ubuntu:22.04 AS cpp_install
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev
@@ -11,7 +11,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y 
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sort |tar czf $CPP_PKG -T -
 
-FROM ubuntu:22.04 as rust_install
+FROM ubuntu:22.04 AS rust_install
      
 ENV RUSTUP_HOME=/root/.rustup \
     CARGO_HOME=/root/.cargo \
