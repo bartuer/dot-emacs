@@ -59,6 +59,7 @@ ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 ENV UV_DIR=/root/.local
+ENV PATH=$UV_DIR:$PATH
 COPY --from=rust_install $RUST_PKG $RUST_PKG
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 COPY --from=js_install $NODEJS_PKG $NODEJS_PKG
