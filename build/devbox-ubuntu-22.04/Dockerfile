@@ -5,7 +5,6 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y 
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sed '$a /etc/ssl/certs'|sed '$a /etc/alternatives'|sed '$a /usr/bin'|sort |uniq|tar czf $CPP_PKG -T -
 
-
 FROM ubuntu:22.04 AS rust_install
 
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
@@ -26,7 +25,6 @@ RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
 RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
     chmod +x $RUST_BIN/rust-analyzer
 
-
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME} > /tmp/rustlist"
 RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $RUST_PKG -T -
@@ -37,7 +35,6 @@ COPY --from=rust_install $RUST_PKG $RUST_PKG
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 RUN tar zxf $CPP_PKG -C /
-
 
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV NVM_VERSION=0.39.7
@@ -73,7 +70,6 @@ RUN uv pip install setuptools jq matplotlib jupyter notebook ipywidgets jupyterl
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 
-
 RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $PY_PKG -T -
 
 FROM ubuntu:22.04 AS dev
@@ -90,4 +86,3 @@ RUN tar zxf $CPP_PKG -C /; \
     tar zxf $RUST_PKG -C /; \
     tar zxf $NODEJS_PKG -C /; \
     tar zxf $PY_PKG -C /; \
-

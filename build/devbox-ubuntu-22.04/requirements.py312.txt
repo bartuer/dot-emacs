@@ -25,4 +25,3 @@ azure-ai-ml==1.23.0
 langchain_cohere==0.4.4
 lancedb==0.6.13
 aiofiles==24.1.0
-az-cli==0.5
