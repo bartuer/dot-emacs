@@ -4,7 +4,7 @@ FROM ubuntu:22.04 AS cpp_install
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates
 
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
-RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sort |tar czf $CPP_PKG -T -
+RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sed '$a /etc/ssl/certs'|sed '$a /etc/alternatives'|sed '$a /usr/bin'|sort |uniq|tar czf $CPP_PKG -T -
 
 
 FROM ubuntu:22.04 AS rust_install
@@ -21,18 +21,18 @@ ENV RUSTUP_HOME=/root/.rustup \
 
 RUN tar zxf $CPP_PKG -C /
 
-RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
+# RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
 
-RUN /usr/bin/cc --version
-RUN cargo --version
-RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
+# RUN /usr/bin/cc --version
+# RUN cargo --version
+# RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
 
-RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
-    chmod +x $RUST_BIN/rust-analyzer
+# RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
+#     chmod +x $RUST_BIN/rust-analyzer
 
 
-ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-RUN find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - 
+# ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
+# RUN find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - 
 
 # WORKDIR /root
 # RUN curl -LsSf https://astral.sh/uv/install.sh | sh
