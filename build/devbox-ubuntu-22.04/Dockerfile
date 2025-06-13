@@ -21,18 +21,15 @@ ENV RUSTUP_HOME=/root/.rustup \
 
 RUN tar zxf $CPP_PKG -C /
 
-# RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
+RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
+RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
 
-# RUN /usr/bin/cc --version
-# RUN cargo --version
-# RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
-
-# RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
-#     chmod +x $RUST_BIN/rust-analyzer
+RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > $RUST_BIN/rust-analyzer; \
+    chmod +x $RUST_BIN/rust-analyzer
 
 
-# ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-# RUN find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - 
+ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
+RUN find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - 
 
 # WORKDIR /root
 # RUN curl -LsSf https://astral.sh/uv/install.sh | sh
