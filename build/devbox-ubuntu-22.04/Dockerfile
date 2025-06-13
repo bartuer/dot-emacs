@@ -1,4 +1,3 @@
-# run
 FROM ubuntu:22.04 AS cpp_install
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates
@@ -46,8 +45,8 @@ ENV NODE_VERSION=24.2.0
 ENV NVM_DIR=/usr/local/nvm
 RUN mkdir $NVM_DIR
 RUN curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh| bash
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g npm@11.3.0 \
     && npm install yarn gulp-cli -g
 RUN npm install --save-dev prettier eslint typescript-language-server unified-language-server typescript -g 
@@ -75,3 +74,19 @@ RUN mkdir /root/.jupyter \
 
 
 RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $PY_PKG -T -
+
+FROM ubuntu:22.04 AS dev
+ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
+ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
+COPY --from=rust_install $RUST_PKG $RUST_PKG
+COPY --from=cpp_install $CPP_PKG $CPP_PKG
+COPY --from=js_install $NODEJS_PKG $NODEJS_PKG
+COPY --from=js_install $PY_PKG $PY_PKG
+
+RUN tar zxf $CPP_PKG -C /; \
+    tar zxf $RUST_PKG -C /; \
+    tar zxf $NODEJS_PKG -C /; \
+    tar zxf $PY_PKG -C /; \
+
