@@ -29,7 +29,7 @@ RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download
 
 
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print $1}'|sort|uniq|tar czf $RUST_PKG -T - "
+RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME}|xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v '^PDF' |grep -v '^broken' |grep -v cannot'|grep -v '^directory' |grep -iv 'copyright'|grep -v 'changelog.Debian.gz'|awk '{print $2}'|sort|uniq|tar czf $RUST_PKG -T - "
 
 # WORKDIR /root
 # RUN curl -LsSf https://astral.sh/uv/install.sh | sh
