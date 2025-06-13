@@ -83,7 +83,7 @@ ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 COPY --from=js_install $NODEJS_PKG $NODEJS_PKG
-COPY --from=js_install $PY_PKG $PY_PKG
+COPY --from=py_install $PY_PKG $PY_PKG
 
 RUN tar zxf $CPP_PKG -C /; \
     tar zxf $RUST_PKG -C /; \
