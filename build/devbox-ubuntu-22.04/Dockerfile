@@ -69,7 +69,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN uv venv --python 3.12.8
 COPY requirements.py312.txt /root/.local/requirements.py312.txt
 RUN uv pip install -r /root/.local/requirements.py312.txt
-RUN uv pip install setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable az-cli
+RUN uv pip install setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 
