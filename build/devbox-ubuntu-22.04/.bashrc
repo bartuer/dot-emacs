@@ -108,8 +108,11 @@ export CARGO_HOME=/root/.cargo
 export UV_DIR=/root/.local
 
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
- LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 export PATH=~/local/bin:$CARGO_HOME/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$UV_DIR/bin:$PATH
+
+source /root/.local/.venv/bin/activate
 
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
