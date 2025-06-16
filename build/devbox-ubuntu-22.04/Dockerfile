@@ -73,7 +73,7 @@ RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $
 FROM ubuntu:22.04 AS dev
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-ENV CPP_PKG=/opcd t/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 ENV DEV_PKG=/opt/arm64.dev.base.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
