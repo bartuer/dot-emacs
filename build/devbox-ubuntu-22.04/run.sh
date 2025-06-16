@@ -10,6 +10,7 @@ docker cp devbox:/opt/arm64.dev.js.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.rs.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.cpp.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.py.22.04.tar.gz /Users/bartuer/Downloads
+docker cp devbox:/opt/arm64.dev.base.22.04.tar.gz /Users/bartuer/Downloads
 docker stop -t 0 devbox
 docker rm devbox
 docker run --name devbox -it  -v /Users/bartuer:/opt ubuntu:22.04 /bin/bash
