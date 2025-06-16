@@ -85,7 +85,7 @@ COPY --from=py_install $PY_PKG $PY_PKG
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         && apt-get install -y --no-install-recommends \
-        git openssh-client openssh-server parallel
+        git openssh-client openssh-server parallel file
 
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
