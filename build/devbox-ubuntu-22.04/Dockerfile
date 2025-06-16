@@ -102,7 +102,7 @@ COPY .bashrc /root/.bashrc
 RUN apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' > /tmp/dev.base.file.list; \
     apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig' |sed '$a /etc/timezone' |sed '$a /root/.bashrc' >> /tmp/dev.base.file.list
 
-RUN tar czf $DEV_PKG -T /tmp/dev/base.file.list
+RUN tar czf $DEV_PKG -T /tmp/dev.base.file.list
 
 EXPOSE 22
 ENTRYPOINT ["/bin/entry"]
