@@ -4,7 +4,7 @@ docker rm devbox
 docker run --name devbox -d  caapi/arm64.devbox.build:22.04 /bin/bash
 docker cp devbox:/opt/arm64.dev.js.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.rs.22.04.tar.gz /Users/bartuer/Downloads
-docker cp devbox:/opt/arm64.dev.cpp.22.04.tar.gz /Users/bartuer/Downloads
+docker cp devbox:/opt/arm64.dev.cc.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.py.22.04.tar.gz /Users/bartuer/Downloads
 docker cp devbox:/opt/arm64.dev.base.22.04.tar.gz /Users/bartuer/Downloads
 docker stop -t 0 devbox

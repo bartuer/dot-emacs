@@ -2,12 +2,12 @@ FROM ubuntu:22.04 AS cpp_install
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates
 
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sed '$a /etc/ssl/certs'|sed '$a /etc/alternatives'|sed '$a /usr/bin'|sort |uniq|tar czf $CPP_PKG -T -
 
 FROM ubuntu:22.04 AS rust_install
 
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 
 ENV RUSTUP_HOME=/root/.rustup \
@@ -33,7 +33,7 @@ RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{pr
 FROM ubuntu:22.04 AS js_install
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 RUN tar zxf $CPP_PKG -C /
 
@@ -54,7 +54,7 @@ RUN find $NVM_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  
 FROM ubuntu:22.04 AS py_install
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 ENV UV_DIR=/root/.local
 ENV PATH=$UV_DIR/bin:$PATH
@@ -77,7 +77,7 @@ RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $
 FROM ubuntu:22.04 AS dev
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 ENV DEV_PKG=/opt/arm64.dev.base.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
@@ -100,10 +100,11 @@ RUN mkdir -p /root/.ssh
 COPY config /root/.ssh/config
 COPY authorized_keys /root/.ssh/authorized_keys
 COPY .bashrc /root/.bashrc
+COPY install.arm64.sh /root/local/bin
 
 SHELL ["/bin/bash", "-c"]
 
-RUN cat <(apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') |tar czf $DEV_PKG -T -
+RUN cat <(apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.arm64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') |tar czf $DEV_PKG -T -
 RUN ls -l /opt/arm64.dev.base.22.04.tar.gz
 
 EXPOSE 22
