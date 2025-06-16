@@ -98,18 +98,21 @@ fi
 #    . /etc/bash_completion
 #fi
 
-export NVM_DIR="/root/.nvm"
+
+export NVM_VERSION=0.39.7
+export NODE_VERSION=24.2.0
+export NVM_DIR=/usr/local/nvm
+export NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
+export RUSTUP_HOME=/root/.rustup
+export CARGO_HOME=/root/.cargo
+export UV_DIR=/root/.local
+
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+export PATH=~/local/bin:$CARGO_HOME/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$UV_DIR/bin:$PATH
 
-export PATH=$PATH:~/local/bin
-
-export NVM_VERSION=0.39.5
-export NODE_VERSION=18.17.0
-export NVM_DIR=/usr/local/nvm
-export NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
-export PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:/opt/miniconda/bin:~/local/bin:$PATH
+source /root/.local/.venv/bin/activate
 
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'

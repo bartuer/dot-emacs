@@ -100,7 +100,8 @@ RUN mkdir -p /root/.ssh
 COPY config /root/.ssh/config
 COPY authorized_keys /root/.ssh/authorized_keys
 COPY .bashrc /root/.bashrc
-COPY install.arm64.sh /root/local/bin
+RUN mkdir -p /root/local/bin
+COPY install.arm64.sh /root/local/bin/install.arm64.sh
 
 SHELL ["/bin/bash", "-c"]
 
