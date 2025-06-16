@@ -77,7 +77,7 @@ ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
-ENV DEV_PKG=/opt/arm64.dev.base.22.04.tar
+ENV DEV_PKG=/opt/arm64.dev.base.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
 COPY --from=cpp_install $CPP_PKG $CPP_PKG
 COPY --from=js_install $NODEJS_PKG $NODEJS_PKG
@@ -99,7 +99,9 @@ COPY config /root/.ssh/config
 COPY authorized_keys /root/.ssh/authorized_keys
 COPY .bashrc /root/.bashrc
 
-RUN apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' | tar cf $DEV_PKG -T -; apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig' |sed '$a /etc/timezone' |sed '$a /root/.bashrc' |tar rvf $DEV_PKG -T -; gzip -f $DEV_PKG
+SHELL ["/bin/bash", "-c"]
+
+RUN cat <(apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') |tar czf $DEV_PKG -T -
 RUN ls -l /opt/arm64.dev.base.22.04.tar.gz
 
 EXPOSE 22
