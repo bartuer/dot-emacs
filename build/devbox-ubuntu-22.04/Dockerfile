@@ -19,12 +19,16 @@ ENV RUSTUP_HOME=/root/.rustup \
 
 RUN tar zxf $CPP_PKG -C /
 
+RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > /usr/local/bin/rust-analyzer; \
+    chmod +x /usr/local/bin/rust-analyzer
+
 RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
 RUN cargo install wasm-pack cargo-generate wasm-bindgen-cli
 
+
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME} > /tmp/rustlist"
-RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $RUST_PKG -T -
+RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|sed '$a /usr/local/bin/rust-analyzer'|tar czf $RUST_PKG -T -
 
 FROM ubuntu:22.04 AS js_install
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
@@ -73,7 +77,7 @@ RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $
 FROM ubuntu:22.04 AS dev
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
-ENV CPP_PKG=/opt/arm64.dev.cpp.22.04.tar.gz
+ENV CPP_PKG=/opcd t/arm64.dev.cpp.22.04.tar.gz
 ENV PY_PKG=/opt/arm64.dev.py.22.04.tar.gz
 ENV DEV_PKG=/opt/arm64.dev.base.22.04.tar.gz
 COPY --from=rust_install $RUST_PKG $RUST_PKG
