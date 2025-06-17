@@ -46,7 +46,7 @@ ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g npm@11.3.0 \
     && npm install yarn gulp-cli -g
-RUN npm install --production --no-optional --save-dev prettier eslint typescript-language-server unified-language-server typescript javascript-typescript-langserver  vscode-json-languageserver-bin vscode-html-languageserver-bin vscode-css-languageserver-bin tslab nteract -g 
+RUN npm install --omit=dev --omit=optional prettier eslint typescript-language-server unified-language-server typescript javascript-typescript-langserver  vscode-json-languageserver-bin vscode-html-languageserver-bin vscode-css-languageserver-bin tslab -g 
 
 RUN find $NVM_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $NODEJS_PKG -T -
 
