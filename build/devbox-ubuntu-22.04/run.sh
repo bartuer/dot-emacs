@@ -9,5 +9,5 @@
 # docker cp devbox:/opt/arm64.dev.base.22.04.tar.gz /Users/bartuer/Downloads
 docker stop -t 0 devbox
 docker rm devbox
-docker run --name devbox -it -p 3333:22 -v /Users/bartuer:/opt -w /opt/Downloads ubuntu:22.04 /bin/sh
+docker run --name devbox --hostname devbox -it -p 3333:22 -v /Users/bartuer:/opt -w /opt/Downloads ubuntu:22.04 /bin/sh
 
