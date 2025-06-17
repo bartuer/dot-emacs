@@ -23,7 +23,7 @@ RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download
     chmod +x /usr/local/bin/rust-analyzer
 
 RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
-RUN cargo install --release --no-default-features wasm-pack cargo-generate wasm-bindgen-cli evcxr_jupyter
+RUN cargo install --no-default-features wasm-pack cargo-generate wasm-bindgen-cli evcxr_jupyter
 
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME} > /tmp/rustlist"
@@ -46,7 +46,7 @@ ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g npm@11.3.0 \
     && npm install yarn gulp-cli -g
-RUN npm install --production --no-optional --save-dev prettier eslint typescript-language-server unified-language-server typescript javascript-typescript-langserver  vscode-json-languageserver-bin vscode-html-languageserver-bin vscode-css-languageserver-bin tslab nteract iorigami -g 
+RUN npm install --production --no-optional --save-dev prettier eslint typescript-language-server unified-language-server typescript javascript-typescript-langserver  vscode-json-languageserver-bin vscode-html-languageserver-bin vscode-css-languageserver-bin tslab nteract -g 
 
 RUN find $NVM_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $NODEJS_PKG -T -
 
@@ -85,7 +85,6 @@ RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$PATH
 RUN tslab install
-RUN iorigami install
 RUN evcxr_jupyter --install
 
 SHELL ["/bin/bash", "-c"]
