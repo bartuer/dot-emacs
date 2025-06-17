@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS cpp_install
 
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates clangd
 
 ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sed '$a /etc/ssl/certs'|sed '$a /etc/alternatives'|sed '$a /usr/bin'|sort |uniq|tar czf $CPP_PKG -T -
@@ -47,7 +47,7 @@ ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN npm install -g npm@11.3.0 \
     && npm install yarn gulp-cli -g
-RUN npm install --save-dev prettier eslint typescript-language-server unified-language-server typescript -g 
+RUN npm install --save-dev prettier eslint typescript-language-server unified-language-server typescript javascript-typescript-langserver sql-language-server vscode-json-languageserver-bin vscode-html-languageserver-bin vscode-css-languageserver-bin -g 
 
 RUN find $NVM_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $NODEJS_PKG -T -
 
@@ -94,6 +94,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN git config --global --add safe.directory /root/etc/el
 RUN git config --global user.name "Bartuer Zhou"
 RUN git config --global user.email "bartuer@gmail.com"
+RUN git config --global core.pager cat
+RUN git config --global http.proxy 'socks5://host.docker.internal:8080'
 
 COPY entry.sh /bin/entry
 RUN mkdir -p /root/.ssh
@@ -105,8 +107,7 @@ COPY install.arm64.sh /root/local/bin/install.arm64.sh
 
 SHELL ["/bin/bash", "-c"]
 
-RUN cat <(apt list --installed|grep ssh|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.arm64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') |tar czf $DEV_PKG -T -
-RUN ls -l /opt/arm64.dev.base.22.04.tar.gz
+RUN cat <(apt list --installed|grep -E "ssh|libwrap0"|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.arm64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') <(find /etc/ssh) |tar czf $DEV_PKG -T -
 
 EXPOSE 22
 ENTRYPOINT ["/bin/entry"]
