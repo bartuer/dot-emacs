@@ -96,6 +96,7 @@ RUN git config --global user.name "Bartuer Zhou"
 RUN git config --global user.email "bartuer@gmail.com"
 RUN git config --global core.pager cat
 RUN git config --global http.proxy 'socks5://host.docker.internal:8080'
+RUN adduser --system --no-create-home --shell /usr/sbin/nologin sshd
 
 COPY entry.sh /bin/entry
 RUN mkdir -p /root/.ssh
@@ -107,7 +108,7 @@ COPY install.arm64.sh /root/local/bin/install.arm64.sh
 
 SHELL ["/bin/bash", "-c"]
 
-RUN cat <(apt list --installed|grep -E "ssh|libwrap0"|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.arm64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') <(find /etc/ssh) |tar czf $DEV_PKG -T -
+RUN cat <(apt list --installed|grep -E "ssh|libwrap0"|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed "$a /etc/passwd"| sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed|grep git|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.arm64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') <(find /etc/ssh) |tar czf $DEV_PKG -T -
 
 EXPOSE 22
 ENTRYPOINT ["/bin/entry"]
