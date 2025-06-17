@@ -80,7 +80,8 @@ WORKDIR $UV_DIR
 RUN uv venv --python 3.12.8
 COPY requirements.py312.txt /root/.local/requirements.py312.txt
 RUN uv pip install --no-cache-dir -r /root/.local/requirements.py312.txt
-RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable xeus-cling
+RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable 
+RUN uv install xeus-cling
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$PATH
