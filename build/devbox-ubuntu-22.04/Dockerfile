@@ -72,7 +72,7 @@ RUN uv pip install setuptools jq matplotlib jupyter notebook ipywidgets jupyterl
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 
-RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $PY_PKG -T -
+RUN find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sed '$a /root/.jupyter/jupyter_notebook_config.py'|sort |uniq|tar czf $PY_PKG -T -
 
 FROM ubuntu:22.04 AS dev
 ENV NODEJS_PKG=/opt/arm64.dev.js.22.04.tar.gz
