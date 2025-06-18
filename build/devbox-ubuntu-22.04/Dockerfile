@@ -80,15 +80,17 @@ WORKDIR $UV_DIR
 RUN uv venv --python 3.12.8
 COPY requirements.py312.txt /root/.local/requirements.py312.txt
 RUN uv pip install --no-cache-dir -r /root/.local/requirements.py312.txt
-RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable 
-RUN uv install xeus-cling
+RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable clang-repl-kernel
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
-ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$PATH
-RUN tslab install
-RUN evcxr_jupyter --install
-
 SHELL ["/bin/bash", "-c"]
+ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$PATH
+ENV JUPYTER_PATH=$UV_DIR/.venv/share/jupyter/
+RUN source $UV_DIR/.venv/bin/activate; \
+    tslab install --prefix $UV_DIR/.venv; \
+    evcxr_jupyter --install; \
+    jupyter kernelspec list
+
 RUN cat <(find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}') <(find /root/.jupyter)|sort |uniq|tar czf $PY_PKG -T -
 
 FROM ubuntu:22.04 AS dev
