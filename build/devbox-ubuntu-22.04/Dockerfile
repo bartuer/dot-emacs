@@ -19,15 +19,14 @@ ENV RUSTUP_HOME=/root/.rustup \
 
 RUN tar zxf $CPP_PKG -C /
 
-RUN curl -sL https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH.gz | gunzip -c - > /usr/local/bin/rust-analyzer; \
-    chmod +x /usr/local/bin/rust-analyzer
-
 RUN curl -k  -sSf https://sh.rustup.rs | sh -s -- -y
 RUN cargo install --no-default-features wasm-pack cargo-generate wasm-bindgen-cli evcxr_jupyter
 
+RUN rustup component add rust-analyzer rust-src
+
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
 RUN /bin/bash -c "find {$RUSTUP_HOME,$CARGO_HOME} > /tmp/rustlist"
-RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|sed '$a /usr/local/bin/rust-analyzer'|tar czf $RUST_PKG -T -
+RUN cat /tmp/rustlist | xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}' |sort |uniq|tar czf $RUST_PKG -T -
 
 FROM ubuntu:22.04 AS js_install
 ENV RUST_PKG=/opt/arm64.dev.rs.22.04.tar.gz
@@ -80,7 +79,7 @@ WORKDIR $UV_DIR
 RUN uv venv --python 3.12.8
 COPY requirements.py312.txt /root/.local/requirements.py312.txt
 RUN uv pip install --no-cache-dir -r /root/.local/requirements.py312.txt
-RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable clang-repl-kernel
+RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipywidgets jupyterlab-rise jupyter-lsp jupyterlab-lsp jedi-language-server seaborn prettytable
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 SHELL ["/bin/bash", "-c"]
@@ -90,7 +89,7 @@ RUN source $UV_DIR/.venv/bin/activate; \
     tslab install --prefix $UV_DIR/.venv; \
     evcxr_jupyter --install; \
     jupyter kernelspec list
-
+COPY rust-analyzer.json $UV_DIR/.venv/etc/jupyter/jupyter_server_config.d/rust-analyzer.json
 RUN cat <(find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}') <(find /root/.jupyter)|sort |uniq|tar czf $PY_PKG -T -
 
 FROM ubuntu:22.04 AS dev

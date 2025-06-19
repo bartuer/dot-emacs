@@ -114,4 +114,5 @@ gdb/gdb-ui.el
 /build/el
 /build/.ssh
 vendor/tree-sitter-langs/bin
-vendor/elisp-tree-sitter
+vendor/elisp-tree-sitter/build/devbox-ubuntu-22.04/Dockerfile.cc
+/build/devbox-ubuntu-22.04/Dockerfile.cc
