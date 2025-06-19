@@ -1,6 +1,8 @@
 FROM ubuntu:22.04 AS cpp_install
 
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils lldb llvm netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev build-essential ca-certificates clang clang-tools parallel file pkg-config libssl-dev  clang-format cmake curl file gdb gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic ca-certificates clangd libclang-dev uuid-dev libtool libzmq3-dev iproute2
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essential gdb libtool clang llvm lldb clang-tools clangd clang-format
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev  ca-certificates  parallel file pkg-config libssl-dev cmake curl file gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic uuid-dev libzmq3-dev iproute2
 
 ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
 RUN apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}' |sed '$a /etc/ssl/certs'|sed '$a /etc/alternatives'|sed '$a /usr/bin'|sort |uniq|tar czf $CPP_PKG -T -
@@ -90,6 +92,7 @@ RUN source $UV_DIR/.venv/bin/activate; \
     evcxr_jupyter --install; \
     jupyter kernelspec list
 COPY rust-analyzer.json $UV_DIR/.venv/etc/jupyter/jupyter_server_config.d/rust-analyzer.json
+COPY clangd.json $UV_DIR/.venv/etc/jupyter/jupyter_server_config.d/clangd.json
 RUN cat <(find $UV_DIR |xargs file|grep -v 'directory'|sed -e 's/:/ /g'|awk '{print  $1}') <(find /root/.jupyter)|sort |uniq|tar czf $PY_PKG -T -
 
 FROM ubuntu:22.04 AS dev
