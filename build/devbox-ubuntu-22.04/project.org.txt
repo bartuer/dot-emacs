@@ -1,0 +1,250 @@
+
+; -*- mode: Org;-*-
+
+
+* DONE Mac OS docker desktop version 
+  - Docker VMM for Apple Silicon VM
+    desktop 4.35
+  - Virtualisation Framework for Apple Intel VM
+    macOS Big Sur
+  - Cross build buildx
+    engine 23.0
+    desktop 4.19
+  - macOS Big Sur 11 Docker Desktop
+    dessktop 4.22
+    https://docs.docker.com/desktop/release-notes/
+    check out build number
+    https://forums.docker.com/t/where-can-i-download-an-older-version-of-docker-desktop-for-mac/139977/4
+    https://github.com/docker/docs/blob/51b3996c903f474aa68b32cfc74370e1cd2c982a/content/desktop/release-notes.md?plain=1#L31
+    118664
+  - wasm image 
+    desktop 4.21
+    4.19 works
+    - docker engine
+      https://docs.docker.com/engine/storage/containerd/
+      enable containerd image store
+      try after alcli update:
+      systemctl restart docker
+  - firewall and proxy
+    - https proxy
+      setup squid like https_proxy=https://127.0.0.1:3128 has TLS issue
+      export https_proxy=socks5://127.0.0.1:3128
+      curl -vv https://registry-1.docker.io
+    - docker pull
+      set http proxy in docker desktop setting-resource-proxies 
+      socks5://127.0.0.1:8080
+      but that setting needs business subscription, 300$/Y
+      https://docs.docker.com/desktop/features/networking/
+    - registry mirrors
+      docker.mirrors.ustc.edu.cn shut down
+      https://docker.xuanyuan.me works
+      it will use mirror first and fallback to default docker.io,
+      seems pick docker.io in Corp net
+    - github clone via ssh
+      set proxycommand
+      ProxyCommand nc -X 5 -x 127.0.0.1:8080 %h %p
+* DONE Emacs on arm64 [5/5]
+  - [X] curl proxy 
+        --build-arg https_proxy=socks5://host.docker.internal:8080
+  - [X] inside container git http clone
+        git config --global http.proxy 'socks5://host.docker.internal:8080'
+  - [X] tree-sitter langs so
+        - packages
+          - vendor/tree-sitter elisp-package
+          - vendor/tsc elisp-binding
+          - vendor/tree-sitter-langs grammar.so
+          - tree-sitter/combobulate
+            ../treesit-compile.el -> /root/.emacs.d/tree-sitter/*.so
+        - elisp-tree-sitter
+          - ./bin/setup
+            core/tsc-dyn.so
+          - build tsc-package
+            ./bin/build
+        - tree-sitter-cli
+          for build grammar from source
+            - Nodejs
+              v20.19.1
+              try volta
+              uv is package manager, volta is version manager
+            - eask
+              for tree-sitter-langs script/compile
+        - tree-sitter-langs build can not find grammar.json
+          - checkout grammar
+            rm -Rf langs in elisp-tree-sitter
+            edit .gitmodules change 25 repo to update=checkout (via Gemini flash 2.5 works)
+            git submodule update --checkout
+          - tree-sitter build full_path
+            inside repos/rust
+            script/compile for node binding
+          - typescript, markdown, xml, sql
+            typescript/tsx
+            typescript/typescript
+            markdown/tree-sitter-markdown
+            markdown/tree-sitter-markdown-inline
+            xml/xml
+            xml/dtd
+            sql cc --shared -fPIC -I./src src/parser.c
+            
+                compile () {
+                    echo "build "$1
+                    cd /root/etc/el/vendor/elisp-tree-sitter/langs/repos/$1; tree-sitter build $PWD    
+                }
+
+                export -f compile
+                parallel compile :::  asm bash c-sharp c cmake cpp css dockerfile elisp html javascript jsdoc json lua markdown/tree-sitter-markdown org python rust solidity sql tcl toml typescript/tsx typescript/typescript xml/xml yaml
+                cd sql;  cc -shared -fPIC -I./src src/parser.c src/scanner.c -o parser.so
+
+                cp ./css/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/css.so
+                cp ./solidity/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/solidity.so
+                cp ./yaml/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/yaml.so
+                cp ./jsdoc/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/jsdoc.so
+                cp ./asm/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/asm.so
+                cp ./tcl/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/tcl.so
+                cp ./python/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/python.so
+                cp ./toml/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/toml.so
+                cp ./javascript/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/javascript.so
+                cp ./c/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/c.so
+                cp ./xml/xml/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/xml.so
+                cp ./org/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/org.so
+                cp ./sql/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/sql.so
+                cp ./lua/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/lua.so
+                cp ./typescript/tsx/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/tsx.so
+                cp ./typescript/typescript/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/typescript.so
+                cp ./json/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/json.so
+                cp ./cmake/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/cmake.so
+                cp ./cpp/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/cpp.so
+                cp ./dockerfile/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/dockerfile.so
+                cp ./rust/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/rust.so
+                cp ./elisp/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/elisp.so
+                cp ./c-sharp/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/c-sharp.so
+                cp ./html/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/html.so
+                cp ./bash/parser.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/bash.so
+                cp ./markdown/tree-sitter-markdown/markdown.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/markdown.so
+          - (tree-sitter-langs-install-grammar) will download at first run to tree-sitter-langs-grammar-dir
+            latest support linux-aarch64
+  - [X] tsc and elisp-tree-sitter
+        - dead development
+          - 5 years, too old, now is v0.26.0
+            https://github.com/emacs-tree-sitter/elisp-tree-sitter 
+            do not use it after emacs 29
+          - tree-sitter-cli 19 do not support arm64
+            npm install -g tree-sitter-cli@0.19.3
+          - patch TextProvider can not merge back
+        - ABI mismatch
+          tree-sitter-mode will report from rs 
+          rs tree-sitter v0.20.0 (https://github.com/ubolonton/tree-sitter?branch=improve-text-provider#475b822f)
+          - api.h #define TREE_SITTER_LANGUAGE_VERSION 13
+            but 
+            parser.c #define LANGUAGE_VERSION 14
+          - revert grammar lib back to 13 works
+  - [X] pack
+        - total 200M, 160M shared libraries, strip does not reduce binary much
+        - need install libgccjit and it's dependency
+          - libgcc-dev
+          - libc.a
+        - R dependency add 20M
+* HALT dev container [3/4]
+  - [X] dependency
+        https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
+        curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
+        curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/python/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.pipx}'
+        curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/rust/manifest.json | jq '.dependencies|{base:.imageLink,pkg:[.apt,.cargo]}'
+        curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/cpp/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.apt}'
+  - [X] package build image works well
+        etc/el/build/devbox-ubuntu-22.04
+        8.4M	arm64.dev.base.22.04.tar.gz
+        470M	arm64.dev.cc.22.04.tar.gz
+        130M	arm64.dev.js.22.04.tar.gz
+        515M	arm64.dev.py.22.04.tar.gz
+        364M	arm64.dev.rs.22.04.tar.gz
+        209M	arm64.emacs30.1_22.04.tar.gz
+        1.7G	total
+  - [X] rust lsp
+        - rust-analyzer PATH
+  - [ ] C++ kernel
+        - C++ version and try to find python.exe, wired
+          - clang_repl_kernel is garbage
+            pretty messy :)
+            https://raw.githubusercontent.com/compiler-research/xeus-clang-repl/refs/heads/main/Dockerfile:221
+            really ugly!
+            f_download_url="https://link-to.alexander-penev.info/${gh_f_repo_owner}/${gh_f_repo_name}/actions/artifacts/${f_artifact_id}.zip" 
+          - condaforge/miniforge3:25.3.0-3 install xeus-cpp
+            - can not install xeus-cling
+          - depend on clang lib
+            (cpp_jupyter_env) root@c6d22b74bd9f:/usr/lib# ldd `which xcpp`
+            ...
+            libxeus-cpp.so.0 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/libxeus-cpp.so.0 (0x0000ffff8ce50000)
+            libxeus-zmq.so.6 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/libxeus-zmq.so.6 (0x0000ffff8cd90000)
+            libxeus.so.13 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/libxeus.so.13 (0x0000ffff8cce0000)
+            libclangCppInterOp.so.20.1 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./libclangCppInterOp.so.20.1 (0x0000ffff80920000)
+
+            libcurl.so.4 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./libcurl.so.4 (0x0000ffff80810000)
+            libpugixml.so.1 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./libpugixml.so.1 (0x0000ffff80780000)
+            libzmq.so.5 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./libzmq.so.5 (0x0000ffff80060000)
+            libuuid.so.1 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./libuuid.so.1 (0x0000ffff80030000)
+            libnghttp2.so.14 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/././libnghttp2.so.14 (0x0000ffff7fdb0000)
+            libssh2.so.1 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/././libssh2.so.1 (0x0000ffff7fd30000)
+            libgssapi_krb5.so.2 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/././libgssapi_krb5.so.2 (0x0000ffff7fb80000)
+            libsodium.so.26 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/././libsodium.so.26 (0x0000ffff7fb10000)
+            libkrb5.so.3 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./././libkrb5.so.3 (0x0000ffff7fa10000)
+            libk5crypto.so.3 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./././libk5crypto.so.3 (0x0000ffff7f9d0000)
+            libcom_err.so.3 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./././libcom_err.so.3 (0x0000ffff7f9a0000)
+            libkrb5support.so.0 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./././libkrb5support.so.0 (0x0000ffff7f970000)
+            libkeyutils.so.1 => /opt/conda/envs/cpp_jupyter_env/bin/../lib/./././libkeyutils.so.1 (0x0000ffff7f950000)
+            libresolv.so.2 => /lib/aarch64-linux-gnu/libresolv.so.2 (0x0000ffff7f920000)
+
+            224M	/opt/conda/envs/cpp_jupyter_env/lib/libclangCppInterOp.so.20.1
+          - clang-20
+            but doesn't compile c++
+            clang -cc1 version 20.1.7 based upon LLVM 20.1.7 default target aarch64-conda-linux-gnu
+            "/opt/conda/envs/cpp_jupyter_env/bin/xcpp" -cc1 -triple
+            aarch64-conda-linux-gnu -E -disable-free
+            -clear-ast-before-backend -disable-llvm-verifier
+            -discard-value-names -main-file-name "<<< inputs >>>"
+            -mrelocation-model pic -pic-level 2 -pic-is-pie
+            -mframe-pointer=non-leaf -fmath-errno -ffp-contract=on
+            -fno-rounding-math -mconstructor-aliases -funwind-tables=2
+            -target-cpu generic -target-feature +v8a -target-feature
+            +fp-armv8 -target-feature +neon -target-abi aapcs
+            -debugger-tuning=gdb -fdebug-compilation-dir=/ -v
+            -fcoverage-compilation-dir=/ -resource-dir
+            /opt/conda/envs/cpp_jupyter_env/lib/clang/20 -I
+            /opt/conda/envs/cpp_jupyter_env/include -internal-isystem
+            /opt/conda/envs/cpp_jupyter_env/lib/clang/20/include
+            -internal-isystem /usr/local/include
+            -internal-externc-isystem /include
+            -internal-externc-isystem /usr/include -std=c++17
+            -fdeprecated-macro -ferror-limit 19 -fno-signed-char
+            -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf
+            -fcxx-exceptions -fexceptions -fcolor-diagnostics
+            -fincremental-extensions -target-feature -fmv -faddrsig
+            -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o - -x c++ "<<< inputs >>>"
+          
+          - header
+            clang-20 -v -E -x c++ /dev/null
+          - should build from source, but core part is incompatible
+            What environment-dev.yml typically installs:
+
+            - make: Build utility.
+            - cmake: Build system generator.
+            - cxx-compiler: A C++ compiler (often implicitly pulls in Clang/GCC from conda-forge).
+            - xeus: 
+              The core Jupyter protocol implementation in C++. NAN
+              very easy to fail due to  version conflict
+              https://github.com/jupyter-xeus/xeus
+            - xeus-zmq: 
+              ZeroMQ-based middleware for xeus. NAN
+              https://github.com/jupyter-xeus/xeus-zmq/blob/main/README.md
+            - nlohmann_json: 
+              A popular JSON library for C++. apt-get install nlohmann-json3-dev 
+            - CppInterOp: 
+              The C++ interpreter interoperability layer (integrates Clang-Repl). NAN
+              https://github.com/compiler-research/CppInterOp/blob/main/README.md
+            - pugixml: 
+              A light-weight XML processing library. apt-get install libpugixml-dev
+            - cpp-argparse: 
+              For argument parsing. apt-get install cpp-argparse-dev
+            
+            
+          - also need rebuild clangd
+            https://raw.githubusercontent.com/Kapral67/Cling-Clangd/refs/heads/main/Hydrunfile.sh
