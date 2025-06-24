@@ -143,7 +143,7 @@
           - libgcc-dev
           - libc.a
         - R dependency add 20M
-* HALT dev container [3/4]
+* HALT dev container [4/5]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -161,6 +161,24 @@
         1.7G	total
   - [X] rust lsp
         - rust-analyzer PATH
+  - [X] PDF export
+        a render engine install problem
+        both need install very huge render engine
+        - webPDF
+          npm install -g playwright
+          uv pip install nbconvert[webpdf]
+          playwright install chromium
+          playwright install-deps 
+          - Math Latex fail (use single equation)
+          - no Slides
+            jupyter nbconvert your_notebook_name.ipynb --to webpdf --template lab --TagRemovePreprocessor.remove_input_tags='{"hide_input"}'
+            pandoc --from markdown --to pptx sample.md -o sample.pptx
+        - Latex PDF
+          apt-get install pandoc texlive-full
+          maybe hang, but can build base image
+        - try arm64 support image pandoc/latex:ubuntu
+          but it is ubuntu 24.04 based libc and libm overwrite by install.arm64.sh
+          repeat pandoc compile error and ctan download error
   - [ ] C++ kernel
         - C++ version and try to find python.exe, wired
           - clang_repl_kernel is garbage
