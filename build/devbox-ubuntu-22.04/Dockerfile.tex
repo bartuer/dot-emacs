@@ -8,4 +8,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN fmtutil -sys --all
 ENV TEX_PKG=/opt/arm64.dev.latex.22.04.tar.gz
-RUN cat <(apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}') <(find /var/lib/texmf) |sort |uniq|tar czf $TEX_PKG -T -
+RUN cat <(apt list --installed|awk -F"/" '{print $1}'|parallel dpkg -L :::|sort|uniq|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|grep -v "^SVG " |grep -v "^PNG " |grep -v "^PDF" |grep -v "^broken" |grep -v "cannot"|grep -v "^directory" |grep -iv "copyright"|grep -v "changelog.Debian.gz" |awk '{print $2}'|sed '$a /etc/alternatives'|sed '$a /usr/bin') <(find /var/lib/texmf) |sort |uniq|tar czf $TEX_PKG -T -
+
+COPY entry.sh /bin/entry
+ENTRYPOINT ["/bin/entry"]
