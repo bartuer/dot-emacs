@@ -43,7 +43,7 @@
     - github clone via ssh
       set proxycommand
       ProxyCommand nc -X 5 -x 127.0.0.1:8080 %h %p
-* DONE Emacs on arm64 [5/5]
+* DONE Emacs on arm64 [5/7]
   - [X] curl proxy 
         --build-arg https_proxy=socks5://host.docker.internal:8080
   - [X] inside container git http clone
@@ -143,7 +143,11 @@
           - libgcc-dev
           - libc.a
         - R dependency add 20M
-* HALT dev container [4/5]
+  - [ ] Aider
+  - [ ] DAP and even CDP
+        Debugger Adapter Protocol and Chrome Devbox Protocol
+        use chrome devtool directly?
+* HALT dev container [5/8]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -179,6 +183,9 @@
         - try arm64 support image pandoc/latex:ubuntu
           but it is ubuntu 24.04 based libc and libm overwrite by install.arm64.sh
           repeat pandoc compile error and ctan download error
+  - [X] fix javascript lsp
+  - [ ] SQL kernel
+  - [ ] Bash kernel
   - [ ] C++ kernel
         - C++ version and try to find python.exe, wired
           - clang_repl_kernel is garbage
