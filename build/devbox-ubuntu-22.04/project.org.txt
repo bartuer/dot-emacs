@@ -43,7 +43,7 @@
     - github clone via ssh
       set proxycommand
       ProxyCommand nc -X 5 -x 127.0.0.1:8080 %h %p
-* DONE Emacs on arm64 [5/7]
+* DONE Emacs on arm64 [5/11]
   - [X] curl proxy 
         --build-arg https_proxy=socks5://host.docker.internal:8080
   - [X] inside container git http clone
@@ -144,6 +144,19 @@
           - libc.a
         - R dependency add 20M
   - [ ] Aider
+        - run installer
+          https://aider.chat/docs/install.html
+        - configure to expand context window
+          - name: ollama_chat/qwen3:30b-a3b
+            extra_params:
+              num_ctx: 131072
+  - [ ] DeepSeek
+  - [ ] Gemini
+  - [ ] OpenAI
+  - [ ] Aidermacs
+        https://github.com/MatthewZMD/aidermacs
+        dependencies (already in Emacs 30 package: ~/local/share/emacs/current/lisp/transient.el.gz
+        https://github.com/magit/transient
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?

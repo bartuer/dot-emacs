@@ -294,7 +294,7 @@
  '(list-matching-lines-default-context-lines 0)
  '(load-path
    '("~/etc/el/ess/" "~/etc/el/tree-sitter" "~/etc/el/vendor/use-package"
-     "~/etc/el/vendor/markdown" "~/etc/el/vendor/tree-sitter"
+     "~/etc/el/auto-install/markdown" "~/etc/el/vendor/tree-sitter"
      "~/etc/el/vendor/tsc" "~/etc/el/vendor/tree-sitter-langs"
      "~/etc/el/vendor/phi-search" "~/etc/el/vendor/expand-region"
      "~/etc/el/auto-install/async" "~/etc/el/auto-install/dash"
@@ -359,7 +359,9 @@
  '(lpr-command "~/scripts/pdfprint")
  '(mail-send-hook '(quote-encoded-subject))
  '(make-backup-files nil)
- '(markdown-command "markdown -x codehilite /dev/stdin")
+ '(markdown-command
+   "pandoc -s --from=markdown --to=html5 --highlight-style=kate")
+ '(markdown-enable-highlighting-syntax t)
  '(max-mini-window-height 0.7)
  '(mm-body-charset-encoding-alist
    '((utf-8 . 7bit) (iso-2022-jp-2 . 7bit) (utf-16 . base64)
@@ -413,9 +415,9 @@
  '(org-todo-keywords '((sequence "TODO" "HALT" "ABORT" "DONE")))
  '(org-use-speed-commands t)
  '(package-selected-packages
-   '(typescript-mode tree-sitter-langs tree-sitter dap-mode go-guru
-                     go-mode latex-preview-pane latex-math-preview
-                     auctex json-snatcher chess))
+   '(aidermacs auctex chess dap-mode go-guru go-mode json-snatcher
+               latex-math-preview latex-preview-pane tree-sitter
+               tree-sitter-langs typescript-mode))
  '(ps-lpr-command "lp")
  '(ps-multibyte-buffer 'bdf-font)
  '(push-minor-mode-string " Pu")
