@@ -122,6 +122,49 @@
                 cp ./markdown/tree-sitter-markdown/markdown.so ~/etc/el/build/emacs-29.1-treesitter-ubuntu-20.04/arm64/vendor/tree-sitter-langs/bin/markdown.so
           - (tree-sitter-langs-install-grammar) will download at first run to tree-sitter-langs-grammar-dir
             latest support linux-aarch64
+          - markdown.so is same as markdown-inline.so bug
+            (link "~/etc/el/vendor/tree-sitter-langs/tree-sitter-langs-build.el" 26003)
+            curl -L -O https://github.com/emacs-tree-sitter/tree-sitter-langs/releases/download/0.12.276/tree-sitter-grammars.aarch64-unknown-linux-gnu.v0.12.276.tar.gz
+            git clone https://github.com/emacs-tree-sitter/tree-sitter-langs.git
+            git submodule update --init --recursive repos/markdown
+            npm install -g tree-sitter-cli
+            tree-sitter init-config 
+            cd repos/markdown
+            tree-sitter build $PWD
+            
+            Language’s ABI is too new: 15, (13 . 13), "/root/.emacs.d/tree-sitter/bin/markdown.so"w
+            revert to 13: tree_sitter_markdown_external_scanner_create
+            tree-sitter generate --abi=13                                       
+                                                                                                                                                               
+            thread 'main' panicked at cli/generate/src/render.rs:1942:5:                                                                                                   
+            This version of Tree-sitter can only generate parsers with ABI version 14 - 15, not 13
+
+            https://github.com/tree-sitter/tree-sitter.git
+            HEAD: 45318922d
+            14:   eaf9b170f
+            
+            npm -g i tree-sitter-cli@0.20.4 or npm install -g /opt/local/src/tree-sitter/cli/npm
+            Cannot install tree-sitter-cli for platform linux, architecture arm64
+            
+            npm -g install tree-sitter-cli
+            cargo install --path /opt/local/src/tree-sitter/cli
+            mv /root/.cargo/bin/tree-sitter
+            /usr/local/nvm/versions/node/v24.2.0/lib/node_modules/tree-sitter-cli
+            now tree-sitter has no build, --abi= in generate
+
+            install node-gyp
+            can not find nan
+            
+            cc directly fix Makefile lack scanner.cc
+            cc -Isrc -std=c11 -fPIC   -c -o src/parser.o src/parser.c
+            cc -Isrc -std=c++11 -fPIC   -c -o src/scanner.o src/scanner.cc
+            cc  -shared -Wl,-soname,libtree-sitter-markdown.so.14.0 src/parser.o  src/scanner.o -o libtree-sitter-markdown.so
+            works 
+
+            should use
+            /root/.emacs.d/tree-sitter/libtree-sitter-markdown.so directly
+            ts-mode support:
+            find /root/local/share/emacs/current/lisp/progmodes -name "*-ts-mode.el.gz"
   - [X] tsc and elisp-tree-sitter
         - dead development
           - 5 years, too old, now is v0.26.0
