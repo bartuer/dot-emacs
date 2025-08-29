@@ -43,7 +43,7 @@
     - github clone via ssh
       set proxycommand
       ProxyCommand nc -X 5 -x 127.0.0.1:8080 %h %p
-* DONE Emacs on arm64 [5/11]
+* DONE Emacs on arm64 [6/11]
   - [X] curl proxy 
         --build-arg https_proxy=socks5://host.docker.internal:8080
   - [X] inside container git http clone
@@ -123,6 +123,7 @@
           - (tree-sitter-langs-install-grammar) will download at first run to tree-sitter-langs-grammar-dir
             latest support linux-aarch64
           - markdown.so is same as markdown-inline.so bug
+            rebuild the grammar
             (link "~/etc/el/vendor/tree-sitter-langs/tree-sitter-langs-build.el" 26003)
             curl -L -O https://github.com/emacs-tree-sitter/tree-sitter-langs/releases/download/0.12.276/tree-sitter-grammars.aarch64-unknown-linux-gnu.v0.12.276.tar.gz
             git clone https://github.com/emacs-tree-sitter/tree-sitter-langs.git
@@ -188,21 +189,25 @@
   - [ ] Aider
         - run installer
           https://aider.chat/docs/install.html
+        - playwright
+          Mainly for UI, ScreenShot and reference Doc
+        - PortAudio
+          Not so useful, via system ASR?
         - configure to expand context window
           - name: ollama_chat/qwen3:30b-a3b
             extra_params:
               num_ctx: 131072
-  - [ ] DeepSeek
-  - [ ] Gemini
-  - [ ] OpenAI
-  - [ ] Aidermacs
+  - [X] Aidermacs
         https://github.com/MatthewZMD/aidermacs
         dependencies (already in Emacs 30 package: ~/local/share/emacs/current/lisp/transient.el.gz
         https://github.com/magit/transient
+  - [ ] DeepSeek
+  - [ ] Gemini
+  - [ ] OpenAI
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?
-* HALT dev container [5/8]
+* HALT dev container [6/8]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -239,8 +244,8 @@
           but it is ubuntu 24.04 based libc and libm overwrite by install.arm64.sh
           repeat pandoc compile error and ctan download error
   - [X] fix javascript lsp
+  - [X] Bash kernel
   - [ ] SQL kernel
-  - [ ] Bash kernel
   - [ ] C++ kernel
         - C++ version and try to find python.exe, wired
           - clang_repl_kernel is garbage
