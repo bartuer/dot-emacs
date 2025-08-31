@@ -1,0 +1,1 @@
+docker build . -t caapi/emacs30.1:24.04
