@@ -849,10 +849,6 @@ root/etc/el/vendor/rcodetools/lib/ruby_toggle_file.rb
 root/etc/el/vendor/rcodetools/.config
 root/etc/el/vendor/rcodetools/InstalledFiles
 root/etc/el/vendor/rcodetools/rcodetools.sxmp
-root/etc/el/vendor/csharp-mode
-root/etc/el/vendor/csharp-mode/csharp-mode-pkg.el
-root/etc/el/vendor/csharp-mode/csharp-mode-autoloads.el
-root/etc/el/vendor/csharp-mode/csharp-mode.el
 root/etc/el/vendor/emmet
 root/etc/el/vendor/emmet/emmet-mode-autoloads.el
 root/etc/el/vendor/emmet/emmet-mode-pkg.el
@@ -6408,6 +6404,7 @@ root/.emacs.d/tree-sitter/bin/gleam.so
 root/.emacs.d/tree-sitter/bin/latex.so
 root/.emacs.d/tree-sitter/bin/mermaid.so
 root/.emacs.d/tree-sitter/libtree-sitter-c.so
+root/.emacs.d/tree-sitter/libtree-sitter-c-sharp.so
 root/.emacs.d/tree-sitter/libtree-sitter-markdown.so
 root/.emacs.d/tree-sitter/libtree-sitter-bash.so
 root/.emacs.d/tree-sitter/libtree-sitter-html.so
