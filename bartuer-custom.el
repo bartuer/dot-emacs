@@ -58,8 +58,7 @@
      gcov-file gcov-header gcov-nomark gcov-called-line
      gcov-never-called perl--Pod::Checker perl--Test perl--Test2
      perl--Test::Harness weblint))
- '(csharp-mode-hook '(bartuer-csharp-load))
- '(current-language-environment "UTF-8")
+  '(current-language-environment "UTF-8")
  '(custom-enabled-themes '(wheatgrass))
  '(default-input-method "chinese-py-punct")
  '(describe-char-unidata-list
@@ -306,7 +305,7 @@
      "~/etc/el/vendor/dash" "~/etc/el/vendor/flycheck"
      "~/etc/el/vendor/helm" "~/etc/el/vendor/omnisharp"
      "~/etc/el/vendor/pkg-info" "~/etc/el/vendor/popup"
-     "~/etc/el/vendor/auto-complete" "~/etc/el/vendor/csharp-mode"
+     "~/etc/el/vendor/auto-complete"
      "~/etc/el/vendor/ggtags" "~/etc/el/vendor/web-beautify"
      "~/etc/el/vendor/epl" "~/etc/el/yasnippet" "~/etc/el/gdb"
      "~/etc/el/vendor/s" "~/etc/el/vendor/dash"

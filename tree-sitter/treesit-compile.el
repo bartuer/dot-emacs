@@ -17,6 +17,7 @@
              (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
              (c "https://github.com/tree-sitter/tree-sitter-c")
              (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+             (c-sharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
              (rust "https://github.com/tree-sitter/tree-sitter-rust")
              (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
@@ -26,6 +27,7 @@
      (treesit-language-available-p 'rust)
      (treesit-language-available-p 'cpp)
      (treesit-language-available-p 'c)
+     (treesit-language-available-p 'c-sharp)
      (treesit-language-available-p 'javascript)
      (treesit-language-available-p 'typescript)
      (treesit-language-available-p 'go)

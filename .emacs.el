@@ -282,6 +282,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-hook 'python-mode-hook 'bartuer-python-load)
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.rs$" . rust-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.cs$" . csharp-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.gyp$" . gyp-mode))
 
 (when (>= emacs-major-version 29)
@@ -290,6 +291,7 @@ If give a negative ARG, will undo the last mark action, thus the
   (require 'tree-sitter)
   (require 'tree-sitter-langs)
   (require 'treesit-mode-bind)
+  (require 'tree-sitter-hl)
   (treesit-mode-bind)
   (add-hook 'combobulate-after-setup-hook #'tree-sitter-hl-mode)
 
@@ -1357,10 +1359,6 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php" . php-mode))
 
-(require 'omnisharp)
-(autoload 'csharp-mode "vendor/csharp-mode/csharp-mode.el" "for csharp" t)
-(require 'csharp-mode)
-(add-to-list 'auto-mode-alist '("\\.cs$" . csharp-mode))
 (autoload 'bartuer-csharp-load "bartuer-csharp.el" t)
 (load "~/etc/el/bartuer-csharp.el")
 (add-hook 'csharp-mode-hook 'bartuer-csharp-load)
