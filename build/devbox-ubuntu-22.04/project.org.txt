@@ -207,7 +207,7 @@
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?
-* HALT dev container [6/8]
+* HALT dev container [7/9]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -333,3 +333,9 @@
             
           - also need rebuild clangd
             https://raw.githubusercontent.com/Kapral67/Cling-Clangd/refs/heads/main/Hydrunfile.sh
+  - [X] dotnet
+        - runtime, asp.net runtime, sdk, ps and ls
+        - csharp-ls segment fault by qemu
+          - docker run --platform linux/amd64  mcr.microsoft.com/dotnet/sdk:9.0  Segment Fault
+          - docker run --platform linux/arm64  mcr.microsoft.com/dotnet/sdk:9.0  OK
+          - Apple Virtualisation framework with Rosetta OK
