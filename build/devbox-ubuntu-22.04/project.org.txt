@@ -198,9 +198,12 @@
             extra_params:
               num_ctx: 131072
         - nvidia python package is huge, 4G
-          find /root/.local -type f -printf '%s %p\n' | sort -nr | head -n 10
-          du -sh .venv/lib/python3.12/site-packages/nvidia
-          4.1G    .venv/lib/python3.12/site-packages/nvidia
+          - find /root/.local -type f -printf '%s %p\n' | sort -nr | head -n 10
+          - du -sh .venv/lib/python3.12/site-packages/nvidia
+                4.1G    .venv/lib/python3.12/site-packages/nvidia
+          - ubuntu:22.04 sentence-transformers==3.0.1->torch
+            [required: >=1.11.0, installed: 2.7.1] no CUDA
+            (link "/opt/local/src/dot-emacs/build/devbox-ubuntu-22.04/requirements.py312.txt" 49)
   - [X] Aidermacs
         https://github.com/MatthewZMD/aidermacs
         dependencies (already in Emacs 30 package: ~/local/share/emacs/current/lisp/transient.el.gz
