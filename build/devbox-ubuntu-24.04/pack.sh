@@ -1,0 +1,4 @@
+#!/bin/bash
+export CSHARP_PKG=/opt/amd64.dev.cs.24.04.tar.gz
+export DEV_PKG=/opt/amd64.dev.base.24.04.tar.gz
+cat <(apt list --installed 2>/dev/null|grep -E "ssh|libwrap0"|awk -F"/" '{print $1}'|xargs dpkg -L 2>/dev/null|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /etc/passwd' | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed 2>/dev/null|grep git|awk -F"/" '{print $1}'|xargs dpkg -L 2>/dev/null|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.amd64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') <(find /etc/ssh)|sort|uniq| tar czf $DEV_PKG -T -

@@ -8,7 +8,6 @@ ENV \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
-        git \
         libatomic1 \
         wget \
         ca-certificates \
@@ -19,6 +18,7 @@ RUN apt-get update \
         libstdc++6 \
         tzdata \
         tzdata-legacy \
+        parallel \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user and group

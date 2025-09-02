@@ -1,0 +1,27 @@
+FROM ubuntu:24.04 
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+        && apt-get install -y --no-install-recommends \
+        git openssh-client openssh-server parallel file
+
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN git config --global --add safe.directory /root/etc/el
+RUN git config --global user.name "Bartuer Zhou"
+RUN git config --global user.email "bartuer@gmail.com"
+RUN git config --global core.pager cat
+RUN git config --global http.proxy 'socks5://host.docker.internal:8080'
+
+COPY entry.sh /bin/entry
+RUN mkdir -p /root/.ssh
+COPY config /root/.ssh/config
+COPY authorized_keys /root/.ssh/authorized_keys
+COPY .bashrc /root/.bashrc
+RUN mkdir -p /root/local/bin
+COPY install.amd64.sh /root/local/bin/install.amd64.sh
+
+SHELL ["/bin/bash", "-c"]
+
+# RUN cat <(apt list --installed 2>/dev/null|grep -E "ssh|libwrap0"|awk -F"/" '{print $1}'|xargs dpkg -L 2>/dev/null|sort|uniq|grep -v man1|grep -v man5|grep -v man8|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'  | sed '$a /etc/passwd' | sed '$a /root/.ssh/config' | sed '$a /root/.ssh/authorized_keys' | sed '$a /bin/entry' )  <(apt list --installed 2>/dev/null|grep git|awk -F"/" '{print $1}'|xargs dpkg -L 2>/dev/null|sort|uniq|grep -v "usr/share/doc"|xargs file|grep -v "directory"|sed -e 's/:/ /g'|awk '{print $2, " ", $1}' |sort |uniq|awk '{print $2}'|sed '$a /root/.gitconfig'|sed '$a /root/local/bin/install.amd64.sh' |sed '$a /etc/timezone' |sed '$a /root/.bashrc') <(find /etc/ssh) |tar czf $DEV_PKG -T -
+
+

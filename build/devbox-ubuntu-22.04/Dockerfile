@@ -1,7 +1,8 @@
 FROM ubuntu:22.04 AS cpp_install
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y apt-transport-https autoconf bash-completion bsdmainutils
-RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essential gdb libtool clang llvm lldb clang-tools clangd clang-format
+RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y build-essentia
+l gdb libtool clang llvm lldb clang-tools clangd clang-format
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get install -y netcat ninja-build iputils-ping software-properties-common tar texinfo unzip valgrind xclip zip zlib1g-dev  ca-certificates  parallel file pkg-config libssl-dev cmake curl file gnupg-agent libblas-dev libgraphviz-dev jq htop linux-tools-common linux-tools-generic uuid-dev libzmq3-dev iproute2
 
 ENV CPP_PKG=/opt/arm64.dev.cc.22.04.tar.gz
@@ -85,7 +86,7 @@ RUN uv pip install --no-cache-dir setuptools jq matplotlib jupyter notebook ipyw
 RUN mkdir /root/.jupyter \
     && echo "c.ServerApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
 SHELL ["/bin/bash", "-c"]
-ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$PATH
+ENV PATH=$UV_DIR/bin:$NVM_DIR/versions/node/v$NODE_VERSION/bin:$RUST_BIN:$UV_DIR/.venv/bin:$PATH
 ENV JUPYTER_PATH=$UV_DIR/.venv/share/jupyter/
 RUN source $UV_DIR/.venv/bin/activate; \
     tslab install --prefix $UV_DIR/.venv; \

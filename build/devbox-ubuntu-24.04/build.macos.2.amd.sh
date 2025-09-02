@@ -1,1 +1,3 @@
-docker buildx build -f Dockerfile.lean --progress=plain --platform linux/amd64 --build-arg https_proxy=socks5://host.docker.internal:8080 . -t caapi/amd64.dotnet9:24.04
+# docker buildx build -f Dockerfile.lean --progress=plain --platform linux/amd64 --build-arg https_proxy=socks5://host.docker.internal:8080 . -t caapi/amd64.dotnet9:24.04
+# docker buildx build -f Dockerfile.dev --progress=plain --platform linux/amd64 --build-arg https_proxy=socks5://host.docker.internal:8080 . -t caapi/amd64.dev:24.04
+docker buildx build  --progress=plain --platform linux/amd64 --build-arg https_proxy=socks5://host.docker.internal:8080 . -t caapi/amd64.devbox:24.04
