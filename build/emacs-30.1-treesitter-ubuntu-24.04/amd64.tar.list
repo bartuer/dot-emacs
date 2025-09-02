@@ -1724,7 +1724,6 @@ root/etc/el/vendor/yasnippet/snippets/nXML-mode/lt_opt.confirm
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/inputtype.file
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/select
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/hr
-root/etc/el/vendor/yasnippet/snippets/nXML-mode/#
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/each
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/doctype
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/inputtype.checkbox
@@ -1780,7 +1779,6 @@ root/etc/el/vendor/yasnippet/snippets/nXML-mode/head
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/label
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/th
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/method.get
-root/etc/el/vendor/yasnippet/snippets/nXML-mode/--
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/password_field
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/truncate
 root/etc/el/vendor/yasnippet/snippets/nXML-mode/script.javascript-src
