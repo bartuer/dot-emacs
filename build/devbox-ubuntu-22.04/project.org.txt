@@ -212,7 +212,7 @@
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?
-* HALT dev container [8/10]
+* HALT dev container [7/11]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -338,15 +338,18 @@
             
           - also need rebuild clangd
             https://raw.githubusercontent.com/Kapral67/Cling-Clangd/refs/heads/main/Hydrunfile.sh
-  - [X] dotnet
-        - runtime, asp.net runtime, sdk, ps and ls
-        - csharp-ls segment fault by qemu
+  - [-] dotnet [4/5]
+        - [X] runtime, asp.net runtime, sdk, ps and ls
+        - [X] csharp-ls segment fault by qemu
           - docker run --platform linux/amd64  mcr.microsoft.com/dotnet/sdk:9.0  Segment Fault
           - docker run --platform linux/arm64  mcr.microsoft.com/dotnet/sdk:9.0  OK
           - Apple Virtualisation framework with Rosetta OK
-        - pwsh can not Add-Type of .NET core dll
-        - csx is too slow
-        - build console app works
+        - [X] pwsh can not Add-Type of .NET core dll
+        - [X] csx is too slow
+              dotnet tool install -g dotnet-script 
+              export PATH="$PATH:/root/.dotnet/tools"
+              dotnet script test.csx
+        - [ ] build console app works
   - [ ] Windows devbox
         - Powershell
           https://github.com/jschaf/powershell.el/blob/master/powershell.el
