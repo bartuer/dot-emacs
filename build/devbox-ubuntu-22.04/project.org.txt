@@ -1,6 +1,4 @@
-
 ; -*- mode: Org;-*-
-
 
 * DONE Mac OS docker desktop version 
   - Docker VMM for Apple Silicon VM
@@ -214,7 +212,7 @@
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?
-* HALT dev container [7/9]
+* HALT dev container [8/10]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -346,3 +344,20 @@
           - docker run --platform linux/amd64  mcr.microsoft.com/dotnet/sdk:9.0  Segment Fault
           - docker run --platform linux/arm64  mcr.microsoft.com/dotnet/sdk:9.0  OK
           - Apple Virtualisation framework with Rosetta OK
+        - pwsh can not Add-Type of .NET core dll
+        - csx is too slow
+        - build console app works
+  - [ ] Windows devbox
+        - Powershell
+          https://github.com/jschaf/powershell.el/blob/master/powershell.el
+          has lsp
+          https://github.com/PowerShell/tree-sitter-PowerShell
+  - [X] mac container  access wsl ssh [8/8]
+        - [X] remote desktop prohibit sleep
+        - [X] remote desktop username use domain
+        - [X] map host ip to container ip
+        - [X] FireWall allow 22
+        - [X] set WiFi as private network
+        - [X] root can write /mnt/c folder
+        - [X] use host not ip
+        - [X] mac container access wsl need configure /etc/hosts
