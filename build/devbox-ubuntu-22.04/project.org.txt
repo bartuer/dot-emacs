@@ -212,7 +212,7 @@
   - [ ] DAP and even CDP
         Debugger Adapter Protocol and Chrome Devbox Protocol
         use chrome devtool directly?
-* HALT dev container [7/11]
+* HALT dev container [8/11]
   - [X] dependency
         https://github.com/devcontainers/images/blob/main/src/cpp/manifest.json
         curl -s https://raw.githubusercontent.com/devcontainers/images/refs/heads/main/src/typescript-node/manifest.json | jq '.dependencies|{base:.imageLink,pkg:.npm}'
@@ -338,23 +338,49 @@
             
           - also need rebuild clangd
             https://raw.githubusercontent.com/Kapral67/Cling-Clangd/refs/heads/main/Hydrunfile.sh
-  - [-] dotnet [4/5]
+  - [X] dotnet [7/7]
         - [X] runtime, asp.net runtime, sdk, ps and ls
+              - dotnet build is same
+              - dotnet run if align the console app to .NET 9, also fast
         - [X] csharp-ls segment fault by qemu
           - docker run --platform linux/amd64  mcr.microsoft.com/dotnet/sdk:9.0  Segment Fault
           - docker run --platform linux/arm64  mcr.microsoft.com/dotnet/sdk:9.0  OK
           - Apple Virtualisation framework with Rosetta OK
-        - [X] pwsh can not Add-Type of .NET core dll
-        - [X] csx is too slow
+        - [X] pwsh can Add-Type of .NET core dll
+              - pwsh -f works very well
+              - pwsh -i 
+                Add-Type and call directly
+                Also works on Term
+              - use it in remote separate term
+        - [X] csx is slow
               dotnet tool install -g dotnet-script 
               export PATH="$PATH:/root/.dotnet/tools"
               dotnet script test.csx
-        - [ ] build console app works
-  - [ ] Windows devbox
-        - Powershell
+        - [X] C# interactive inside VS works very well
+        - [X] build console app works
+        - [X] NuGet mess [4/4]
+              - [X] VS pop up Azure DevOps cred challenge
+                    can not find where to change the setting, only
+                    works in cloned repo
+              - [X] nuget command
+                    nuget sources Add -Name "InsightsServicesDeps" -Source "https://office.pkgs.visualstudio.com/_packaging/InsightsServicesDeps/nuget/v3/index.json"
+                    nuget sources
+                    in .nuget/packages:
+                    nuget install 
+              - [X] PS package manage console does not work
+                    never respect NuGet.Config Source configuration
+              - [X] Manage NuGet for Solution does not work
+                    - browse never trigger auth
+                    - can not install from feed InsightsServicesDeps
+                      keep try api.nuget.org
+                      dotnet nuget list source
+  - [-] Windows devbox [1/2]
+        - [ ] Powershell
           https://github.com/jschaf/powershell.el/blob/master/powershell.el
           has lsp
           https://github.com/PowerShell/tree-sitter-PowerShell
+        - [X] install jq
+              in c++ tar
   - [X] mac container  access wsl ssh [8/8]
         - [X] remote desktop prohibit sleep
         - [X] remote desktop username use domain
