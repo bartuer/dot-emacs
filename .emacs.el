@@ -302,6 +302,7 @@ If give a negative ARG, will undo the last mark action, thus the
     (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
     (add-to-list 'eglot-server-programs '(typescript-mode . ("typescript-language-server"
                                                              "--stdio")))
+    (add-to-list 'eglot-server-programs '(csharp-mode . ("csharp-ls")))
 
     (eldoc-doc-buffer)
     (setq eldoc-echo-area-use-multiline-p nil)
@@ -310,7 +311,9 @@ If give a negative ARG, will undo the last mark action, thus the
     ((python-mode . eglot-ensure)
      (python-ts-mode . eglot-ensure)
      (typescript-mode . eglot-ensure)
-     (typescript-ts-mode . eglot-ensure))))
+     (typescript-ts-mode . eglot-ensure)
+     (csharp-mode . eglot-ensure)
+     (csharp-ts-mode . eglot-ensure))))
 
 ;(require 'flymake-jslint)
 ;(lintnode-start)
@@ -325,8 +328,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
 
 (require 'powershell)
-(require 'powershell-mode)
-(add-to-list 'auto-mode-alist '("\.ps1$" . powershell-mode))
+(add-to-list 'auto-mode-alist '("\\ps1$" . powershell-mode))
 
 (add-hook 'shell-mode-hook
           (lambda ()

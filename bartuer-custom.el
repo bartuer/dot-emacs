@@ -58,7 +58,7 @@
      gcov-file gcov-header gcov-nomark gcov-called-line
      gcov-never-called perl--Pod::Checker perl--Test perl--Test2
      perl--Test::Harness weblint))
-  '(current-language-environment "UTF-8")
+ '(current-language-environment "UTF-8")
  '(custom-enabled-themes '(wheatgrass))
  '(default-input-method "chinese-py-punct")
  '(describe-char-unidata-list
@@ -188,7 +188,7 @@
                                       try-complete-lisp-symbol-partially
                                       try-complete-lisp-symbol))
  '(hippie-expand-verbose t)
- '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load))
+ '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load) t)
  '(htmlize-html-charset "utf-8")
  '(htmlize-hyperlink-style
    "\12      a {\12        color: inherit;\12        background-color: #000000;\12        font: inherit;\12        text-decoration: inherit;\12      }\12      a:hover {\12        text-decoration: underline;\12      }\12")
@@ -305,13 +305,13 @@
      "~/etc/el/vendor/dash" "~/etc/el/vendor/flycheck"
      "~/etc/el/vendor/helm" "~/etc/el/vendor/omnisharp"
      "~/etc/el/vendor/pkg-info" "~/etc/el/vendor/popup"
-     "~/etc/el/vendor/auto-complete"
-     "~/etc/el/vendor/ggtags" "~/etc/el/vendor/web-beautify"
-     "~/etc/el/vendor/epl" "~/etc/el/yasnippet" "~/etc/el/gdb"
-     "~/etc/el/vendor/s" "~/etc/el/vendor/dash"
-     "~/etc/el/vendor/swift-mode" "~/etc/el/vendor/fsharp-mode"
-     "~/etc/el/vendor/lua-mode" "~/etc/el/vendor/nav"
-     "~/etc/el/vendor/emmet" "~/etc/el/vendor/rinari/util/jump/"
+     "~/etc/el/vendor/auto-complete" "~/etc/el/vendor/ggtags"
+     "~/etc/el/vendor/web-beautify" "~/etc/el/vendor/epl"
+     "~/etc/el/yasnippet" "~/etc/el/gdb" "~/etc/el/vendor/s"
+     "~/etc/el/vendor/dash" "~/etc/el/vendor/swift-mode"
+     "~/etc/el/vendor/fsharp-mode" "~/etc/el/vendor/lua-mode"
+     "~/etc/el/vendor/nav" "~/etc/el/vendor/emmet"
+     "~/etc/el/vendor/rinari/util/jump/"
      "~/etc/el/vendor/rinari/util/" "~/etc/el/vendor/rinari/"
      "~/etc/el/vendor/node_modules/lintnode" "~/etc/el"
      "~/etc/el/icicles" "~/etc/el" "~/etc/el/auto-install"
@@ -414,9 +414,10 @@
  '(org-todo-keywords '((sequence "TODO" "HALT" "ABORT" "DONE")))
  '(org-use-speed-commands t)
  '(package-selected-packages
-   '(aidermacs auctex chess dap-mode go-guru go-mode json-snatcher
-               latex-math-preview latex-preview-pane tree-sitter
-               tree-sitter-langs typescript-mode))
+   '(aidermacs auctex chess dap-mode eglot go-guru go-mode json-snatcher
+               latex-math-preview latex-preview-pane powershell
+               tree-sitter tree-sitter-langs typescript-mode))
+ '(powershell-location-of-exe "/usr/share/dotnet/powershell/pwsh")
  '(ps-lpr-command "lp")
  '(ps-multibyte-buffer 'bdf-font)
  '(push-minor-mode-string " Pu")
