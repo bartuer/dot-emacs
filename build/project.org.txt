@@ -335,7 +335,6 @@
             - cpp-argparse: 
               For argument parsing. apt-get install cpp-argparse-dev
             
-            
           - also need rebuild clangd
             https://raw.githubusercontent.com/Kapral67/Cling-Clangd/refs/heads/main/Hydrunfile.sh
   - [X] dotnet [7/7]
@@ -358,7 +357,7 @@
               dotnet script test.csx
         - [X] C# interactive inside VS works very well
         - [X] build console app works
-        - [X] NuGet mess [4/4]
+        - [X] NuGet mess [5/5]
               - [X] VS pop up Azure DevOps cred challenge
                     can not find where to change the setting, only
                     works in cloned repo
@@ -374,6 +373,8 @@
                     - can not install from feed InsightsServicesDeps
                       keep try api.nuget.org
                       dotnet nuget list source
+              - [X] NuGet.config and Directory.Build.props
+                    - share code, package but not build
   - [-] Windows devbox [1/2]
         - [ ] Powershell
           https://github.com/jschaf/powershell.el/blob/master/powershell.el
