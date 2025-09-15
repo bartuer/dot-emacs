@@ -283,6 +283,7 @@ If give a negative ARG, will undo the last mark action, thus the
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.rs$" . rust-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.cs$" . csharp-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.csx$" . csharp-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.gyp$" . gyp-mode))
 
 (when (>= emacs-major-version 29)
