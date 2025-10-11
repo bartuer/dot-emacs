@@ -368,10 +368,12 @@
               crazy restore like:
               /root/.cache/dotnet-script/mnt/c/users/bazhou/local/In4AutoLib/fix.archive/net9.0/script.csproj
               dotnet script test.csx
+              dotnet script resouce.test.cs
         - [X] C# interactive inside VS works very well
         - [X] build console app works
               - eshell can run but shell can not
                 GetInsight.exe: PE32+ executable (console) x86-64, for MS Windows, 6 sections
+              - dotnet run --no-build
         - [X] NuGet mess [5/5]
               - [X] VS pop up Azure DevOps cred challenge
                     can not find where to change the setting, only

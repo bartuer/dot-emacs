@@ -1,0 +1,2 @@
+;; Generated package description from treesit-fold.el  -*- no-byte-compile: t -*-
+(define-package "treesit-fold" "0.2.1" "Code folding using treesit" '((emacs "29.1")) :commit "1b4b552867d8eaa03008b887ec0c9236c3c2b416" :authors '(("Junyi Hou" . "junyi.yi.hou@gmail.com") ("Jen-Chieh" . "jcs090218@gmail.com")) :maintainer '("Jen-Chieh" . "jcs090218@gmail.com") :keywords '("convenience" "folding" "tree-sitter") :url "https://github.com/emacs-tree-sitter/treesit-fold")

@@ -293,6 +293,9 @@ If give a negative ARG, will undo the last mark action, thus the
   (require 'tree-sitter-langs)
   (require 'treesit-mode-bind)
   (require 'tree-sitter-hl)
+  (require 'treesit-fold)
+  (global-treesit-fold-mode 1)
+  (define-key treesit-fold-mode-map (kbd "TAB") #'treesit-fold-toggle)
   (treesit-mode-bind)
   (add-hook 'combobulate-after-setup-hook #'tree-sitter-hl-mode)
 

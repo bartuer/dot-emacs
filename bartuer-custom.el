@@ -188,7 +188,7 @@
                                       try-complete-lisp-symbol-partially
                                       try-complete-lisp-symbol))
  '(hippie-expand-verbose t)
- '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load) t)
+ '(html-mode-hook '(er/add-html-mode-expansions bartuer-sgml-load))
  '(htmlize-html-charset "utf-8")
  '(htmlize-hyperlink-style
    "\12      a {\12        color: inherit;\12        background-color: #000000;\12        font: inherit;\12        text-decoration: inherit;\12      }\12      a:hover {\12        text-decoration: underline;\12      }\12")
@@ -293,6 +293,7 @@
  '(list-matching-lines-default-context-lines 0)
  '(load-path
    '("~/etc/el/ess/" "~/etc/el/tree-sitter" "~/etc/el/vendor/use-package"
+     "~/etc/el/auto-install/treesit-fold-0.2.1" "~/etc/el/powershell-20250614.1529"
      "~/etc/el/auto-install/markdown" "~/etc/el/vendor/tree-sitter"
      "~/etc/el/vendor/tsc" "~/etc/el/vendor/tree-sitter-langs"
      "~/etc/el/vendor/phi-search" "~/etc/el/vendor/expand-region"
@@ -416,7 +417,8 @@
  '(package-selected-packages
    '(aidermacs auctex chess dap-mode eglot go-guru go-mode json-snatcher
                latex-math-preview latex-preview-pane powershell
-               tree-sitter tree-sitter-langs typescript-mode))
+               tree-sitter tree-sitter-langs treesit-fold
+               typescript-mode))
  '(powershell-location-of-exe "/usr/share/dotnet/powershell/pwsh")
  '(ps-lpr-command "lp")
  '(ps-multibyte-buffer 'bdf-font)
