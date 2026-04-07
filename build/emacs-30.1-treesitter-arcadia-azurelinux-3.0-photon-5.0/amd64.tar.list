@@ -16,6 +16,14 @@ usr/lib/libhogweed.so.6.8
 usr/lib/libnettle.so
 usr/lib/libnettle.so.8
 usr/lib/libnettle.so.8.8
+usr/bin/aspell
+usr/bin/ispell
+usr/bin/spell
+usr/lib/aspell-0.60
+usr/lib/libaspell.so.15
+usr/lib/libaspell.so.15.3.1
+usr/lib/libpspell.so.15
+usr/lib/libpspell.so.15.3.1
 usr/bin/killemacs
 usr/bin/quote0
 bin/entry

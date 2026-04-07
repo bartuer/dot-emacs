@@ -26,6 +26,17 @@ RUN tdnf install -y \
         aspell \
     && tdnf clean all
 
+# Build aspell English dictionary from source (no aspell-en package in Azure Linux 3.0).
+# The dict configure script uses `which` to find aspell/prezip — not available in base.
+# Set ASPELL and PREZIP explicitly so configure/make succeed.
+RUN cd /opt \
+    && curl -fsSL https://ftp.gnu.org/gnu/aspell/dict/en/aspell6-en-2020.12.07-0.tar.bz2 | tar xj \
+    && cd aspell6-en-2020.12.07-0 \
+    && ASPELL=/usr/bin/aspell PREZIP=/usr/bin/prezip-bin ./configure \
+    && make ASPELL=/usr/bin/aspell PREZIP=/usr/bin/prezip-bin \
+    && make install \
+    && rm -rf /opt/aspell6-en-2020.12.07-0
+
 # Build and install tree-sitter from source (no tdnf package available)
 # Pin to v0.22.6 — Emacs 30.1 expects ts_language_version (removed in 0.24+)
 RUN git clone --depth 1 --branch v0.22.6 https://github.com/tree-sitter/tree-sitter.git \
