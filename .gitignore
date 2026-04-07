@@ -116,3 +116,6 @@ gdb/gdb-ui.el
 vendor/tree-sitter-langs/bin
 vendor/elisp-tree-sitter/build/devbox-ubuntu-22.04/Dockerfile.cc
 /build/devbox-ubuntu-22.04/Dockerfile.cc
+/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/amd64.arcadia.emacs30.1_azl3.0.tar.gz
+/build/devbox-arcadia-azurelinux-3.0-photon-5.0/amd64.arcadia.dev.base.azl3.0.tar.gz
+/build/devbox-arcadia-azurelinux-3.0-photon-5.0/test2.tar.gz

@@ -1,0 +1,174 @@
+* Goal
+      Build an "arcadia" (non-Ubuntu) dev container image based on:
+      - mcr.microsoft.com/officepy/codeexecutionjupyterext1
+
+      Image tagging convention (derived from the base image name):
+      - mcr.microsoft.com/officepy/codeexecutionjupyterext1:emacs30.1.arcadia
+      - mcr.microsoft.com/officepy/codeexecutionjupyterext1:dev.base.arcadia
+
+      And produce 2 installable tarballs for amd64:
+      - amd64.arcadia.emacs30.1_azl3.0.tar.gz
+      - amd64.arcadia.dev.base.azl3.0.tar.gz
+
+      The tarballs are consumed by an install script like:
+      (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/install.amd64.sh" 1)
+
+      Success criteria:
+      - [X] Can build tarballs deterministically via Docker build (no manual steps)
+      - [X] The resulting tarballs extract under / (same contract as existing ubuntu tarballs)
+      - [X] An updated install script can install the arcadia tarballs
+      - [X] A small smoke test verifies Emacs + base toolchain inside the image
+
+* Dependencies
+      - Base image: mcr.microsoft.com/officepy/codeexecutionjupyterext1
+      - Reference Dockerfile pattern (Arcadia-like base + multi-stage):
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/Dockerfile" 1)
+      - Existing Ubuntu builders (for feature parity only; do NOT assume apt):
+            - Emacs builder: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+            - Devbox builder: (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/Dockerfile" 1)
+      - Packaging contract reference (extract to /):
+            - install script snippet includes: tar zxf <tarball> -C /
+
+      - Arcadia builders (this repo):
+            - Emacs (Arcadia): (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/README.org.txt" 1)
+            - Dev base (Arcadia): (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/README.org.txt" 1)
+
+* Context
+      Notes:
+      - This is NOT an Ubuntu base; treat it as "arcadia".
+            - Prefer Arcadia package manager (likely tdnf) and avoid apt assumptions.
+      - Image tag naming:
+            - Use base-derived tags (avoid custom registries like caapi/*)
+            - mcr.microsoft.com/officepy/codeexecutionjupyterext1:emacs30.1.arcadia
+            - mcr.microsoft.com/officepy/codeexecutionjupyterext1:dev.base.arcadia
+      - Package naming convention for output artifacts:
+            - amd64.arcadia.emacs30.1_azl3.0.tar.gz
+            - amd64.arcadia.dev.base.azl3.0.tar.gz
+      - Existing script contract (example actions):
+            - tar zxf amd64.emacs30.1_24.04.tar.gz -C /
+            - tar zxf amd64.dev.base.24.04.tar.gz -C /
+
+* Main Loop :test_tool:
+      Iterate until tarballs build + extract cleanly:
+      - (R) Identify missing deps / incorrect paths in the arcadia builders
+      - (E) Update Dockerfiles / packaging scripts
+      - (P) Rebuild tarballs and run smoke tests
+      - (L) Stop when Success criteria satisfied
+
+      Suggested smoke tests (run inside a container created from the installed tarballs):
+      - emacs --batch --eval '(princ emacs-version)'
+      - git --version
+      - python --version (if included in dev.base)
+      - node --version (if included in dev.base)
+
+* DONE SSH reverse tunnel
+      SSH reverse tunnel from inside the container to a jump host
+      enables remote SSH access into the container for development,
+      debugging, and eval runs without exposing container ports
+
+      - autossh
+      - hearbeat
+
+* DONE SSH reverse tunnel design
+      The container has no public IP and no inbound ports beyond 6010/6020.
+      Solution: SSH OUT from container to a jump host with reverse forwarding.
+
+#+BEGIN_SRC
+      ┌─ CONTAINER ──────────────┐        ┌─ JUMP HOST ──────────────┐
+      │                          │        │  (accessible machine)     │
+      │  sshd on port 22         │        │                           │
+      │    ▲                     │        │  sshd on port 22          │
+      │    │ localhost:22        │        │    ▲                      │
+      │    │                     │        │    │                      │
+      │  ssh -R 2222:localhost:22 ──────────►  port 2222 listening    │
+      │    (reverse tunnel)      │        │    (forwarded to          │
+      │                          │        │     container:22)         │
+      └──────────────────────────┘        └───────────────────────────┘
+                                                                                                                                           │
+                                                                                                                  From any machine:
+                                                                                                                  ssh -p 2222 root@jump-host
+                                                                                                                        → tunneled to container:22
+#+END_SRC
+
+      Requirements:
+      - container: openssh-server (sshd) + openssh-clients (ssh)
+      - jump host: sshd with GatewayPorts=yes (or GatewayPorts=clientspecified)
+      - SSH key pair: generated in container, public key added to jump host
+      - autossh for automatic reconnection on network drops
+
+      Alternative (simpler, no sshd in container):
+      - container: openssh-clients only
+      - ssh -R 2222:localhost:6020 jump-host — forward debug port only
+      - no shell access into container, but debug attach works
+      - combine with VS Code Remote-SSH to jump host + port forward
+
+* DONE Arcadia base image alignment
+      - [X] Confirm base image tag and capabilities
+                        - Base: mcr.microsoft.com/officepy/codeexecutionjupyterext1 (Azure Linux 3.0)
+                        - Package manager: tdnf (at /usr/bin/tdnf), rpm (at /usr/bin/rpm)
+                        - Already installed: gcc 13.2.0, g++, make 4.4.1, tar, curl 8.11.1,
+                          zlib-devel, pkgconf, ncurses-libs, openssl, findutils,
+                          node v22.20.0, python 3.12
+                        - Must install: git, autoconf, texinfo, ncurses-devel, gnutls-devel,
+                          jansson-devel, sqlite-devel
+                        - Not in tdnf repos: libgccjit (no native-comp), tree-sitter (build from src),
+                          autossh, ripgrep
+                        - NOTE: default entrypoint starts services; use --entrypoint sh for probing
+
+      - [X] Create a minimal "arcadia builder" Dockerfile skeleton
+                        - Emacs Dockerfile updated:
+                              (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+                        - Dev.base Dockerfile updated:
+                              (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+                        - Key decisions:
+                          - --without-native-compilation (no libgccjit)
+                          - tree-sitter built from source (git clone + make)
+                          - Only missing packages installed via tdnf (no duplicates)
+                          - dev.base: git + openssh-clients + openssh-server + file
+
+* DONE Build emacs30.1 tarball (arcadia)
+      - [X] New docker build target that compiles Emacs 30.1 (+tree-sitter)
+                        - Tree-sitter built from source, pinned to v0.22.6 (Emacs 30.1 compatible)
+                        - glibc-devel + kernel-headers required (not in base)
+                        - --without-native-compilation (no libgccjit on Azure Linux 3.0)
+                        - --entrypoint sh needed in pack.sh (base image starts services)
+                        - Image tag:
+                              mcr.microsoft.com/officepy/codeexecutionjupyterext1:emacs30.1.arcadia
+      - [X] Package into:
+                        - amd64.arcadia.emacs30.1_azl3.0.tar.gz (255M)
+                        - Includes: /root/local (emacs install), /root/etc/el (dotfiles),
+                          /usr/local/lib/libtree-sitter*, /usr/bin/{killemacs,quote0}
+      - [X] Output mechanism: docker run --entrypoint sh + bind mount + tar.sh
+
+* DONE Build dev.base tarball (arcadia)
+      - [X] New docker build target that installs baseline tools
+                        - Packages added: git, openssh-clients, openssh-server, file
+                        - curl, tar, findutils, ca-certificates already in base
+                        - Image tag:
+                              mcr.microsoft.com/officepy/codeexecutionjupyterext1:dev.base.arcadia
+      - [X] Package into:
+                        - amd64.arcadia.dev.base.azl3.0.tar.gz (16M, 357 files)
+                        - Includes: git, ssh, scp, sftp, sshd, file, etc/ssh configs
+
+* DONE Update install script (arcadia)
+      The install script extracts:
+      - amd64.arcadia.dev.base.azl3.0.tar.gz (first — deps)
+      - amd64.arcadia.emacs30.1_azl3.0.tar.gz (second — emacs)
+
+      Reference:
+      (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/install.amd64.sh" 1)
+
+      - [X] Correct extraction order and contract (tar zxf ... -C /)
+
+* DONE Validation
+      - [X] Verify tarball layout (no unexpected top-level directory)
+            - emacs: root/local, root/etc/el, usr/local/lib, usr/lib, usr/bin
+            - dev.base: usr/bin (git,ssh,file), etc/ssh, lib/systemd
+      - [X] Create a fresh container and extract both tarballs (order: dev.base then emacs)
+      - [X] Run smoke tests listed in *Main Loop*
+            - emacs --batch: 30.1 ✓
+            - tree-sitter: available ✓
+            - git: 2.45.4 ✓
+            - python: 3.12.9 ✓
+            - node: v22.20.0 ✓
+            - ssh: OpenSSH_9.8p1 ✓
