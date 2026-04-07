@@ -91,6 +91,11 @@ RUN git config --global --add safe.directory /root/etc/el \
 
 RUN mkdir -p /root/.emacs.d/tree-sitter/bin
 
+# Write BUNDLE-VERSION so tree-sitter-langs skips the GitHub download
+# (no DNS inside the container). The version must match the constant in
+# vendor/tree-sitter-langs/tree-sitter-langs-build.el.
+RUN echo -n "0.12.276" > /root/.emacs.d/tree-sitter/bin/BUNDLE-VERSION
+
 # Compile tree-sitter grammar shared objects using Emacs batch mode.
 # The grammars are defined in the dot-emacs config (tree-sitter/treesit-compile.el).
 # Emacs 30.1 treesit-install-language-grammar needs: gcc, git, libtree-sitter — all present.
