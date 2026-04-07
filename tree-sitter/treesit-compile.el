@@ -22,7 +22,7 @@
              (cpp        "https://github.com/tree-sitter/tree-sitter-cpp"        "v0.23.4")
              (c-sharp    "https://github.com/tree-sitter/tree-sitter-c-sharp"    "v0.23.1")
              (rust       "https://github.com/tree-sitter/tree-sitter-rust"       "v0.23.3")
-             (yaml       "https://github.com/ikatyang/tree-sitter-yaml"))))
+             (yaml       "https://github.com/ikatyang/tree-sitter-yaml")))
 
      (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
 
