@@ -23,6 +23,7 @@ RUN tdnf install -y \
         gnutls-devel \
         jansson-devel \
         sqlite-devel \
+        aspell \
     && tdnf clean all
 
 # Build and install tree-sitter from source (no tdnf package available)
