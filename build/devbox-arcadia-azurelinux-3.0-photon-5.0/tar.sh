@@ -22,6 +22,9 @@ echo root/.gitconfig >> "$FLIST"
 find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \
   | sed 's|^/||' >> "$FLIST"
 
+# Custom sshd_config
+echo etc/ssh/sshd_config >> "$FLIST"
+
 tar czf "$OUT" -C / -T "$FLIST"
 rm -f "$FLIST"
 

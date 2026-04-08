@@ -24,6 +24,9 @@ RUN git config --global --add safe.directory /root/etc/el \
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh \
     && ssh-keygen -A
 
+# Custom sshd config (PermitRootLogin, pubkey auth, hardened ciphers)
+COPY sshd_config /etc/ssh/sshd_config
+
 # Entry point and shell config
 COPY entry.sh /bin/entry
 RUN chmod +x /bin/entry
