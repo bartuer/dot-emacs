@@ -72,3 +72,6 @@ export PATH=~/local/bin:$PATH
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
 alias ec='~/local/bin/emacsclient -t'
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8

@@ -12,8 +12,14 @@ RUN tdnf install -y \
         git \
         openssh-clients \
         openssh-server \
+        glibc-lang \
         file \
+    && (tdnf install -y glibc-i18n || true) \
     && tdnf clean all
+
+# Default UTF-8 locale for shells and tools.
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
 
 # Git config defaults
 RUN git config --global --add safe.directory /root/etc/el \
