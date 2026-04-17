@@ -6,7 +6,7 @@ numpy==1.26.4
 python-dotenv==1.0.1
 azure-identity==1.19.0
 openai==1.84.0
-langchain-openai==0.3.21
+langchain-openai==1.1.14
 langchain==0.3.25
 datamapplot==0.4.2
 matplotlib==3.10.0
