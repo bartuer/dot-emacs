@@ -12,14 +12,16 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         curl \
         gnupg-agent \
         software-properties-common \
-        build-essential \
-        autoconf \
-        pkg-config \
-        git \
-        cmake \
-        libncurses-dev libncurses5-dev \
-        libjansson4 libjansson-dev \
-        zlib1g-dev \
+         build-essential \
+         autoconf \
+         pkg-config \
+         git \
+         cmake \
+         libtool-bin \
+         libvterm-dev \
+         libncurses-dev libncurses5-dev \
+         libjansson4 libjansson-dev \
+         zlib1g-dev \
         libgnutls28-dev \
         libsqlite3-dev \
         aspell aspell-en \
@@ -65,7 +67,7 @@ RUN mkdir -p ~/local/src && \
     ./autogen.sh
 
 RUN cd ~/local/src/emacs-30.1 && \
-    ./configure --prefix=/root/local --with-native-compilation --with-tree-sitter --with-tiff=no --without-dbus --without-xft --without-xpm --without-xim --without-gconf --with-gnutls  --without-mailutils --without-jpeg --without-tiff --without-gif --without-png --without-rsvg --without-lcms2 --without-libsystemd --without-cairo --without-xml2 --without-native-image-api --without-xft --without-harfbuzz --without-libotf --without-toolkit-scroll-bars --without-xaw3d --without-xim --without-xdbe --without-gpm --without-gsettings --without-selinux --without-libgmp --without-kerberos --without-kerberos5 --without-hesiod --with-sound=no --with-x-toolkit=no --with-x=no CFLAGS=-O3 && \
+    ./configure --prefix=/root/local --with-native-compilation --with-tree-sitter --with-modules --with-tiff=no --without-dbus --without-xft --without-xpm --without-xim --without-gconf --with-gnutls  --without-mailutils --without-jpeg --without-tiff --without-gif --without-png --without-rsvg --without-lcms2 --without-libsystemd --without-cairo --without-xml2 --without-native-image-api --without-xft --without-harfbuzz --without-libotf --without-toolkit-scroll-bars --without-xaw3d --without-xim --without-xdbe --without-gpm --without-gsettings --without-selinux --without-libgmp --without-kerberos --without-kerberos5 --without-hesiod --with-sound=no --with-x-toolkit=no --with-x=no CFLAGS=-O3 && \
     mkdir -p ~/local/share && \
     make -j && make install && \
     mkdir -p ~/local/bin/
@@ -88,6 +90,26 @@ RUN mkdir -p ~/local/share/emacs && \
     ln -s ~/local/share/emacs/30.1 ~/local/share/emacs/current && \
     cd /root && \
     ln -s /root/etc/el/.emacs.el .emacs.el
+
+ENV EMACS_LIBVTERM_COMMIT=54c29d14bca05bdd8ae60cda01715d727831e3f9
+RUN cd /opt \
+    && git clone https://github.com/akermu/emacs-libvterm.git vterm-src \
+    && cd vterm-src \
+    && git checkout "$EMACS_LIBVTERM_COMMIT" \
+    && mkdir build && cd build \
+    && cmake -DUSE_SYSTEM_LIBVTERM=yes \
+             -DEMACS_SOURCE=/root/local/src/emacs-30.1 \
+             .. \
+    && make -j$(nproc) \
+    && mkdir -p /root/etc/el/vendor/vterm \
+    && cp ../vterm.el ../vterm-module.so /root/etc/el/vendor/vterm/ \
+    && cd /opt \
+    && rm -rf vterm-src
+
+RUN /root/local/bin/emacs --batch \
+    --eval '(add-to-list (quote load-path) "/root/etc/el/vendor/vterm")' \
+    --eval '(require (quote vterm))' \
+    --eval '(message "VTERM in builder OK")'
 
 
 COPY .bashrc /root/.bashrc

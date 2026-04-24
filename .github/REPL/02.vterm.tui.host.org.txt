@@ -1,0 +1,236 @@
+* Goal
+      Make GitHub Copilot CLI usable inside Emacs on the current
+      Ubuntu 24.04 container by enabling vterm end-to-end, with:
+
+      1) Emacs built with dynamic-module support and a working
+         libvterm/emacs-libvterm module available at runtime.
+         Target builder:
+         (link "/src/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+
+      2) The devbox/container environment carrying the runtime pieces
+         vterm needs (shared library path, shell env, install flow),
+         adapted to the fact we are already inside a container and do
+         not need the Azure/Arcadia tarball handoff.
+         Targets:
+         (link "/src/dot-emacs/build/devbox-ubuntu-24.04/Dockerfile" 1)
+         (link "/src/dot-emacs/build/devbox-ubuntu-24.04/.bashrc" 1)
+         (link "/src/dot-emacs/build/devbox-ubuntu-24.04/install.amd64.sh" 1)
+
+      3) The current running Ubuntu 24 container updated directly so
+         `M-x vterm` can be used now for ghcp CLI / Ink TUI work,
+         without waiting for a host Docker rebuild/tar extraction step.
+
+      Success criteria:
+      - [X] In the current container, batch Emacs can `(require 'vterm)`
+            without error.
+            — verified: VTERM OK
+      - [X] In the current container, `ldd` on `vterm-module.so`
+            resolves libvterm correctly.
+            — verified: libvterm.so.0 => /lib/x86_64-linux-gnu/libvterm.so.0
+      - [ ] In interactive Emacs, `M-x vterm` opens a shell.
+            — requires interactive terminal; module readiness verified.
+      - [ ] Inside vterm, ghcp CLI can be launched for Ink/TUI use;
+            `C-c C-t` still toggles `vterm-copy-mode`.
+            — deferred to live TUI session.
+      - [X] Ubuntu 24 builder files encode the same capability so the
+            next rebuild reproduces the setup.
+
+* Dependencies
+      - Prior art / rationale:
+            (link "/src/dot-emacs/.github/REPL/01.vterm.tui.org.txt" 1)
+            (link "/src/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/emacs.ghcpcli.md" 1)
+            (link "/src/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/fri_apr_24_2026_compatibility_of_vterm_with_ink_tui.md" 1)
+      - Reference commit carrying the Azure Linux implementation:
+            :b7bc77e:
+      - Emacs-side wiring already present in repo:
+            (link "/src/dot-emacs/bartuer-vterm.el" 1)
+            (link "/src/dot-emacs/.emacs.el" 1437)
+      - Upstream references:
+            emacs-libvterm: https://github.com/akermu/emacs-libvterm
+            libvterm: https://www.leonerd.org.uk/code/libvterm/
+            Copilot CLI docs:
+              https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli
+      - Ubuntu 24 base image:
+            ubuntu:24.04
+
+* Context
+      Azure/Arcadia already proved the product decision:
+      - vterm is the correct terminal host for ghcp CLI / Ink TUI.
+      - bartuer-vterm.el already sets the important runtime knobs:
+            big scrollback, lower redraw delay, `C-y`, `M-y`,
+            `C-c C-t`.
+      - .emacs.el already loads bartuer-vterm opportunistically.
+
+      What is missing on Ubuntu 24 today:
+      - Emacs builder does NOT configure with `--with-modules`.
+      - Emacs builder does NOT install libtool / libvterm headers.
+      - No vendored `vendor/vterm` payload is built or shipped.
+      - Current install.amd64.sh assumes tarball extraction only; for
+        this task the active container should be provisioned directly.
+
+      Ubuntu 24 adaptation rule:
+      - Reuse the Azure logic, but translate it from "build tarballs,
+        ship artifacts to another container" into "install/build in the
+        current container, then make the builder files reproduce that
+        exact state later".
+      - No host docker orchestration is required in this iteration.
+
+      Likely implementation shape:
+      - apt install: cmake, libtool-bin, libvterm-dev (and any missing
+        compiler/pkg-config prerequisites if required by vterm build).
+      - ensure Emacs 30.1 configure includes `--with-modules`.
+      - vendor/build emacs-libvterm into:
+            /root/etc/el/vendor/vterm/
+        so existing bartuer-vterm.el keeps working unchanged.
+      - keep `LD_LIBRARY_PATH=/usr/local/lib:/usr/lib...` style runtime
+        visibility if the built module links to a non-default lib path.
+
+      Non-goals:
+      - Packaging a new tarball in this container-only pass.
+      - Reworking bartuer-vterm.el unless Ubuntu-specific fallout
+        proves it necessary.
+      - Guaranteeing Ink redraw correctness without an interactive
+        terminal check; module/build readiness comes first.
+
+* DONE Capture Ubuntu 24 vterm baseline :test_tool:
+      Goal: prove the current gap before editing.
+
+      - [X] Check whether Emacs has module support now:
+              ~/local/bin/emacs --batch \
+                --eval '(princ system-configuration-features)'
+              RESULT: no MODULES (pre-rebuild)
+
+      - [X] Check whether any vterm payload already exists:
+              ls -la /root/etc/el/vendor /root/etc/el/vendor/vterm
+              RESULT: no vendor/vterm directory
+
+      - [X] Check whether `libvterm` is already installed:
+              dpkg -l | grep libvterm
+              RESULT: libvterm-dev 0.3.3-2build1 already present
+
+      - [X] Record the failure mode of:
+              ~/local/bin/emacs --batch --eval "(require 'vterm)"
+              RESULT: Cannot open load file: vterm (no MODULES, no payload)
+
+* DONE Patch Ubuntu 24 emacs builder
+      Goal: builder can reproduce a module-capable Emacs + vendored
+      emacs-libvterm.
+
+      - [X] Update
+            (link "/src/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+            to install the vterm build prerequisites:
+              libtool-bin
+              libvterm-dev
+
+      - [X] Add `--with-modules` to the Emacs 30.1 configure line.
+
+      - [X] Add vterm build/vendor step (same commit as Azure reference):
+              ENV EMACS_LIBVTERM_COMMIT=54c29d14bca05bdd8ae60cda01715d727831e3f9
+              builds against system libvterm, copies vterm.el + vterm-module.so
+              into /root/etc/el/vendor/vterm/
+              builder smoke-tests with batch (require 'vterm)
+
+      - [X] Update amd64.tar.list to include libvterm .so paths and
+              vendor/vterm directory so future tarball packaging ships vterm.
+
+      - [X] Ubuntu 24 packaged libvterm (0.3.3) is sufficient;
+            no source-from-scratch build needed.
+
+* DONE Patch Ubuntu 24 devbox/runtime files
+      Goal: runtime side matches the new vterm delivery model.
+
+      - [X] Update
+            (link "/src/dot-emacs/build/devbox-ubuntu-24.04/Dockerfile" 1)
+            — no changes needed; `libvterm0` is already installed by apt as
+            part of the tarball flow, and vterm-module.so is vendored.
+
+      - [X] Update
+            (link "/src/dot-emacs/build/devbox-ubuntu-24.04/.bashrc" 1)
+            — no changes needed; PATH / LD_LIBRARY_PATH already correct.
+
+      - [X] Update
+            (link "/src/dot-emacs/build/devbox-ubuntu-24.04/install.amd64.sh" 1)
+            added `ldconfig` after tarball extractions so the dynamic linker
+            registers libvterm.so.
+            No .bashrc or devbox Dockerfile changes were necessary.
+
+* DONE Provision the active Ubuntu 24 container directly :test_tool:
+      Goal: make vterm available now, without waiting for tarball flow.
+
+      - [X] Install prerequisites directly with apt in the running
+            container.
+            apt-get install -y libtool-bin libvterm-dev
+            — both already at newest version (libvterm-dev 0.3.3-2build1)
+
+      - [X] Build/vendor emacs-libvterm directly into
+            /root/etc/el/vendor/vterm/ so current .emacs.el picks it up.
+            Cloned emacs-libvterm to /root/local/src/emacs-libvterm,
+            checked out 54c29d14bca05bdd8ae60cda01715d727831e3f9.
+            cmake -DUSE_SYSTEM_LIBVTERM=yes .. && make
+            cp vterm.el vterm-module.so /root/etc/el/vendor/vterm/
+            ldconfig
+
+      - [X] Emacs binary lacked module support; rebuilt from source.
+            Downloaded emacs-30.1.tar.gz to /root/local/src/.
+            configure flags (adapted for live container):
+              --prefix=/root/local
+              --without-native-compilation   (libgccjit headers absent in live container)
+              --with-gnutls=ifavailable       (libgnutls28-dev absent in live container)
+              --with-modules
+              --with-tree-sitter
+              --without-x
+            make -j$(nproc) && make install → /root/local/bin/emacs
+            New features string: MODULES NOTIFY INOTIFY PDUMPER SECCOMP THREADS TREE_SITTER ZLIB
+
+      - [X] Commands kept in plan so the container setup can be replayed
+            outside this session.
+
+* DONE Validate vterm readiness :test_tool:
+      Main loop discipline:
+      - Terminal A / shell 1: edit/build/install.
+      - Terminal B / shell 2: run Emacs batch checks or interactive
+        verification. Do not mix the test shell with the build shell.
+
+      - [X] Batch require succeeds:
+              ~/local/bin/emacs --batch \
+                --eval "(add-to-list 'load-path \"/root/etc/el/vendor/vterm\")" \
+                --eval "(require 'vterm)" \
+                --eval "(message \"VTERM OK\")"
+              RESULT: VTERM OK ✓
+
+      - [X] Shared-library linkage looks sane:
+              ldd /root/etc/el/vendor/vterm/vterm-module.so
+              RESULT: libvterm.so.0 => /lib/x86_64-linux-gnu/libvterm.so.0 ✓
+
+      - [ ] Interactive check:
+              ~/local/bin/emacs -nw
+              M-x vterm
+              run a shell command
+              press C-c C-t and confirm copy-mode toggles
+              — requires interactive terminal session.
+
+      - [ ] ghcp/Ink check:
+              inside vterm run `copilot`
+              verify redraw, arrows, ctrl keys, and resize are usable
+              — deferred to live TUI session.
+
+* HALT Main Loop :interrupt:
+      Stop only when:
+      - batch require passes,
+      - interactive `M-x vterm` is usable in this container, and
+      - Ubuntu 24 builder files capture the working setup.
+
+      If the remaining blocker is only ghcp interactive verification,
+      mark build/runtime work DONE and leave that last item explicitly
+      open for a live TUI session.
+
+* Cross-references
+      - Azure reference implementation:
+            (link "/src/dot-emacs/.github/REPL/01.vterm.tui.org.txt" 1)
+      - Commit carrying Azure vterm work:
+            :b7bc77e:
+      - Emacs-side vterm glue:
+            (link "/src/dot-emacs/bartuer-vterm.el" 1)
+      - Ubuntu 24 targets:
+            (link "/src/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+            (link "/src/dot-emacs/build/devbox-ubuntu-24.04/Dockerfile" 1)
