@@ -75,3 +75,18 @@ alias ec='~/local/bin/emacsclient -t'
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+# ─── LLM endpoints (hard-coded defaults) ────────────────
+# Point every SDK (OpenAI / Anthropic / Ollama / Copilot CLI) at
+# a local Ollama instance by default. Override at `docker run` time
+# with -e OPENAI_BASE_URL=https://... etc.; the `:=` form preserves
+# any value already inherited from the container environment.
+: "${OPENAI_BASE_URL:=http://localhost:11434/v1}"
+: "${OPENAI_API_KEY:=dummy}"
+: "${ANTHROPIC_BASE_URL:=http://localhost:11434/anthropic}"
+: "${ANTHROPIC_API_KEY:=dummy}"
+: "${OLLAMA_HOST:=http://localhost:11434}"
+: "${COPILOT_MODEL_BASE_URL:=http://localhost:11434}"
+export OPENAI_BASE_URL OPENAI_API_KEY \
+       ANTHROPIC_BASE_URL ANTHROPIC_API_KEY \
+       OLLAMA_HOST COPILOT_MODEL_BASE_URL

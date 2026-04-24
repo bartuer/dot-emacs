@@ -12,6 +12,9 @@ WORKDIR /opt
 
 # Install only what's missing for the Emacs build.
 # gcc, make, tar, curl, zlib-devel, pkgconf already in base.
+#
+# Extra packages for libvterm + emacs-libvterm dynamic module:
+#   cmake, libtool   — build system for libvterm + emacs-libvterm
 RUN tdnf install -y \
         glibc-devel \
         kernel-headers \
@@ -24,6 +27,8 @@ RUN tdnf install -y \
         jansson-devel \
         sqlite-devel \
         aspell \
+        cmake \
+        libtool \
     && tdnf clean all
 
 # Build aspell English dictionary from source (no aspell-en package in Azure Linux 3.0).
@@ -48,6 +53,20 @@ RUN git clone --depth 1 --branch v0.22.6 https://github.com/tree-sitter/tree-sit
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 
+# Build and install libvterm from source (no tdnf package available).
+# Pin to 0.3.3 — the release emacs-libvterm CI uses as of 2026.
+# Installs to /usr/local (lib + include + pkgconfig), which is already
+# on LD_LIBRARY_PATH and PKG_CONFIG_PATH (set above).
+RUN cd /opt \
+    && curl -fsSLO https://www.leonerd.org.uk/code/libvterm/libvterm-0.3.3.tar.gz \
+    && tar xzf libvterm-0.3.3.tar.gz \
+    && cd libvterm-0.3.3 \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig \
+    && cd /opt \
+    && rm -rf libvterm-0.3.3 libvterm-0.3.3.tar.gz
+
 # Build Emacs 30.1
 RUN mkdir -p /root/local/src \
     && cd /root/local/src \
@@ -64,6 +83,7 @@ RUN cd /root/local/src/emacs-30.1 \
         --with-tree-sitter \
         --with-gnutls \
         --with-json \
+        --with-modules \
         --without-native-compilation \
         --without-dbus \
         --without-xft --without-xpm --without-xim \
@@ -100,6 +120,27 @@ RUN git config --global --add safe.directory /root/etc/el \
     && cp /root/etc/el/install/killemacs /usr/bin \
     && cp /root/etc/el/install/quote0 /usr/bin \
     && ln -sf /root/etc/el/.emacs.el /root/.emacs.el
+
+# Build akermu/emacs-libvterm dynamic module against system libvterm.
+# The module (vterm-module.so) + elisp (vterm.el) are vendored into
+# /root/etc/el/vendor/vterm/ so the dot-emacs config can load them.
+# Must run AFTER dot-emacs is cloned (vendor/ dir lives inside it) and
+# AFTER Emacs is installed (emacs-libvterm's CMake locates emacs via
+# EMACS_SOURCE for the module headers).
+# Pin to current master HEAD (2026-04) for reproducibility.
+ENV EMACS_LIBVTERM_COMMIT=54c29d14bca05bdd8ae60cda01715d727831e3f9
+RUN cd /opt \
+    && git clone https://github.com/akermu/emacs-libvterm.git vterm-src \
+    && cd vterm-src \
+    && git checkout "$EMACS_LIBVTERM_COMMIT" \
+    && mkdir build && cd build \
+    && cmake -DUSE_SYSTEM_LIBVTERM=yes \
+             -DEMACS_SOURCE=/root/local/src/emacs-30.1 \
+             .. \
+    && make -j$(nproc) \
+    && mkdir -p /root/etc/el/vendor/vterm \
+    && cp ../vterm.el ../vterm-module.so /root/etc/el/vendor/vterm/ \
+    && cd /opt && rm -rf vterm-src
 
 RUN mkdir -p /root/.emacs.d/tree-sitter/bin
 

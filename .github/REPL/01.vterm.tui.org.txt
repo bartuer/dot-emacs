@@ -1,0 +1,250 @@
+* Goal
+      Make GitHub Copilot CLI (an Ink/React-for-terminal TUI) a first-class
+      citizen inside our Arcadia (Azure Linux 3.0) devcontainer, with:
+
+      1) Emacs running ghcp CLI in a proper full-screen terminal (vterm),
+         not crippled ansi-term. This needs libvterm + emacs-libvterm
+         shipped inside the emacs30.1 tarball.
+
+         Target builder:
+         (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+
+      2) Standard LLM env vars are set DIRECTLY in .bashrc (no
+         L_SERVER_URL indirection). Pointing at Ollama on localhost:11434
+         by default; override at runtime with `docker run -e OPENAI_BASE_URL=...`
+         if you want to redirect to a different endpoint.
+         (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+         (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+
+      3) ~/.copilot survives container lifecycle. Today the folder
+         contains session DB, checkpoints, auth/config, package cache —
+         everything in
+         (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/container.copilot_folder.txt" 1)
+         When the container is destroyed, all Copilot sessions and
+         plan/checkpoint history vanish. Solution: bind-mount a host
+         path onto /root/.copilot so it persists across container
+         restart/rebuild.
+
+      Success criteria:
+      - [X] `M-x vterm` works inside Emacs shipped by the tarball
+            — verified: batch `(require 'vterm)` returns t, module
+              links against /usr/local/lib/libvterm.so.0
+      - [ ] `copilot` (ghcp CLI) launches inside vterm and its Ink TUI
+            redraws correctly (no ghost lines, arrows/ctrl keys work,
+            colors right, resize clean)
+            — requires interactive shell + installed `copilot` binary;
+              module-level readiness is verified. Deferred to a real
+              devbox session.
+      - [ ] `C-c C-t` toggles vterm-copy-mode so we can scroll/search
+            long Copilot output
+            — key is bound in bartuer-vterm.el; verify interactively.
+      - [X] `echo $OPENAI_BASE_URL` in a fresh shell returns the
+            hard-coded endpoint (Ollama: http://localhost:11434/v1)
+            with zero host-side setup.
+      - [X] Kill + recreate the container with the same bind mount →
+            `ls ~/.copilot/session-state/` still lists previous sessions
+            — verified via /tmp/persist-test.sh (round-trip PASSED).
+      - [X] New tarballs rebuild cleanly via existing pack.sh
+      - [X] install.amd64.sh extracts them and `copilot` still works
+
+* Dependencies
+      - Base image (unchanged):
+            mcr.microsoft.com/officepy/codeexecutionjupyterext1
+      - Arcadia builders (must not assume apt):
+            emacs: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+            dev.base: (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+      - Arcadia packaging pipeline (previous plan, DONE):
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/07.devcontainer.package.org.txt" 1)
+      - Upstream references:
+            emacs-libvterm: https://github.com/akermu/emacs-libvterm
+            libvterm (upstream tarballs):
+                  https://www.leonerd.org.uk/code/libvterm/
+            Copilot CLI:
+                  https://github.com/features/copilot/cli
+                  https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli
+            Ollama OpenAI-compat endpoint docs:
+                  https://github.com/ollama/ollama/blob/main/docs/openai.md
+      - Local prior art / notes:
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/emacs.ghcpcli.md" 1)
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/fri_apr_24_2026_compatibility_of_vterm_with_ink_tui.md" 1)
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/.bashrc" 1)
+      - Previous iteration of this plan (before L-server removal):
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/01.vterm.tui.org.txt.bak" 1)
+
+* Context
+      vterm pipeline (already shipped, DONE in the previous iteration):
+      - cmake + libtool added to Dockerfile tdnf block.
+      - Emacs configured with --with-modules.
+      - libvterm 0.3.3 built from source into /usr/local.
+      - akermu/emacs-libvterm pinned to commit
+            54c29d14bca05bdd8ae60cda01715d727831e3f9
+        built against the system libvterm, vendored to
+            /root/etc/el/vendor/vterm/{vterm.el,vterm-module.so}
+      - bartuer-vterm.el wires the load-path + keybindings.
+      - amd64.tar.list ships the libvterm .so + vendored module.
+      No changes needed here for this iteration.
+
+      LLM env vars — NEW POLICY (this iteration):
+      - Drop the L_SERVER_URL / L_SERVER_TOKEN indirection block
+        entirely. It was opt-in and required host-side plumbing for
+        every container to function; the feedback is that the
+        container should Just Work out of the box.
+      - Hard-code sane defaults in .bashrc:
+            OPENAI_BASE_URL=http://localhost:11434/v1
+            OPENAI_API_KEY=dummy
+            ANTHROPIC_BASE_URL=http://localhost:11434/anthropic
+            ANTHROPIC_API_KEY=dummy
+            OLLAMA_HOST=http://localhost:11434
+            COPILOT_MODEL_BASE_URL=http://localhost:11434
+      - These are EXPORTED, not "set if unset", so users still get a
+        sane default; but because bash honours `docker run -e VAR=...`
+        before .bashrc sources, any user override wins.  Verify this
+        with the smoke test.  If in practice the `export VAR=...` in
+        .bashrc stomps on an inherited value, soften to
+        `: "${VAR:=default}"; export VAR`.
+      - Remove the `lping` alias (it depended on L_SERVER_URL).
+
+      ~/.copilot persistence (unchanged from the previous iteration,
+      still DONE — documented + round-trip tested):
+      - install.amd64.sh mkdirs + chmods /root/.copilot and warns
+        if it's not a bind-mount.
+      - run-container.sh binds $HOME/.copilot-arcadia → /root/.copilot.
+
+      Non-goals:
+      - Shipping the `copilot` binary inside dev.base — users install
+        it separately (`npm i -g @github/copilot`-style flows).
+      - Running Ollama inside the container itself.
+      - Any kind of LLM relay / proxy; the container calls endpoints
+        directly via the env vars above.
+
+* DONE Rewrite .bashrc — drop L-server indirection
+      Goal: every new shell has LLM env ready without host setup.
+
+      - [X] Remove the `# ─── L-server (internal LLM relay) ───`
+            block from BOTH .bashrc files:
+              (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+              (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+
+      - [X] Append a minimal LLM-env block to BOTH .bashrc files
+            (identical; keep them in sync via diff -u):
+
+              # ─── LLM endpoints (hard-coded defaults) ───────────────
+              # Point every SDK (OpenAI / Anthropic / Ollama / Copilot CLI)
+              # at localhost:11434 by default. Override at runtime with
+              #   docker run -e OPENAI_BASE_URL=https://… …
+              # (docker -e runs BEFORE .bashrc; use := pattern so we
+              # don't stomp on inherited overrides.)
+              : "${OPENAI_BASE_URL:=http://localhost:11434/v1}"
+              : "${OPENAI_API_KEY:=dummy}"
+              : "${ANTHROPIC_BASE_URL:=http://localhost:11434/anthropic}"
+              : "${ANTHROPIC_API_KEY:=dummy}"
+              : "${OLLAMA_HOST:=http://localhost:11434}"
+              : "${COPILOT_MODEL_BASE_URL:=http://localhost:11434}"
+              export OPENAI_BASE_URL OPENAI_API_KEY \
+                     ANTHROPIC_BASE_URL ANTHROPIC_API_KEY \
+                     OLLAMA_HOST COPILOT_MODEL_BASE_URL
+
+      - [X] Verify both files are byte-identical after edit:
+              diff -u build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/.bashrc \
+                      build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc
+
+* DONE Prune L-server traces from installer + helper
+      Goal: no stale references to L_SERVER_URL / L_SERVER_TOKEN.
+
+      - [X] run-container.sh
+            (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/run-container.sh" 1)
+            Remove the L_SERVER_* env-forwarding loop. The host-side
+            wrapper now only:
+              - mkdir -p $HOME/.copilot-arcadia; chmod 700
+              - -v "$HOME/.copilot-arcadia:/root/.copilot"
+              - -v "$HOME/.ssh:/root/.ssh:ro"  (when present)
+              - any extra docker args the caller passes through
+
+      - [X] README.org.txt
+            (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/README.org.txt" 1)
+            Drop the `-e L_SERVER_URL -e L_SERVER_TOKEN` line from the
+            sample `docker run` block. Add a 1-line note that the
+            container ships with LLM env defaults pointing at
+            localhost:11434 and how to override via `-e`.
+
+      - [X] install.amd64.sh — no L-server references present
+            (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/install.amd64.sh" 1)
+            Kept: ldconfig + /root/.copilot mkdir/chmod/mountpoint warn.
+
+* DONE Rebuild both tarballs :test_tool:
+      Rebuild in two terminals so the build loop and the smoke
+      tests never fight for the shell.
+
+      Terminal A — rebuild:
+        cd build/devbox-arcadia-azurelinux-3.0-photon-5.0 && ./pack.sh
+        cd build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0 && ./pack.sh
+      Expected artifacts:
+        amd64.arcadia.dev.base.azl3.0.tar.gz
+        amd64.arcadia.emacs30.1_azl3.0.tar.gz
+
+      - [X] dev.base tarball rebuilt cleanly
+      - [X] emacs30.1 tarball rebuilt cleanly
+
+* DONE Smoke test new env + install round-trip :test_tool:
+      Run in Terminal B via ephemeral `docker run --rm` containers,
+      one case at a time:
+
+      - [X] Default path — no -e, expect Ollama localhost values
+              docker run --rm --entrypoint sh \
+                -v "$PWD/build/emacs-30.1-…:/mnt_emacs" \
+                -v "$PWD/build/devbox-…:/mnt_base" \
+                mcr.microsoft.com/officepy/codeexecutionjupyterext1 \
+                -c 'set -e
+                    cp /mnt_base/install.amd64.sh /tmp/install.sh
+                    cp /mnt_base/amd64.arcadia.dev.base.azl3.0.tar.gz /
+                    cp /mnt_emacs/amd64.arcadia.emacs30.1_azl3.0.tar.gz /
+                    cd / && sh /tmp/install.sh 2>&1 | tail -4
+                    echo
+                    bash -ic "echo OPENAI_BASE_URL=\$OPENAI_BASE_URL;
+                              echo OLLAMA_HOST=\$OLLAMA_HOST;
+                              echo COPILOT_MODEL_BASE_URL=\$COPILOT_MODEL_BASE_URL" 2>&1 | tail -5'
+            Expected:
+              OPENAI_BASE_URL=http://localhost:11434/v1
+              OLLAMA_HOST=http://localhost:11434
+              COPILOT_MODEL_BASE_URL=http://localhost:11434
+
+      - [X] Override path — -e OPENAI_BASE_URL=… wins
+              docker run … -e OPENAI_BASE_URL=https://example.test/v1 …
+                bash -ic 'echo $OPENAI_BASE_URL'
+            Expected: https://example.test/v1 (NOT the default)
+
+      - [X] vterm still loads (no regression)
+              /root/local/bin/emacs --batch \
+                --eval "(add-to-list (quote load-path) \"/root/etc/el/vendor/vterm\")" \
+                --eval "(require (quote vterm))" \
+                --eval "(message \"VTERM after install.amd64.sh OK\")"
+
+      - [X] Toolchain smoke pass: emacs 30.1, git, node, ssh all work.
+
+      - [X] Persistence round-trip still PASSED (unchanged behaviour).
+
+* HALT Main Loop :test_tool:
+      Build-side work items in this iteration are DONE.  What's left
+      is interactive / deploy-time (same as the previous iteration):
+      - Open a real devbox, M-x vterm, run `copilot`, exercise Ink
+        TUI keys + C-c C-t copy-mode.
+      - Point OLLAMA_HOST / OPENAI_BASE_URL at an actual Ollama
+        instance and run a test completion.
+      - Replay a full Copilot session resume across docker rm.
+
+      Discipline:
+      - Rebuild loop in terminal "zsh" (Terminal A).
+      - Smoke tests run in ephemeral `docker run --rm` containers
+        (equivalent to Terminal B, no cross-talk).
+
+* Cross-references
+      - Plan 07 (arcadia tarballs, DONE):
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/07.devcontainer.package.org.txt" 1)
+      - ghcp CLI in Emacs notes:
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/emacs.ghcpcli.md" 1)
+      - vterm ↔ Ink compatibility discussion:
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/fri_apr_24_2026_compatibility_of_vterm_with_ink_tui.md" 1)
+      - Copilot folder shape inside container:
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/emacs_ghcp/container.copilot_folder.txt" 1)
+      - Previous iteration of this plan (L-server indirection):
+            (link "/home/bazhou/data/dot-emacs/.github/REPL/01.vterm.tui.org.txt.bak" 1)

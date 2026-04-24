@@ -1436,6 +1436,7 @@ mshp,192.168.0.142 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd
 
 (setq interprogram-cut-function (intern "clipboard-copy-function"))
 (require 'bartuer-page)
+(require 'bartuer-vterm nil t)
 
 ;;; disable edit change prompt
 (defun ask-user-about-supersession-threat (fn)

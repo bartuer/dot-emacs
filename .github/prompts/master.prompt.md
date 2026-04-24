@@ -1,21 +1,21 @@
 ---
 mode: 'agent'
-model: 'Claude Opus 4.6'
+model: 'Claude Opus 4.5 (Preview)'
 description: 'follow master piece plan document'
-plan_document: '.github/REPL/07.devcontainer.package.org.txt"
+plan_document: '(link ".github/REPL/01.vterm.tui.org.txt" 33259)'
 ---
 ### The Org mode plan document is an executable 
 
-    - The structure of document imitate the logic in a piece of programming language:
+    - The structure of document immitate the logic in a piece of programming language:
       - *Goal*
         The final result user want to take away
       - *Dependencies*
-        Preconditions to run the program, those import and include
+        Preconditions to run the program, those import and includeπ
       - *Context*
-        Prepare input data, environment, arguments and configuration, all
-        necessary information to launch the program
+        Prepare input data, environment, arugments and configure, all
+        necessary information to launch the pogram
       - *Main Loop*
-        With test_tool ready and clear criteria, loop:
+        With test_tool ready and clear creteria, loop:
         - (R) figure out what's wrong with the output
         - (E) modify in codebase and run test_tool again
         - (P) read test_tool output
@@ -23,7 +23,7 @@ plan_document: '.github/REPL/07.devcontainer.package.org.txt"
     - all meaning of the plan document is to finally achieve our goal
       and get something done
       - it is instrument you need strictly follow
-      - it is the guidance help you navigate through the whole journey
+      - it is the guildence help you navigate through the whole journey
       - it is handy check list of things to be done in your mind
 
 ### How to update on work item
@@ -61,12 +61,12 @@ plan_document: '.github/REPL/07.devcontainer.package.org.txt"
       (link "/path/to/file" digit), the digit indicate approximate
       characters from beginning to the anchor location
     - pay attention to special work item with mark: :test_tool: and
-      :interrupt:
+      :interraput:
       - :test_tool: the test/verify tool to make sure our goal
         accomplished, we will use it in the *Main Loop*
       - remember, never run test and test target in the same shell
         run test in a shell, run main loop in another, otherwise you
         will struggle a lot
       - other keywords surround by : normally reference a file,
-        commit, Class, method, anything user can reference and already
+        commit, Class, method, anything user can referece and already
         reference in the user prompt
