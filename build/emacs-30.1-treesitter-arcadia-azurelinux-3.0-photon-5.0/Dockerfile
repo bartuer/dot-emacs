@@ -108,11 +108,24 @@ RUN cd /root/local/src/emacs-30.1 \
 RUN mkdir -p /root/local/share/emacs \
     && ln -sf /root/local/share/emacs/30.1 /root/local/share/emacs/current
 
-# Bring in dot-emacs config and helper scripts
+# Bring in dot-emacs config and helper scripts.
+# DOTEMACS_REV is injected by pack.sh on every build (date +%s), which
+# busts the Docker layer cache here so we always land on the current
+# origin/HEAD of https://github.com/bartuer/dot-emacs.
+# Without this, the `git clone` layer is cached indefinitely and the
+# tarball ships a stale snapshot (e.g. missing bartuer-vterm.el and the
+# matching (require 'bartuer-vterm) line in .emacs.el).
+ARG DOTEMACS_REV=unknown
 RUN git config --global --add safe.directory /root/etc/el \
     && mkdir -p /root/etc \
     && cd /root/etc \
+    && echo "DOTEMACS_REV=${DOTEMACS_REV}" \
     && git clone https://github.com/bartuer/dot-emacs.git el \
+    && cd el \
+    && git fetch --depth=1 origin HEAD \
+    && git reset --hard FETCH_HEAD \
+    && git log --oneline -1 \
+    && cd /root/etc \
     && mkdir -p /root/local/bin \
     && cp /root/etc/el/install/pbcopy.xlicp.sh /root/local/bin/pbcopy \
     && cp /root/etc/el/install/killemacs /root/local/bin/killemacs \

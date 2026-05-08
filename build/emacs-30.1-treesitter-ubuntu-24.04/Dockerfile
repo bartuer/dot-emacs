@@ -47,9 +47,13 @@ RUN git config --global --add safe.directory /root/etc/el
 RUN git config --global user.name "Bartuer Zhou"
 RUN git config --global user.email "bartuer@gmail.com"
 RUN git config --global core.pager cat 
-RUN git config --global http.proxy 'socks5://host.docker.internal:8080' 
+# Proxy disabled for direct-internet Linux build host.
+# RUN git config --global http.proxy 'socks5://host.docker.internal:8080'
 
-RUN git clone https://github.com/tree-sitter/tree-sitter.git \
+# Pin to v0.24.x: Emacs 30.1's treesit.c uses ts_language_version,
+# which was renamed to ts_language_abi_version in tree-sitter 0.25.
+ENV TREE_SITTER_TAG=v0.24.7
+RUN git clone --depth 1 --branch "$TREE_SITTER_TAG" https://github.com/tree-sitter/tree-sitter.git \
     && cd /opt/tree-sitter \
     && make -j \
     && make install
@@ -75,7 +79,7 @@ RUN cd ~/local/src/emacs-30.1 && \
 # RUN mkdir -p ~/etc
 # COPY ./el /root/etc/el
 
-RUN echo "repo 76d13fe"
+RUN echo "repo d7de42c"
 RUN mkdir -p ~/etc && \
     cd ~/etc && \
     git clone https://github.com/bartuer/dot-emacs.git el && \
