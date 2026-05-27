@@ -191,6 +191,13 @@ COPY .bashrc /root/.bashrc
 RUN printf '%s\n' '[ -f ~/.bashrc ] && . ~/.bashrc' > /root/.bash_profile \
     && cp /root/.bash_profile /root/.profile
 
+# .bashrc exports NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js".
+# Node refuses to start if the --require target is missing, which breaks
+# every `node`/`npm`/copilot CLI invocation in the container. Ship an
+# empty placeholder so the require is a no-op; real implementations can
+# overwrite this file later.
+RUN touch /root/.copilot-clipboard-shim.js
+
 # Packaging scripts (copied in by context)
 COPY amd64.tar.list /opt/amd64.tar.list
 COPY tar.sh /opt/tar.sh

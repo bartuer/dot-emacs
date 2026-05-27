@@ -38,5 +38,6 @@ bin/entry
 root/.bashrc
 root/.bash_profile
 root/.profile
+root/.copilot-clipboard-shim.js
 etc/ld.so.conf.d/local.conf
 etc/ld.so.cache
