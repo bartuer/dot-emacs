@@ -1,6 +1,18 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# If not running interactively, don't do anything
+# Environment that must be set for BOTH interactive and non-interactive
+# shells (e.g. `ssh host emacs ...`, `bash -c emacs`, sshd ForceCommand,
+# emacs daemons spawned without a tty). Tree-sitter grammar .so files
+# under ~/.emacs.d/tree-sitter/ dlopen libtree-sitter.so.0 from
+# /usr/local/lib, so this path must be on LD_LIBRARY_PATH before emacs
+# starts — otherwise treesit reports "Cannot find shared library for
+# language: ...".
+export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH:-}"
+export PATH="$HOME/local/bin:/app/copilot/bin:$PATH"
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# If not running interactively, don't do anything more
 [ -z "$PS1" ] && return
 
 # don't put duplicate lines in the history. See bash(1) for more options
@@ -66,27 +78,21 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-export PATH=~/local/bin:$PATH
-
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
 alias ec='~/local/bin/emacsclient -t'
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# ─── LLM endpoints (hard-coded defaults) ────────────────
-# Point every SDK (OpenAI / Anthropic / Ollama / Copilot CLI) at
-# a local Ollama instance by default. Override at `docker run` time
-# with -e OPENAI_BASE_URL=https://... etc.; the `:=` form preserves
-# any value already inherited from the container environment.
-: "${OPENAI_BASE_URL:=http://localhost:11434/v1}"
-: "${OPENAI_API_KEY:=dummy}"
-: "${ANTHROPIC_BASE_URL:=http://localhost:11434/anthropic}"
-: "${ANTHROPIC_API_KEY:=dummy}"
-: "${OLLAMA_HOST:=http://localhost:11434}"
-: "${COPILOT_MODEL_BASE_URL:=http://localhost:11434}"
-export OPENAI_BASE_URL OPENAI_API_KEY \
-       ANTHROPIC_BASE_URL ANTHROPIC_API_KEY \
-       OLLAMA_HOST COPILOT_MODEL_BASE_URL
+# 1. Set the provider type to 'openai' (Ollama uses the OpenAI-compatible API)
+export COPILOT_PROVIDER_TYPE="openai"
+                                                                                                   
+# 2. Point to your local Ollama endpoint
+export COPILOT_PROVIDER_BASE_URL="http://172.25.159.143:11434/v1"
+                                                                                                   
+# 3. Specify the model name (as seen in 'ollama list')
+export COPILOT_MODEL="claude-opus-4-7"
+                                                                                                   
+# 4. Use a placeholder API key (Ollama doesn't require one, but the CLI expects a string)
+export COPILOT_PROVIDER_API_KEY="ollama"
+                                                                                                   
+# GHCP CLI clipboard shim (no-X path; writes to ~/.clipboard)
+export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-}"

@@ -36,3 +36,7 @@ usr/bin/killemacs
 usr/bin/quote0
 bin/entry
 root/.bashrc
+root/.bash_profile
+root/.profile
+etc/ld.so.conf.d/local.conf
+etc/ld.so.cache

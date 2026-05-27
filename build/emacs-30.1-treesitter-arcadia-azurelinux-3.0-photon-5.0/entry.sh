@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Ensure tree-sitter grammar modules can dlopen libtree-sitter.so.0
+# regardless of how this container is entered (docker run CMD, sshd
+# children, `docker exec`, etc.). /etc/ld.so.conf.d/local.conf covers
+# the dynamic linker; this covers any tooling that still consults
+# LD_LIBRARY_PATH.
+export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH:-}"
+
 if [ $# -eq 0 ];
 then
     # docker run -d

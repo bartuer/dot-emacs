@@ -53,6 +53,15 @@ RUN git clone --depth 1 --branch v0.22.6 https://github.com/tree-sitter/tree-sit
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 
+# Make /usr/local/lib resolvable by dlopen for ALL processes (sshd
+# children, emacs daemons, scripts run via `bash -c`, etc.) without
+# depending on LD_LIBRARY_PATH being exported by a shell rc file.
+# Tree-sitter grammar modules under ~/.emacs.d/tree-sitter/ dlopen
+# libtree-sitter.so.0 from here; without this they fail with
+# "Cannot find shared library for language: <lang>".
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf \
+    && ldconfig
+
 # Build and install libvterm from source (no tdnf package available).
 # Pin to 0.3.3 — the release emacs-libvterm CI uses as of 2026.
 # Installs to /usr/local (lib + include + pkgconfig), which is already
@@ -175,6 +184,12 @@ COPY entry.sh /bin/entry
 RUN chmod +x /bin/entry
 
 COPY .bashrc /root/.bashrc
+
+# Login shells (sshd, `bash -l`) read .bash_profile / .profile, not
+# .bashrc. Source .bashrc from both so the env (LD_LIBRARY_PATH, PATH,
+# LANG, aliases) is set for SSH sessions too.
+RUN printf '%s\n' '[ -f ~/.bashrc ] && . ~/.bashrc' > /root/.bash_profile \
+    && cp /root/.bash_profile /root/.profile
 
 # Packaging scripts (copied in by context)
 COPY amd64.tar.list /opt/amd64.tar.list
