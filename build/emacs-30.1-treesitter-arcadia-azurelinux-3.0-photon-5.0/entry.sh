@@ -6,6 +6,16 @@
 # the dynamic linker; this covers any tooling that still consults
 # LD_LIBRARY_PATH.
 export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH:-}"
+export TREE_SITTER_GRAMMAR_DIR="${TREE_SITTER_GRAMMAR_DIR:-/usr/local/share/emacs/tree-sitter}"
+
+# Make grammar path stable across users/sessions by wiring ~/.emacs.d/tree-sitter
+# to the global prebuilt grammar bundle when available.
+if [ -n "${HOME:-}" ] && [ -d "$TREE_SITTER_GRAMMAR_DIR" ]; then
+    mkdir -p "$HOME/.emacs.d"
+    if [ ! -e "$HOME/.emacs.d/tree-sitter" ]; then
+        ln -s "$TREE_SITTER_GRAMMAR_DIR" "$HOME/.emacs.d/tree-sitter"
+    fi
+fi
 
 if [ $# -eq 0 ];
 then

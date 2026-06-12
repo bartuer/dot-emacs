@@ -1,7 +1,8 @@
 root/local
 root/etc/el
 root/.emacs.el
-root/.emacs.d/tree-sitter
+root/.emacs.d
+usr/local/share/emacs/tree-sitter
 usr/local/lib/libtree-sitter.a
 usr/local/lib/libtree-sitter.so
 usr/local/lib/libtree-sitter.so.0

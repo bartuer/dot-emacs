@@ -52,6 +52,7 @@ RUN git clone --depth 1 --branch v0.22.6 https://github.com/tree-sitter/tree-sit
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 ENV PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+ENV TREE_SITTER_GRAMMAR_DIR=/usr/local/share/emacs/tree-sitter
 
 # Make /usr/local/lib resolvable by dlopen for ALL processes (sshd
 # children, emacs daemons, scripts run via `bash -c`, etc.) without
@@ -134,6 +135,7 @@ RUN git config --global --add safe.directory /root/etc/el \
     && git fetch --depth=1 origin HEAD \
     && git reset --hard FETCH_HEAD \
     && git log --oneline -1 \
+    && perl -0pi -e 's#\(setq treesit-extra-load-path\s+`\("~/.emacs.d/tree-sitter/"\)\)#\(setq tree-sitter-langs-grammar-dir \(or \(getenv "TREE_SITTER_GRAMMAR_DIR"\) \(expand-file-name "tree-sitter/" user-emacs-directory\)\)\)\n  \(setq tsc-dyn-dir tree-sitter-langs-grammar-dir\)\n  \(setq treesit-extra-load-path \(list tree-sitter-langs-grammar-dir\)\)#' /root/etc/el/.emacs.el \
     && cd /root/etc \
     && mkdir -p /root/local/bin \
     && cp /root/etc/el/install/pbcopy.xlicp.sh /root/local/bin/pbcopy \
@@ -164,18 +166,21 @@ RUN cd /opt \
     && cp ../vterm.el ../vterm-module.so /root/etc/el/vendor/vterm/ \
     && cd /opt && rm -rf vterm-src
 
-RUN mkdir -p /root/.emacs.d/tree-sitter/bin
+RUN mkdir -p ${TREE_SITTER_GRAMMAR_DIR}/bin \
+    && mkdir -p /root/.emacs.d /etc/skel/.emacs.d \
+    && ln -sfn ${TREE_SITTER_GRAMMAR_DIR} /root/.emacs.d/tree-sitter \
+    && ln -sfn ${TREE_SITTER_GRAMMAR_DIR} /etc/skel/.emacs.d/tree-sitter
 
 # Write BUNDLE-VERSION so tree-sitter-langs skips the GitHub download
 # (no DNS inside the container). The version must match the constant in
 # vendor/tree-sitter-langs/tree-sitter-langs-build.el.
-RUN echo -n "0.12.276" > /root/.emacs.d/tree-sitter/bin/BUNDLE-VERSION
+RUN echo -n "0.12.276" > ${TREE_SITTER_GRAMMAR_DIR}/bin/BUNDLE-VERSION
 
 # Compile tree-sitter grammar shared objects using Emacs batch mode.
 # The grammars are defined in the dot-emacs config (tree-sitter/treesit-compile.el).
 # Emacs 30.1 treesit-install-language-grammar needs: gcc, git, libtree-sitter — all present.
 RUN /root/local/bin/emacs --batch \
-    --eval '(setq treesit-extra-load-path (list "/root/.emacs.d/tree-sitter/"))' \
+    --eval "(setq treesit-extra-load-path (list \"${TREE_SITTER_GRAMMAR_DIR}/\"))" \
     -l /root/etc/el/tree-sitter/treesit-compile.el \
     -f do-treesit-compile
 
