@@ -31,14 +31,55 @@ find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \
 # Custom sshd_config
 echo etc/ssh/sshd_config >> "$FLIST"
 
-# --- LSP servers installed via pip (jedi-language-server, outside rpm db) ---
-# Collect every file belonging to jedi-language-server + all its dist-info.
-# pip show -f lists paths relative to the package's Location.
-/app/officepy/bin/pip show -f jedi-language-server 2>/dev/null \
-  | awk '/^Location:/{loc=$2} /^Files:/{p=1;next} p && /^ /{gsub(/^ /,""); print loc "/" $0}' \
-  | sort -u \
-  | while read -r f; do [ -e "$f" ] && [ ! -d "$f" ] && echo "$f"; done \
-  | sed 's|^/||' >> "$FLIST"
+# --- LSP servers installed via pip (jedi-language-server + full transitive closure) ---
+# We must bundle ALL transitive deps because:
+#   - Some deps (e.g. cattrs) are NEW and land in python3.12/site-packages
+#   - Some deps (e.g. attrs) were ALREADY in the base image at python3.1/site-packages
+#     but as an old version; pip upgrades them in-place at python3.1/site-packages.
+#   - Going only 1 level deep misses these transitively-upgraded packages.
+# Strategy: BFS over pip's Requires graph until no new packages found.
+PIP=/app/officepy/bin/pip
+
+_pip_direct_deps() {
+  $PIP show "$1" 2>/dev/null \
+    | awk '/^Requires:/{$1=""; gsub(/,/,""); print}' \
+    | tr ' ' '\n' | grep -v '^$'
+}
+
+_pip_files_for_pkg() {
+  $PIP show -f "$1" 2>/dev/null \
+    | awk '/^Location:/{loc=$2} /^Files:/{p=1;next} p{
+        if (/^[[:space:]]/ && NF>0) {
+          f=$0; gsub(/^[[:space:]]*/,"",f); print loc "/" f
+        } else { p=0 }
+      }' \
+    | while read -r f; do
+        f=$(realpath -m "$f" 2>/dev/null) || continue
+        [ -e "$f" ] && [ ! -d "$f" ] && echo "${f#/}"
+      done
+}
+
+SEEN="jedi-language-server"
+QUEUE="jedi-language-server"
+while [ -n "$QUEUE" ]; do
+  NEXT=""
+  for pkg in $QUEUE; do
+    for dep in $(_pip_direct_deps "$pkg"); do
+      # normalise: pip package names are case-insensitive, use lowercase
+      dep_lc=$(echo "$dep" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
+      if ! echo " $SEEN " | grep -qi " $dep_lc "; then
+        SEEN="$SEEN $dep_lc"
+        NEXT="$NEXT $dep_lc"
+      fi
+    done
+  done
+  QUEUE=$NEXT
+done
+
+for pkg in $SEEN; do
+  _pip_files_for_pkg "$pkg"
+done | sort -u >> "$FLIST"
+
 # Also capture the console-script entrypoint binary itself
 find /app/officepy/bin -name 'jedi-language-server' -type f 2>/dev/null \
   | sed 's|^/||' >> "$FLIST"
