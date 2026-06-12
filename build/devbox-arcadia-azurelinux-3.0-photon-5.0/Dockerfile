@@ -17,6 +17,17 @@ RUN tdnf install -y \
     && (tdnf install -y glibc-i18n || true) \
     && tdnf clean all
 
+# Language servers for Emacs eglot integration.
+#   - jedi-language-server                    : python-mode / python-ts-mode (PyPI)
+#   - typescript-language-server + typescript : typescript-mode / typescript-ts-mode (npm)
+# Base image already ships python3.12 (at /app/officepy/bin) and node v22 with
+# global npm at /usr (so npm-global bins land in /usr/bin, already on PATH).
+# csharp-ls intentionally omitted (requires .NET runtime, not in this devbox).
+# These installs land OUTSIDE the rpm db, so tar.sh must explicitly include
+# their files when packaging the offline tarball — see tar.sh.
+RUN /app/officepy/bin/pip install --no-cache-dir jedi-language-server \
+ && npm install -g --no-audit --no-fund typescript typescript-language-server
+
 # Default UTF-8 locale for shells and tools.
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8

@@ -288,7 +288,9 @@ If give a negative ARG, will undo the last mark action, thus the
 
 (when (>= emacs-major-version 29)
   (require 'use-package)
-  (setq treesit-extra-load-path  `("~/.emacs.d/tree-sitter/"))
+  (setq tree-sitter-langs-grammar-dir (or (getenv "TREE_SITTER_GRAMMAR_DIR") (expand-file-name "tree-sitter/" user-emacs-directory)))
+  (setq tsc-dyn-dir tree-sitter-langs-grammar-dir)
+  (setq treesit-extra-load-path (list tree-sitter-langs-grammar-dir))
   ;; Disabled: legacy elisp-tree-sitter pkg conflicts with built-in `treesit'.
   ;; Its `tree-sitter-load' searches ~/.tree-sitter/bin/ (empty here) and raises
   ;; "Cannot find shared library for language: python" whenever a *-ts-mode buffer

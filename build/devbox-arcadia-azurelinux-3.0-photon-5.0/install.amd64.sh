@@ -17,6 +17,21 @@ if command -v ldconfig >/dev/null 2>&1; then
     ldconfig
 fi
 
+# Install Emacs eglot language servers. These are pip/npm packages — they
+# live outside the rpm db, so the dev.base tarball (built via rpm -ql)
+# does NOT include them. Installing here guarantees LSPs are present even
+# when the target was rehydrated from tarballs rather than the docker image.
+# Requires network access on the target. No-op if already installed.
+if [ -x /app/officepy/bin/pip ]; then
+    /app/officepy/bin/pip install --no-cache-dir --quiet jedi-language-server \
+        || echo "[warn] failed to install jedi-language-server" >&2
+fi
+if command -v npm >/dev/null 2>&1; then
+    npm install -g --no-audit --no-fund --silent \
+        typescript typescript-language-server \
+        || echo "[warn] failed to install typescript-language-server" >&2
+fi
+
 # Copilot CLI writes sessions, checkpoints, plans, auth, and its
 # vendored node pkg into /root/.copilot.  Make sure the dir exists
 # with tight perms so a fresh container doesn't fail the first run.

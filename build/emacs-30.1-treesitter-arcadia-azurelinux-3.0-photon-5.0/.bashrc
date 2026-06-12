@@ -8,7 +8,10 @@
 # starts — otherwise treesit reports "Cannot find shared library for
 # language: ...".
 export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH:-}"
-export PATH="$HOME/local/bin:/app/copilot/bin:$PATH"
+# /app/officepy/bin exposes python3.12 + pip + jupyter + pip-installed LSPs
+# (jedi-language-server). Must be on PATH for non-interactive shells too so
+# eglot/emacs daemons spawned without a tty can find the LSP binary.
+export PATH="$HOME/local/bin:/app/copilot/bin:/app/officepy/bin:$PATH"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 

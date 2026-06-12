@@ -67,7 +67,9 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-export PATH=~/local/bin:/app/copilot/bin:$PATH
+# /app/officepy/bin exposes python3.12 + pip + jupyter + pip-installed LSPs
+# (jedi-language-server) so eglot/emacs subprocesses can find them.
+export PATH=~/local/bin:/app/copilot/bin:/app/officepy/bin:$PATH
 
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
