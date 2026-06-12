@@ -31,7 +31,18 @@ find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \
 # Custom sshd_config
 echo etc/ssh/sshd_config >> "$FLIST"
 
-tar czf "$OUT" -C / -T "$FLIST"
+# LSPs (jedi-language-server via pip, typescript-language-server + typescript
+# via npm -g) are installed by the Dockerfile so they exist in the IMAGE.
+# We deliberately exclude them from the TARBALL — install.amd64.sh re-installs
+# them on the target via pip/npm, keeping the dev.base tarball lean.
+tar czf "$OUT" -C / \
+    --exclude='app/officepy/*' \
+    --exclude='usr/lib/node_modules/typescript' \
+    --exclude='usr/lib/node_modules/typescript-language-server' \
+    --exclude='usr/bin/tsc' \
+    --exclude='usr/bin/tsserver' \
+    --exclude='usr/bin/typescript-language-server' \
+    -T "$FLIST"
 rm -f "$FLIST"
 
 echo "Created $OUT"
