@@ -289,15 +289,19 @@ If give a negative ARG, will undo the last mark action, thus the
 (when (>= emacs-major-version 29)
   (require 'use-package)
   (setq treesit-extra-load-path  `("~/.emacs.d/tree-sitter/"))
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
+  ;; Disabled: legacy elisp-tree-sitter pkg conflicts with built-in `treesit'.
+  ;; Its `tree-sitter-load' searches ~/.tree-sitter/bin/ (empty here) and raises
+  ;; "Cannot find shared library for language: python" whenever a *-ts-mode buffer
+  ;; triggers tree-sitter-hl-mode. Built-in `treesit' + `*-ts-mode' replace it.
+  ;; (require 'tree-sitter)
+  ;; (require 'tree-sitter-langs)
   (require 'treesit-mode-bind)
-  (require 'tree-sitter-hl)
+  ;; (require 'tree-sitter-hl)
   (require 'treesit-fold)
   (global-treesit-fold-mode 1)
   (define-key treesit-fold-mode-map (kbd "C-u C-i") #'treesit-fold-toggle)
   (treesit-mode-bind)
-  (add-hook 'combobulate-after-setup-hook #'tree-sitter-hl-mode)
+  ;; (add-hook 'combobulate-after-setup-hook #'tree-sitter-hl-mode)
 
   (require 'markdown-mode)
   (use-package eglot

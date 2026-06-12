@@ -4,7 +4,7 @@
 
 # tsc-dyn.so (elisp-tree-sitter Rust binding)
 # The amd64 binary lives under the ubuntu-24.04 build (same glibc ABI).
-cp ~/etc/el/build/emacs-30.1-treesitter-ubuntu-24.04/amd64/vendor/tsc/tsc-dyn.so ~/etc/el/vendor/tsc
+cp /root/etc/el/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/amd64/vendor/tsc/tsc-dyn.so ~/etc/el/vendor/tsc
 
 # tree-sitter grammar .so files (compiled by treesit-compile.el during docker build)
 # These are already at ~/.emacs.d/tree-sitter/ after tarball extraction.

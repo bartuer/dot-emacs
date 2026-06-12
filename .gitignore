@@ -123,3 +123,5 @@ vendor/elisp-tree-sitter/build/devbox-ubuntu-22.04/Dockerfile.cc
 /build/emacs-30.1-treesitter-ubuntu-24.04/amd64.emacs30.1_24.04.tar.gz
 /build/emacs-30.1-treesitter-ubuntu-24.04/amd64.tar.list.bak.1778241806
 /build/devbox-ubuntu-24.04/amd64.dev.base.24.04.tar.gz
+.emacs.d/tree-sitter
+vendor/vterm/vterm-module.so
