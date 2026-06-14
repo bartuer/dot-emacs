@@ -85,10 +85,13 @@ export COPILOT_PROVIDER_TYPE="openai"
 export COPILOT_PROVIDER_BASE_URL="http://172.25.159.143:11434/v1"
                                                                                                    
 # 3. Specify the model name (as seen in 'ollama list')
-export COPILOT_MODEL="claude-opus-4-7"
+export COPILOT_MODEL="claude-opus-4-8"
                                                                                                    
 # 4. Use a placeholder API key (Ollama doesn't require one, but the CLI expects a string)
 export COPILOT_PROVIDER_API_KEY="ollama"
                                                                                                    
 # GHCP CLI clipboard shim (no-X path; writes to ~/.clipboard)
 export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-}"
+
+touch /root/.copilot-clipboard-shim.js
+alias harness="copilot --allow-all --resume"

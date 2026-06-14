@@ -1,21 +1,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# Environment that must be set for BOTH interactive and non-interactive
-# shells (e.g. `ssh host emacs ...`, `bash -c emacs`, sshd ForceCommand,
-# emacs daemons spawned without a tty). Tree-sitter grammar .so files
-# under ~/.emacs.d/tree-sitter/ dlopen libtree-sitter.so.0 from
-# /usr/local/lib, so this path must be on LD_LIBRARY_PATH before emacs
-# starts — otherwise treesit reports "Cannot find shared library for
-# language: ...".
-export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH:-}"
-# /app/officepy/bin exposes python3.12 + pip + jupyter + pip-installed LSPs
-# (jedi-language-server). Must be on PATH for non-interactive shells too so
-# eglot/emacs daemons spawned without a tty can find the LSP binary.
-export PATH="$HOME/local/bin:/app/copilot/bin:/app/officepy/bin:$PATH"
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
-# If not running interactively, don't do anything more
+# If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
 # don't put duplicate lines in the history. See bash(1) for more options
@@ -81,9 +66,17 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+# /app/officepy/bin exposes python3.12 + pip + jupyter + pip-installed LSPs
+# (jedi-language-server) so eglot/emacs subprocesses can find them.
+export PATH=~/local/bin:/app/copilot/bin:/app/officepy/bin:$PATH
+
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
 alias ec='~/local/bin/emacsclient -t'
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # 1. Set the provider type to 'openai' (Ollama uses the OpenAI-compatible API)
 export COPILOT_PROVIDER_TYPE="openai"
@@ -92,10 +85,13 @@ export COPILOT_PROVIDER_TYPE="openai"
 export COPILOT_PROVIDER_BASE_URL="http://172.25.159.143:11434/v1"
                                                                                                    
 # 3. Specify the model name (as seen in 'ollama list')
-export COPILOT_MODEL="claude-opus-4-7"
+export COPILOT_MODEL="claude-opus-4-8"
                                                                                                    
 # 4. Use a placeholder API key (Ollama doesn't require one, but the CLI expects a string)
 export COPILOT_PROVIDER_API_KEY="ollama"
                                                                                                    
 # GHCP CLI clipboard shim (no-X path; writes to ~/.clipboard)
 export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-}"
+
+touch /root/.copilot-clipboard-shim.js
+alias harness="copilot --allow-all --resume"
