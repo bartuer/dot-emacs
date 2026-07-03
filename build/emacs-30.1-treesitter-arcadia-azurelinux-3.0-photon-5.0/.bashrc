@@ -95,3 +95,4 @@ export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-
 
 touch /root/.copilot-clipboard-shim.js
 alias harness="copilot --allow-all --resume"
+alias h="copilot --allow-all --resume"

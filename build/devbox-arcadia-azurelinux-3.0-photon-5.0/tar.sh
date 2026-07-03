@@ -23,6 +23,8 @@ rpm -ql $PKGS 2>/dev/null \
 echo bin/entry >> "$FLIST"
 echo root/.bashrc >> "$FLIST"
 echo root/.gitconfig >> "$FLIST"
+echo root/.ssh/config >> "$FLIST"
+echo root/.ssh/authorized_keys >> "$FLIST"
 
 # Pre-generated SSH host keys (from ssh-keygen -A in Dockerfile)
 find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \

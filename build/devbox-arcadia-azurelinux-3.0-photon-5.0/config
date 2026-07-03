@@ -1,0 +1,11 @@
+Host host
+     Hostname 172.25.159.143
+     StrictHostKeyChecking no
+     IdentityFile ~/.ssh/nx.rsa
+     ForwardAgent yes
+     User root
+
+Host github
+     HostName github.com
+     User git
+     IdentityFile ~/.ssh/nx.rsa 

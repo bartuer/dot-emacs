@@ -49,6 +49,8 @@ COPY entry.sh /bin/entry
 RUN chmod +x /bin/entry
 
 COPY .bashrc /root/.bashrc
+COPY config /root/.ssh/config
+COPY authorized_keys /root/.ssh/authorized_keys
 
 # Packaging scripts
 COPY tar.sh /opt/tar.sh
