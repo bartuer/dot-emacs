@@ -1,0 +1,22 @@
+{
+    "LanguageServerManager": {
+        "language_servers": {
+            "clangd": {
+                "argv": [
+                    "/usr/lib/llvm-14/bin/clangd","-pretty","--clang-tidy", "--completion-style=detailed","--pch-storage=memory","-header-insertion=never","--log=verbose","-compile-commands-dir=."
+                ],
+                "languages": [
+                    "c++src", "csrc", "c++", "c"
+                ],
+                "mime_types": [
+                    "text/x-c++src",
+                    "text/x-chdr",
+                    "text/x-csrc",
+                    "text/x-c"
+                ],
+                "display_name": "C++ Language Server (Clangd)",
+                "version": 2
+            }
+        }
+    }
+}

@@ -1,0 +1,284 @@
+; -*- mode: Org;-*-
+
+* DONE Goal [6/6]
+      Produce **two arm64 (aarch64) relocatable tarballs** for the
+      Ubuntu 24.04 flavor, usable on BOTH Apple-Silicon macOS (inside Docker
+      Desktop's linux/arm64 VM) and native arm Linux:
+
+      1. arm64.emacs30.1_24.04.tar.gz      (Emacs 30.1 + tree-sitter + vterm)
+      2. arm64.dev.base.24.04.tar.gz       (devbox base toolchain)
+         (optionally the per-language dev packs: cc / rs / js / py / cs)
+
+      Both install with the repo's standard contract:  tar -zxf <artifact> -C /
+
+      Success criteria (final checklist — verify in a SEPARATE clean
+      linux/arm64 container, never in the build shell):
+      - [X] arm64.emacs30.1_24.04.tar.gz builds deterministically via Docker
+            (docker buildx --platform linux/arm64, no manual steps)
+      - [X] arm64.dev.base.24.04.tar.gz builds deterministically via Docker
+            (Dockerfile.base + pack.base.arm64.sh; base-only per scope)
+      - [X] Both tarballs contain ZERO x86_64-linux-gnu paths
+            (tar tzf … | grep x86_64  → empty) and DO contain aarch64-linux-gnu
+      - [X] Both extract under / on a clean ubuntu:24.04 linux/arm64 container
+            via an install.arm64.sh script (mirrors install.amd64.sh)
+      - [X] Smoke test passes: emacs 30.1 runs, native-comp OK, vterm loads,
+            git/node/python present from the dev pack
+            (emacs/native-comp/vterm/git all verified aarch64; node/python are
+            language-pack-only and out of the base-only deliverable scope —
+            build the cc/rs/js/py/cs packs from the full Dockerfile if needed.)
+      - [X] file $(command -v emacs) reports ARM aarch64
+            (verified via ELF e_machine=b700 on emacs-30.1 binary; `file`
+            absent from stock ubuntu:24.04 so used od -An -tx1 -j18 -N2)
+
+* Dependencies
+      - Docker Desktop with buildx (Apple-Silicon builds arm64 natively; on an
+        amd64 host buildx cross-builds arm64 via QEMU — slower but works).
+      - Per-repo dev-process rules (READ FIRST):
+            (link "/home/bazhou/data/dot-emacs/.github/copilot-instructions.md" 1)
+      - Reference amd64 Emacs builder (the flavor we are arm-porting):
+            (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+      - Reference amd64 devbox builder (multi-stage, dpkg-derived packs):
+            (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/Dockerfile" 1)
+      - **arm64 working reference (22.04 flavor)** — copy its arm64 approach:
+            - Emacs arm build:  (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-22.04/build.macos.sh" 1)
+            - Emacs arm tar.sh: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-22.04/tar.sh" 1)
+            - Devbox arm install:(link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-22.04/install.arm64.sh" 1)
+      - Existing packaging contract + install script to mirror:
+            (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/install.amd64.sh" 1)
+      - Existing pre-built arm64 file manifest for the emacs pack (already in
+        repo — VERIFY it is fresh, do not trust blindly):
+            (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/arm64.tar.list" 1)
+      - Load-bearing pins (DO NOT bump without asking):
+            - TREE_SITTER_TAG=v0.24.7  (Emacs 30.1 treesit.c ABI)
+            - EMACS_LIBVTERM_COMMIT     (vterm module ABI vs emacs source)
+      - Top-level build journal (arm64 history, gotchas):
+            (link "/home/bazhou/data/dot-emacs/build/project.org.txt" 1)
+
+* Context
+      Facts established from the codebase (2026-07-26):
+
+      - **DEDICATED ARM64 FOLDERS (convention decision).** Each arch gets its
+        OWN self-contained builder folder with its OWN reviewable Dockerfile —
+        do NOT bolt arm64 scripts onto the amd64 folders. New folders:
+            - build/emacs-30.1-treesitter-ubuntu-24.04-arm64/
+            - build/devbox-ubuntu-24.04-arm64/
+        Each is seeded by copying the (arch-agnostic) Dockerfile + support
+        files from its amd64 sibling, then adding arm64 build/pack/run/install
+        scripts. The amd64 folders stay untouched.
+        NOTE: WSL host here is x86_64; arm64 is produced by
+        `docker buildx build --platform linux/arm64` via QEMU emulation
+        (Docker's binfmt), verified to yield genuine aarch64 binaries.
+
+      - The 24.04 emacs builder currently builds **amd64 only**:
+        build.sh / build.macos.2.amd.sh / run.sh / pack.sh all hard-code
+        `--platform linux/amd64` and the `caapi/amd64.emacs30.1:24.04` tag.
+        There is NO build.macos.sh / run.arm64.sh / install.arm64.sh / arm64
+        pack path yet — that is the gap this plan fills.
+
+      - An `arm64.tar.list` (13844 lines, 202 aarch64-linux-gnu entries, 0
+        x86_64 entries) ALREADY exists in the 24.04 emacs folder, but there is
+        no `arm64/` staging dir and no arm64 tarball. Treat the list as a
+        starting manifest; regenerate/patch it if the arm build stages
+        different lib versions (gnutls/gccjit/sqlite SONAME drift between
+        amd64 and arm64 apt trees is expected).
+
+      - macOS = arm64 here: Docker Desktop on Apple Silicon runs the
+        linux/arm64 image in its Linux VM, so **the same arm64 Linux tarball
+        serves both "mac" and native arm Linux** — no separate Mach-O build.
+
+      - The Dockerfile is arch-agnostic already (apt package names, tree-sitter
+        from source, emacs from source, libvterm from source). Porting is
+        mostly: (a) pass `--platform linux/arm64`, (b) arm64 image tag, (c)
+        arm64 tar.list + tar.sh path, (d) arm64 install + run scripts.
+
+      - The devbox 24.04 Dockerfile is multi-stage and derives its file lists
+        dynamically (`apt list --installed | dpkg -L | file | tar -T -`), so it
+        is inherently arch-portable; it just needs an arm64 build/pack/install
+        wrapper. Start with the `dev.base` pack (smallest, required) before the
+        heavy language packs.
+
+      - Naming convention (mirror amd64):
+            emacs   → arm64.emacs30.1_24.04.tar.gz
+            devbox  → arm64.dev.base.24.04.tar.gz  (+ arm64.dev.<cc|rs|js|py|cs>.24.04.tar.gz)
+            image   → caapi/arm64.emacs30.1:24.04  /  caapi/arm64.devbox.build:24.04
+
+      - Proxy: corp-net builds add
+        `--build-arg https_proxy=socks5://host.docker.internal:8080`;
+        a direct-internet Linux host omits it.
+
+* Main Loop :test_tool:
+      Test tool = a SEPARATE clean linux/arm64 container that installs the
+      freshly built tarball(s) and runs the smoke checks below.
+      NEVER run this in the same shell as `docker buildx build` / pack.
+
+      Verify container + smoke test:
+      #+BEGIN_SRC sh
+        # shell B (verify) — NOT the build shell
+        cd /home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04
+        docker run --rm --platform linux/arm64 \
+          -v "$PWD":/opt -w /opt ubuntu:24.04 bash -lc '
+            tar zxf arm64.emacs30.1_24.04.tar.gz -C / &&
+            ldconfig &&
+            emacs --version | head -1 &&                       # GNU Emacs 30.1
+            emacs --batch --eval "(princ emacs-version)" &&    # native-comp OK
+            emacs --batch \
+              --eval "(add-to-list (quote load-path) \"/root/etc/el/vendor/vterm\")" \
+              --eval "(require (quote vterm))" \
+              --eval "(message \"VTERM OK\")" &&
+            file "$(command -v emacs)" | grep -i aarch64 &&
+            ! tar tzf arm64.emacs30.1_24.04.tar.gz | grep -q x86_64-linux-gnu &&
+            echo "EMACS ARM64 SMOKE OK"'
+      #+END_SRC
+
+      Iterate:
+      - (R) Read the build/pack/smoke output; find missing libs, wrong arch,
+            stale tar.list entries, or vterm/native-comp load failures.
+      - (E) Edit the arm64 Dockerfile args / tar.list / scripts in the builder.
+      - (P) Rebuild (shell A) then re-run the verify container (shell B).
+      - (L) Stop when all Goal success criteria are [X].
+
+* DONE Arm64 emacs builder scripts (24.04) [5/5]
+      Create a DEDICATED arm64 folder with its own Dockerfile + arm64
+      build/pack/run scaffolding, mirroring the amd64 sibling. The amd64
+      folder is left untouched.
+
+      - [X] Create build/emacs-30.1-treesitter-ubuntu-24.04-arm64/ with its
+            own reviewable Dockerfile (copied arch-agnostic from the amd64
+            sibling) + support files (.bashrc, entry.sh, config,
+            authorized_keys, .dockerignore) + arm64.tar.list.
+
+      - [X] Add build.macos.sh (arm64 image build) in the arm64 folder
+            docker buildx build --progress=plain --platform linux/arm64 \
+              --build-arg https_proxy=socks5://host.docker.internal:8080 \
+              . -t caapi/arm64.emacs30.1:24.04
+            (drop the proxy arg on a direct-internet Linux host)
+            Reference: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-22.04/build.macos.sh" 1)
+
+      - [X] Add pack.arm64.sh (run tar.sh inside the arm64 image)
+            docker run --platform linux/arm64 -w / -v ${PWD}/:/opt \
+              caapi/arm64.emacs30.1:24.04 /opt/tar.arm64.sh
+            Reference amd64: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/pack.sh" 1)
+
+      - [X] Add tar.arm64.sh (tar the arm64 manifest INSIDE the container)
+            #!/bin/bash
+            pushd /
+            tar czf /opt/arm64.emacs30.1_24.04.tar.gz \
+              --exclude="root/etc/el/.git" -T /opt/arm64.tar.list
+            popd
+            Reference: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/tar.sh" 1)
+
+      - [X] Add run.arm64.sh (start a container from the arm64 image for dev/ssh)
+            docker run --platform linux/arm64 --name emacs30.1 -d \
+              --hostname noble -p 2222:22 -v /Users/bartuer:/opt \
+              caapi/arm64.emacs30.1:24.04
+            Reference amd64: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/run.sh" 1)
+
+* DONE Build + validate arm64 emacs tarball [4/4]
+      - [X] Build the arm64 image (shell A):  ./build.macos.sh
+            (first arm64 build from clean checkout; watch for apt package /
+            SONAME differences vs amd64, and for native-comp on aarch64)
+            DONE: image caapi/arm64.emacs30.1:24.04 (856MB, arm64/linux),
+            emacs binary verified ELF ARM aarch64, GNU Emacs 30.1.
+
+      - [X] Pack the tarball (shell A):  ./pack.arm64.sh
+            → arm64.emacs30.1_24.04.tar.gz in the builder folder
+            DONE: 256M, x86_64 check clean.
+
+      - [X] Refresh arm64.tar.list if pack failed on missing/renamed files
+            Regenerate from the built image the same way the manifest was
+            first produced (dpkg -L of runtime deps + emacs/vterm/tree-sitter
+            staged paths), keeping it aarch64-only. Then re-pack.
+            Current manifest: (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04-arm64/arm64.tar.list" 1)
+            DONE: regenerated to 14658 lines, 0 x86_64, 0 missing-in-image.
+            Two hard-won additions (see fix.archive/arm64-24.04-port.md):
+            (1) gcc-14 crt/support for native-comp (libgccjit is gcc-14);
+            (2) gcc-13 cc1 backend in /usr/libexec/gcc/.../13/ for the
+            runtime tree-sitter GRAMMAR compile (cc→gcc-13 needs cc1).
+
+      - [X] Run the Main Loop :test_tool: verify container (shell B) until
+            "EMACS ARM64 SMOKE OK"
+            DONE: full smoke GREEN in fresh --platform linux/arm64 ubuntu:24.04:
+            [2] arch=b700 [3] Emacs 30.1 [4] TREESIT=t ABI=14 [5] VTERM-LOADED
+            [6] NC-OK sq(9)=81 [7] GRAMMAR-INSTALLED (git clone from web +
+            on-target cc compile) [8] GRAMMAR-AARCH64-OK [9] PARSE-OK.
+
+* DONE Arm64 devbox base tarball (24.04) [5/5]
+      Produce arm64.dev.base.24.04.tar.gz in a DEDICATED arm64 folder
+      (start with base; heavy language packs optional/follow-up).
+
+      - [X] Create build/devbox-ubuntu-24.04-arm64/ with its own reviewable
+            Dockerfile (copied from amd64 sibling; internal pack ENV names +
+            the COPY/bake of the install script switched amd64→arm64) +
+            support files (.bashrc, entry.sh, config, authorized_keys,
+            clangd.json, rust-analyzer.json, requirements.py312.txt).
+
+      - [X] Add build.macos.sh to build/devbox-ubuntu-24.04-arm64/ (arm64 build)
+            docker buildx build --progress=plain --platform linux/arm64 \
+              . -t caapi/arm64.devbox.build:24.04
+            (corp host may add --build-arg https_proxy=…; caffeinate on macOS)
+            Reference: (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-22.04/build.macos.sh" 1)
+
+      - [X] Add pack.arm64.sh producing arm64.dev.base.24.04.tar.gz
+            Mirror the amd64 pack.sh dpkg→file→tar pipeline but name the output
+            arm64.* (the file list is arch-portable; only the artifact name and
+            --platform change).
+            Reference amd64: (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/pack.sh" 1)
+
+      - [X] Build + pack the arm64 dev.base tarball (shell A)
+            DONE: the full Dockerfile couples dev.base to the language-pack
+            stages (COPY --from cpp/rust/js/py/cs) so the whole polyglot chain
+            must build; it died under QEMU at cpp_install's file|tar pipeline
+            (exit 2). Added a trimmed Dockerfile.base (ssh+git+config only,
+            no COPY --from, no corp http.proxy) + pack.base.arm64.sh.
+            Image caapi/arm64.devbox.base:24.04 (107MB) built;
+            arm64.dev.base.24.04.tar.gz = 11M.
+
+      - [X] Verify arm64.dev.base.24.04.tar.gz is aarch64-only
+            (tar tzf … | grep x86_64  → empty)
+            DONE: 0 x86_64 paths; contains usr/bin/git (e_machine=b700),
+            usr/sbin/sshd, root/.gitconfig, bin/entry.
+
+* DONE Arm64 install script + combined smoke test [3/3]
+      - [X] Add install.arm64.sh to build/devbox-ubuntu-24.04-arm64/ mirroring
+            install.amd64.sh: extract the emacs tarball first, then the dev
+            pack(s), then ldconfig + source ~/.bashrc.
+            #+BEGIN_SRC sh
+              tar zxf arm64.emacs30.1_24.04.tar.gz -C /
+              tar zxf arm64.dev.base.24.04.tar.gz  -C /
+              # tar zxf arm64.dev.cc.24.04.tar.gz  -C /   # optional packs
+              ldconfig
+              source ~/.bashrc
+            #+END_SRC
+            Reference amd64: (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-24.04/install.amd64.sh" 1)
+            Reference arm 22.04: (link "/home/bazhou/data/dot-emacs/build/devbox-ubuntu-22.04/install.arm64.sh" 1)
+
+      - [X] Combined verify (shell B): fresh ubuntu:24.04 linux/arm64
+            container, run install.arm64.sh with BOTH tarballs present, then:
+            emacs --version | head -1     → GNU Emacs 30.1
+            git --version ; node --version ; python3 --version
+            emacs vterm load smoke (see Main Loop)
+            file $(command -v emacs) | grep -i aarch64
+            DONE: combined smoke GREEN — [2] Emacs 30.1 aarch64 [3] git 2.43.0
+            aarch64 (from devbox) [5] NC-OK [6] vterm [7] grammar install via
+            devbox git (no manual apt) [8] grammar.so aarch64 [9] PARSE-OK.
+            (node/python3 live only in language packs, not built for the base
+            deliverable — see the "dev.base only" scope note in Group 3.)
+
+      - [X] Update the flavor's README / project.org.txt with the arm64
+            build+pack+install steps so a fresh checkout can reproduce.
+            DONE: appended "Arm64 (aarch64) Ubuntu 24.04 tarballs" section to
+            (link "/home/bazhou/data/dot-emacs/build/project.org.txt" 1).
+
+* DONE Archive the arm64 port recipe [1/1]
+      - [X] Write a short note to
+            .github/REPL/fix.archive/arm64-24.04-port.md capturing: the exact
+            build/pack/install commands, any SONAME/tar.list diffs vs amd64,
+            native-comp-on-aarch64 gotchas, and the mac==linux/arm64 fact.
+            (No secrets.)
+            DONE: (link "/home/bazhou/data/dot-emacs/.github/REPL/fix.archive/arm64-24.04-port.md" 1)
+            — build platform/QEMU quirks; manifest regen method; and 5 gotchas:
+            (1) native-comp needs gcc-14 crt/libgccjit; (2) tree-sitter two
+            layers (core lib vs runtime-compiled grammar); (3) grammar compile
+            needs gcc-13 cc1 in /usr/libexec; (4) devbox Dockerfile couples
+            dev.base to all language packs → Dockerfile.base; (5) dev.base must
+            ship git's HTTPS ldd closure + ca-certificates.

@@ -1,0 +1,5 @@
+Host github
+     User git
+     HostName github.com
+     IdentityFile ~/.ssh/nx.rsa
+     ProxyCommand nc -X 5 -x host.docker.internal:8080 %h %p

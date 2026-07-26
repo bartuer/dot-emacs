@@ -411,3 +411,35 @@
         - [X] root can write /mnt/c folder
         - [X] use host not ip
         - [X] mac container access wsl need configure /etc/hosts
+* DONE Arm64 (aarch64) Ubuntu 24.04 tarballs [emacs + devbox] via Docker
+  Two relocatable arm64 tarballs, usable on Apple-Silicon macOS (Docker
+  Desktop linux/arm64 VM) AND native arm Linux. Built under QEMU on an
+  x86_64 WSL host (docker buildx --platform linux/arm64). Dedicated arm64
+  folders (HARD RULE 3a). Full recipe + gotchas:
+  .github/REPL/fix.archive/arm64-24.04-port.md
+  - [X] Emacs pack: build/emacs-30.1-treesitter-ubuntu-24.04-arm64/
+        ./build.macos.sh            # docker buildx --platform linux/arm64
+        ./pack.arm64.sh             # → arm64.emacs30.1_24.04.tar.gz (~256M)
+        - manifest arm64.tar.list regenerated from the image (0 x86_64,
+          0-missing); ships gcc-14 crt for native-comp AND gcc-13 cc1
+          (/usr/libexec/gcc/aarch64-linux-gnu/13/cc1) for runtime tree-sitter
+          grammar compile.
+  - [X] Devbox pack: build/devbox-ubuntu-24.04-arm64/
+        docker buildx build --platform linux/arm64 -f Dockerfile.base . \
+          -t caapi/arm64.devbox.base:24.04
+        ./pack.base.arm64.sh        # → arm64.dev.base.24.04.tar.gz (~18M)
+        - Dockerfile.base is base-only (ssh+git+config); the full Dockerfile
+          couples dev.base to the cc/rs/js/py/cs packs and is slow/fragile
+          under QEMU. Pack includes git's HTTPS ldd closure (libcurl-gnutls,
+          gnutls, krb5, …) + ca-certificates so `git clone https://…` works.
+  - [X] Install on target (both together):
+        build/devbox-ubuntu-24.04-arm64/install.arm64.sh
+        tar zxf arm64.emacs30.1_24.04.tar.gz -C /
+        tar zxf arm64.dev.base.24.04.tar.gz  -C /
+        ldconfig ; source ~/.bashrc
+  - [X] Combined smoke (fresh --platform linux/arm64 ubuntu:24.04): Emacs 30.1
+        aarch64, native-comp NC-OK, vterm, git(aarch64) from devbox, and the
+        end-to-end tree-sitter grammar install (Emacs downloads grammar from
+        the web + compiles on-target) → aarch64 grammar.so → PARSE-OK.
+  - mac == linux/arm64: building for --platform linux/arm64 yields the same
+    artifact that runs in Docker Desktop's Apple-Silicon VM and on arm Linux.

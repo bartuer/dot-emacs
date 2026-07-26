@@ -1,0 +1,19 @@
+{
+  "LanguageServerManager": {
+    "language_servers": {
+      "rust-analyzer": {
+        "argv": [
+          "/root/.cargo/bin/rust-analyzer"
+        ],
+        "languages": [
+          "rust"
+        ],
+        "mime_types": [
+          "text/x-rustsrc"
+        ],
+        "display_name": "Rust Analyzer",
+        "version": 2
+      }
+    }
+  }
+}

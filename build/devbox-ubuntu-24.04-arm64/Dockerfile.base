@@ -1,0 +1,47 @@
+# Base-only arm64 devbox image — produces arm64.dev.base.24.04.tar.gz
+# (git + openssh + parallel + shell config). No language packs.
+#
+# The full multi-stage Dockerfile couples dev.base to the cc/rs/js/py/cs
+# language-pack stages via COPY --from, forcing the entire polyglot chain
+# (cargo/npm/uv/dotnet) to build under QEMU — slow and fragile. The plan
+# (Group 3) scopes the arm64 deliverable to dev.base only, and the base
+# pack (final RUN below) needs ONLY ssh + git. This trimmed Dockerfile
+# builds that directly. Build the language packs later from the full
+# Dockerfile if/when needed.
+#
+#   docker buildx build --progress=plain --platform linux/arm64 \
+#     -f Dockerfile.base . -t caapi/arm64.devbox.base:24.04
+
+FROM ubuntu:24.04 AS dev
+ENV DEV_PKG=/opt/arm64.dev.base.24.04.tar.gz
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+        apt-get install -y --no-install-recommends \
+        git openssh-client openssh-server parallel file ca-certificates
+
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN git config --global --add safe.directory /root/etc/el
+RUN git config --global user.name "Bartuer Zhou"
+RUN git config --global user.email "bartuer@gmail.com"
+RUN git config --global core.pager cat
+# No http.proxy: target uses direct internet (grammar clone from GitHub).
+
+COPY entry.sh /bin/entry
+RUN mkdir -p /root/.ssh
+COPY config /root/.ssh/config
+COPY authorized_keys /root/.ssh/authorized_keys
+COPY .bashrc /root/.bashrc
+RUN mkdir -p /root/local/bin
+COPY install.arm64.sh /root/local/bin/install.arm64.sh
+
+SHELL ["/bin/bash", "-c"]
+
+# dev.base pack is produced on the HOST by pack.base.arm64.sh (it computes a
+# validated file list from this image — ssh + git package files + git's HTTPS
+# runtime ldd closure (libcurl-gnutls, gnutls, krb5, …) + the ca-certificates
+# bundle — then tars it). Doing the list-build + validation on the host avoids
+# the fragile in-image `file | tar` pipeline (exit 2 under QEMU on a bad path).
+
+EXPOSE 22
+ENTRYPOINT ["/bin/entry"]
