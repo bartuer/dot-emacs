@@ -36,19 +36,23 @@
         APPEND-not-overwrite at install time, NOT removal from the tarball.
 
       Success criteria:
-      - [ ] `tar tzf arm64.dev.base.24.04.tar.gz` contains NO etc/ssh/sshd_config
-      - [ ] ...contains NO etc/ssh/ssh_host_* (private or public host keys)
-      - [ ] ...contains NO etc/ssh/ssh_config
-      - [ ] ...contains NO etc/ssh/moduli
-      - [ ] ...contains NO etc/pam.d/sshd
-      - [ ] root/.ssh/authorized_keys + root/.ssh/config ARE kept in the tarball
-      - [ ] install.arm64.sh APPENDS (dedup) the shipped authorized_keys to any
-            pre-existing /root/.ssh/authorized_keys instead of overwriting it
-      - [ ] Still contains the intended payload: sshd, ssh, scp, sftp,
+      - [X] `tar tzf arm64.dev.base.24.04.tar.gz` contains NO etc/ssh/sshd_config
+      - [X] ...contains NO etc/ssh/ssh_host_* (private or public host keys)
+      - [X] ...contains NO etc/ssh/ssh_config
+      - [X] ...contains NO etc/ssh/moduli
+      - [X] ...contains NO etc/pam.d/sshd
+      - [X] root/.ssh/authorized_keys is NOT shipped directly; it ships as the
+            STAGING file root/.ssh/authorized_keys.devbox. (root/.ssh/config was
+            DROPPED entirely — operator decision — since the container gets it
+            from the IMAGE and the host has a richer one to preserve.)
+      - [X] install.arm64.sh APPENDS (dedup) the shipped authorized_keys.devbox to
+            any pre-existing /root/.ssh/authorized_keys instead of overwriting it
+      - [X] Still contains the intended payload: sshd, ssh, scp, sftp,
             git + HTTPS closure, ca-certificates, /bin/entry, /root/.bashrc
-      - [ ] Extracting the new tarball on a scratch host preserves a working
+      - [X] Extracting the new tarball on the LIVE host preserved a working
             sshd_config (cloud AuthorizedKeysCommand + PasswordAuthentication intact)
-            and preserves any pre-existing operator key in authorized_keys
+            and preserved the pre-existing operator key in authorized_keys
+            (verified on this host: 2 keys, host fp unchanged, sshd -t OK).
 
 * Dependencies
       - Packer that builds the tarball (THE fix target):
@@ -257,25 +261,26 @@
             session; the scratch-rootfs dry-run + append-safety cover the same
             invariants. Left for the operator to run on a real box if desired.
 
-* TODO Commit & push the fixed scripts to GitHub
+* DONE Commit & push the fixed scripts to GitHub
       Only after Host-safe validation passes. Commit source changes ONLY
       (scripts) — never the rebuilt *.tar.gz artifact.
-      - [ ] Stage the edited packer/installer/Dockerfile:
-                  cd /root/local/src/dot-emacs
-                  git add build/devbox-ubuntu-24.04-arm64/pack.base.arm64.sh \
-                          build/devbox-ubuntu-24.04-arm64/pack.arm64.sh \
-                          build/devbox-ubuntu-24.04-arm64/install.arm64.sh \
-                          build/devbox-ubuntu-24.04-arm64/Dockerfile.base \
-                          .github/REPL/08.devbox.arm64.ssh-clobber.remove.org.txt
-      - [ ] Confirm no artifact/secret is staged:
-                  git status --porcelain | grep -E '\.tar\.gz$|nx\.rsa$' && echo "ABORT" || echo OK
-      - [ ] Commit:
-                  git commit -m "devbox arm64: stop clobbering host SSH (server config + host keys); append-safe root/.ssh"
-      - [ ] Push over SSH (per copilot-instructions.md "Pushing to GitHub over SSH"):
-                  git remote set-url origin git@github.com:bartuer/dot-emacs.git
-                  git push origin HEAD     # auth via ~/.ssh/nx.rsa (Host github alias)
-            Precondition: nx.rsa public half registered on the GitHub account;
-            `ssh -T git@github.com` must NOT say "Permission denied (publickey)".
+      - [X] Staged the edited packer/installer/Dockerfile/entry + native driver +
+            copilot-instructions + this plan doc (8 files). The .tar.gz is
+            gitignored (.gitignore:128) so it was never staged.
+      - [X] Confirmed no artifact/secret staged (grep .tar.gz|nx.rsa|nx.pub → none).
+      - [X] Committed: bd31a3f "devbox arm64: stop clobbering host SSH on tarball
+            extract" (8 files, +443/-8).
+      - [X] LIVE host validation before push: extracted the tarball with
+            `tar -zxf … -C /` on this host + ran the install merge, then audited —
+            ECS AuthorizedKeysCommand present, PasswordAuthentication yes,
+            host ed25519 fp unchanged (SHA256:K5lV4y/…), authorized_keys kept the
+            operator key + ADDED the dev key (2 lines), ~/.ssh/config 10 Host
+            blocks intact, `sshd -t` OK, ssh service active. Operator confirmed a
+            fresh SSH login still works → green light.
+      - [X] Pushed over SSH via ~/.ssh/nx.rsa (GIT_SSH_COMMAND, IdentitiesOnly):
+                  git push git@github.com:bartuer/dot-emacs.git HEAD:master
+            → 7234293..bd31a3f. Verified: remote refs/heads/master == bd31a3f.
+            (fetch URL left as https; only the push used the ssh URL.)
 
 * Notes
       - The emacs tarball (arm64.emacs30.1_24.04.tar.gz) ALSO ships
