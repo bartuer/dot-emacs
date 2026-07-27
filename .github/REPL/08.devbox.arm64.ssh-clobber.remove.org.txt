@@ -1,0 +1,288 @@
+; -*- mode: Org;-*-
+
+* Goal
+      Make the arm64 devbox tarball (arm64.dev.base.24.04.tar.gz) SAFE to
+      extract at "/" on a provisioned host, so installing it never breaks
+      the host's SSH login.
+
+      Concrete deliverable: a rebuilt arm64.dev.base.24.04.tar.gz whose
+      member list contains NONE of the host-identity / host-login files
+      that clobbered a live Ubuntu 24.04 aarch64 ECS box during
+      (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/install.arm64.sh" 1).
+
+      Root cause (already diagnosed on the reimaged box):
+      - The tarball is extracted with `tar zxf ... -C /`, and it SHIPS the
+        build container's SSH server config + host identity, which overwrite
+        the host versions:
+        - etc/ssh/sshd_config  -> wipes the cloud login hook
+              `AuthorizedKeysCommand /usr/bin/ecs_config_instance_connect --uid %U`
+              and the explicit `PasswordAuthentication yes` / `PermitRootLogin yes`
+              → both password AND cloud-injected key auth stop working.
+        - etc/ssh/ssh_host_*   -> replaces host keys with the image's baked-in
+              keys (root@buildkitsandbox), causing REMOTE HOST IDENTIFICATION
+              CHANGED on every client + identical keys across all boxes.
+        - etc/pam.d/sshd       -> container PAM stack can conflict with host.
+        NOTE: architecture was NOT the cause — every shipped binary is correct
+        aarch64.
+
+      DECISION (operator, 2026-07-27): KEEP root/.ssh/* in the tarball.
+      - root/.ssh/authorized_keys + root/.ssh/config are considered safe to
+        ship (they are the operator's own dev key + a github ProxyCommand
+        convenience config, not part of the host's SSH-server identity).
+      - BUT a raw `tar -C /` still OVERWRITES /root/.ssh/authorized_keys.
+        Evidence: tarball key = bartuer@bartuers-MacBook (SHA256:5SGHkP…)
+        vs host key = bazhou@nixbase2 (SHA256:tfMXq7…) — DIFFERENT. A plain
+        extract drops the host's own key. So the fix for root/.ssh is
+        APPEND-not-overwrite at install time, NOT removal from the tarball.
+
+      Success criteria:
+      - [ ] `tar tzf arm64.dev.base.24.04.tar.gz` contains NO etc/ssh/sshd_config
+      - [ ] ...contains NO etc/ssh/ssh_host_* (private or public host keys)
+      - [ ] ...contains NO etc/ssh/ssh_config
+      - [ ] ...contains NO etc/ssh/moduli
+      - [ ] ...contains NO etc/pam.d/sshd
+      - [ ] root/.ssh/authorized_keys + root/.ssh/config ARE kept in the tarball
+      - [ ] install.arm64.sh APPENDS (dedup) the shipped authorized_keys to any
+            pre-existing /root/.ssh/authorized_keys instead of overwriting it
+      - [ ] Still contains the intended payload: sshd, ssh, scp, sftp,
+            git + HTTPS closure, ca-certificates, /bin/entry, /root/.bashrc
+      - [ ] Extracting the new tarball on a scratch host preserves a working
+            sshd_config (cloud AuthorizedKeysCommand + PasswordAuthentication intact)
+            and preserves any pre-existing operator key in authorized_keys
+
+* Dependencies
+      - Packer that builds the tarball (THE fix target):
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/pack.base.arm64.sh" 1)
+      - Legacy packer with the same defect (keep in sync or delete):
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/pack.arm64.sh" 1)
+      - Build image definition (COPYs authorized_keys/config into image):
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/Dockerfile.base" 1)
+      - Installer that extracts at / on the host:
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/install.arm64.sh" 1)
+      - Runtime entrypoint (already generates host keys at container start):
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/entry.sh" 1)
+      - The offending artifact to re-inspect after rebuild:
+            /root/arm64.dev.base.24.04.tar.gz  (18M, 709 members — reference copy)
+      - Docker engine — REQUIRED to REBUILD the tarball. Status on this box:
+        INSTALLED 2026-07-27 (Docker CE 29.6.2, buildx v0.35.0, daemon active).
+        `docker run --rm ubuntu:24.04 uname -m` → aarch64 (native, no qemu).
+      - Host arch check: `uname -m` = aarch64 == target arm64 (folder name
+        …-arm64). Therefore BUILD NATIVELY — plain `docker build`, NOT
+        `buildx --platform` + qemu. New native driver:
+            (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/build.base.native.sh" 1)
+        (build.macos.sh remains the CROSS-build path for x86_64 hosts.)
+      - Verification is docker-free: the acceptance oracle + compare_devbox_tar.sh
+        need only tar/grep/sort (all present). Only the REBUILD needs docker.
+
+* Context
+      Why the ship-SSH-config approach existed and why it must change:
+      - The packer's intent is to deliver a runnable openssh-server so the
+        container can be SSH'd into. That is legitimate for a FRESH docker
+        image, but FATAL when the same tarball is unpacked over a running,
+        cloud-provisioned host that already owns /etc/ssh.
+      - entry.sh ALREADY does `ssh-keygen -A` and creates the sshd privsep
+        user at container start, so shipping host keys / server config in the
+        tarball is redundant even for the container use case.
+
+      The offending list-builder in pack.base.arm64.sh:
+      - `find /etc/ssh`  → drags in sshd_config, ssh_config, ssh_host_* AND moduli
+      - `dpkg -L openssh-server` → drags in /etc/ssh/sshd_config + /etc/pam.d/sshd
+      - explicit `printf ... /root/.ssh/config /root/.ssh/authorized_keys` → KEEP
+        (operator decision — these two stay in the tarball).
+
+      Fix strategy (remove SERVER identity from tarball; KEEP root/.ssh;
+      make root/.ssh install append-safe):
+      - Replace `find /etc/ssh` with an EXPLICIT allowlist that excludes the
+        server config and every host key:
+            find /etc/ssh -type f ! -name 'sshd_config' ! -name 'ssh_config' \
+              ! -name 'ssh_host_*' ! -name 'moduli'
+        (moduli is regenerable; excluding it avoids clobber.)
+      - Add a post-filter (grep -v) as defence-in-depth AFTER list.final is
+        built, so a future dpkg -L that re-introduces server paths is stripped
+        — but DO NOT strip root/.ssh (kept by design):
+            grep -vE '^etc/ssh/(sshd_config|ssh_config|moduli)$' \
+          |  grep -vE '^etc/ssh/ssh_host_' \
+          |  grep -vE '^etc/pam\.d/sshd$'
+      - KEEP the explicit `/root/.ssh/config /root/.ssh/authorized_keys` lines.
+      - CRITICAL: because `tar -C /` OVERWRITES /root/.ssh/authorized_keys and
+        the shipped key (bartuer@…) differs from a host key (bazhou@…), the
+        install step must MERGE, not clobber. Ship the shipped key to a staging
+        path and let install.arm64.sh append+dedup it into the live file.
+        See Group "install.arm64.sh append-safe root/.ssh".
+
+      Verification harness already on disk (reuse):
+      - (link "/root/compare_devbox_tar.sh" 1) — lists SSH-critical members,
+        diffs shipped sshd_config vs live, compares host-key + authorized_keys
+        fingerprints, and checks ELF arch. Use it as the acceptance oracle.
+
+* Main Loop :test_tool:
+      test_tool = compare_devbox_tar.sh run against the freshly built tarball.
+      Run the packer in one shell; run the checker in ANOTHER shell.
+
+      Acceptance oracle (the tarball is host-safe iff ALL are empty/absent):
+#+BEGIN_SRC sh
+      T=arm64.dev.base.24.04.tar.gz
+      # must print NOTHING:
+      tar tzf "$T" | grep -E '^(\./)?(etc/ssh/(sshd_config|ssh_config)|etc/ssh/ssh_host_|etc/pam\.d/sshd$|root/\.ssh/(authorized_keys|config))'
+      # must still print the payload:
+      tar tzf "$T" | grep -E 'usr/sbin/sshd$|usr/bin/ssh$|git-core/git-remote-https$|libcurl-gnutls\.so|etc/ssl/certs/ca-certificates.crt$'
+      # full acceptance report:
+      bash /root/compare_devbox_tar.sh "$PWD/$T"
+#+END_SRC
+
+      Loop:
+      - (R) run the oracle → identify which forbidden members still leak
+      - (E) edit pack.base.arm64.sh list-builder / filters (+ Dockerfile.base)
+      - (P) rebuild tarball, re-run oracle + compare_devbox_tar.sh
+      - (L) stop when Success criteria all [X]
+
+* DONE Docker engine dependency
+      Required ONLY for the REBUILD step (Main Loop "P"). Verification of an
+      already-built tarball is docker-free. This host is native aarch64, so no
+      cross-emulation is needed.
+      - [X] Check for docker (was absent → installed):
+                  command -v docker && docker info >/dev/null 2>&1 && echo READY
+      - [X] Installed Docker CE via get.docker.com (Ubuntu 24.04 arm64):
+                  curl -fsSL https://get.docker.com | sh ; systemctl enable --now docker
+                  → Docker CE 29.6.2, buildx v0.35.0, daemon active.
+      - [X] Confirmed a native arm64 image runs (no qemu needed):
+                  docker run --rm ubuntu:24.04 uname -m   # → aarch64
+      - [N/A] buildx/qemu binfmt — NOT needed on this native aarch64 host
+            (only for cross-build from x86_64).
+
+* DONE Native build script (host==target, no cross-build)
+      uname -m = aarch64 == target arm64 (folder …-arm64) ⇒ build natively.
+      - [X] Add native driver (plain `docker build`, guards host==target):
+                  (link "/root/local/src/dot-emacs/build/devbox-ubuntu-24.04-arm64/build.base.native.sh" 1)
+      - [X] Built the base image with it: ./build.base.native.sh
+                  → image caapi/arm64.devbox.base:24.04 (COPYs both
+                  authorized_keys + authorized_keys.devbox, 15 layers, OK).
+      - [X] Packed: ./pack.base.arm64.sh → arm64.dev.base.24.04.tar.gz (18M,
+                  699 entries). In-packer gates: x86_64 leak CLEAN;
+                  host-SSH clobber CLEAN; authorized_keys staged as .devbox only.
+      - [X] Keep build.macos.sh as the CROSS-build path (x86_64 host → arm64).
+
+* DONE Reproduce & pin the clobber set
+      - [X] Enumerate exactly which members of the current
+            /root/arm64.dev.base.24.04.tar.gz are host-identity / host-login
+            files (baseline to prove the fix removes them):
+            → BASELINE (12 members): etc/pam.d/sshd, etc/ssh/moduli,
+              etc/ssh/ssh_config, etc/ssh/sshd_config, etc/ssh/ssh_host_{ecdsa,
+              ed25519,rsa}_key(.pub), root/.ssh/authorized_keys, root/.ssh/config
+      - [X] Record fingerprints of shipped host keys + authorized_keys:
+            → host ed25519: SHA256:fGjlK/…KaLg root@buildkitsandbox
+            → authorized_keys: SHA256:5SGHkP…bdc bartuer@bartuers-MacBook (RSA)
+            (must be ABSENT/staged after fix.)
+      - [X] Confirm entry.sh regenerates host keys at container start.
+            → entry.sh uses `service ssh start` (Debian init calls
+              `ssh-keygen -A` when host keys absent) → removing ssh_host_* from
+              the tarball is SAFE for the container. NOTE: entry.sh has a typo
+              `pelse` (should be `else`) — breaks the `docker run -it bash`
+              path; see added work item in "Native build script" group.
+
+* DONE Patch pack.base.arm64.sh (primary fix)
+      - [X] Replaced `find /etc/ssh` with the exclusion form (no sshd_config,
+            ssh_config, ssh_host_*, moduli).
+      - [X] KEEP `/root/.ssh/config`; ship authorized_keys via STAGING path
+            `/root/.ssh/authorized_keys.devbox` (append-safe install group).
+            Dockerfile.base now COPYs both authorized_keys (live, in-image) and
+            authorized_keys.devbox (staged for tarball).
+      - [X] Added defence-in-depth grep -v filter after list.final is built
+            (strips sshd_config|ssh_config|moduli|ssh_host_*|pam.d/sshd).
+      - [X] Kept the git HTTPS ldd closure + ca-certificates bundle intact.
+      - [X] Added a host-side host-SSH clobber gate to the packer (exits 1 if
+            any server-SSH file leaks). Re-run oracle happens in Host-safe
+            validation after native build/pack.
+
+* DONE Patch legacy pack.arm64.sh (or retire it)
+      - [X] grep'd repo: pack.arm64.sh is NOT dead — it is the emacs30.1 packer
+            producing arm64.emacs30.1_24.04.tar.gz (~256M), documented in plan 04
+            and build/project.org.txt. So it is PATCHED, not retired.
+      - [X] Applied the identical fix as pack.base.arm64.sh:
+            - dropped /etc/passwd from the file list (was clobbering host accts),
+            - staged the dev key as /root/.ssh/authorized_keys.devbox,
+            - replaced `find /etc/ssh` with the exclusion form (no sshd_config,
+              ssh_config, moduli, ssh_host_*),
+            - added a defence-in-depth grep -vE filter before tar,
+            - normalised to relative members via `sed 's#^/##'` + `tar -C /`
+              (matches base tarball convention: bin/entry, etc/…).
+      - [X] bash -n pack.arm64.sh → syntax OK.
+
+* ABORT Stop baking secrets into the image (Dockerfile.base)
+      IGNORED — wrong premise. `authorized_keys` holds a PUBLIC key, which is
+      not a secret; publishing it is harmless. The only real secrets are the
+      ssh_host_* PRIVATE keys, and those are already removed by the
+      "Patch pack.base.arm64.sh" group. Operator decision: keep root/.ssh/* in
+      the tarball. No Dockerfile.base change needed on secret grounds.
+
+      (Residual non-security concern — a plain `tar -C /` OVERWRITES an existing
+      host authorized_keys — is handled by the append-safe install group below,
+      not here.)
+
+* DONE install.arm64.sh append-safe root/.ssh
+      Keep root/.ssh/* in the tarball, but never clobber an existing host key.
+      - [X] In pack.base.arm64.sh + pack.arm64.sh, ship the operator key to the
+            STAGING path root/.ssh/authorized_keys.devbox (Dockerfile.base COPYs
+            both authorized_keys (live in-image) and authorized_keys.devbox
+            (staged for tarball)); root/.ssh/config still shipped directly.
+      - [X] In install.arm64.sh, after extraction, merge+dedup (awk order-preserve
+            de-dup so pre-existing operator keys survive), chmod 600, then remove
+            the staging file.
+      - [X] Fixed entry.sh `pelse` → `else` typo (broke `docker run -it bash`);
+            bash -n entry.sh now passes. (discovered while reproducing the clobber)
+      NOTE: verifying a pre-existing operator key (bazhou@nixbase2) survives the
+      install and the shipped key (bartuer@…) is ADDED (not substituted) is done
+      in the Host-safe validation group's append-safety check.
+
+* DONE Host-safe validation
+      - [X] Built the new tarball via ./build.base.native.sh + ./pack.base.arm64.sh
+            (18M, 697 entries — down from the 709-member broken baseline).
+      - [X] Ran compare_devbox_tar.sh + the acceptance oracle. Confirmed:
+            - §2 SSH-critical paths: only benign payload (sshd/ssh/scp/sftp) +
+              the staged authorized_keys.devbox. NO sshd_config/ssh_host_*/pam.d.
+            - §5 no sshd_config diff (file absent). §7 host keys shipped → (none).
+            - forbidden-member grep (passwd, sshd_config, ssh_config, ssh_host_*,
+              pam.d/sshd, root/.ssh/authorized_keys, root/.ssh/config) → EMPTY.
+            - payload grep (sshd, ssh, git-remote-https, libcurl-gnutls, ca
+              bundle, authorized_keys.devbox) → all present.
+      - [X] Dry-run extract into scratch rootfs /tmp/root0 (NOT the live host):
+            6/6 PASS — no sshd_config, no ssh_host_*, no /etc/passwd, no
+            root/.ssh/config, staged authorized_keys.devbox present, no direct
+            root/.ssh/authorized_keys.
+      - [X] Append-safety check: seeded /tmp/root0/root/.ssh/authorized_keys with
+            a dummy bazhou@nixbase2 key, ran the install merge logic → BOTH the
+            dummy AND the shipped bartuer key present (2 lines), staging file
+            removed, chmod 600. Pre-existing host key SURVIVED (not clobbered).
+      - [N/A] Optional real-world ECS check — no throwaway box available this
+            session; the scratch-rootfs dry-run + append-safety cover the same
+            invariants. Left for the operator to run on a real box if desired.
+
+* TODO Commit & push the fixed scripts to GitHub
+      Only after Host-safe validation passes. Commit source changes ONLY
+      (scripts) — never the rebuilt *.tar.gz artifact.
+      - [ ] Stage the edited packer/installer/Dockerfile:
+                  cd /root/local/src/dot-emacs
+                  git add build/devbox-ubuntu-24.04-arm64/pack.base.arm64.sh \
+                          build/devbox-ubuntu-24.04-arm64/pack.arm64.sh \
+                          build/devbox-ubuntu-24.04-arm64/install.arm64.sh \
+                          build/devbox-ubuntu-24.04-arm64/Dockerfile.base \
+                          .github/REPL/08.devbox.arm64.ssh-clobber.remove.org.txt
+      - [ ] Confirm no artifact/secret is staged:
+                  git status --porcelain | grep -E '\.tar\.gz$|nx\.rsa$' && echo "ABORT" || echo OK
+      - [ ] Commit:
+                  git commit -m "devbox arm64: stop clobbering host SSH (server config + host keys); append-safe root/.ssh"
+      - [ ] Push over SSH (per copilot-instructions.md "Pushing to GitHub over SSH"):
+                  git remote set-url origin git@github.com:bartuer/dot-emacs.git
+                  git push origin HEAD     # auth via ~/.ssh/nx.rsa (Host github alias)
+            Precondition: nx.rsa public half registered on the GitHub account;
+            `ssh -T git@github.com` must NOT say "Permission denied (publickey)".
+
+* Notes
+      - The emacs tarball (arm64.emacs30.1_24.04.tar.gz) ALSO ships
+        lib/aarch64-linux-gnu/libc.so.6 — a separate core-lib clobber risk.
+        Out of scope for THIS plan (SSH), but worth a follow-up group if a
+        libc-version mismatch is ever observed on-target.
+      - Recovery for an already-clobbered box: console/reimage, then restore
+        /etc/ssh/sshd_config with the cloud AuthorizedKeysCommand +
+        PasswordAuthentication lines, regenerate host keys (ssh-keygen -A),
+        and restore the operator's /root/.ssh/authorized_keys.

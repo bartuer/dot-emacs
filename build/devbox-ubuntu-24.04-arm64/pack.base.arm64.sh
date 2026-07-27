@@ -30,11 +30,23 @@ set -e
   # ca-certificates bundle + source certs + symlinks
   find /etc/ssl/certs -type f -o -type l
   find /usr/share/ca-certificates -type f
-  # ssh config dir
-  find /etc/ssh
-  # explicit extras the container writes
-  printf "%s\n" /etc/passwd /etc/timezone \
-    /root/.ssh/config /root/.ssh/authorized_keys /root/.gitconfig /root/.bashrc \
+  # ssh CLIENT/host files ONLY — never the SERVER identity/config, which would
+  # clobber a live host on `tar -C /` (see plan 08). Exclude sshd_config,
+  # ssh_config, every ssh_host_* key, and moduli (all host-owned/regenerable).
+  find /etc/ssh -type f ! -name "sshd_config" ! -name "ssh_config" \
+    ! -name "ssh_host_*" ! -name "moduli"
+  # explicit extras the container writes.
+  # NOTE: authorized_keys is shipped to a STAGING path (authorized_keys.devbox)
+  # so `tar -C /` cannot overwrite an existing host authorized_keys;
+  # install.arm64.sh appends+dedups it. See plan 08 "append-safe root/.ssh".
+  # DROPPED (host clobber risk, plan 08):
+  #   - /etc/passwd — would overwrite host accounts.
+  #   - /root/.ssh/config — the container single-block Host github (with an
+  #     in-container ProxyCommand) would obliterate the operator rich host
+  #     ~/.ssh/config. The container still gets config via the IMAGE
+  #     (COPY config /root/.ssh/config in Dockerfile.base), not the tarball.
+  printf "%s\n" /etc/timezone \
+    /root/.ssh/authorized_keys.devbox /root/.gitconfig /root/.bashrc \
     /bin/entry /root/local/bin/install.arm64.sh
 } | grep -vE "/(share/doc|share/man|/man[0-9])/" \
   | sed "s#^/##" | sort -u > /tmp/list.raw
@@ -47,6 +59,17 @@ while read -r p; do
 done < /tmp/list.raw
 sort -u /tmp/list.final -o /tmp/list.final
 
+# defence-in-depth: even if a future dpkg -L re-introduces server identity
+# paths, strip them here so the tarball can NEVER clobber host SSH. Keep
+# root/.ssh/authorized_keys.devbox (staged); DROP etc/passwd and the live
+# root/.ssh/config (host clobber risk — see printf note above).
+grep -vE "^etc/ssh/(sshd_config|ssh_config|moduli)$" /tmp/list.final \
+  | grep -vE "^etc/ssh/ssh_host_" \
+  | grep -vE "^etc/pam\.d/sshd$" \
+  | grep -vE "^etc/passwd$" \
+  | grep -vE "^root/\.ssh/config$" > /tmp/list.safe
+mv /tmp/list.safe /tmp/list.final
+
 echo "list entries: $(wc -l < /tmp/list.final)"
 echo "x86_64 in list: $(grep -c x86_64 /tmp/list.final || true)"
 tar -C / -czf /out/'"$OUT"' -T /tmp/list.final
@@ -57,3 +80,14 @@ ls -lh "$OUT"
 echo -n "x86_64 leak: "; tar tzf "$OUT" | grep -i x86_64 && echo "LEAK!" || echo "CLEAN"
 echo -n "has git-remote-https + libcurl-gnutls + ca bundle: "
 tar tzf "$OUT" | grep -E 'git-core/git-remote-https$|libcurl-gnutls\.so|etc/ssl/certs/ca-certificates.crt$' | tr '\n' ' '; echo
+
+# host-safety gate: the tarball must NEVER carry server SSH identity/config.
+echo -n "host-SSH clobber check: "
+if tar tzf "$OUT" | grep -Eq '^(\./)?(etc/passwd|etc/ssh/(sshd_config|ssh_config|moduli)|etc/ssh/ssh_host_|etc/pam\.d/sshd|root/\.ssh/(authorized_keys|config))$'; then
+  echo "FAIL — host-clobber files leaked:"; tar tzf "$OUT" | grep -E '^(\./)?(etc/passwd|etc/ssh/(sshd_config|ssh_config|moduli)|etc/ssh/ssh_host_|etc/pam\.d/sshd|root/\.ssh/(authorized_keys|config))$'
+  exit 1
+else
+  echo "CLEAN (no passwd/sshd_config/ssh_config/moduli/ssh_host_*/pam.d/sshd/root .ssh authorized_keys|config)"
+fi
+echo -n "authorized_keys staged (not clobbering): "
+tar tzf "$OUT" | grep -E '^(\./)?root/\.ssh/authorized_keys(\.devbox)?$' | tr '\n' ' '; echo

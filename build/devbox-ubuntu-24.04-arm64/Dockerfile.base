@@ -30,7 +30,12 @@ RUN git config --global core.pager cat
 COPY entry.sh /bin/entry
 RUN mkdir -p /root/.ssh
 COPY config /root/.ssh/config
+# Ship the dev key as a STAGING file. The tarball packs authorized_keys.devbox
+# (NOT authorized_keys) so `tar -C /` on a host never overwrites an existing
+# /root/.ssh/authorized_keys; install.arm64.sh appends+dedups it. Also keep a
+# live authorized_keys inside the IMAGE so `service ssh start` works in-container.
 COPY authorized_keys /root/.ssh/authorized_keys
+COPY authorized_keys /root/.ssh/authorized_keys.devbox
 COPY .bashrc /root/.bashrc
 RUN mkdir -p /root/local/bin
 COPY install.arm64.sh /root/local/bin/install.arm64.sh

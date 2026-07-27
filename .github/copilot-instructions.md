@@ -101,7 +101,8 @@ tarball first, then the dev packs.
 - `<arch>.tar.list`           — explicit, deterministic file manifest to package
 - `tar.sh`                    — runs `tar czf … -T <arch>.tar.list` INSIDE container
 - `pack.sh`                   — `docker run … /opt/tar.sh` to emit the tarball
-- `build.macos.2.amd.sh` / `build.macos.sh` — `docker buildx build --platform …`
+- `build.macos.2.amd.sh` / `build.macos.sh` — CROSS-build via `docker buildx build --platform …` (host≠target)
+- `build.*.native.sh`        — NATIVE build via plain `docker build` (host==target; no qemu), guards `uname -m`
 - `run.sh` / `run.dev.sh`     — start a container from the built image (dev/ssh)
 - `install.<arch>.sh`         — `tar zxf … -C /` on the target
 - `copy.<arch>.sh`            — copy built `*.so` (tsc-dyn, grammars) back into repo
@@ -133,6 +134,17 @@ tarball first, then the dev packs.
 
 ## Cross-arch / macOS build notes (Docker Desktop)
 
+- **FIRST: check host arch vs target arch (`uname -m`).** The target is encoded
+  in the folder name (`…-arm64` ⇒ target arm64; no suffix / `amd64` ⇒ amd64).
+  - **Host arch == target arch ⇒ build NATIVELY. Do NOT cross-build.** Use a
+    plain `docker build -f Dockerfile.base . -t <img>` — no `--platform`, no
+    `buildx`, no qemu/binfmt. It is genuine target-arch output and much faster.
+    Example: on a native aarch64 host, build the arm64 devbox with
+    `build/devbox-ubuntu-24.04-arm64/build.base.native.sh` (guards host==target).
+  - **Host arch != target arch ⇒ cross-build** with
+    `docker buildx build --platform linux/<target>` (QEMU/binfmt emulation).
+    That is what `build.macos.sh` does (x86_64/Intel-mac or WSL host → arm64).
+    Register binfmt once if needed: `docker run --privileged --rm tonistiigi/binfmt --install <arch>`.
 - Apple-Silicon Macs build arm64 with `docker buildx build --platform linux/arm64`;
   Intel Macs / amd64 hosts build `--platform linux/amd64`. `buildx` cross-builds
   either way, but native-arch is much faster (use `caffeinate` on macOS to keep
@@ -144,6 +156,22 @@ tarball first, then the dev packs.
   line is already commented out).
 - `--platform` must be passed to BOTH `docker build` and the later `docker run`
   (pack/run) so the packaged libs match the intended arch.
+
+### Pushing to GitHub over SSH
+
+You can `git push` to GitHub directly over SSH (no HTTPS/PAT needed). Convention:
+
+```bash
+git remote set-url origin git@github.com:bartuer/dot-emacs.git
+git push origin HEAD          # authenticated via ~/.ssh/nx.rsa
+```
+
+The baked `~/.ssh/config` already defines a `Host github` alias
+(`HostName github.com`, `User git`, `IdentityFile ~/.ssh/nx.rsa`), so
+`git@github.com` resolves to that identity. The key is `~/.ssh/nx.rsa`
+(its public half must be registered on the GitHub account for pushes to
+succeed). On corp-net the same `config` routes GitHub SSH through the SOCKS
+proxy via `ProxyCommand nc -X 5 -x host.docker.internal:8080 %h %p`.
 
 ---
 
