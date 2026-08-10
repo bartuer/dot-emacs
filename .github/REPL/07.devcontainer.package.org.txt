@@ -1,4 +1,20 @@
-* Goal
+; -*- mode: Org;-*-
+
+#+TITLE: 07 devcontainer package
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+* Goal [4/5]
       Build an "arcadia" (non-Ubuntu) dev container image based on:
       - mcr.microsoft.com/officepy/codeexecutionjupyterext1
 
@@ -18,6 +34,8 @@
       - [X] The resulting tarballs extract under / (same contract as existing ubuntu tarballs)
       - [X] An updated install script can install the arcadia tarballs
       - [X] A small smoke test verifies Emacs + base toolchain inside the image
+      - [ ] The Arcadia dev.base tarball installs working ripgrep, jq, rsync,
+            and GNU parallel commands on a clean compatible target
 
 * Dependencies
       - Base image: mcr.microsoft.com/officepy/codeexecutionjupyterext1
@@ -32,6 +50,11 @@
       - Arcadia builders (this repo):
             - Emacs (Arcadia): (link "/home/bazhou/data/dot-emacs/build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/README.org.txt" 1)
             - Dev base (Arcadia): (link "/home/bazhou/data/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/README.org.txt" 1)
+      - Requested Arcadia dev.base additions:
+            - ripgrep (rg): fast recursive text search
+            - jq: JSON filtering and transformation
+            - rsync: incremental file synchronization
+            - parallel: GNU parallel command execution
 
 * Context
       Notes:
@@ -47,6 +70,13 @@
       - Existing script contract (example actions):
             - tar zxf amd64.emacs30.1_24.04.tar.gz -C /
             - tar zxf amd64.dev.base.24.04.tar.gz -C /
+      - The Arcadia dev.base package manifest is generated from the explicit
+        rpm package list in:
+            (link "/mnt/c/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/tar.sh" 1)
+      - Package availability and exact repository versions must be inspected
+        in the base image before changing the Dockerfile. If a requested tool
+        is absent from enabled tdnf repositories, stop at the decision gate
+        rather than silently adding a source build or an unpinned download.
 
 * Main Loop :test_tool:
       Iterate until tarballs build + extract cleanly:
@@ -172,3 +202,68 @@
             - python: 3.12.9 ✓
             - node: v22.20.0 ✓
             - ssh: OpenSSH_9.8p1 ✓
+
+* HALT Add CLI utilities to Arcadia dev.base [1/4]
+      :blocked:
+      - Windows/WSL Docker networking or endpoint security blocks the official
+        files.pythonhosted.org TLS handshake from inside the Azure Linux base:
+          SSLV3_ALERT_HANDSHAKE_FAILURE
+      - Host curl can reach the same artifact, but container curl and pip cannot.
+      - An alternate PyPI mirror probe succeeded, but it is intentionally not
+        adopted. The user will resume the official build on another machine.
+      - The jq, rsync, ripgrep, GNU parallel, manifest, and documentation edits
+        are already present in the working tree.
+      - Resume from the repository root with:
+        docker build --platform linux/amd64 \
+          -t mcr.microsoft.com/officepy/codeexecutionjupyterext1:dev.base.arcadia \
+          build/devbox-arcadia-azurelinux-3.0-photon-5.0
+
+      - [X] 07.1 Resolve package names and repository versions in the base image
+            - Probe with Docker using the existing amd64 Arcadia base image.
+            - Record the exact tdnf package name and candidate version for
+              ripgrep, jq, rsync, and GNU parallel.
+            - Confirm each package provides the expected command:
+              rg, jq, rsync, and parallel.
+            :test_tool: docker run --rm --platform linux/amd64 --entrypoint sh mcr.microsoft.com/officepy/codeexecutionjupyterext1 -lc 'tdnf list available ripgrep jq rsync parallel'
+            :interrupt: If any package is unavailable, ask whether to add a
+                        pinned source/RPM build or omit that tool.
+            - Resolution:
+              - jq: jq-1.7.1-8.azl3 from azurelinux-official-base
+              - rsync: rsync-3.4.3-1.azl3 from azurelinux-official-base
+              - ripgrep: unavailable from tdnf; user selected pinned upstream
+                ripgrep 14.1.1 x86_64-musl release, SHA-256
+                4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e
+              - GNU parallel: unavailable from tdnf; user selected pinned
+                upstream parallel 20250622 release, SHA-256
+                69f578cf11f1b124ba3c2b673a16641debe63aeb3d2ac4cec5ad65f8a53d489b
+
+      - [ ] 07.2 Add the resolved packages to the image and tarball manifest
+            - Add only the confirmed tdnf packages to the existing install RUN.
+            - Add the same rpm package names to PKGS in tar.sh so binaries,
+              libraries, documentation, and package-owned runtime files are
+              included in the root-extractable tarball.
+            - Do not alter the existing language-server packaging.
+            (link "/mnt/c/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 718)
+            (link "/mnt/c/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/tar.sh" 1)
+            :test_tool: docker build --platform linux/amd64 -t mcr.microsoft.com/officepy/codeexecutionjupyterext1:dev.base.arcadia build/devbox-arcadia-azurelinux-3.0-photon-5.0
+            - Current result: the new tdnf and verified upstream utility layers
+              build successfully; the later pre-existing
+              jedi-language-server pip step is blocked as documented above.
+
+      - [ ] 07.3 Rebuild the root-extractable Arcadia dev.base artifact
+            - Run pack.sh from its builder directory.
+            - Confirm amd64.arcadia.dev.base.azl3.0.tar.gz exists and contains
+              the four command paths without an extra top-level directory.
+            :test_tool: tar tzf build/devbox-arcadia-azurelinux-3.0-photon-5.0/amd64.arcadia.dev.base.azl3.0.tar.gz | grep -E '(^|/)(rg|jq|rsync|parallel)$'
+
+      - [ ] 07.4 Install and smoke-test in a separate clean container
+            - Start a fresh compatible base container, extract only the rebuilt
+              dev.base tarball at /, and run:
+                rg --version
+                jq --version
+                rsync --version
+                parallel --version
+            - Assert all four resolved binaries are x86-64 ELF executables or
+              valid scripts whose interpreters and runtime libraries exist.
+            - Keep verification separate from the image build/pack shell.
+            :test_tool: docker run --rm --platform linux/amd64 --entrypoint sh -v "$PWD/build/devbox-arcadia-azurelinux-3.0-photon-5.0:/opt:ro" mcr.microsoft.com/officepy/codeexecutionjupyterext1 -lc 'tar zxf /opt/amd64.arcadia.dev.base.azl3.0.tar.gz -C / && rg --version && jq --version && rsync --version && parallel --version'

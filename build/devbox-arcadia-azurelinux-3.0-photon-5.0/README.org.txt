@@ -7,7 +7,10 @@
   - amd64.arcadia.dev.base.azl3.0.tar.gz
 
 * Notes
-  - This should contain runtime tools you want available everywhere.
+  - Runtime tools include git, OpenSSH, file, jq, rsync, ripgrep, and GNU
+    parallel, plus the packaged language servers.
+  - jq and rsync are pinned Azure Linux RPMs. ripgrep and GNU parallel are
+    pinned upstream releases verified by SHA-256 in the Dockerfile.
   - Avoid dpkg/apt; use Arcadia package manager (likely tdnf).
   - The tarball must be extractable at filesystem root ("tar ... -C /").
 

@@ -12,6 +12,15 @@ execute them following the discipline encoded in the doc itself.
 The canonical prompt this skill encapsulates is
 [master.prompt.md](../../prompts/master.prompt.md "master prompt").
 
+## Skill boundaries
+
+| Skill       | Owns                                                        |
+|-------------|-------------------------------------------------------------|
+| `org_plan`  | Plan structure, ordering, checks, and annotations           |
+| `frontier`  | Consequential choices missing from the plan                 |
+| `kiss`      | Minimality audit of implementation and plan work            |
+| `exec_plan` | Commands, verification, and plan-state transitions          |
+
 ---
 
 ## Pre-flight — respect the project's dev process setup
@@ -26,19 +35,6 @@ current rules, and follow them. This skill intentionally does
 NOT restate any of those rules — dev-process specifics live only
 in the per-repo instruction files so a checkout in another repo
 inherits that repo's rules automatically.
-
----
-
-## What the user typically asks
-
-Real-world invocation patterns observed in the project's session history:
-
-- `exec plan '/workspace/OfficeAgent/.github/REPL/19.dataconnection.benchmark.org.txt'`
-- `/master.prompt.md exec plan 19 phase 16 '…/19.dataconnection.benchmark.org.txt'`
-- `go work on phase 17.1`
-- `try more, and ws rerun all cases`
-- `'/workspace/OfficeAgent/.github/prompts/master.prompt.md' exec plan 19 phase 16 …`
-- `/exec_plan '…/08.dataconnection.velixo.eval.org.txt' '…/19.dataconnection.benchmark.org.txt'`  ← multi-doc
 
 When the user names a specific phase (e.g. "phase 17.1"), scope execution
 to that work-item group only; otherwise execute from the first non-DONE
@@ -125,14 +121,14 @@ The CLI already logs every turn, tool call, and output — do not
 duplicate that work. Instead, read from it and pick the right tier
 for each write:
 
-| Tier                | Path / Tool                                                              | Timescale       | Owner        | When to use                                                                 |
-|---------------------|--------------------------------------------------------------------------|-----------------|--------------|------------------------------------------------------------------------------|
-| Rules               | `.github/copilot-instructions.md`                                        | forever         | human commit | Invariants — never violated (rg vs parallel, CRLF, ssh git identity, …)     |
-| Plan state          | `.github/REPL/NN.*.org.txt`                                              | days–weeks      | skill edit   | `[ ] / [X]`, counters, work items                                            |
-| Durable findings    | `.github/REPL/fix.archive/*.md`                                          | forever         | skill commit | Taxonomies, postmortems, recipes that outlive the session                    |
-| Session narrative   | `~/.copilot/session-state/$COPILOT_AGENT_SESSION_ID/checkpoints/`        | this run only   | CLI auto     | "Why did I do X on turn N" — CLI writes NNN-slug.md files automatically      |
-| Raw events          | `~/.copilot/session-state/$COPILOT_AGENT_SESSION_ID/events.jsonl` + `session.db` | this run only | CLI auto     | Every tool call, output, model choice — replay/debug of current run          |
-| Cross-session lookup| `session_store_sql` tool (DuckDB over `~/.copilot/session-store.db`)     | forever         | CLI + reader | "Have I hit this F-code / built this script / seen this error before?"       |
+| Tier                 | Path / Tool                                                                      | Timescale     | Owner        | When to use                                                             |
+|----------------------|----------------------------------------------------------------------------------|---------------|--------------|-------------------------------------------------------------------------|
+| Rules                | `.github/copilot-instructions.md`                                                | forever       | human commit | Invariants — never violated (rg vs parallel, CRLF, ssh git identity, …) |
+| Plan state           | `.github/REPL/NN.*.org.txt`                                                      | days–weeks    | skill edit   | `[ ] / [X]`, counters, work items                                       |
+| Durable findings     | `.github/REPL/fix.archive/*.md`                                                  | forever       | skill commit | Taxonomies, postmortems, recipes that outlive the session               |
+| Session narrative    | `~/.copilot/session-state/$COPILOT_AGENT_SESSION_ID/checkpoints/`                | this run only | CLI auto     | "Why did I do X on turn N" — CLI writes NNN-slug.md files automatically |
+| Raw events           | `~/.copilot/session-state/$COPILOT_AGENT_SESSION_ID/events.jsonl` + `session.db` | this run only | CLI auto     | Every tool call, output, model choice — replay/debug of current run     |
+| Cross-session lookup | `session_store_sql` tool (DuckDB over `~/.copilot/session-store.db`)             | forever       | CLI + reader | "Have I hit this F-code / built this script / seen this error before?"  |
 
 Read-before-work rule: for any non-trivial task, spend one
 `session_store_sql` query up front to check whether you (or another
@@ -188,13 +184,13 @@ agent) to emit the fleet invocation yourself.
 
 ### When to fleet
 
-| Situation | Action |
-|---|---|
-| User pastes 2+ `.org.txt` paths | Invoke `/fleet` |
-| User says "exec plans 17 and 19 in parallel" | Invoke `/fleet` |
-| User says "exec plan 19 phase 16 and phase 17" | Serial — same doc |
-| User says "exec plan 19" (single doc) | Direct execution, no fleet |
-| Plans share a sweep dir / dataset that mutates | Serial — tell user why |
+| Situation                                      | Action                     |
+|------------------------------------------------|----------------------------|
+| User pastes 2+ `.org.txt` paths                | Invoke `/fleet`            |
+| User says "exec plans 17 and 19 in parallel"   | Invoke `/fleet`            |
+| User says "exec plan 19 phase 16 and phase 17" | Serial — same doc          |
+| User says "exec plan 19" (single doc)          | Direct execution, no fleet |
+| Plans share a sweep dir / dataset that mutates | Serial — tell user why     |
 
 ### How to invoke `/fleet`
 
@@ -218,22 +214,6 @@ Or the user can type it directly in the GHCP CLI terminal:
 GHCP will create two subagent sessions, each inheriting the skill
 context. No manual `task()` wiring needed — the CLI handles lifecycle,
 cancellation, and result aggregation.
-
-### Before dispatching: pre-flight collision check
-
-Grep both plan docs for shared resources that would cause write races:
-
-```bash
-grep -hE ":test_tool:|docker.*run|sweep|dataset\.jsonl" plan-A.org.txt plan-B.org.txt
-```
-
-| Collision type | Example | Action |
-|---|---|---|
-| Same `:test_tool:` port | `:6010` in both | Serial |
-| Same docker container | `excel-agent` in both | Serial |
-| Same sweep directory | `dceval/_sweeps/` in both | Serial |
-| Same dataset write | `dataset.jsonl` in both | Serial |
-| No overlap | — | Fleet ✅ |
 
 ### Fleet safety rules
 
@@ -299,15 +279,15 @@ source of truth).
 Look for parallelism opportunities ONLY after picking the current
 work-item group (per the serial loop, step 1). Within that group:
 
-| Situation | Action |
-|---|---|
-| Items carry `:parallel_group: <tag>` markers (see below) | Fleet the tagged wave |
-| User explicitly says "do 17.1, 17.2, 17.3 in parallel" | Fleet those items |
-| Sweep-cell phase: N independent cases sharing a runner | Fleet (cap fan-out) |
-| Items have implicit ordering (item N reads item N-1's output) | Serial |
-| Items share a `:test_tool:` port / container / sweep dir | Serial |
-| Items mutate the same file (other than the plan doc itself) | Serial |
-| You are not sure | Serial — ask the user before fleeting |
+| Situation                                                     | Action                                |
+|---------------------------------------------------------------|---------------------------------------|
+| Items carry `:parallel_group: <tag>` markers (see below)      | Fleet the tagged wave                 |
+| User explicitly says "do 17.1, 17.2, 17.3 in parallel"        | Fleet those items                     |
+| Sweep-cell phase: N independent cases sharing a runner        | Fleet (cap fan-out)                   |
+| Items have implicit ordering (item N reads item N-1's output) | Serial                                |
+| Items share a `:test_tool:` port / container / sweep dir      | Serial                                |
+| Items mutate the same file (other than the plan doc itself)   | Serial                                |
+| You are not sure                                              | Serial — ask the user before fleeting |
 
 ### Author convention: `:parallel_group:` marker
 
@@ -340,30 +320,6 @@ Semantics:
    Waves execute serially in declaration order; items within a wave
    execute in parallel.
 4. **A lone-tagged item is just serial** — no benefit, no harm.
-
-### Pre-flight: intra-doc collision check
-
-Before dispatching a wave, scan the candidate items' sub-bullets for
-shared resources. Reuse the inter-doc collision rules verbatim:
-
-```bash
-# extract the wave's sub-bullet lines and grep for shared state
-awk '/^    - \[ \] 21\./,/^    - \[/' plan.org.txt \
-  | grep -hE ':test_tool:|docker.*run|sweep|dataset\.jsonl|:[0-9]{4,5}\b'
-```
-
-| Collision type | Example | Action |
-|---|---|---|
-| Same `:test_tool:` port | `:6010` in two items | Serial (drop one from wave) |
-| Same docker container name | `excel-agent` in two | Serial |
-| Same sweep / output dir | `dceval/_sweeps/run-A/` | Serial |
-| Same dataset write | `dataset.jsonl` append | Serial |
-| Only the plan doc itself | (every item edits it) | Fleet ✅ — orchestrator owns the edit |
-| Disjoint paths / ports | — | Fleet ✅ |
-
-If even one pair collides, either (a) drop the colliding item from the
-wave and run it serially after, or (b) abandon the wave and fall back
-to fully serial. When in doubt, ask the user.
 
 ### Plan-doc write serialization (critical)
 
@@ -440,32 +396,12 @@ After all subagents in a wave return:
 6. **Pre-flight collisions every wave** — don't trust historical safety;
    items get edited.
 
-### Mini-example
-
-User: `exec plan 21` and Phase 21 looks like the sample above.
-
-**Orchestrator:**
-
-1. Read plan 21, locate `* Phase 21`, find wave
-   `tool_smoke = {21.1, 21.2, 21.3}` and barrier `21.4`.
-2. Collision check on 21.1/21.2/21.3 sub-bullets — disjoint packages,
-   no shared ports → fleet OK.
-3. Dispatch:
-   ```
-   /fleet
-     exec_plan_item '…/21.foo.org.txt' 21.1
-     exec_plan_item '…/21.foo.org.txt' 21.2
-     exec_plan_item '…/21.foo.org.txt' 21.3
-   ```
-4. Wait. Collect: 21.1=PASS, 21.2=PASS, 21.3=FAIL(missing fixture).
-5. Single edit: flip 21.1 and 21.2 to `[X]`, bump `[0/4] → [2/4]`.
-   Leave 21.3 `[ ]` and add a `← blocked: missing fixture` note.
-6. Skip 21.4 (barrier depends on the wave) and report to user.
-
----
-
 ## Quick reference — common pitfalls
 
+- **Gold-plating an edit that already passes `:test_tool:`**
+  → violates `kiss`. The laziest passing diff is the right diff.
+- **Improvising past a blocker with no `:decision:` coverage**
+  → silent assumption. One `frontier` micro-round, record, resume.
 - **Editing `[ ] → [X]` and running its command in the same turn**
   → the command may fail and leave the doc lying about state. Run
   first, verify, then edit.
@@ -514,8 +450,8 @@ grep -hE ":test_tool:|docker.*run|sweep|dataset" \
 **Step 2 — fleet dispatch (GHCP CLI native)**
 ```
 /fleet
-  exec_plan '/workspace/OfficeAgent/.github/REPL/17.foo.org.txt'
-  exec_plan '/workspace/OfficeAgent/.github/REPL/19.bar.org.txt'
+  exec_plan '.github/REPL/17.foo.org.txt'
+  exec_plan '.github/REPL/19.bar.org.txt'
 ```
 GHCP creates two subagent sessions in parallel. Each runs the
 single-doc execution loop on its own plan, updates `[ ]→[X]`

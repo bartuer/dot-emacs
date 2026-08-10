@@ -1,12 +1,35 @@
 ---
 name: org_plan
-description: Use this skill create comprehensive plan document
+description: Author or edit a comprehensive Org-mode plan document under `.github/REPL/NN.<slug>.org.txt` — including `* Goal`, `* Dependencies`, `* Context`, phased `* TODO Phase N` work-item groups with `[ ]`/`[X]` checkboxes and `[N/M]` counters, `:test_tool:` verification bullets, `:interrupt:` open-question gates, and `* References`. Use when the user says "org_plan", "/org_plan", "author a plan", "draft a plan doc", "create plan NN", "add a work item to plan NN", "add a phase to plan …", "write a plan for …", "new plan doc", "extend plan …", "insert a work-item group into …", or supplies an `.org.txt` path and asks to modify its structure. Sister skill to `exec_plan` (which runs plans); this one only authors/edits them.
+location: project
 ---
 
 # Plan Doc Format Description
 
-### The Org mode plan document is an executable
+## Skill boundaries
 
+| Skill       | Owns                                                        |
+|-------------|-------------------------------------------------------------|
+| `org_plan`  | Plan structure, ordering, checks, and annotations           |
+| `frontier`  | Unresolved human decisions and rejected alternatives        |
+| `kiss`      | Minimality audit without weakening required coverage        |
+| `exec_plan` | Commands, verification, and plan-state transitions          |
+
+### Respect the project's dev process setup
+
+Every plan doc authored by this skill MUST include a top-of-file
+"respect the dev process setup" line pointing at the per-repo
+instruction files (see the "Generate Plan Doc" section below for
+the required header snippet).
+
+This skill stays project-agnostic. It does NOT enumerate the
+rules themselves — the plan doc points at the per-repo
+instruction files by relative path, and the executor is
+required to open and respect whatever is currently there.
+
+### The Org mode plan document is an executable
+    - If material decisions remain unresolved, invoke `frontier` before
+      authoring; skip it when the user has already settled them.
     - The structure of document imitate the logic in a piece of programming language:
       - *Goal*
         The final result user want to take away
@@ -48,8 +71,13 @@ description: Use this skill create comprehensive plan document
       - HALT
       so, if you find any necessary work item group add it without
       above label
-    - if you have something to summarize, add to fix.archive folder
-      with a short, meaningful name
+    - if you have something to summarize that is a durable finding
+      (taxonomy, postmortem, recipe), add to `.github/REPL/fix.archive/`
+      with a short, meaningful name and commit it.  Turn-level
+      narrative (why-I-did-X notes) belongs to CLI session memory at
+      `~/.copilot/session-state/$COPILOT_AGENT_SESSION_ID/checkpoints/`
+      — the CLI writes those automatically; do not hand-roll them
+      under `fix.archive/`.
 
 ### How to execute the plan
 
@@ -74,15 +102,52 @@ description: Use this skill create comprehensive plan document
 
 # Example
 
-[successul_executed_plan_doc](../../REPL/11.prompt.fingerprint.upgrade.org.txt "sample")
+[successul_executed_plan_doc](../../REPL/03.ollama.org.txt "sample")
 
 # Generate Plan Doc
+
+### required header — dev-process-respect line
+
+Every new plan doc MUST begin with a header block that (a) states
+the plan title / number, and (b) explicitly tells the executor to
+respect this project's per-repo instructions. Do NOT enumerate
+the rules in the plan doc itself — a plan should stay portable
+across dev-process changes.
+
+Canonical template — paste at the very top of every new
+`.github/REPL/NN.<slug>.org.txt`, before the first `* Goal`:
+
+```org
+; -*- mode: Org;-*-
+
+#+TITLE: <plan-number> <plan-slug>
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+```
 
 ### save user plan document at request path or by default alongside the example plan doc
 
 ### after finish the draft of plan document
 
 #### review with critique mindset
+    - review with the `kiss` skill (audit mode): walk every work
+      item down the ladder — does it need to exist (YAGNI)? can
+      groups collapse to fewer ckps? is each item the laziest
+      version that still meets its :test_tool: criteria?
+    - verify the "Dev process setup" block is present at the top
+      of the plan doc (before `* Goal`), pointing at the per-repo
+      instruction files.
     - add necessary reference and context
       - url
       - (link "path") to local file

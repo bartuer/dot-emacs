@@ -3,7 +3,7 @@ set -eu
 
 # For dev.base we package files from the packages we explicitly installed
 # (git, openssh-clients, openssh-server, glibc-lang, glibc-i18n when available,
-# file) plus SSH config.
+# file, jq, rsync) plus SSH config and pinned upstream commands.
 # Base-image packages are NOT included — they're already there at runtime.
 
 OUT=/opt/amd64.arcadia.dev.base.azl3.0.tar.gz
@@ -11,10 +11,21 @@ OUT=/opt/amd64.arcadia.dev.base.azl3.0.tar.gz
 # Collect files from the packages we added on top of base,
 # plus entry point and shell config.
 FLIST=$(mktemp)
-PKGS="git openssh-clients openssh-server glibc-lang file"
+PKGS="git openssh-clients openssh-server glibc-lang file jq rsync"
 if rpm -q glibc-i18n >/dev/null 2>&1; then
   PKGS="$PKGS glibc-i18n"
 fi
+
+# Include RPM-owned runtime libraries introduced by jq and rsync.
+RUNTIME_PKGS=$(
+  for cmd in jq rsync; do
+    ldd "$(command -v "$cmd")" 2>/dev/null \
+      | awk '/=> \// { print $3 } /^\// { print $1 }'
+  done \
+    | while read -r lib; do rpm -qf "$lib" 2>/dev/null || true; done \
+    | sort -u
+)
+PKGS="$PKGS $RUNTIME_PKGS"
 
 rpm -ql $PKGS 2>/dev/null \
   | sort -u \
@@ -25,6 +36,8 @@ echo root/.bashrc >> "$FLIST"
 echo root/.gitconfig >> "$FLIST"
 echo root/.ssh/config >> "$FLIST"
 echo root/.ssh/authorized_keys >> "$FLIST"
+echo usr/local/bin/rg >> "$FLIST"
+echo usr/local/bin/parallel >> "$FLIST"
 
 # Pre-generated SSH host keys (from ssh-keygen -A in Dockerfile)
 find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \

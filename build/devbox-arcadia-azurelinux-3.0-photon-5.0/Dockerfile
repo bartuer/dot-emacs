@@ -6,6 +6,11 @@
 
 FROM mcr.microsoft.com/officepy/codeexecutionjupyterext1
 
+ARG RIPGREP_VERSION=14.1.1
+ARG RIPGREP_SHA256=4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e
+ARG PARALLEL_VERSION=20250622
+ARG PARALLEL_SHA256=69f578cf11f1b124ba3c2b673a16641debe63aeb3d2ac4cec5ad65f8a53d489b
+
 # Install missing baseline tools.
 # curl, tar, findutils, ca-certificates already in base.
 RUN tdnf install -y \
@@ -14,8 +19,31 @@ RUN tdnf install -y \
         openssh-server \
         glibc-lang \
         file \
+        jq-1.7.1-8.azl3 \
+        rsync-3.4.3-1.azl3 \
     && (tdnf install -y glibc-i18n || true) \
     && tdnf clean all
+
+# ripgrep is not available in the Azure Linux repositories. Install its
+# upstream static-musl release and verify the archive before extraction.
+RUN set -eu; \
+    archive="ripgrep-${RIPGREP_VERSION}-x86_64-unknown-linux-musl.tar.gz"; \
+    curl -fsSLO "https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/${archive}"; \
+    printf '%s  %s\n' "$RIPGREP_SHA256" "$archive" | sha256sum -c -; \
+    tar xzf "$archive"; \
+    install -m 0755 "ripgrep-${RIPGREP_VERSION}-x86_64-unknown-linux-musl/rg" /usr/local/bin/rg; \
+    rm -rf "$archive" "ripgrep-${RIPGREP_VERSION}-x86_64-unknown-linux-musl"
+
+# GNU parallel is also absent from the repositories. Its command is a
+# self-contained Perl script, so install only that command from the verified
+# upstream release rather than adding a build toolchain.
+RUN set -eu; \
+    archive="parallel-${PARALLEL_VERSION}.tar.bz2"; \
+    curl -fsSLO "https://ftp.gnu.org/gnu/parallel/${archive}"; \
+    printf '%s  %s\n' "$PARALLEL_SHA256" "$archive" | sha256sum -c -; \
+    tar xjf "$archive"; \
+    install -m 0755 "parallel-${PARALLEL_VERSION}/src/parallel" /usr/local/bin/parallel; \
+    rm -rf "$archive" "parallel-${PARALLEL_VERSION}"
 
 # Language servers for Emacs eglot integration.
 #   - jedi-language-server                    : python-mode / python-ts-mode (PyPI)
