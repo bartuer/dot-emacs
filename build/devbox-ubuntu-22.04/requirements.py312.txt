@@ -3,7 +3,7 @@ sentence-transformers==3.0.1
 #tbb==2022.x0.0 for MKL
 numba==0.59.0
 numpy==1.26.4
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 azure-identity==1.19.0
 openai==1.84.0
 langchain-openai==0.3.21
