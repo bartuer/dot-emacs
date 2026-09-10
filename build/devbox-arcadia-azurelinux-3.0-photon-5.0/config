@@ -1,8 +1,9 @@
 Host host
-     Hostname 172.25.159.143
+     Hostname host.docker.internal
      StrictHostKeyChecking no
      IdentityFile ~/.ssh/nx.rsa
      ForwardAgent yes
+     Port 2200
      User root
 
 Host github

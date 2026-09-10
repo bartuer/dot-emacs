@@ -4,6 +4,30 @@
 # Pre-installed in base: curl, tar, findutils, gcc, make, node v22, python 3.12
 # Install only missing baseline tools for dev workflow.
 
+# Build stage: compile the calamine "silo" READ engine from source.
+# calamine PR #683 (chart reading) is unmerged upstream, so we pin it by SHA
+# via the pull ref. The silo SOURCE is copied from the build context
+# (silo/main.rs, silo/Cargo.toml) -- it lives in a separate repo under active
+# development, so we build the snapshot present at build time, not a git ref.
+# The Cargo.toml pins calamine by a dev-box path; we rewrite it to the in-image
+# clone below. The binary is self-contained (libgcc_s/libc only).
+FROM mcr.microsoft.com/officepy/codeexecutionjupyterext1 AS rustbuild
+ARG CALAMINE_SHA=d69ae3cda8725fd864269ecffe458e022050a23b
+RUN tdnf install -y rust gcc glibc-devel binutils kernel-headers git \
+    && tdnf clean all
+WORKDIR /opt/calamine
+RUN git clone --no-checkout https://github.com/tafia/calamine.git . \
+    && git fetch --force origin "refs/pull/683/head:pr683" \
+    && git checkout --force pr683 \
+    && test "$(git rev-parse HEAD)" = "$CALAMINE_SHA" \
+    && test -f src/chart.rs
+COPY silo/main.rs /opt/silo/src/main.rs
+COPY silo/Cargo.toml /opt/silo/Cargo.toml
+# Repoint the dev-box calamine path at the in-image clone.
+RUN sed -i 's#calamine={path="[^"]*"}#calamine={path="/opt/calamine"}#' /opt/silo/Cargo.toml \
+    && cargo build --release --manifest-path /opt/silo/Cargo.toml \
+    && install -m 0755 /opt/silo/target/release/silo /usr/local/bin/silo
+
 FROM mcr.microsoft.com/officepy/codeexecutionjupyterext1
 
 ARG RIPGREP_VERSION=14.1.1
@@ -13,14 +37,18 @@ ARG PARALLEL_SHA256=69f578cf11f1b124ba3c2b673a16641debe63aeb3d2ac4cec5ad65f8a53d
 
 # Install missing baseline tools.
 # curl, tar, findutils, ca-certificates already in base.
+# perl is required at runtime by GNU parallel (a Perl script).
 RUN tdnf install -y \
         git \
+        git-lfs-3.6.1-5.azl3 \
         openssh-clients \
         openssh-server \
         glibc-lang \
         file \
         jq-1.7.1-8.azl3 \
         rsync-3.4.3-1.azl3 \
+        htop-3.2.2-1.azl3 \
+        perl \
     && (tdnf install -y glibc-i18n || true) \
     && tdnf clean all
 
@@ -44,6 +72,10 @@ RUN set -eu; \
     tar xjf "$archive"; \
     install -m 0755 "parallel-${PARALLEL_VERSION}/src/parallel" /usr/local/bin/parallel; \
     rm -rf "$archive" "parallel-${PARALLEL_VERSION}"
+
+# silo (calamine READ engine: cells + formulas + charts in one pass) built
+# in the rustbuild stage.
+COPY --from=rustbuild /usr/local/bin/silo /usr/local/bin/silo
 
 # Language servers for Emacs eglot integration.
 #   - jedi-language-server                    : python-mode / python-ts-mode (PyPI)
@@ -79,6 +111,9 @@ RUN chmod +x /bin/entry
 COPY .bashrc /root/.bashrc
 COPY config /root/.ssh/config
 COPY authorized_keys /root/.ssh/authorized_keys
+# Docker bind-mounts /etc/resolv.conf in every container, masking any baked
+# layer. Ship as .baked; entry.sh copies it into place at container start.
+COPY resolv.conf /etc/resolv.conf.baked
 
 # Packaging scripts
 COPY tar.sh /opt/tar.sh

@@ -69,7 +69,7 @@ fi
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 # /app/officepy/bin exposes python3.12 + pip + jupyter + pip-installed LSPs
 # (jedi-language-server) so eglot/emacs subprocesses can find them.
-export PATH=~/local/bin:/app/copilot/bin:/app/officepy/bin:$PATH
+export PATH=~/local/bin:/app/copilot/bin:/app/node_modules/.bin:/app/officepy/bin:$PATH
 
 alias e='~/local/bin/emacs --daemon -nw'
 alias ed='~/local/bin/emacs --debug-init'
@@ -78,11 +78,27 @@ alias ec='~/local/bin/emacsclient -t'
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+                                                                                                   
+                                                                                                   
+# GHCP CLI clipboard shim (no-X path; writes to ~/.clipboard)
+export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-}"
+
+. "$HOME/.cargo/env"
+
+# added by scripts/env_check.sh -- ssg -- .venv on PATH
+# interactive convenience ONLY: skills/scripts call
+# .venv/bin/python explicitly and do not rely on this.
+export PATH="/workspace/OfficeAgent/agents/ssg-agent/.venv/bin:$PATH"
+
+# Skip the ADO device-flow yarn plugin locally (isInsidePipeline()==true);
+# auth comes from npmAuthToken in ~/.yarnrc.yml instead.
+export AGENT_ID="${AGENT_ID:-local-pat-bypass}"
+
 # 1. Set the provider type to 'openai' (Ollama uses the OpenAI-compatible API)
 export COPILOT_PROVIDER_TYPE="openai"
                                                                                                    
 # 2. Point to your local Ollama endpoint
-export COPILOT_PROVIDER_BASE_URL="http://172.25.159.143:11434/v1"
+export COPILOT_PROVIDER_BASE_URL="http://host.docker.internal:11434/v1"
                                                                                                    
 # 3. Specify the model name (as seen in 'ollama list')
 export COPILOT_MODEL="claude-opus-4-8"
@@ -94,5 +110,5 @@ export COPILOT_PROVIDER_API_KEY="ollama"
 export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-}"
 
 touch /root/.copilot-clipboard-shim.js
-alias harness="copilot --allow-all --resume"
-alias h="copilot --allow-all --resume"
+alias harness="copilot --allow-all --resume --autopilot"
+alias h="copilot --allow-all --resume --autopilot --model claude-opus-5"
