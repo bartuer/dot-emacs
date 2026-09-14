@@ -72,6 +72,9 @@
             - gcc-14=14.3.0-14ubuntu1
             - libgccjit0=14.3.0-14ubuntu1
             - libgccjit-14-dev=14.3.0-14ubuntu1
+      - Exact glibc target:
+            - libc6/libc-bin/libc-gconv-modules-extra/libc6-dev/libc-dev-bin
+              =2.43-2ubuntu2.4
       - Shell-helper runtime:
             - curl (already present)
             - jq=1.8.1-4ubuntu2, required by h() to parse /v1/models
@@ -350,6 +353,16 @@
               - ghe names gpt-5.6-sol, high effort, and long_context;
               - h is a shell function, not the obsolete plain alias.
             :test_tool: The final line is EMACS_26_04_VERIFY_OK.
+            - Final hardening result:
+              - WSL, image, and validation glibc packages are exactly
+                2.43-2ubuntu2.4.
+              - Only five byte-identical glibc development files are allowed;
+                core glibc runtime files are absent.
+              - gcc/libgccjit packages are exactly 14.3.0-14ubuntu1.
+              - A real x86-64 Elisp .eln compiles, loads, and executes.
+              - libtree-sitter.so.0.24 and tsc-dyn.so are x86-64.
+              - Language grammar .so files remain on-demand; embedded
+                historical build/ binaries are excluded.
 
       - [X] If verification fails, repeat the * Main Loop without weakening
             an assertion or copying core glibc files into the artifact.

@@ -5,8 +5,17 @@ WORKDIR /opt
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+COPY glibc.version /opt/glibc.version
+COPY libgccjit.version /opt/libgccjit.version
+
+RUN glibc_version="$(cat /opt/glibc.version)" \
+        && apt-get update && DEBIAN_FRONTEND=noninteractive \
         && apt-get install -y --no-install-recommends \
+        "libc6=${glibc_version}" \
+        "libc-bin=${glibc_version}" \
+        "libc-gconv-modules-extra=${glibc_version}" \
+        "libc6-dev=${glibc_version}" \
+        "libc-dev-bin=${glibc_version}" \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -38,11 +47,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         file
 
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+RUN gcc_jit_version="$(cat /opt/libgccjit.version)" \
+        && apt-get update && DEBIAN_FRONTEND=noninteractive \
         apt-get install -y --no-install-recommends \
-        gcc-14 \
-        libgccjit0 \
-        libgccjit-14-dev
+        "gcc-14=${gcc_jit_version}" \
+        "libgccjit0=${gcc_jit_version}" \
+        "libgccjit-14-dev=${gcc_jit_version}"
 
 ENV CC="gcc-14"
 
@@ -83,10 +93,12 @@ RUN cd ~/local/src/emacs-30.1 && \
 # RUN mkdir -p ~/etc
 # COPY ./el /root/etc/el
 
-RUN echo "repo d7de42c"
+ENV DOT_EMACS_COMMIT=0521e7e12aa6a6df6301a1793332e7ee78398d11
 RUN mkdir -p ~/etc && \
     cd ~/etc && \
     git clone https://github.com/bartuer/dot-emacs.git el && \
+    cd el && \
+    git checkout "$DOT_EMACS_COMMIT" && \
     cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy && \
     cp ~/etc/el/install/killemacs ~/local/bin/killemacs && \
     cp ~/etc/el/install/quote0 ~/local/bin/quote0 && \

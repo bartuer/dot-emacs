@@ -11,8 +11,8 @@ Measured on C01 on 2026-09-14.
 - Docker base digest:
   `sha256:513c074113a871b51a8d16ab445c88779d6452d937a164fb5cc479f32668a41d`
 - Source tree: `/workspace/dot-emacs`
-- Recovered source HEAD:
-  `353ad0578a11906854e1380b7fe2cc15b2df0d24`
+- Pinned dot-emacs source HEAD:
+  `0521e7e12aa6a6df6301a1793332e7ee78398d11`
 
 ## Why the existing 24.04 bundle is not the WSL artifact
 
@@ -122,21 +122,21 @@ Compilation ran only inside Docker.
 ```text
 image:
   caapi/amd64.emacs30.1:26.04
-  sha256:266d97645d08f39acad6168cd0c72bf12ebe7df2c77af3634ec408b168a1ec2f
+  sha256:fffd6a388c7b4b26ebd51e8a16af16d5b4fb01299a1d2724ab93d23f740ddabb
   architecture: amd64
-  size: 3313586545 bytes
+  size: 3313617620 bytes
 
 base:
   ubuntu@sha256:513c074113a871b51a8d16ab445c88779d6452d937a164fb5cc479f32668a41d
 
 manifest:
   amd64.tar.list
-  entries: 13735
+  entries: 13691
 
 artifact:
   amd64.emacs30.1_26.04.tar.gz
-  size: 403028464 bytes
-  sha256: afe0006f3cd68d096b9ec2075b649d2b67500c2b2fff2d91515c46af3391ee7f
+  size: 398967166 bytes
+  sha256: 186eef556332cf376811e474025f84c344c030cec1734a45db3075909a9d0142
 ```
 
 The artifact is generated locally and ignored by Git because it exceeds
@@ -161,24 +161,60 @@ cd build/emacs-30.1-treesitter-ubuntu-26.04
 ./verify.sh amd64.emacs30.1_26.04.tar.gz
 ```
 
+Install on the matching rebuilt WSL through the fail-closed wrapper:
+
+```bash
+sudo ./install.amd64.sh amd64.emacs30.1_26.04.tar.gz
+```
+
+The installer refuses to extract unless the target's `libc6`, `libc-bin`,
+`libc-gconv-modules-extra`, `libc6-dev`, and `libc-dev-bin` packages all
+exactly match `2.43-2ubuntu2.4`.
+
 The completed smoke test printed:
 
 ```text
 GNU Emacs 30.1
 jq-1.8.1
+GLIBC_EXACT_MATCH_OK version=2.43-2ubuntu2.4 overlap=5
 EMACS_26_04_VERIFY_OK
 ```
 
-The build image reported glibc `2.43-2ubuntu2.4`; the clean validation
-container reported glibc `2.43-2ubuntu2.3`. This patch-level difference is
-safe because the artifact contains none of the target's core loader,
-`libc.so.6`, or `libm.so.6`. Their checksums were unchanged by root
-extraction, and every Emacs and jq dependency resolved after `ldconfig`.
+The rebuilt WSL host, Docker image, and validation container all used exact
+glibc package version `2.43-2ubuntu2.4`. A stock `ubuntu:26.04` container at
+`2.43-2ubuntu2.3` was rejected before extraction.
+
+The artifact contains none of the target's core loader, `libc.so.6`, or
+`libm.so.6`. Every path owned by an installed package from source package
+`glibc` is rejected except this explicit native-comp development allowlist:
+
+```text
+usr/lib/x86_64-linux-gnu/crti.o
+usr/lib/x86_64-linux-gnu/crtn.o
+usr/lib/x86_64-linux-gnu/libc.a
+usr/lib/x86_64-linux-gnu/libc.so
+usr/lib/x86_64-linux-gnu/libc_nonshared.a
+```
+
+Those five files were byte-identical between WSL, the image, and the archive.
+Their checksums and the core runtime checksums were unchanged after root
+extraction.
 
 The final package also verified:
 
 - Emacs 30.1 and vterm are x86-64;
-- native compilation and tree-sitter are available;
+- gcc-14, libgccjit0, and libgccjit-14-dev are pinned to
+  `14.3.0-14ubuntu1`;
+- native compilation produced and loaded a real x86-64 `.eln`, returning the
+  expected result;
+- the assembler/linker runtime closure includes matching `libbfd`, `libctf`,
+  `libjansson`, and `libsframe`;
+- tree-sitter core `libtree-sitter.so.0.24` and `tsc-dyn.so` are x86-64;
+- language grammar `.so` files are intentionally compiled on demand from the
+  configured sources in `tree-sitter/treesit-compile.el`, not prebuilt in this
+  artifact;
+- embedded historical `root/etc/el/build/` files are excluded, preventing
+  stale arm64 grammar/modules from entering the amd64 archive;
 - tree-sitter remains pinned to `v0.24.7`;
 - emacs-libvterm remains pinned to
   `54c29d14bca05bdd8ae60cda01715d727831e3f9`;

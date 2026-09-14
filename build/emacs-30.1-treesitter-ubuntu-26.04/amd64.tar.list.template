@@ -13,6 +13,13 @@ usr/lib/x86_64-linux-gnu/libjq.so.1
 usr/lib/x86_64-linux-gnu/libjq.so.1.0.4
 usr/lib/x86_64-linux-gnu/libonig.so.5
 usr/lib/x86_64-linux-gnu/libonig.so.5.5.0
+usr/lib/x86_64-linux-gnu/libbfd-2.46-system.so
+usr/lib/x86_64-linux-gnu/libctf.so.0
+usr/lib/x86_64-linux-gnu/libctf.so.0.0.0
+usr/lib/x86_64-linux-gnu/libjansson.so.4
+usr/lib/x86_64-linux-gnu/libjansson.so.4.14.0
+usr/lib/x86_64-linux-gnu/libsframe.so.3
+usr/lib/x86_64-linux-gnu/libsframe.so.3.0.0
 usr/include/vterm.h
 usr/include/vterm_keycodes.h
 usr/lib/x86_64-linux-gnu/libvterm.so

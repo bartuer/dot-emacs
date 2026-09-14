@@ -1,0 +1,5 @@
+usr/lib/x86_64-linux-gnu/crti.o
+usr/lib/x86_64-linux-gnu/crtn.o
+usr/lib/x86_64-linux-gnu/libc.a
+usr/lib/x86_64-linux-gnu/libc.so
+usr/lib/x86_64-linux-gnu/libc_nonshared.a

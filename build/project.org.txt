@@ -462,20 +462,30 @@
         ./refresh-amd64-tar-list.sh
         ./pack.sh
         -> amd64.emacs30.1_26.04.tar.gz
-        -> 403028464 bytes
-        -> sha256 afe0006f3cd68d096b9ec2075b649d2b67500c2b2fff2d91515c46af3391ee7f
+        -> 398967166 bytes
+        -> sha256 186eef556332cf376811e474025f84c344c030cec1734a45db3075909a9d0142
   - [X] Manifest:
-        - 13735 entries generated from the completed 26.04 image
-        - excludes libc.so.6, libm.so.6, and ld-linux-x86-64.so.2
-        - contains no aarch64 paths
+        - 13691 entries generated from the completed 26.04 image
+        - excludes libc.so.6, libm.so.6, ld-linux-x86-64.so.2, and every
+          other glibc-owned path except five byte-identical native-comp
+          development files listed in glibc-dev.allow.list
+        - contains no aarch64 paths or embedded root/etc/el/build history
         - includes jq plus libjq/libonig runtime libraries
   - [X] Verify in a separate clean ubuntu:26.04 container:
         ./verify.sh amd64.emacs30.1_26.04.tar.gz
-        -> glibc checksums unchanged after tar -zxf ... -C /
+        -> WSL, image, and validation glibc packages exactly
+           2.43-2ubuntu2.4
+        -> fail-closed installer rejects 2.43-2ubuntu2.3 before extraction
+        -> core and allowed glibc checksums unchanged after extraction
         -> no missing Emacs or jq libraries
-        -> Emacs 30.1, native-comp, tree-sitter, vterm, x86-64 all pass
+        -> gcc/libgccjit exactly 14.3.0-14ubuntu1
+        -> a real Elisp .eln compiles, loads, and executes successfully
+        -> Emacs 30.1, tree-sitter core, tsc-dyn, vterm, x86-64 all pass
+        -> language grammar .so files compile on demand; stale build-tree
+           grammar binaries are not packaged
         -> packaged .bashrc has 127.0.0.1 provider, ghe gpt-5.6-sol,
            and dynamic h() model selection
+        -> GLIBC_EXACT_MATCH_OK version=2.43-2ubuntu2.4 overlap=5
         -> EMACS_26_04_VERIFY_OK
   - Full recipe and measurements:
         .github/REPL/fix.archive/emacs-30.1-ubuntu-26.04-build.md
