@@ -1,0 +1,398 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 09 build ubuntu 26.04 package
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+* Goal [7/7]
+      Complete the new, dedicated Docker-based Ubuntu 26.04 amd64 builder and
+      produce a relocatable Emacs package:
+
+        amd64.emacs30.1_26.04.tar.gz
+
+      The package must install with:
+
+        tar -zxf amd64.emacs30.1_26.04.tar.gz -C /
+
+      Success criteria:
+      - [X] The self-contained Ubuntu 26.04 image builds reproducibly with
+            Docker for linux/amd64; nothing is compiled on the host.
+      - [X] The package contains Emacs 30.1, tree-sitter v0.24.7, native
+            compilation, and the pinned emacs-libvterm module.
+      - [X] The manifest is generated from the completed 26.04 image and
+            contains no aarch64 paths or binaries.
+      - [X] The package excludes the target's core glibc files
+            (libc.so.6, libm.so.6, and ld-linux-x86-64.so.2).
+      - [X] Root extraction in a separate clean ubuntu:26.04 container
+            preserves the target glibc checksums and leaves no missing
+            runtime libraries.
+      - [X] The packaged /root/.bashrc preserves the current WSL shell
+            behavior: provider URL http://127.0.0.1:11434/v1, no global
+            COPILOT_MODEL pin, ghe using GitHub gpt-5.6-sol, and h selecting
+            a model from the live provider catalog.
+      - [X] The clean-container smoke test prints
+            EMACS_26_04_VERIFY_OK after Emacs, native-comp, tree-sitter,
+            vterm, architecture, shell configuration, and root-extraction
+            checks pass.
+
+* Dependencies
+      - Rebuilt Ubuntu 26.04 WSL on x86_64 with Docker available.
+      - Ubuntu base image:
+            ubuntu:26.04
+      - Existing in-progress builder:
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/Dockerfile" 1)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/.bashrc" 1)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/build.sh" 1)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/refresh-amd64-tar-list.sh" 1)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/pack.sh" 1)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/verify.sh" 1)
+      - Proven Ubuntu 24.04 amd64 builder, used only as structural reference:
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04/Dockerfile" 1)
+      - Durable Ubuntu 26.04 findings:
+            (link "/workspace/dot-emacs/.github/REPL/fix.archive/glibc-private-symbol-wsl26-vs-container24.md" 1)
+            (link "/workspace/dot-emacs/.github/REPL/fix.archive/emacs-30.1-ubuntu-26.04-build.md" 1)
+      - Current rebuilt-WSL shell configuration, used as the source of truth
+        for the provision block packaged as /root/.bashrc:
+            (link "/root/.bashrc" 3400)
+      - Load-bearing source pins; do not change without a new user decision:
+            - Emacs 30.1
+            - TREE_SITTER_TAG=v0.24.7
+            - EMACS_LIBVTERM_COMMIT=54c29d14bca05bdd8ae60cda01715d727831e3f9
+      - Ubuntu 26.04 native-comp compiler set currently selected:
+            - gcc-14=14.3.0-14ubuntu1
+            - libgccjit0=14.3.0-14ubuntu1
+            - libgccjit-14-dev=14.3.0-14ubuntu1
+      - Shell-helper runtime:
+            - curl (already present)
+            - jq=1.8.1-4ubuntu2, required by h() to parse /v1/models
+
+* Context
+      Facts established on 2026-09-14:
+
+      - The whole WSL distro has already been rebuilt as clean Ubuntu 26.04.
+        Rebuilding or repairing WSL is not part of this plan. Use the rebuilt
+        WSL only as the Docker host and final target.
+
+      - The Ubuntu 24.04 package is not safe to install over Ubuntu 26.04.
+        Its bundled glibc 2.39 files can create a mixed loader/runtime stack
+        on a glibc 2.43 target and trigger a GLIBC_PRIVATE symbol failure.
+
+      - A dedicated sibling builder already exists at:
+            build/emacs-30.1-treesitter-ubuntu-26.04/
+        It is the wholly separate build folder requested for this work. Keep
+        the proven 24.04, arm64, and Arcadia folders unchanged.
+
+      - Scope is Ubuntu 26.04 linux/amd64 Emacs packaging only. Do not add a
+        devbox flavor, an arm64 flavor, or unrelated language toolchains.
+        Arcadia is already correct for its Azure Linux target and is out of
+        scope.
+
+      - The current build log stops during the Emacs build after Docker step
+        15 completed; it does not show a completed image export. No
+        amd64.emacs30.1_26.04.tar.gz artifact exists yet.
+
+      - amd64.tar.list and amd64.tar.list.template both currently contain
+        13,832 entries inherited as a starting point. The final manifest must
+        be refreshed against the completed 26.04 image rather than trusted
+        as-is.
+
+      - build.sh is not currently executable. The other build, manifest,
+        pack, and verify scripts are executable.
+
+      - The verify script already protects the clean target's loader,
+        libc.so.6, and libm.so.6 with before/after checksums. Extend it only
+        where needed to make the Goal's native-comp and tree-sitter checks
+        explicit.
+
+      - The current rebuilt-WSL ~/.bashrc provision block is authoritative:
+            - COPILOT_PROVIDER_TYPE=openai
+            - COPILOT_PROVIDER_BASE_URL=http://127.0.0.1:11434/v1
+            - COPILOT_PROVIDER_API_KEY=ollama
+            - no global COPILOT_MODEL export
+            - ghe removes provider/model overrides and invokes GitHub
+              Copilot with --model gpt-5.6-sol --effort high,
+              --context long_context, --allow-all, and --resume
+            - h() fetches ${COPILOT_PROVIDER_BASE_URL%/}/models, parses model
+              IDs with jq, accepts an explicit model or interactive choice,
+              clears stale model override variables, and execs Copilot with
+              the selected provider model.
+
+      :decision: Package the current rebuilt-WSL ghe and h behavior, including
+                 jq=1.8.1-4ubuntu2, because the user explicitly requires the
+                 current ~/.bashrc, right loopback endpoint, and model setup.
+      :rejected: host.docker.internal or a hard-coded WSL address -- the
+                 rebuilt WSL uses mirrored networking and the current working
+                 endpoint is 127.0.0.1.
+      :rejected: A global hard-coded Claude model -- ghe must use GitHub
+                 gpt-5.6-sol and h must select from the provider catalog.
+
+      :decision: Build only from the dedicated
+                 build/emacs-30.1-treesitter-ubuntu-26.04/ folder.
+      :rejected: Modify the 24.04 or Arcadia builders -- those are separate
+                 target flavors and must remain intact.
+
+      - The rebuilt WSL host is x86_64 and matches the linux/amd64 target.
+        Build natively with plain docker build; do not use buildx, QEMU, or a
+        cross-platform build path.
+
+      - A clean Docker container can verify that the packaged .bashrc sources
+        and defines the correct helpers, but its own 127.0.0.1 is not the WSL
+        host. Probe the live /v1/models endpoint separately in rebuilt WSL
+        after the clean-container package test passes.
+
+      - Any new package, package-version substitution, source download, or pin
+        change beyond the dependency set documented above requires an
+        explicit user decision before editing or rebuilding.
+
+* Main Loop :test_tool:
+      Test tool = verify.sh running in a SEPARATE shell from the Docker build
+      and packaging shell.
+
+      Shell A builds and packages:
+      #+BEGIN_SRC sh
+        cd /workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04
+        ./build.sh
+        ./refresh-amd64-tar-list.sh
+        ./pack.sh
+        sha256sum amd64.emacs30.1_26.04.tar.gz
+      #+END_SRC
+
+      Shell B verifies the completed artifact in a fresh container:
+      #+BEGIN_SRC sh
+        cd /workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04
+        ./verify.sh amd64.emacs30.1_26.04.tar.gz
+      #+END_SRC
+
+      Iterate:
+      - (R) Read the build, manifest, pack, or verify failure.
+      - (E) Make the smallest correction in the 26.04 builder.
+      - (P) Rebuild/repack in shell A, then rerun verify.sh in shell B.
+      - (L) Stop only when verify.sh prints EMACS_26_04_VERIFY_OK and every
+            Goal checkbox is [X].
+
+* DONE Reconcile the existing 26.04 builder [5/5]
+      - [X] Confirm the rebuilt WSL host is healthy before using Docker:
+            #+BEGIN_SRC sh
+              test "$(uname -m)" = x86_64
+              ldd --version | head -1
+              /bin/true
+              docker info >/dev/null
+            #+END_SRC
+            :test_tool: WSL is x86_64, reports glibc 2.43, executes
+                        /bin/true, and reaches Docker.
+
+      - [X] Review the in-progress sibling against the 24.04 reference and
+            keep only changes required by Ubuntu 26.04, artifact naming, and
+            safe glibc handling.
+            - Preserve the source pins listed in * Dependencies.
+            - Preserve the separate builder folder; do not edit the 24.04
+              flavor.
+            - Ensure all scripts use caapi/amd64.emacs30.1:26.04 and the
+              26.04 artifact name consistently.
+            - Make build.sh use native plain docker build; do not use buildx,
+              QEMU, or --platform for this matching x86_64 host/target.
+
+      - [X] Confirm the documented native-comp package candidates in an
+            unmodified ubuntu:26.04 container before the next image build:
+            #+BEGIN_SRC sh
+              docker run --rm --platform linux/amd64 ubuntu:26.04 bash -lc '
+                apt-get update -qq
+                apt-cache policy gcc-14 libgccjit0 libgccjit-14-dev'
+            #+END_SRC
+            :test_tool: All three candidates resolve to 14.3.0-14ubuntu1.
+            :interrupt: If a candidate differs or is unavailable, state the
+                        exact package, version, and reason, then ask before
+                        changing the Dockerfile or any pin.
+
+      - [X] Align the packaged .bashrc with the current rebuilt-WSL
+            ~/.bashrc before building.
+            - Preserve the existing Emacs PATH, LD_LIBRARY_PATH, and e/ed/ec
+              definitions.
+            - Use http://127.0.0.1:11434/v1; do not use
+              host.docker.internal or a numeric WSL address.
+            - Do not export COPILOT_MODEL globally.
+            - Include ghe with gpt-5.6-sol, high effort, long_context,
+              provider-variable removal, --allow-all, and --resume.
+            - Include h() as the catalog-selecting shell function, not the
+              obsolete plain alias.
+            - Add jq=1.8.1-4ubuntu2 to the Dockerfile; curl is already present.
+            (link "/root/.bashrc" 3400)
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04/.bashrc" 1)
+            :test_tool: docker run --rm --platform linux/amd64 ubuntu:26.04 bash -lc 'apt-get update -qq && apt-cache policy jq | grep -F "Candidate: 1.8.1-4ubuntu2"'
+            :test_tool: bash -ic 'curl -fsS "${COPILOT_PROVIDER_BASE_URL%/}/models" | jq -e ".data | length > 0"; type ghe; type h; test -z "${COPILOT_MODEL+x}"'
+            :interrupt: If the rebuilt WSL loopback provider is unavailable,
+                        diagnose its service/networking; do not substitute a
+                        guessed IP or model.
+
+      - [X] Make the driver scripts reliably executable and fail-fast.
+            - Add executable permission to build.sh.
+            - Keep set -euo pipefail in scripts that perform build, manifest,
+              package, or verification work.
+            :test_tool: stat -c '%A %n' build.sh pack.sh tar.sh verify.sh refresh-amd64-tar-list.sh
+
+* DONE Complete the Docker image [3/3]
+      - [X] Build caapi/amd64.emacs30.1:26.04 in shell A.
+            #+BEGIN_SRC sh
+              cd /workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04
+              ./build.sh
+            #+END_SRC
+            - Keep build output outside committed source; build.26.04.log is a
+              local diagnostic, not a deliverable.
+            :test_tool: docker image inspect caapi/amd64.emacs30.1:26.04
+
+      - [X] Run read-only checks inside the completed image:
+            #+BEGIN_SRC sh
+              docker run --rm --entrypoint bash \
+                caapi/amd64.emacs30.1:26.04 -lc '
+                  ldd --version | head -1
+                  file /root/local/bin/emacs
+                  /root/local/bin/emacs -Q --batch \
+                    --eval "(princ emacs-version)"
+                  /root/local/bin/emacs -Q --batch \
+                    --eval "(princ (if (native-comp-available-p) \"NATIVE_COMP_OK\" \"NATIVE_COMP_MISSING\"))"
+                  /root/local/bin/emacs -Q --batch \
+                    --eval "(princ (if (treesit-available-p) \"TREESIT_OK\" \"TREESIT_MISSING\"))"'
+
+              docker run --rm --entrypoint bash \
+                caapi/amd64.emacs30.1:26.04 -ic '
+                  test "$COPILOT_PROVIDER_BASE_URL" = "http://127.0.0.1:11434/v1"
+                  test -z "${COPILOT_MODEL+x}"
+                  command -v curl
+                  command -v jq
+                  type ghe
+                  type h
+                  alias ghe | grep -F -- "--model gpt-5.6-sol"
+                  alias ghe | grep -F -- "--effort high"
+                  alias ghe | grep -F -- "--context long_context"'
+            #+END_SRC
+            :test_tool: glibc is 2.43, Emacs is 30.1 and x86-64, and both
+                        NATIVE_COMP_OK and TREESIT_OK are printed; the shell
+                        assertions also exit zero.
+
+      - [X] Confirm the pinned vterm module loads in the image before
+            packaging.
+            :test_tool: docker run --rm --platform linux/amd64 --entrypoint /root/local/bin/emacs caapi/amd64.emacs30.1:26.04 -Q --batch --eval '(add-to-list (quote load-path) "/root/etc/el/vendor/vterm")' --eval '(require (quote vterm))' --eval '(princ "VTERM_OK")'
+
+* DONE Generate the root-extractable package [4/4]
+      - [X] Regenerate amd64.tar.list from the completed image.
+            #+BEGIN_SRC sh
+              cd /workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04
+              ./refresh-amd64-tar-list.sh
+            #+END_SRC
+            :test_tool: The script prints MANIFEST_OK and reports no unmapped
+                        required entries.
+
+      - [X] Audit the generated manifest before packaging.
+            #+BEGIN_SRC sh
+              ! grep -Eq '(^|/)(libc\.so\.6|libm\.so\.6|ld-linux-x86-64\.so\.2)$' amd64.tar.list
+              ! grep -Eqi 'aarch64|aarch64-linux-gnu' amd64.tar.list
+              grep -qx 'root/local' amd64.tar.list
+              grep -qx 'root/etc/el' amd64.tar.list
+              grep -qx 'usr/local/lib/libtree-sitter.so.0.24' amd64.tar.list
+              grep -qx 'usr/bin/jq' amd64.tar.list
+            #+END_SRC
+            :test_tool: All commands exit zero.
+            - If jq or an ldd-reported jq runtime dependency is absent from
+              the inherited template, add its Ubuntu 26.04 package-owned
+              runtime path to amd64.tar.list.template and regenerate. Do not
+              hand-edit only the generated amd64.tar.list.
+
+      - [X] Package from / inside the image using the explicit manifest.
+            #+BEGIN_SRC sh
+              ./pack.sh
+            #+END_SRC
+            :test_tool: test -s amd64.emacs30.1_26.04.tar.gz
+
+      - [X] Inspect the tarball without extracting it.
+            #+BEGIN_SRC sh
+              tar tzf amd64.emacs30.1_26.04.tar.gz > /tmp/emacs-26.04.tar.paths
+              grep -q '^root/local/' /tmp/emacs-26.04.tar.paths
+              grep -q '^root/etc/el/' /tmp/emacs-26.04.tar.paths
+              ! grep -Eq '(^|/)(libc\.so\.6|libm\.so\.6|ld-linux-x86-64\.so\.2)$' /tmp/emacs-26.04.tar.paths
+              ! grep -Eqi 'aarch64|aarch64-linux-gnu' /tmp/emacs-26.04.tar.paths
+            #+END_SRC
+            :test_tool: All commands exit zero; there is no extra top-level
+                        packaging directory.
+
+* DONE Verify in a separate clean Ubuntu 26.04 container [3/3]
+      - [X] Extend verify.sh with explicit native-comp and tree-sitter
+            availability assertions plus interactive-shell assertions for
+            the provider URL, absence of a global model pin, curl/jq, ghe,
+            and h. Preserve its glibc checksum, architecture, ldd, Emacs, and
+            vterm checks.
+            :test_tool: bash -n verify.sh
+
+      - [X] From shell B, run the read-only package smoke test:
+            #+BEGIN_SRC sh
+              ./verify.sh amd64.emacs30.1_26.04.tar.gz
+            #+END_SRC
+            The test must:
+            - start from a fresh ubuntu:26.04 linux/amd64 container;
+            - checksum the target loader, libc.so.6, and libm.so.6 before and
+              after root extraction;
+            - run ldconfig and reject missing ldd dependencies;
+            - prove Emacs and vterm are x86-64, not aarch64;
+            - run Emacs 30.1, native-comp, tree-sitter, and vterm checks;
+            - source /root/.bashrc with bash -ic and prove:
+              - COPILOT_PROVIDER_BASE_URL is http://127.0.0.1:11434/v1;
+              - COPILOT_MODEL is not globally set;
+              - curl and jq resolve;
+              - ghe names gpt-5.6-sol, high effort, and long_context;
+              - h is a shell function, not the obsolete plain alias.
+            :test_tool: The final line is EMACS_26_04_VERIFY_OK.
+
+      - [X] If verification fails, repeat the * Main Loop without weakening
+            an assertion or copying core glibc files into the artifact.
+            - Not needed: the first complete clean-container verification
+              passed and printed EMACS_26_04_VERIFY_OK.
+            :interrupt: If success appears to require a new apt package,
+                        source download, version substitution, or pin change,
+                        state its exact version and purpose and ask the user
+                        before changing the builder.
+
+* DONE Finalize reproducibility records [3/3]
+      - [X] Record final image/base details, manifest count, artifact size,
+            SHA-256, shell-helper configuration, and successful smoke-test
+            output in:
+            (link "/workspace/dot-emacs/.github/REPL/fix.archive/emacs-30.1-ubuntu-26.04-build.md" 1)
+            Do not add host secrets, credentials, or the generated build log.
+
+      - [X] Update the top-level build journal with the exact build, refresh,
+            pack, install, and verify commands:
+            (link "/workspace/dot-emacs/build/project.org.txt" 1)
+
+      - [X] Review the final diff and repository state.
+            - Keep changes scoped to the 26.04 builder, this plan, and directly
+              related documentation.
+            - Do not commit generated diagnostic logs.
+            - Confirm every Goal checkbox and work-item group reflects the
+              verified final state before execution is declared complete.
+            :test_tool: git status --short
+
+* References
+      - Ubuntu 26.04 builder:
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-26.04" 1)
+      - Ubuntu 24.04 amd64 reference:
+            (link "/workspace/dot-emacs/build/emacs-30.1-treesitter-ubuntu-24.04" 1)
+      - Build and packaging journal:
+            (link "/workspace/dot-emacs/build/project.org.txt" 1)
+      - Existing September 14, 2026 plan:
+            (link "/workspace/dot-emacs/.github/REPL/03.emacs.bundle.org.txt" 1)
+      - Current rebuilt-WSL shell configuration:
+            (link "/root/.bashrc" 3400)
+      - Shared shell provision reference:
+            (link "/workspace/dot-emacs/build/bashrc_patch" 1)
+      - Ubuntu 26.04 build recipe:
+            (link "/workspace/dot-emacs/.github/REPL/fix.archive/emacs-30.1-ubuntu-26.04-build.md" 1)
+      - glibc failure postmortem:
+            (link "/workspace/dot-emacs/.github/REPL/fix.archive/glibc-private-symbol-wsl26-vs-container24.md" 1)

@@ -443,3 +443,39 @@
         the web + compiles on-target) → aarch64 grammar.so → PARSE-OK.
   - mac == linux/arm64: building for --platform linux/arm64 yields the same
     artifact that runs in Docker Desktop's Apple-Silicon VM and on arm Linux.
+
+* DONE Ubuntu 26.04 amd64 Emacs package
+  Rebuilt after a Ubuntu 24.04 root-extractable package overwrote Ubuntu
+  26.04 WSL glibc and caused a GLIBC_PRIVATE loader failure.
+
+  - [X] Dedicated builder:
+        build/emacs-30.1-treesitter-ubuntu-26.04/
+        - native x86_64 Docker build; no host compilation or QEMU
+        - Emacs 30.1
+        - tree-sitter v0.24.7
+        - gcc-14/libgccjit-14 native compilation
+        - pinned emacs-libvterm
+        - jq 1.8.1 for the packaged h() model selector
+  - [X] Build and package:
+        cd build/emacs-30.1-treesitter-ubuntu-26.04
+        ./build.sh
+        ./refresh-amd64-tar-list.sh
+        ./pack.sh
+        -> amd64.emacs30.1_26.04.tar.gz
+        -> 403028464 bytes
+        -> sha256 afe0006f3cd68d096b9ec2075b649d2b67500c2b2fff2d91515c46af3391ee7f
+  - [X] Manifest:
+        - 13735 entries generated from the completed 26.04 image
+        - excludes libc.so.6, libm.so.6, and ld-linux-x86-64.so.2
+        - contains no aarch64 paths
+        - includes jq plus libjq/libonig runtime libraries
+  - [X] Verify in a separate clean ubuntu:26.04 container:
+        ./verify.sh amd64.emacs30.1_26.04.tar.gz
+        -> glibc checksums unchanged after tar -zxf ... -C /
+        -> no missing Emacs or jq libraries
+        -> Emacs 30.1, native-comp, tree-sitter, vterm, x86-64 all pass
+        -> packaged .bashrc has 127.0.0.1 provider, ghe gpt-5.6-sol,
+           and dynamic h() model selection
+        -> EMACS_26_04_VERIFY_OK
+  - Full recipe and measurements:
+        .github/REPL/fix.archive/emacs-30.1-ubuntu-26.04-build.md
