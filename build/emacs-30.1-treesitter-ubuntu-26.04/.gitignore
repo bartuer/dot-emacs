@@ -1,3 +1,8 @@
+# The bundle is NOT committed here. It ships from the cluster repo's
+# archive/ as 120 MiB LFS split parts -- see archive/README.split.md there.
+# GitHub refuses files over 100 MB, and the ADO LFS endpoint refuses objects
+# over exactly 128 MiB (MEASURED 2026-09-15), so a 198 MiB bundle cannot go
+# whole to either remote.
 amd64.emacs30.1_26.04.tar.gz
 build.26.04.log
 amd64.tar.list.missing
