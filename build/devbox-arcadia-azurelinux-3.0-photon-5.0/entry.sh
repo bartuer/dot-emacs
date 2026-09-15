@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Install the baked DNS resolver config over Docker's runtime-managed
+# /etc/resolv.conf (which is a bind mount; the image layer alone is masked).
+if [ -f /etc/resolv.conf.baked ]; then
+    cat /etc/resolv.conf.baked > /etc/resolv.conf 2>/dev/null || true
+fi
+
 if [ $# -eq 0 ];
 then
     # docker run -d

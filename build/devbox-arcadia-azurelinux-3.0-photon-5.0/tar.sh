@@ -3,7 +3,9 @@ set -eu
 
 # For dev.base we package files from the packages we explicitly installed
 # (git, openssh-clients, openssh-server, glibc-lang, glibc-i18n when available,
-# file, jq, rsync) plus SSH config and pinned upstream commands.
+# file, jq, rsync, perl) plus SSH config and pinned upstream commands.
+# perl is packaged because GNU parallel (usr/local/bin/parallel) is a Perl
+# script whose interpreter must exist on the target.
 # Base-image packages are NOT included — they're already there at runtime.
 
 OUT=/opt/amd64.arcadia.dev.base.azl3.0.tar.gz
@@ -11,14 +13,20 @@ OUT=/opt/amd64.arcadia.dev.base.azl3.0.tar.gz
 # Collect files from the packages we added on top of base,
 # plus entry point and shell config.
 FLIST=$(mktemp)
-PKGS="git openssh-clients openssh-server glibc-lang file jq rsync"
+PKGS="git git-lfs openssh-clients openssh-server glibc-lang file jq rsync htop"
 if rpm -q glibc-i18n >/dev/null 2>&1; then
   PKGS="$PKGS glibc-i18n"
 fi
 
-# Include RPM-owned runtime libraries introduced by jq and rsync.
+# perl is a metapackage ("contains no files"); the interpreter lives in
+# perl-interpreter and the core modules in ~190 perl-* sub-packages.
+# GNU parallel (usr/local/bin/parallel) is a Perl script, so package them all.
+PERL_PKGS=$(rpm -qa | grep '^perl-' | sort)
+PKGS="$PKGS $PERL_PKGS"
+
+# Include RPM-owned runtime libraries introduced by jq, rsync, and htop.
 RUNTIME_PKGS=$(
-  for cmd in jq rsync; do
+  for cmd in jq rsync htop; do
     ldd "$(command -v "$cmd")" 2>/dev/null \
       | awk '/=> \// { print $3 } /^\// { print $1 }'
   done \
@@ -38,6 +46,7 @@ echo root/.ssh/config >> "$FLIST"
 echo root/.ssh/authorized_keys >> "$FLIST"
 echo usr/local/bin/rg >> "$FLIST"
 echo usr/local/bin/parallel >> "$FLIST"
+echo usr/local/bin/silo >> "$FLIST"
 
 # Pre-generated SSH host keys (from ssh-keygen -A in Dockerfile)
 find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \
@@ -45,6 +54,11 @@ find /etc/ssh -name 'ssh_host_*' -type f 2>/dev/null \
 
 # Custom sshd_config
 echo etc/ssh/sshd_config >> "$FLIST"
+
+# Baked DNS resolver config (shipped as .baked because Docker bind-mounts
+# /etc/resolv.conf in every container; entry.sh copies it into place at
+# container start). Not rpm-owned.
+echo etc/resolv.conf.baked >> "$FLIST"
 
 # --- LSP servers installed via pip (jedi-language-server + full transitive closure) ---
 # We must bundle ALL transitive deps because:
@@ -105,8 +119,11 @@ for mod in typescript typescript-language-server; do
   find "$NPM_GPREFIX/lib/node_modules/$mod" -type f 2>/dev/null \
     | sed 's|^/||' >> "$FLIST"
 done
-# npm wrapper scripts (symlinks → real files)
-for cmd in tsc tsserver typescript-language-server; do
+# npm wrapper scripts (symlinks → real files).
+# NOTE: the typescript package only exports `tsc` in its bin map; there is no
+# `tsserver` executable. typescript-language-server invokes tsserver
+# programmatically via node.
+for cmd in tsc typescript-language-server; do
   target=$(readlink -f "$NPM_GPREFIX/bin/$cmd" 2>/dev/null || true)
   [ -n "$target" ] && echo "${target#/}" >> "$FLIST"
   [ -e "$NPM_GPREFIX/bin/$cmd" ] && echo "${NPM_GPREFIX#/}/bin/$cmd" >> "$FLIST"

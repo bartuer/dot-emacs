@@ -280,6 +280,8 @@ If give a negative ARG, will undo the last mark action, thus the
 (autoload 'bartuer-python-load "~/etc/el/bartuer-python.el"
   "mode for python mode" t nil)
 (add-hook 'python-mode-hook 'bartuer-python-load)
+(add-to-list 'auto-mode-alist '("\\.h$" . c-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.c$" . c-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.rs$" . rust-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.cs$" . csharp-ts-mode))
