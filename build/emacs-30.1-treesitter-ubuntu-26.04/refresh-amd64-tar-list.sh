@@ -137,13 +137,24 @@ awk '
 ' "$candidate.uniq" > "$output"
 rm -f "$candidate" "$candidate.uniq"
 
+# A required path is satisfied either by its own line OR by an ancestor
+# directory that covers it -- the ancestor prune above deliberately drops
+# `usr/local/lib/libtree-sitter.so.0.24` once `usr/local/lib` is an entry,
+# and `tar -T` still archives the file. Testing for the literal line here
+# would reject a manifest that is in fact correct.
 for required in \
   root/local \
   root/etc/el \
   root/.emacs.el \
   root/.bashrc \
   usr/local/lib/libtree-sitter.so.0.24; do
-  grep -qx "$required" "$output" || {
+  covered=""
+  probe="$required"
+  while :; do
+    if grep -qxF "$probe" "$output"; then covered=1; break; fi
+    case "$probe" in */*) probe="${probe%/*}" ;; *) break ;; esac
+  done
+  [[ -n "$covered" ]] || {
     echo "Required manifest entry missing: $required" >&2
     exit 1
   }
