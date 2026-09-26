@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# cli-sessions.sh -- keep ~/.copilot/sessions true, and attach by name.
+#
+# The registry (box|session|plan|model|launched_utc) is WRITTEN at launch by
+# bin/plan-route.sh, but launch-time rows go stale: sessions die, humans
+# start CLIs by hand.  --refresh rebuilds it from the fleet itself: every
+# tmux session whose pane runs `copilot` on any reachable box.
+#
+# Usage:
+#   cli-sessions.sh --refresh        # rescan fleet, rewrite registry, print it
+#   cli-sessions.sh --list           # print registry as-is (no network)
+#   cli-sessions.sh <T>              # attach: ssh <box> -t tmux a -t <session>
+#   cli-sessions.sh all | <T>,<T>    # ONE local window, a tiled pane per session
+#   cli-sessions.sh <T> <message..>  # TYPE <message> into the CLI + Enter
+#   cli-sessions.sh all <message..>  # ... into every session
+#     <T> = full session name or a unique prefix: 36 -> 36-agent-room
+#     message `/exec_plan` with no path expands to the session's own plan.
+# Grid = LOCAL tmux session "cli-grid"; each pane ssh-attaches one remote
+# session, 6 panes per page (window; CLI_PAGE=n to change).  Prefix is C-a
+# so C-b still reaches the remote tmux.  Keys (after C-a):
+#   z        toggle tiled <-> full screen (zoom) for the current pane
+#   Tab/S-Tab next/prev pane, STAYING zoomed -> full-screen carousel (repeatable)
+#   o  q N   next pane / show numbers then press N to jump   (or mouse click)
+#   n  p  w  next / prev page / pick page from a tree      d  detach
+# The ~/.bashrc `cli` function is a thin wrapper around this script.
+set -uo pipefail
+
+REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"
+# Vendored into dot-emacs (install/cli) from cluster bin/cli-sessions.sh.
+# Box list: CLI_IPS (fleet-ips.json) if present, else the Host aliases
+# in ~/.ssh/config (wildcards dropped) -- so it works with no cluster repo.
+IPS="${CLI_IPS:-/workspace/cluster/bin/fleet-ips.json}"
+
+boxes() {
+    if [ -r "$IPS" ]; then
+        jq -r '.regions[].boxes|to_entries[]|select(.value!=null and .value!="")|.key' "$IPS"
+    else
+        awk '/^Host /{for(i=2;i<=NF;i++) if($i !~ /[*?]/) print $i}' "$HOME/.ssh/config" 2>/dev/null
+    fi | sort -uV
+}
+
+# Runs ON the box; prints box|session|plan|model|created for copilot panes.
+# shellcheck disable=SC2016
+PROBE='
+b=$1
+tmux list-panes -a -F "#{session_name}|#{pane_pid}|#{session_created}" 2>/dev/null |
+while IFS="|" read -r s pid c; do
+  a=$(ps --ppid "$pid" -o args= 2>/dev/null | grep -m1 "copilot") || continue
+  m=$(printf "%s" "$a" | grep -oE -- "--model [^ ]+" | cut -d" " -f2)
+  p=$(printf "%s" "$a" | grep -oE "/exec_plan [^ ]+" | cut -d" " -f2)
+  printf "%s|%s|%s|%s|%s\n" "$b" "$s" "${p:--}" "${m:--}" "$(date -u -d @"$c" +%FT%TZ)"
+done | sort -u -t"|" -k2,2'
+
+probe_one() {
+    local b="$1"
+    if [ "$b" = "${PLAN_SELF:-}" ] || [ "$(hostname -I 2>/dev/null | awk '{print $1}')" = \
+         "$(jq -r --arg b "$b" '.regions[].boxes[$b]//empty' "$IPS" 2>/dev/null)" ]; then
+        bash -c "$PROBE" _ "$b"
+    else
+        timeout 15 ssh -n -o BatchMode=yes -o ConnectTimeout=8 -o LogLevel=ERROR "$b" \
+            "bash -c $(printf %q "$PROBE") _ $b" 2>/dev/null
+    fi
+    return 0   # unreachable box must not abort xargs (255 = stop)
+}
+export -f probe_one; export PROBE IPS
+
+refresh() {
+    mkdir -p "$(dirname "$REG")"
+    boxes | xargs -P 16 -I{} bash -c 'probe_one {}' | sort -t'|' -k1,1V -k2,2 > "$REG.tmp" \
+        && mv "$REG.tmp" "$REG"
+}
+
+list() {
+    [ -s "$REG" ] || { echo "(no copilot sessions in $REG)"; return 0; }
+    printf '%-6s %-28s %-16s %-21s %s\n' BOX SESSION MODEL LAUNCHED PLAN
+    while IFS='|' read -r b s p m t; do
+        printf '%-6s %-28s %-16s %-21s %s\n' "$b" "$s" "$m" "$t" "${p##*/}"
+    done < "$REG"
+}
+
+# field 2 of the registry row for <T>: exact name, else UNIQUE prefix.
+row() {
+    local r
+    r=$(awk -F'|' -v s="$1" '$2==s' "$REG" 2>/dev/null)
+    [ -n "$r" ] || r=$(awk -F'|' -v s="$1" 'index($2,s)==1' "$REG" 2>/dev/null)
+    [ "$(printf '%s' "$r" | grep -c .)" = 1 ] && printf '%s\n' "$r"
+}
+resolve() {   # <T> -> row, refreshing once on a miss
+    local r; r=$(row "$1")
+    [ -n "$r" ] || { refresh; r=$(row "$1"); }
+    [ -n "$r" ] || { echo "cli: no unique session '$1'" >&2; list >&2; return 1; }
+    printf '%s\n' "$r"
+}
+lookup() { resolve "$1" 2>/dev/null | cut -d'|' -f1; }
+targets() {   # all | T[,T...] -> session names
+    if [ "$1" = all ]; then [ -s "$REG" ] || refresh; cut -d'|' -f2 "$REG"
+    else local t; for t in ${1//,/ }; do resolve "$t" | cut -d'|' -f2 || return 1; done; fi
+}
+
+# Type a line into the CLI's input box.  -l = literal (no key-name parsing:
+# a message containing "Enter" or "C-c" stays text).  Enter sent separately.
+# A BUSY autopilot queues it; an idle one runs it.
+send() {   # send <session> <message>
+    local r b s p m msg="$2"
+    r=$(resolve "$1") || return 1
+    IFS='|' read -r b s p _ <<<"$r"
+    [ "$msg" = /exec_plan ] && [ "$p" != - ] && msg="/exec_plan $p"
+    m=$(printf '%q' "$msg")
+    if timeout 20 ssh -n -o BatchMode=yes -o ConnectTimeout=8 -o LogLevel=ERROR "$b" \
+        "tmux send-keys -t '$s' -l -- $m && sleep 0.3 && tmux send-keys -t '$s' Enter"; then
+        printf '%-6s %-24s sent: %s\n' "$b" "$s" "$msg"
+    else
+        printf '%-6s %-24s FAILED\n' "$b" "$s" >&2; return 1
+    fi
+}
+
+grid() {   # grid <session>...  -- pages of CLI_PAGE panes (default 6), tiled
+    local g=cli-grid s box n=0 page=${CLI_PAGE:-6} cmd
+    command -v tmux >/dev/null || { echo "cli: tmux missing" >&2; exit 2; }
+    tmux has-session -t "$g" 2>/dev/null && tmux kill-session -t "$g"
+    for s in "$@"; do
+        box=$(lookup "$s")
+        [ -n "$box" ] || { echo "cli: skip unknown '$s'" >&2; continue; }
+        cmd="ssh -t $box tmux attach -t $s; echo '[$box/$s detached]'; read"
+        if [ $n = 0 ]; then
+            tmux new-session -d -s "$g" -x 240 -y 60 -n p1 "$cmd"
+            tmux set -t "$g" prefix C-a
+            tmux set -t "$g" mouse on
+            tmux set -t "$g" pane-border-status top
+            tmux set -t "$g" pane-border-format ' #{pane_index} #{pane_title} '
+            tmux set -t "$g" allow-rename off
+            tmux set -t "$g" set-titles off
+            # Tab / S-Tab: next / previous pane in this page, KEEPING zoom (-Z),
+            # so zoomed = full-screen carousel.  -r: repeat without re-prefix.
+            tmux bind -r Tab   select-pane -Z -t :.+
+            tmux bind -r BTab  select-pane -Z -t :.-
+        elif [ $((n % page)) = 0 ]; then
+            tmux new-window -t "$g" -n "p$((n / page + 1))" "$cmd"
+        else
+            tmux split-window -t "$g" "$cmd"
+        fi
+        tmux select-pane -t "$g" -T "$box/$s"
+        tmux set -p -t "$g" allow-set-title off 2>/dev/null
+        tmux select-layout -t "$g" tiled >/dev/null
+        n=$((n + 1))
+    done
+    [ $n -gt 0 ] || { echo "cli: nothing to attach" >&2; exit 1; }
+    tmux select-window -t "$g:p1"
+    [ -n "${CLI_NOATTACH:-}" ] && exit 0
+    if [ -n "${TMUX:-}" ]; then exec tmux switch-client -t "$g"
+    else exec tmux attach -t "$g"; fi
+}
+
+case "${1:-}" in
+    --refresh|-r) refresh; list ;;
+    --list|-l|'') list ;;
+    -h|--help)    sed -n '2,20p' "$0" ;;
+    *)
+        mapfile -t S < <(targets "$1") || exit 1
+        [ ${#S[@]} -gt 0 ] || exit 1
+        if [ $# -gt 1 ]; then          # message mode
+            shift; rc=0
+            for s in "${S[@]}"; do send "$s" "$*" || rc=1; done; exit $rc
+        fi
+        if [ "$1" = all ] || [ "${1#*,}" != "$1" ]; then grid "${S[@]}"; fi
+        exec ssh -t "$(lookup "${S[0]}")" tmux attach -t "${S[0]}"
+        ;;
+esac

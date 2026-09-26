@@ -112,3 +112,6 @@ export NODE_OPTIONS="--require /root/.copilot-clipboard-shim.js ${NODE_OPTIONS:-
 touch /root/.copilot-clipboard-shim.js
 alias harness="copilot --allow-all --resume --autopilot"
 alias h="copilot --allow-all --resume --autopilot --model claude-opus-5-5"
+
+# cli: fleet copilot session console (install/cli -> ~/local/bin/cli).
+complete -W "all \$(cut -d'|' -f2 ~/.copilot/sessions 2>/dev/null)" cli
