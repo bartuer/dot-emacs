@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [3/7]
+* Phase 3 — roll the refreshed bundle into the fleet [4/7]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [ ] 3.1 Untar into running officeagent-dev containers (they still
@@ -158,8 +158,12 @@
         archive 2af9f30; fleet-ssh -b all -> 30/31 on 7e8d707f.
         :test_tool: fixture: targets cj06 -> both cj06 sessions; OK.
   - [ ] 3.7 c13 populate 7e8d707f (banner-exchange timeout 12:50).
-  - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
+        12:45 retry: still banner-exchange timeout.
+  - [X] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
+        cluster b8522b9: IPS="${CLI_IPS:-$HERE/fleet-ips.json}", ssh-config
+        fallback, quiet jq.  Code (minus comments/IPS line) == install/cli;
+        boxes() -> 31 via json and via ~/.ssh/config.
   - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
         amd64.emacs30.1_26.04 (d342364, 2026-09-15) lists no
         root/local/bin/cli; its builder pins DOT_EMACS_COMMIT=0521e7e
