@@ -1,0 +1,142 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 38 dot-emacs cli bundle
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+  This plan is AUTHORED in the cluster repo and SHIPPED into the
+  dot-emacs checkout on c01 by `PLAN_REPO=/workspace/dot-emacs
+  bin/plan-route.sh` (ship mode, cluster 2026-09-26).  It executes
+  in /workspace/dot-emacs.  The authored copy is
+  cluster:.github/REPL/38.dot-emacs.cli.bundle.org.txt.
+
+* DONE Goal [3/3]
+  - [X] G1 CONTAINER DEFAULT MODEL IS claude-opus-5-5 — every
+        build/*/.bashrc and build/bashrc_patch that sets a Copilot
+        model (COPILOT_MODEL= or `alias h=... --model X`) says
+        claude-opus-5-5.
+        :test_tool: `rg -n 'COPILOT_MODEL=|--model claude' build/ | rg -v opus-5-5`
+                    prints nothing (ghe's gpt-5.6-sol alias is exempt).
+        PASS 2026-09-26: rg --hidden (the .bashrc files are dotfiles) empty.
+  - [X] G2 `cli` SHIPS IN THE BUNDLE — the fleet session console
+        (cli list / cli <T> attach / cli all grid / cli <T> <msg>)
+        is installed by the tarball at /root/local/bin/cli and
+        `cli` works in a fresh container shell with no cluster repo.
+        :test_tool: in the built image: `bash -ic 'type cli; cli -h | head -3'`
+        PASS 2026-09-26: tarball extracted at / in clean
+        codeexecutionjupyterext1:latest (no /workspace/cluster): `cli is
+        /root/local/bin/cli`, -h prints header, completion registered,
+        `cli --list` ok, COPILOT_MODEL/alias h = claude-opus-5-5, GNU Emacs 30.1.
+  - [X] G3 COMMITTED + PUSHED to bartuer/dot-emacs, the 7 pre-existing
+        unpushed commits and pre-existing dirty files LEFT AS THEY
+        WERE (not this plan's work — see Context).
+        DONE: 7b82b39 (model), 9fa5381 (cli) pushed 0521e7e..9fa5381 to
+        master.  The push also published the 7 pre-existing ubuntu-26.04
+        commits (the user's finished work, allowed per Context).  The 6 dirty
+        build/ files + untracked plans stay unstaged/uncommitted.
+
+* Context
+  - SOURCE of `cli`: cluster repo bin/cli-sessions.sh (commits
+    b01e15d, bb82865, df8d59d, 4c92163).  Registry ~/.copilot/sessions
+    = box|session|plan|model|launched_utc; --refresh scans boxes in
+    bin/fleet-ips.json (the ONLY cluster dependency -> 1.2 below).
+    Fetch it: `git -C /workspace/cluster show origin/master:bin/cli-sessions.sh`
+    (c01 has /workspace/cluster).
+  - The bundle contract: builder = build/<flavor>/Dockerfile, packed
+    by an explicit *.tar.list, extract at `/`.  root/.bashrc is
+    already in
+    (link "build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/amd64.tar.list" 900).
+  - MEASURED 2026-09-26 model defaults:
+    | file                                                   | now                          |
+    |--------------------------------------------------------+------------------------------|
+    | build/emacs-30.1-...-azurelinux-...-photon-5.0/.bashrc | COPILOT_MODEL=opus-4-8, h=opus-5 |
+    | build/devbox-arcadia-...-photon-5.0/.bashrc            | opus-5 (uncommitted edit), h=opus-5 |
+    | build/bashrc_patch                                     | opus-4-7                     |
+    | build/emacs-30.1-treesitter-ubuntu-26.04/.bashrc       | h() picker, no default       |
+  - PRE-EXISTING STATE on c01 — NOT THIS PLAN'S: 7 local commits
+    ahead of origin (2026-09-14/15, ubuntu-26.04 builder) and 6
+    modified build/ files + untracked plans 03/10.  Stage ONLY the
+    files this plan touches, by explicit path.  Do not push the 7
+    commits' question away by rebasing/resetting; if `git push`
+    would publish them, that is fine ONLY because they are the
+    user's own finished commits — record it in G3.
+  - The model name on L-server is `claude-opus-5-5` (hyphen, not
+    dot): `curl -s 127.0.0.1:11434/v1/models | jq -r '.data[].id' | grep opus`.
+
+* DONE Phase 1 — model default + cli in bundle [4/4]
+  - [X] 1.1 Set claude-opus-5-5 in every model line listed in
+        Context (COPILOT_MODEL= and `alias h=` --model).  Keep the
+        uncommitted host.docker.internal edits already in those files.
+        :test_tool: G1's rg.
+        DONE: emacs-arcadia .bashrc (4-8/5 -> 5-5), devbox-arcadia .bashrc
+        (5 -> 5-5), bashrc_patch (4-7 -> 5-5); G1 rg (with --hidden) empty.
+  - [X] 1.2 Vendor cli: copy cluster bin/cli-sessions.sh ->
+        install/cli (repo-root install/, where pbcopy.xlicp.sh and
+        killemacs live).  :trap: the Dockerfile `git clone`s dot-emacs
+        into /root/etc/el (Dockerfile line ~142), so the IMAGE sees
+        install/cli only AFTER it is PUSHED -- push 1.2 before 1.4's
+        image build.  Make the
+        fleet-ips path overridable: CLI_IPS env, default
+        /workspace/cluster/bin/fleet-ips.json, and if absent fall back
+        to hosts in ~/.ssh/config (`awk '/^Host /{print $2}'`, drop *).
+        Commit the change upstream in cluster too? NO — note it as a
+        follow-up in the result; this plan edits dot-emacs only.
+        DONE: install/cli = cluster origin/master:bin/cli-sessions.sh @4c92163
+        (after `git fetch`; local checkout was stale at bb82865) + CLI_IPS /
+        ~/.ssh/config fallback.  bash -n OK; both box sources probed.
+  - [X] 1.3 Install it: Dockerfile `cp /root/etc/el/install/cli
+        /root/local/bin/cli`, add `root/local/bin/cli` to amd64.tar.list,
+        and in .bashrc add completion
+        `complete -W "all \$(cut -d'|' -f2 ~/.copilot/sessions 2>/dev/null)" cli`.
+        Do the same for the devbox flavor only if its tar.list ships
+        root/local/bin.
+        DONE: Dockerfile cp line + .bashrc complete (compgen verified).
+        tar.list NOT edited: `root/local` (line 1) already covers
+        root/local/bin/cli; an explicit child entry duplicates it in the tar
+        (the repo pruned such entries in 8c1863a).  devbox tar.sh ships no
+        root/local/bin -> skipped.
+  - [X] 1.4 :test_tool: build + smoke per the repo's own build
+        instructions (README.org.txt in the flavor dir); run G1 and G2
+        test_tools.  If a full image build is too slow for this
+        session, run the static checks (bash -n install/cli,
+        tar.list entry present, Dockerfile line present) and mark the
+        image smoke as a follow-up — do NOT claim G2 without it.
+        DONE: full docker build (DOTEMACS_REV busted, cloned 9fa5381) +
+        tar.sh into /tmp/38pack (repo's committed tarball left untouched);
+        tarball lists root/local/bin/cli; G1 + G2 PASS (see Goal).
+
+* DONE Phase 2 — land [1/1]
+  - [X] 2.1 Commit per WI with explicit paths (1.1 model, 1.2+1.3
+        cli), push, fill G3 with the commit shas.
+        DONE: 7b82b39, 9fa5381 (hunk-level staging kept pre-existing
+        edits in the same files out of both commits).
+        ARCHIVE (user ask 2026-09-26): cluster 15f9588 replaced
+        archive/amd64.arcadia.emacs30.1_azl3.0.tar.gz.{00,01,02} (LFS,
+        sha256 7db03f18…); lfs-pulled on 20 boxes (c09 c11-c14 cj02-05 cj09 helix unreachable), all
+        7db03f18.  Running containers still run the OLD untar
+        (container-emacs.sh no-ops when emacs is present).
+        FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
+        ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
+
+* Phase 3 — roll the refreshed bundle into the fleet [0/3]
+  (added 2026-09-26 from user ask "push the bundle to cluster archive
+  and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
+  - [ ] 3.1 Untar into running officeagent-dev containers (they still
+        run the old untar: COPILOT_MODEL opus-4-8/opus-5, no cli).
+        :interrupt: overwrites each container's /root/.bashrc -- confirm.
+        :test_tool: fleet-ssh.sh cli='docker exec officeagent-dev sh -lc "command -v cli"'
+  - [ ] 3.2 Populate the boxes that were unreachable: c09 c11-c14
+        cj02-cj05 cj09 helix (/tmp/38.populate.sh via fleet-ssh.sh).
+        :test_tool: parts sha256 == 7db03f18
+  - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
+        fallback into cluster bin/cli-sessions.sh.
