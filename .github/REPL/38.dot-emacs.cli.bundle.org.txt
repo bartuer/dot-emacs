@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [5/7]
+* Phase 3 — roll the refreshed bundle into the fleet [6/7]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [X] 3.1 Untar into running officeagent-dev containers (they still
@@ -164,8 +164,10 @@
         rebuilt image, bundle sha 7e8d707f (277,165,703 B), cluster
         archive 2af9f30; fleet-ssh -b all -> 30/31 on 7e8d707f.
         :test_tool: fixture: targets cj06 -> both cj06 sessions; OK.
-  - [ ] 3.7 c13 populate 7e8d707f + container untar (/tmp/38.ctr.sh) (banner-exchange timeout 12:50).
+  - [X] 3.7 c13 populate 7e8d707f + container untar (/tmp/38.ctr.sh) (banner-exchange timeout 12:50).
         12:45 retry: still banner-exchange timeout.
+        14:51 c13 back: parts 0185d17 7e8d707f; container cli + opus-5-5
+        + emacs 30.1.  Fleet now 31/31 bundle, 23/23 containers.
   - [X] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
         cluster b8522b9: IPS="${CLI_IPS:-$HERE/fleet-ips.json}", ssh-config
