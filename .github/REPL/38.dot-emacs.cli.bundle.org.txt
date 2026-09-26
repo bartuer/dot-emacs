@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [0/3]
+* Phase 3 — roll the refreshed bundle into the fleet [0/5]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [ ] 3.1 Untar into running officeagent-dev containers (they still
@@ -140,3 +140,23 @@
         :test_tool: parts sha256 == 7db03f18
   - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
+  - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
+        amd64.emacs30.1_26.04 (d342364, 2026-09-15) lists no
+        root/local/bin/cli; its builder pins DOT_EMACS_COMMIT=0521e7e
+        (pre-9fa5381) and its Dockerfile has no `cp install/cli` line.
+        Fix = add the cp line + bump the pin + rebuild + re-archive.
+        :interrupt: the pin is load-bearing (rule 4) -- confirm the bump.
+        The 26.04 .bashrc sets no COPILOT_MODEL by design (h() picker;
+        verify.sh asserts `test -z ${COPILOT_MODEL+x}`), so no model edit there.
+  - [ ] 3.5 cli runtime deps.  Needs bash>=4 jq ssh tmux timeout xargs awk
+        sed sort -V ps(procps) date -d; `hostname -I` optional (only the
+        self-box shortcut; falls back to ssh).  MEASURED:
+        | target                        | missing           |
+        |-------------------------------+-------------------|
+        | azl base + new bundle         | ssh tmux hostname |
+        | officeagent-dev (c01)         | hostname          |
+        | 26.04 WSL host                | --                |
+        | 26.04 image                   | tmux              |
+        officeagent-dev is the real container target and works.  Shipping
+        ssh/tmux in the azl emacs bundle = new tdnf packages (rule 4) --
+        not done; devbox-arcadia already packages openssh-clients.
