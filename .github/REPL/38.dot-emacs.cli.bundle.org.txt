@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [0/5]
+* Phase 3 — roll the refreshed bundle into the fleet [1/5]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [ ] 3.1 Untar into running officeagent-dev containers (they still
@@ -148,15 +148,17 @@
         :interrupt: the pin is load-bearing (rule 4) -- confirm the bump.
         The 26.04 .bashrc sets no COPILOT_MODEL by design (h() picker;
         verify.sh asserts `test -z ${COPILOT_MODEL+x}`), so no model edit there.
-  - [ ] 3.5 cli runtime deps.  Needs bash>=4 jq ssh tmux timeout xargs awk
+  - [X] 3.5 cli runtime deps.  Needs bash>=4 jq ssh tmux timeout xargs awk
         sed sort -V ps(procps) date -d; `hostname -I` optional (only the
-        self-box shortcut; falls back to ssh).  MEASURED:
-        | target                        | missing           |
-        |-------------------------------+-------------------|
-        | azl base + new bundle         | ssh tmux hostname |
-        | officeagent-dev (c01)         | hostname          |
-        | 26.04 WSL host                | --                |
-        | 26.04 image                   | tmux              |
-        officeagent-dev is the real container target and works.  Shipping
-        ssh/tmux in the azl emacs bundle = new tdnf packages (rule 4) --
-        not done; devbox-arcadia already packages openssh-clients.
+        self-box shortcut; falls back to ssh).  RESOLVED, no bundle change:
+        the emacs bundle is not the only layer -- the azl stack is
+          dev.base   -> ssh (usr/bin/ssh, OpenSSH_9.8p1) + jq
+          container-tmux.tar.gz -> usr/local/bin/tmux (bare binary; needs
+                        libevent_core-2.1.so.7, present in the officeagent
+                        image as libevent-2.1.12-1.azl3, ABSENT in plain
+                        codeexecutionjupyterext1)
+          emacs      -> /root/local/bin/cli
+        MEASURED: live officeagent-dev (c01) has jq ssh tmux; only
+        `hostname` missing (optional).  Full 3-bundle stack on plain
+        codeexecutionjupyterext1: ssh+jq ok, `type cli` + `cli --list` ok,
+        tmux fails on libevent -- a base-image gap, not a cli one.
