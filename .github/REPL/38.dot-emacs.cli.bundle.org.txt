@@ -138,6 +138,11 @@
   - [ ] 3.2 Populate the boxes that were unreachable: c09 c11-c14
         cj02-cj05 cj09 helix (/tmp/38.populate.sh via fleet-ssh.sh).
         :test_tool: parts sha256 == 7db03f18
+        2026-09-26: ssh-config-islands.sh regen == live config (64
+        entries); --verify 21/31. helix populated (1b20391 7db03f18).
+        Still dark: c09 c11 c12 c13 (via helix), c14 (via c16),
+        cj02-cj05 cj09 (via cj00) -- ping + :2200 dead from their jump
+        host, i.e. VMs down, not config. Retry when they come back.
   - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
   - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
