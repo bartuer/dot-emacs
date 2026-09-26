@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [2/5]
+* Phase 3 — roll the refreshed bundle into the fleet [3/7]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [ ] 3.1 Untar into running officeagent-dev containers (they still
@@ -151,6 +151,13 @@
         12:04: fleet-ssh -b all -> 31/31 parts sha 7db03f18 (c13 on
         retry). cj00 stays 81 behind origin w/ 8 local edits (not ours;
         archive parts path-checked out).
+  - [X] 3.6 Re-roll with cluster bb91e88 cli (box name as target:
+        `cli cj06`, "a, b" lists, /exec_plan <words>). install/cli
+        synced in fc1a8a7 (upstream + our CLI_IPS fallback only);
+        rebuilt image, bundle sha 7e8d707f (277,165,703 B), cluster
+        archive 2af9f30; fleet-ssh -b all -> 30/31 on 7e8d707f.
+        :test_tool: fixture: targets cj06 -> both cj06 sessions; OK.
+  - [ ] 3.7 c13 populate 7e8d707f (banner-exchange timeout 12:50).
   - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
   - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
