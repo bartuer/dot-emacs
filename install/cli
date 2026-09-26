@@ -13,8 +13,9 @@
 #   cli-sessions.sh all | <T>,<T>    # ONE local window, a tiled pane per session
 #   cli-sessions.sh <T> <message..>  # TYPE <message> into the CLI + Enter
 #   cli-sessions.sh all <message..>  # ... into every session
-#     <T> = full session name or a unique prefix: 36 -> 36-agent-room
-#     message `/exec_plan` with no path expands to the session's own plan.
+#     <T> = full session name, a unique prefix (36 -> 36-agent-room), or a
+#           BOX name (cj06 -> every session on cj06).  Lists: a,b or "a, b".
+#     `/exec_plan [words]` with no plan path -> `/exec_plan <own plan> [words]`.
 # Grid = LOCAL tmux session "cli-grid"; each pane ssh-attaches one remote
 # session, 6 panes per page (window; CLI_PAGE=n to change).  Prefix is C-a
 # so C-b still reaches the remote tmux.  Keys (after C-a):
@@ -92,9 +93,19 @@ resolve() {   # <T> -> row, refreshing once on a miss
     printf '%s\n' "$r"
 }
 lookup() { resolve "$1" 2>/dev/null | cut -d'|' -f1; }
-targets() {   # all | T[,T...] -> session names
-    if [ "$1" = all ]; then [ -s "$REG" ] || refresh; cut -d'|' -f2 "$REG"
-    else local t; for t in ${1//,/ }; do resolve "$t" | cut -d'|' -f2 || return 1; done; fi
+boxrows() {   # <box> -> every session row on that box (a box name is a target)
+    awk -F'|' -v b="$1" '$1==b' "$REG" 2>/dev/null
+}
+targets() {   # all | T[,T...] -> session names; T = session, unique prefix, or BOX
+    if [ "$1" = all ]; then [ -s "$REG" ] || refresh; cut -d'|' -f2 "$REG"; return; fi
+    local t r
+    for t in ${1//,/ }; do
+        r=$(row "$t")
+        [ -n "$r" ] || r=$(boxrows "$t")
+        [ -n "$r" ] || { refresh; r=$(row "$t"); [ -n "$r" ] || r=$(boxrows "$t"); }
+        [ -n "$r" ] || { echo "cli: no session or box '$t'" >&2; list >&2; return 1; }
+        printf '%s\n' "$r" | cut -d'|' -f2
+    done
 }
 
 # Type a line into the CLI's input box.  -l = literal (no key-name parsing:
@@ -104,7 +115,12 @@ send() {   # send <session> <message>
     local r b s p m msg="$2"
     r=$(resolve "$1") || return 1
     IFS='|' read -r b s p _ <<<"$r"
-    [ "$msg" = /exec_plan ] && [ "$p" != - ] && msg="/exec_plan $p"
+    # /exec_plan with no plan path: insert the session's own plan, keep the rest
+    # as the instruction ("/exec_plan push finish X" -> "/exec_plan <plan> push finish X")
+    if [ "$p" != - ] && { [ "$msg" = /exec_plan ] || { [ "${msg#/exec_plan }" != "$msg" ] &&
+        ! printf '%s' "${msg#/exec_plan }" | grep -qE '^[^ ]*(\.org\.txt|/)|^[0-9]+([ .]|$)'; }; }; then
+        msg="/exec_plan $p${msg#/exec_plan}"
+    fi
     m=$(printf '%q' "$msg")
     if timeout 20 ssh -n -o BatchMode=yes -o ConnectTimeout=8 -o LogLevel=ERROR "$b" \
         "tmux send-keys -t '$s' -l -- $m && sleep 0.3 && tmux send-keys -t '$s' Enter"; then
@@ -156,13 +172,17 @@ case "${1:-}" in
     --list|-l|'') list ;;
     -h|--help)    sed -n '2,20p' "$0" ;;
     *)
+        # "cli cj06, cj07, cj01 msg": a target token ending in ',' continues the list
+        T=$1; shift
+        while [ "${T%,}" != "$T" ] && [ $# -gt 0 ]; do T="$T$1"; shift; done
+        T=${T%,}; set -- "$T" "$@"
         mapfile -t S < <(targets "$1") || exit 1
         [ ${#S[@]} -gt 0 ] || exit 1
         if [ $# -gt 1 ]; then          # message mode
             shift; rc=0
             for s in "${S[@]}"; do send "$s" "$*" || rc=1; done; exit $rc
         fi
-        if [ "$1" = all ] || [ "${1#*,}" != "$1" ]; then grid "${S[@]}"; fi
+        if [ ${#S[@]} -gt 1 ] || [ "$1" = all ] || [ "${1#*,}" != "$1" ]; then grid "${S[@]}"; fi
         exec ssh -t "$(lookup "${S[0]}")" tmux attach -t "${S[0]}"
         ;;
 esac
