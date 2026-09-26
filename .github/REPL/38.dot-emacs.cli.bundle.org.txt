@@ -146,6 +146,8 @@
         10:45 retry: --verify 26/31; c09 c11 c12 c13 c14 populated
         (5bde6fb 7db03f18). Remaining dark: cj02-cj05 cj09 (no ping
         from cj00).
+        11:02: cj02 cj09 populated (f96bea3 7db03f18) -> 28/31.
+        Remaining: cj03 cj04 cj05.
   - [ ] 3.3 Cluster follow-up: upstream CLI_IPS + ~/.ssh/config
         fallback into cluster bin/cli-sessions.sh.
   - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
