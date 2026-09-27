@@ -18,15 +18,17 @@ complete -F _cli_complete cli
 # session (default = name) is resumed ONLY if it has events.jsonl -- a bare or unloadable
 # --resume drops copilot into its interactive picker; otherwise start it fresh under that name.
 # tmux gives a new session the SERVER's env, not this shell's -> forward COPILOT_* with -e.
+# no args -> per-box defaults T_NAME/T_SID/T_ARGS (39.shell.sh converts an old `alias t=` into them).
 alias t >/dev/null 2>&1 || function t {
-    local v s=${2:-${1:-main}} r d; local -a e=()
+    local v n s r d; local -a e=()
+    if (($#)); then n=$1; s=${2:-$1}; else n=${T_NAME:-main}; s=${T_SID:-$n}; fi
     for v in ${!COPILOT_PROVIDER_@} COPILOT_MODEL; do [ -n "${!v:-}" ] && e+=(-e "$v=${!v}"); done
     for d in $(grep -lxF -e "id: $s" -e "name: $s" ~/.copilot/session-state/*/workspace.yaml 2>/dev/null); do
         d=${d%/*}; [ -s "$d/events.jsonl" ] && { r="--resume ${d##*/}"; break; }
     done
     [[ -z $r && $s =~ ^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$ ]] && r="--session-id $s"
-    tmux new -A -s "${FLEET_BOX}.${1:-main}" "${e[@]}" \
-      "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all --add-dir /workspace/cluster ${r:---name '$s'}"
+    tmux new -A -s "${FLEET_BOX}.$n" "${e[@]}" \
+      "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all ${T_ARGS:-}--add-dir /workspace/cluster ${r:---name '$s'}"
 }
 # <<< fleet shell <<<
 BLK
@@ -34,6 +36,13 @@ BLK
 put() {  # $1 = bashrc path (reads/writes via $2 prefix cmd)
     f=$1; tmp=$(mktemp)
     $2 cat "$f" 2>/dev/null | sed '/^# >>> fleet shell >>>/,/^# <<< fleet shell <<</d' > $tmp
+    local al n sid ar; al=$(grep -m1 '^alias t=' $tmp)   # old per-box alias t -> defaults for function t
+    if [ -n "$al" ]; then
+        n=$(sed -n 's/.* -s \([^ ]*\) .*/\1/p' <<<"$al"); n=${n#"$B".}; n=${n#"$B"_}
+        sid=$(sed -n 's/.*--resume \([^ "'"'"']*\).*/\1/p' <<<"$al"); ar=
+        grep -q -- '--autopilot' <<<"$al" && ar='--autopilot '
+        sed -i "s|^alias t=.*|T_NAME=${n:-main} T_SID=$sid T_ARGS='$ar'  # was: alias t (converted by 39.shell.sh)|" $tmp
+    fi
     { grep -v '^export FLEET_BOX=' $tmp; blk | sed "1a export FLEET_BOX=$B"; } > $tmp.n
     $2 sh -c "test -f $f.pre39 || cp -p $f $f.pre39"
     if [ -n "$2" ]; then $2 sh -c "cat > $f" < $tmp.n; else cat $tmp.n > $f; fi

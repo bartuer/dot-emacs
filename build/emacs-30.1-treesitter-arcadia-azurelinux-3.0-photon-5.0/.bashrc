@@ -125,15 +125,17 @@ complete -F _cli_complete cli
 # session (default = name) is resumed ONLY if it has events.jsonl -- a bare or unloadable
 # --resume drops copilot into its interactive picker; otherwise start it fresh under that name.
 # tmux gives a new session the SERVER's env, not this shell's -> forward COPILOT_* with -e.
+# no args -> per-box defaults T_NAME/T_SID/T_ARGS (39.shell.sh converts an old `alias t=` into them).
 alias t >/dev/null 2>&1 || function t {
-    local v s=${2:-${1:-main}} r d; local -a e=()
+    local v n s r d; local -a e=()
+    if (($#)); then n=$1; s=${2:-$1}; else n=${T_NAME:-main}; s=${T_SID:-$n}; fi
     for v in ${!COPILOT_PROVIDER_@} COPILOT_MODEL; do [ -n "${!v:-}" ] && e+=(-e "$v=${!v}"); done
     for d in $(grep -lxF -e "id: $s" -e "name: $s" ~/.copilot/session-state/*/workspace.yaml 2>/dev/null); do
         d=${d%/*}; [ -s "$d/events.jsonl" ] && { r="--resume ${d##*/}"; break; }
     done
     [[ -z $r && $s =~ ^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$ ]] && r="--session-id $s"
-    tmux new -A -s "${FLEET_BOX}.${1:-main}" "${e[@]}" \
-      "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all --add-dir /workspace/cluster ${r:---name '$s'}"
+    tmux new -A -s "${FLEET_BOX}.$n" "${e[@]}" \
+      "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all ${T_ARGS:-}--add-dir /workspace/cluster ${r:---name '$s'}"
 }
 # <<< fleet shell <<<
 # Prefer the live cluster cli/room (cli needs orch-collect.py + room.sh beside it);
