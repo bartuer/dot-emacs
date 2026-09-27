@@ -114,6 +114,10 @@ alias harness="copilot --allow-all --resume --autopilot"
 alias h="copilot --allow-all --resume --autopilot --model claude-opus-5-5"
 
 # cli: fleet copilot session console (install/cli -> ~/local/bin/cli).
+# FLEET_BOX: set per box by the roll-out; a fresh unpack derives it from
+# fleet-ips.json .regions[].hostnames (container hostname = <host>ctr).
+[ -n "${FLEET_BOX:-}" ] || FLEET_BOX=$(jq -r --arg h "${HOSTNAME%ctr}" '.regions[].hostnames // {}|to_entries[]|select((.value|ascii_downcase)==($h|ascii_downcase))|.key' /workspace/cluster/bin/fleet-ips.json 2>/dev/null | head -1)
+export FLEET_BOX
 # >>> fleet shell >>>   (managed by 39.shell.sh -- replaced whole on each roll-out)
 _cli_complete() { COMPREPLY=($(compgen -W "all $(cut -d'|' -f1,2 ~/.copilot/sessions 2>/dev/null | tr '|' '\n' | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}")); }
 complete -F _cli_complete cli

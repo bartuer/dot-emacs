@@ -228,4 +228,12 @@
         README row).  26.04 part stays with 3.4 (pin consent).
         :test_tool: image: cli 2026.09.27.2, t=function, complete -F
         _cli_complete, opus-5-5, emacs 30.1; tarball has 2 fleet-shell markers.
+  - [ ] 4.3 Bundle .bashrc FLEET_BOX fallback: unpack overwrites /root/.bashrc
+        (drops the roll-out's export FLEET_BOX), so `t` would name sessions
+        ".main".  Source fix (dot-emacs, next rebuild): derive from
+        fleet-ips.json .regions[].hostnames via ${HOSTNAME%ctr}.
+        :test_tool: fleet sweep, FLEET_BOX unset: 31/31 hosts, 22/23 ctrs
+        resolve; helix ctr has a random docker hostname -> empty (roll-out
+        export covers it).  Remaining: rebuild + archive + re-roll
+        fleet-shell after any unpack.
 
