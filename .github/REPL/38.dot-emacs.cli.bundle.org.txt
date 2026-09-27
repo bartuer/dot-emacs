@@ -219,6 +219,13 @@
         /root/local/bin): `room list -n` works from /tmp on 31/31 hosts.
         Container: hub c00wsl reachable; cj00wsl/c16wsl unreachable (non-blocking).
         cli --list STATE header on all; no script change needed (pull only).
-  - [ ] 4.2 Fold the fleet-shell block into the bundles (azl .bashrc,
+  - [X] 4.2 Fold the fleet-shell block into the bundles (azl .bashrc,
         26.04 via 3.4) next time a bundle is rebuilt anyway.
+        azl: dot-emacs 5344a86 (install/cli = cluster 165bb92, 2026.09.27.2;
+        fleet shell block in bundle .bashrc; .bashrc links live
+        /workspace/cluster cli/room over the vendored copy when mounted).
+        Bundle feb691e8, 277,194,935 B -> cluster 1b34830 (archive parts +
+        README row).  26.04 part stays with 3.4 (pin consent).
+        :test_tool: image: cli 2026.09.27.2, t=function, complete -F
+        _cli_complete, opus-5-5, emacs 30.1; tarball has 2 fleet-shell markers.
 
