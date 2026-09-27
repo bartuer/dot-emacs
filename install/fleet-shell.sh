@@ -4,7 +4,7 @@ cd $CL 2>/dev/null || { echo NO-REPO; exit 0; }
 git config --global --add safe.directory $CL 2>/dev/null
 timeout 120 git pull -q --ff-only --no-edit >/dev/null 2>&1 || timeout 120 bash bin/box-pull.sh >/dev/null 2>&1
 v=$(git log -1 --format=%h -- bin/cli-sessions.sh)
-ln -sfn $CLI /usr/local/bin/cli
+ln -sfn $CLI /usr/local/bin/cli; ln -sfn $CL/bin/room.sh /usr/local/bin/room
 B=${FLEET_BOX:-}
 for ip in $(hostname -I 2>/dev/null); do
   [ -n "$B" ] || B=$(jq -r --arg ip "$ip" '.regions[].boxes|to_entries[]|select(.value==$ip)|.key' bin/fleet-ips.json 2>/dev/null | head -1)
@@ -35,7 +35,7 @@ H=$(bash -ic 'printf "%s,%s,%s" "$(command -v cli)" "$(type -t t)" "$(complete -
 C=-
 if command -v docker >/dev/null && docker ps --format '{{.Names}}' 2>/dev/null | grep -qx officeagent-dev; then
     D="docker exec -i officeagent-dev"
-    if $D test -x $CLI; then $D ln -sfn $CLI /root/local/bin/cli; fi
+    if $D test -x $CLI; then $D ln -sfn $CLI /root/local/bin/cli; $D ln -sfn $CL/bin/room.sh /root/local/bin/room; fi
     put /root/.bashrc "$D"
     C=$($D bash -ic 'printf "%s,%s,%s" "$(readlink -f $(command -v cli))" "$(type -t t)" "$COPILOT_MODEL"' 2>/dev/null | tail -1)
 fi

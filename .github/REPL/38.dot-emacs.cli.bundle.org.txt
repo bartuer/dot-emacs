@@ -215,6 +215,9 @@
         provision cli() function (same script).
         Re-roll cli 4778e6e (STATE/GROUP cols, ControlMaster): 31/31 hosts,
         then cba4d6d (did-you-mean, PLAN uncut, rescan): 31/31 hosts,
+        + `room` on PATH (-> cluster bin/room.sh; host /usr/local/bin, ctr
+        /root/local/bin): `room list -n` works from /tmp on 31/31 hosts.
+        Container: hub c00wsl reachable; cj00wsl/c16wsl unreachable (non-blocking).
         cli --list STATE header on all; no script change needed (pull only).
   - [ ] 4.2 Fold the fleet-shell block into the bundles (azl .bashrc,
         26.04 via 3.4) next time a bundle is rebuilt anyway.
