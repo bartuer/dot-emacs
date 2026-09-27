@@ -236,4 +236,11 @@
         resolve; helix ctr has a random docker hostname -> empty (roll-out
         export covers it).  Remaining: rebuild + archive + re-roll
         fleet-shell after any unpack.
+  - [ ] 4.4 `t` lost COPILOT_MODEL/COPILOT_PROVIDER_*: `tmux new` into a
+        RUNNING server starts the pane with the server's global env, not the
+        caller's (ctr api-server server; measured: only COPILOT_CLI_PATH
+        reached the pane).  Fix: t forwards ${!COPILOT_PROVIDER_@}
+        + COPILOT_MODEL via `tmux new -e` (tmux >= 3.0; fleet 3.4/3.6).
+        Rolled via fleet-shell: 31/31 hosts, 23/23 ctrs (c01/c02 hosts keep
+        their own alias t).  Bundle .bashrc fixed in source; ships with 4.3 rebuild.
 

@@ -15,8 +15,11 @@ blk() { cat <<'BLK'
 _cli_complete() { COMPREPLY=($(compgen -W "all $(cut -d'|' -f1,2 ~/.copilot/sessions 2>/dev/null | tr '|' '\n' | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}")); }
 complete -F _cli_complete cli
 # t [name] [copilot-session-id]: attach-or-create tmux "<box>.<name>" running GHCP CLI (--resume)
+# tmux gives a new session the SERVER's env, not this shell's -> forward COPILOT_* with -e.
 alias t >/dev/null 2>&1 || function t {
-    tmux new -A -s "${FLEET_BOX}.${1:-main}" \
+    local v; local -a e=()
+    for v in ${!COPILOT_PROVIDER_@} COPILOT_MODEL; do [ -n "${!v:-}" ] && e+=(-e "$v=${!v}"); done
+    tmux new -A -s "${FLEET_BOX}.${1:-main}" "${e[@]}" \
       "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all --add-dir /workspace/cluster --resume ${2:-}"
 }
 # <<< fleet shell <<<
