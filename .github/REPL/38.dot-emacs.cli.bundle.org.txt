@@ -243,4 +243,12 @@
         + COPILOT_MODEL via `tmux new -e` (tmux >= 3.0; fleet 3.4/3.6).
         Rolled via fleet-shell: 31/31 hosts, 23/23 ctrs (c01/c02 hosts keep
         their own alias t).  Bundle .bashrc fixed in source; ships with 4.3 rebuild.
+  - [ ] 4.5 `t` dropped into the "Resume Session" PICKER (user: "c04 still ask pass").
+        c04 `t clean_REPL move.number.script.outof.REPL`: session dir had
+        workspace.yaml but NO events.jsonl -> "found but could not be loaded"
+        -> copilot falls back to the interactive picker; bare `t x` (empty
+        --resume) always opened the picker.  Fix: t resumes only an id/name whose
+        session dir has events.jsonl, else `--session-id UUID` or `--name S`
+        (fresh).  Measured on c04: both cases land on a plain prompt.  Rolled
+        31/31 hosts (c10 retried); bundle .bashrc fixed in source (4.3 rebuild).
 
