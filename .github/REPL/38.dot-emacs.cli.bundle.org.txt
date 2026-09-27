@@ -195,3 +195,24 @@
         `hostname` missing (optional).  Full 3-bundle stack on plain
         codeexecutionjupyterext1: ssh+jq ok, `type cli` + `cli --list` ok,
         tmux fails on libevent -- a base-image gap, not a cli one.
+
+* Phase 4 — light path: .bashrc + cli straight to every box (no bundle)
+  (added 2026-09-27 from user: "bundle -> archive -> push is too heavy;
+  meanwhile update tested .bashrc and cli to all box" via fleet_ssh)
+  - [X] 4.1 install/fleet-shell.sh (idempotent): git pull cluster; symlink
+        /usr/local/bin/cli -> cluster bin/cli-sessions.sh (8928e1b, the
+        c02wsl-tested cli); FLEET_BOX from fleet-ips.json by `hostname -I`;
+        replace a `# >>> fleet shell >>>` block in ~/.bashrc (cli
+        completion over sessions+boxes, `t [name] [sid]` =
+        tmux new -A -s <box>.<name> copilot --resume; an existing
+        `alias t` wins, e.g. c02).  Same block + /root/local/bin/cli
+        symlink into officeagent-dev (cluster is mounted).  Backups
+        ~/.bashrc.pre39 once.
+        :trap: `base64 -d | bash` + `docker exec -i` eats the rest of the
+        script from stdin -> write to /tmp/39.shell.sh, run </dev/null.
+        :test_tool: fleet-ssh.sh -b all roll=... -> 31/31 host cli+t+completion;
+        23/23 containers cli->cluster script, t, opus-5-5.  cj08 keeps its
+        provision cli() function (same script).
+  - [ ] 4.2 Fold the fleet-shell block into the bundles (azl .bashrc,
+        26.04 via 3.4) next time a bundle is rebuilt anyway.
+
