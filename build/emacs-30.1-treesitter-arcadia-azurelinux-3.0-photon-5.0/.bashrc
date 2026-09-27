@@ -114,4 +114,17 @@ alias harness="copilot --allow-all --resume --autopilot"
 alias h="copilot --allow-all --resume --autopilot --model claude-opus-5-5"
 
 # cli: fleet copilot session console (install/cli -> ~/local/bin/cli).
-complete -W "all \$(cut -d'|' -f2 ~/.copilot/sessions 2>/dev/null)" cli
+# >>> fleet shell >>>   (managed by 39.shell.sh -- replaced whole on each roll-out)
+_cli_complete() { COMPREPLY=($(compgen -W "all $(cut -d'|' -f1,2 ~/.copilot/sessions 2>/dev/null | tr '|' '\n' | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}")); }
+complete -F _cli_complete cli
+# t [name] [copilot-session-id]: attach-or-create tmux "<box>.<name>" running GHCP CLI (--resume)
+alias t >/dev/null 2>&1 || function t {
+    tmux new -A -s "${FLEET_BOX}.${1:-main}" \
+      "copilot --model ${COPILOT_MODEL:-claude-opus-5-5} --allow-all --add-dir /workspace/cluster --resume ${2:-}"
+}
+# <<< fleet shell <<<
+# Prefer the live cluster cli/room (cli needs orch-collect.py + room.sh beside it);
+# the vendored ~/local/bin/cli is the fallback when /workspace/cluster is absent.
+for _c in cli:cli-sessions.sh room:room.sh; do
+    [ -x /workspace/cluster/bin/${_c#*:} ] && [ ! -L /root/local/bin/${_c%%:*} ] && ln -sfn /workspace/cluster/bin/${_c#*:} /root/local/bin/${_c%%:*}
+done; unset _c
