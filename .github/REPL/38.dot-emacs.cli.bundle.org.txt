@@ -214,6 +214,7 @@
         23/23 containers cli->cluster script, t, opus-5-5.  cj08 keeps its
         provision cli() function (same script).
         Re-roll cli 4778e6e (STATE/GROUP cols, ControlMaster): 31/31 hosts,
+        then cba4d6d (did-you-mean, PLAN uncut, rescan): 31/31 hosts,
         cli --list STATE header on all; no script change needed (pull only).
   - [ ] 4.2 Fold the fleet-shell block into the bundles (azl .bashrc,
         26.04 via 3.4) next time a bundle is rebuilt anyway.
