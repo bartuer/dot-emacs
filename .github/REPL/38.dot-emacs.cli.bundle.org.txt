@@ -228,7 +228,7 @@
         README row).  26.04 part stays with 3.4 (pin consent).
         :test_tool: image: cli 2026.09.27.2, t=function, complete -F
         _cli_complete, opus-5-5, emacs 30.1; tarball has 2 fleet-shell markers.
-  - [ ] 4.3 Bundle .bashrc FLEET_BOX fallback: unpack overwrites /root/.bashrc
+  - [X] 4.3 Bundle .bashrc FLEET_BOX fallback: unpack overwrites /root/.bashrc
         (drops the roll-out's export FLEET_BOX), so `t` would name sessions
         ".main".  Source fix (dot-emacs, next rebuild): derive from
         fleet-ips.json .regions[].hostnames via ${HOSTNAME%ctr}.
@@ -236,14 +236,14 @@
         resolve; helix ctr has a random docker hostname -> empty (roll-out
         export covers it).  Remaining: rebuild + archive + re-roll
         fleet-shell after any unpack.
-  - [ ] 4.4 `t` lost COPILOT_MODEL/COPILOT_PROVIDER_*: `tmux new` into a
+  - [X] 4.4 `t` lost COPILOT_MODEL/COPILOT_PROVIDER_*: `tmux new` into a
         RUNNING server starts the pane with the server's global env, not the
         caller's (ctr api-server server; measured: only COPILOT_CLI_PATH
         reached the pane).  Fix: t forwards ${!COPILOT_PROVIDER_@}
         + COPILOT_MODEL via `tmux new -e` (tmux >= 3.0; fleet 3.4/3.6).
         Rolled via fleet-shell: 31/31 hosts, 23/23 ctrs (c01/c02 hosts keep
         their own alias t).  Bundle .bashrc fixed in source; ships with 4.3 rebuild.
-  - [ ] 4.5 `t` dropped into the "Resume Session" PICKER (user: "c04 still ask pass").
+  - [X] 4.5 `t` dropped into the "Resume Session" PICKER (user: "c04 still ask pass").
         c04 `t clean_REPL move.number.script.outof.REPL`: session dir had
         workspace.yaml but NO events.jsonl -> "found but could not be loaded"
         -> copilot falls back to the interactive picker; bare `t x` (empty
@@ -251,4 +251,17 @@
         session dir has events.jsonl, else `--session-id UUID` or `--name S`
         (fresh).  Measured on c04: both cases land on a plain prompt.  Rolled
         31/31 hosts (c10 retried); bundle .bashrc fixed in source (4.3 rebuild).
+  - [X] 4.6 c01/c02 hosts had a hand-made `alias t=` (c02: no COPILOT_* -e at all,
+        c01: no COPILOT_MODEL) that shadowed function t.  fleet-shell now CONVERTS
+        it: `alias t=...` -> `T_NAME=<tmux name> T_SID=<resume id> T_ARGS=<--autopilot>`
+        and function t uses those when called with no args (same tmux session,
+        same resumed session).  Rolled 31/31: t is a function on every host + ctr.
+        Bundles rebuilt + re-archived (cluster 7ffaa68):
+          azl   41065b40 (277,201,809 B)  -- fleet block, t fixes, FLEET_BOX fallback
+          26.04 d38fb15a (207,187,842 B)  -- fleet block + t added to its .bashrc
+                (was missing entirely; also fixed a duplicated `>>> fleet provision`
+                close marker); cli/room symlinked from live /workspace/cluster.
+                DOT_EMACS_COMMIT pin NOT bumped (3.4 still owns vendoring cli).
+        Verified in both images: type t=function, t forwards COPILOT_PROVIDER_*
+        (+ COPILOT_MODEL on azl; 26.04 sets none by design).  Not yet populated.
 
