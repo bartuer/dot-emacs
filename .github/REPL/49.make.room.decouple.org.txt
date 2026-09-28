@@ -109,7 +109,7 @@
         github; post done --ref <sha>.
         :done: `OK cluster a5f157d 12 files` rc 0; pushed 11bde0e + dacee83 (49.ctr.test.sh).
 
-* TODO Phase T — clean-container tests (deps D; T.24 on c06, T.26 on c07) [0/2]
+* DONE Phase T — clean-container tests (deps D; T.24 on c06, T.26 on c07) [2/2]
   :parallel_group: clean_ctr
   Script (both): /workspace/dot-emacs/install/49.ctr.test.sh IMG [ref]  (outside install/fleet: 49-D1)
     docker run --rm --network host -v ~/.ssh:/root/.ssh:ro -v
@@ -119,17 +119,21 @@
     && export PATH=~/local/bin:$PATH; test ! -e /workspace/cluster;
     cli -V; cli -r | head -1; room -c session_top read >/dev/null && echo room=ok;
     room -c session_top tasks >/dev/null && echo tasks=ok'
-  - [ ] T.24 ubuntu:24.04 on c06: all lines ok, cli header shows N live.
+  - [X] T.24 ubuntu:24.04 on c06: all lines ok, cli header shows N live.
         :parallel_group: clean_ctr
         :log: 08:10 pilot on c08 @dacee83: 6/7, cli -r hangs.  49-F5 MEASURED: bash 5.2.21
         (24.04) bare `wait` in refresh() also waits on logerr's `exec 2> >(..)` procsub,
         never returns; bash 5.3.9 returns; `wait $pid` fixes.  issue 02fe69 -> cluster Q owner.
         :log: 08:28 fixed cluster 44d06fd (cli .5); re-export 61a063c; c08 rerun 24.04 PASS 7/7.
         T.24 reposted 64c4ae (26181d failed pre-fix), claimed c01_39-fleet-top.
-  - [ ] T.26 ubuntu:26.04 on c07: same.
+        :log: 08:40 c06 ubuntu:24.04 @61a063c PASS 7/7 (3 live/3 box).  Done posted 6a6ad1;
+        64c4ae needs a non-author done (claim refused: author).
+  - [X] T.26 ubuntu:26.04 on c07: same.
         :parallel_group: clean_ctr
         :log: 08:18 pilot on c08 @dacee83: PASS 7/7 (11 live/9 box).
         :log: 08:33 c08 rerun @61a063c PASS 7/7; task claimed c01_39-fleet-top.
+        :log: 08:40 c07 ubuntu:26.04 @61a063c PASS 7/7 (2 live/2 box); b1d4ee done.
+        P reposted 3bbef4 (deps 64c4ae,b1d4ee); old 0c3a44 failed (deps a failed task).
   Any failure -> post issue --to the cluster A/Q claimant (code bug) or
   fix here (install bug); never patch install/fleet by hand (49-D1).
 
