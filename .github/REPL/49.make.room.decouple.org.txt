@@ -92,19 +92,26 @@
         :done: 07:56 dispatched=[c00wsl,c16wsl,cj00wsl]; ROOT claimed by a c00
         dot-emacs slot, A claimed by c02 cluster slot; D/T/P blocked on deps.
 
-* TODO Phase D — vendor + install (deps cluster A) [0/3]
-  - [ ] D.1 `bash /workspace/cluster/bin/room-export.sh install/fleet`;
+* DONE Phase D — vendor + install (deps cluster A) [3/3]
+  - [X] D.1 `bash /workspace/cluster/bin/room-export.sh install/fleet`;
         `git rm install/cli`; point fleet-shell.sh + both bundle .bashrc
         fallbacks at install/fleet (49-D6).
-  - [ ] D.2 install/fleet/install.sh (49-D5).
+        :done: 11bde0e export of cluster a5f157d (12 files); install/cli git-mv'd; fleet-shell.sh
+        BIN=cluster/bin else install/fleet; azl + 26.04 .bashrc loops try both, Dockerfiles ln -s
+        install/fleet/{cli-sessions.sh,room.sh}.
+  - [X] D.2 install/fleet/install.sh (49-D5).
+        :deviation: lives at install/fleet-install.sh -- install/fleet/ is export output and
+        --check rejects unlisted files (49-D1); a hand file inside it would be drift.
         :test_tool: HOME=/tmp/h49 bash install/fleet/install.sh twice ->
         second run prints no change; `/tmp/h49/local/bin/cli -V` = cluster's.
-  - [ ] D.3 `room-export.sh --check install/fleet` rc 0; commit, push
+        :done: run2 `no change (cluster a5f157d)`; cli 2026.09.28.3 == cluster; room -h ok.
+  - [X] D.3 `room-export.sh --check install/fleet` rc 0; commit, push
         github; post done --ref <sha>.
+        :done: `OK cluster a5f157d 12 files` rc 0; pushed 11bde0e + dacee83 (49.ctr.test.sh).
 
 * TODO Phase T — clean-container tests (deps D; T.24 on c06, T.26 on c07) [0/2]
   :parallel_group: clean_ctr
-  Script (both): /workspace/dot-emacs/install/fleet/49.ctr.test.sh IMG
+  Script (both): /workspace/dot-emacs/install/49.ctr.test.sh IMG [ref]  (outside install/fleet: 49-D1)
     docker run --rm --network host -v ~/.ssh:/root/.ssh:ro -v
     ~/.fleet:/root/.fleet:ro IMG bash -c 'apt-get -qq update && apt-get -qq
     install -y git openssh-client python3 tmux jq parallel curl procps >/dev/null;
@@ -114,8 +121,12 @@
     room -c session_top tasks >/dev/null && echo tasks=ok'
   - [ ] T.24 ubuntu:24.04 on c06: all lines ok, cli header shows N live.
         :parallel_group: clean_ctr
+        :log: 08:10 pilot on c08 @dacee83: 6/7, cli -r hangs.  49-F5 MEASURED: bash 5.2.21
+        (24.04) bare `wait` in refresh() also waits on logerr's `exec 2> >(..)` procsub,
+        never returns; bash 5.3.9 returns; `wait $pid` fixes.  issue 02fe69 -> cluster Q owner.
   - [ ] T.26 ubuntu:26.04 on c07: same.
         :parallel_group: clean_ctr
+        :log: 08:18 pilot on c08 @dacee83: PASS 7/7 (11 live/9 box).
   Any failure -> post issue --to the cluster A/Q claimant (code bug) or
   fix here (install bug); never patch install/fleet by hand (49-D1).
 
