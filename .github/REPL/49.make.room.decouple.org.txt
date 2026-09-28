@@ -49,13 +49,18 @@
     .github/skills/room (6 Sep-26 copies, no manifest -> drift unknown).
   - install/cli is a hand copy of cluster cli (38 4.9), no manifest.
 
-* Goal [0/4]
-  - [ ] G1 in a clean ubuntu:24.04 AND ubuntu:26.04 container (host network,
+* Goal [2/4]
+  - [X] G1 in a clean ubuntu:24.04 AND ubuntu:26.04 container (host network,
         ~/.ssh + ~/.fleet read-only, NO /workspace/cluster):
         `git clone dot-emacs && install/fleet/install.sh` -> `cli -r` lists
         the fleet, `room -c session_top read` works, `room next` gates.
-  - [ ] G2 install/fleet/ is byte-identical to a cluster export
+        :evidence: @61a063c install/49.ctr.test.sh PASS 7/7 on c06 24.04, c07 26.04, c08 both
+        (cli -r header N live, room read/tasks ok, gate refused tier wsl!=ctr).  Installer is
+        install/fleet-install.sh (D.2 deviation, 49-D1).
+  - [X] G2 install/fleet/ is byte-identical to a cluster export
         (MANIFEST check rc 0); install/cli is gone (one copy, not two).
+        :evidence: `room-export.sh --check install/fleet` = OK cluster 44d06fd 12 files, rc 0;
+        install/cli removed 11bde0e.
   - [ ] G3 both bundles carry install/fleet, built + archived.
   - [ ] G4 monitor M reviewed every commit of the swarm; issues it posted
         are closed or ruled.
@@ -154,6 +159,7 @@
           (24.04 cli hang) -> fixed 44d06fd, PASS ae3698; 08:29 issue 13298c (--check DRIFT on
           __pycache__, dot-emacs gitignores it; cluster fix pending).  dot-emacs 11bde0e dacee83
           0f53006 61a063c (mine): no hand edit in install/fleet (--check rc 0), no fact files.
+        :log: 08:44 610e282 (T DONE, plan doc only) OK; T.24 64c4ae done by dot-emacs-38.
   - [ ] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
         leave session_top.
 
