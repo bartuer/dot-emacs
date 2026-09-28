@@ -8,12 +8,12 @@
   plan runs in /workspace/dot-emacs, dispatched through the room
   `dot-emacs_parens41` (cluster plan 41 E.1).
 
-* Goal [0/1]
-  - [ ] G1 `bin/check-parens.sh` exits 0 on the checkout and non-zero,
+* Goal [1/1]
+  - [X] G1 `bin/check-parens.sh` exits 0 on the checkout and non-zero,
         naming the file, on an unbalanced .el.
 
-* Phase A — the check [0/1]
-  - [ ] A.1 write bin/check-parens.sh (~10 lines): for each argument (default
+* Phase A — the check [1/1]
+  - [X] A.1 write bin/check-parens.sh (~10 lines): for each argument (default
         `bartuer-*.el`), `emacs --batch -Q` inserts the file, runs
         `emacs-lisp-mode` and `check-parens`, and prints `BAD <file>` on
         error.  Exit 1 if any file is BAD.
