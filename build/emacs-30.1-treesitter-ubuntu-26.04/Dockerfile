@@ -94,7 +94,7 @@ RUN cd ~/local/src/emacs-30.1 && \
 # COPY ./el /root/etc/el
 
 # 3.4: bumped from 0521e7e (pre-cli) so install/cli exists; 49 P.1: re-pin to a commit with install/fleet
-ENV DOT_EMACS_COMMIT=b4cbfb4d115b21b95b27c797be465f385bd5d253
+ENV DOT_EMACS_COMMIT=61a063c2e8ab217bbad3540ca0977be0ca43f6b1
 RUN mkdir -p ~/etc && \
     cd ~/etc && \
     git clone https://github.com/bartuer/dot-emacs.git el && \

@@ -142,10 +142,19 @@
   Any failure -> post issue --to the cluster A/Q claimant (code bug) or
   fix here (install bug); never patch install/fleet by hand (49-D1).
 
-* TODO Phase P — pack (deps T.24, T.26) [0/1]
-  - [ ] P.1 rebuild azl + 26.04 bundles (38 recipe), 26.04 pin -> the D.3
+* DONE Phase P — pack (deps T.24, T.26) [1/1]
+  - [X] P.1 rebuild azl + 26.04 bundles (38 recipe), 26.04 pin -> the D.3
         sha; verify in both images `cli -V`, `room -h`, no /workspace/cluster
         needed; archive in cluster, README rows; push both repos.
+        :deviation: 26.04 pin -> 61a063c (the T-tested re-export with the 44d06fd
+        bash-5.2 fix), not D.3 11bde0e (cli .3, hangs on 24.04).  azl clones HEAD (77df4f6,
+        install/fleet identical to 61a063c).
+        :done: 08:57 task 3bbef4 on CPC-bazho (c01).  Both images: no /workspace/cluster,
+        cli/room -> /root/etc/el/install/fleet, cli 2026.09.28.5, room -h ok; tarball
+        extracted on a clean base: ubuntu:26.04 and officeagent:devlatest cli .5 + room -h ok,
+        t=function.  Bundles 26.04 5dc5497e (207,717,848 B), azl de7bed1b (277,703,702 B).
+        :finding: room needs python3; plain codeexecutionjupyterext1 and bare ubuntu:26.04
+        have none -> room -h fails there (cli ok).  Base-image gap like 38/3.5, not a bundle bug.
 
 * TODO Phase M — monitor / review (whole run) [0/2]
   - [ ] M.1 every 10 min until P done: `git log` on cluster + dot-emacs for
