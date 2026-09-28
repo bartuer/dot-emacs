@@ -130,6 +130,8 @@
         no hand edit under install/fleet; facts 49-D2: no fleet-*.json in
         dot-emacs; version bumped; tests cited).  Post `issue` --to the
         author on a violation; `review` pass otherwise.
+        :claimed: 07:57 M by dot-emacs-49-make-room-decouple (c08), ack 3d9ae7.
+        :log: 07:58 pass1 review ca44fc: 7 commits, plan docs only, 0 facts, OK.
   - [ ] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
         leave session_top.
 

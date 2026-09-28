@@ -93,7 +93,7 @@ RUN cd ~/local/src/emacs-30.1 && \
 # RUN mkdir -p ~/etc
 # COPY ./el /root/etc/el
 
-# 3.4: bumped from 0521e7e (pre-cli) so install/cli exists
+# 3.4: bumped from 0521e7e (pre-cli) so install/cli exists; 49 P.1: re-pin to a commit with install/fleet
 ENV DOT_EMACS_COMMIT=b4cbfb4d115b21b95b27c797be465f385bd5d253
 RUN mkdir -p ~/etc && \
     cd ~/etc && \
@@ -103,7 +103,7 @@ RUN mkdir -p ~/etc && \
     cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy && \
     cp ~/etc/el/install/killemacs ~/local/bin/killemacs && \
     cp ~/etc/el/install/quote0 ~/local/bin/quote0 && \
-    cp ~/etc/el/install/cli ~/local/bin/cli && \
+    ln -sfn ~/etc/el/install/fleet/cli-sessions.sh ~/local/bin/cli && ln -sfn ~/etc/el/install/fleet/room.sh ~/local/bin/room && \
     cp ~/etc/el/install/killemacs /usr/bin && \
     cp ~/etc/el/install/quote0 /usr/bin && \
     cp ~/etc/el/install/pbcopy.xlicp.sh ~/local/bin/pbcopy

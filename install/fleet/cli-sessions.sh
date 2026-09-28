@@ -40,7 +40,7 @@
 #   n  p  w  next / prev page / pick page from a tree      d  detach
 # The ~/.bashrc `cli` function is a thin wrapper around this script.
 set -uo pipefail
-CLI_VERSION=2026.09.28.2 # YYYY.MM.DD.N -- bump on every edit of this file
+CLI_VERSION=2026.09.28.3 # YYYY.MM.DD.N -- bump on every edit of this file
 
 HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)   # via /usr/local/bin/cli symlink too
 REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"

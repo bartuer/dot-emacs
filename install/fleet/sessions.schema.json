@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cluster/sessions.schema.json",
+  "title": "orch sessions v1 -- /run/orch/sessions.json (plan 35 G1)",
+  "description": "One document per box; one row per GHCP CLI session holding an inuse lock. Source map: .github/REPL/fix.archive/session-telemetry.md. PRIVATE: never served on the banner (33-D3).",
+  "type": "object",
+  "required": ["schema", "host", "collected_at", "lserver", "unattributed_requests", "sessions"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": 1},
+    "host": {"type": "string", "minLength": 1},
+    "collected_at": {"type": "string", "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"},
+    "unattributed_requests": {"type": "integer", "minimum": 0,
+      "description": "L-server requests with no session-state/<uuid> in the prompt (the 17+25 health probe, non-CLI callers)"},
+    "lserver": {
+      "type": "object", "additionalProperties": false,
+      "required": ["up", "errors", "last_error"],
+      "properties": {
+        "up": {"type": "boolean", "description": "something LISTENs on :11434"},
+        "errors": {"type": "integer", "minimum": 0, "description": "ERROR lines in server.jsonl"},
+        "last_error": {"oneOf": [{"type": "null"}, {
+          "type": "object", "required": ["ts", "msg", "error"],
+          "properties": {"ts": {"type": ["string", "null"]}, "msg": {"type": ["string", "null"]},
+                         "error": {"type": "string"}}}]}
+      }
+    },
+    "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}}
+  },
+  "$defs": {
+    "session": {
+      "type": "object", "additionalProperties": false,
+      "required": ["uuid", "name", "pid", "live", "state", "last_event", "started", "age_s",
+                   "idle_s", "turns", "cwd", "model", "requests", "tokens_in", "tokens_out",
+                   "commits_repo", "diffstat_repo", "lserver_errors", "hitl"],
+      "properties": {
+        "uuid": {"type": "string", "pattern": "^[0-9a-f-]{36}$"},
+        "name": {"type": ["string", "null"], "description": "workspace.yaml name: = CLI --name = plan-34 slot name"},
+        "pid": {"type": "integer"},
+        "live": {"type": "boolean", "description": "lock pid is a running copilot"},
+        "state": {"enum": ["WAIT", "BUSY", "ERR", "NOLOG", "HITL", "DEAD"]},
+        "last_event": {"type": ["string", "null"]},
+        "started": {"type": ["string", "null"]},
+        "age_s": {"type": ["integer", "null"]},
+        "idle_s": {"type": ["integer", "null"], "description": "seconds since events.jsonl last written"},
+        "turns": {"type": "integer", "minimum": 0, "description": "user.message count"},
+        "cwd": {"type": ["string", "null"]},
+        "model": {"type": ["string", "null"]},
+        "requests": {"type": "integer", "minimum": 0},
+        "tokens_in": {"type": "integer", "minimum": 0},
+        "tokens_out": {"type": "integer", "minimum": 0},
+        "commits_repo": {"type": ["integer", "null"], "description": "REPO-scoped: headCommit..HEAD, includes other agents' commits and merges"},
+        "diffstat_repo": {"type": ["string", "null"]},
+        "lserver_errors": {
+          "type": "object", "required": ["count", "last"], "additionalProperties": false,
+          "properties": {
+            "count": {"type": "integer", "minimum": 0},
+            "last": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["ts", "error"]}]}
+          }
+        },
+        "last_msg": {"type": ["string", "null"], "maxLength": 160,
+          "description": "optional (39-D13): first 160 chars of the last non-empty assistant.message; never the user prompt; room.py SECRET shapes -> [redacted]"},
+        "hitl": {
+          "type": "object", "required": ["pending", "kind", "question"], "additionalProperties": false,
+          "properties": {
+            "pending": {"type": ["boolean", "null"], "description": "null = unknowable (live NOLOG: folder-trust prompt precedes the log)"},
+            "kind": {"enum": [null, "ask_user", "permission", "unknown"]},
+            "question": {"type": ["string", "null"]}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,13 +1,18 @@
 # usage: FLEET_BOX=<box> bash 39.shell.sh   -- idempotent, light: cli + bashrc block, host + container
-CL=/workspace/cluster; CLI=$CL/bin/cli-sessions.sh
-cd $CL 2>/dev/null || { echo NO-REPO; exit 0; }
-git config --global --add safe.directory $CL 2>/dev/null
-timeout 120 git pull -q --ff-only --no-edit >/dev/null 2>&1 || timeout 120 bash bin/box-pull.sh >/dev/null 2>&1
-v=$(git log -1 --format=%h -- bin/cli-sessions.sh)
-ln -sfn $CLI /usr/local/bin/cli; ln -sfn $CL/bin/room.sh /usr/local/bin/room
+# 49-D6: prefer a LIVE /workspace/cluster checkout; else the vendored export install/fleet (49-D1).
+CL=/workspace/cluster; FD=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)/fleet
+if cd $CL 2>/dev/null; then
+    git config --global --add safe.directory $CL 2>/dev/null
+    timeout 120 git pull -q --ff-only --no-edit >/dev/null 2>&1 || timeout 120 bash bin/box-pull.sh >/dev/null 2>&1
+    BIN=$CL/bin; v=$(git log -1 --format=%h -- bin/cli-sessions.sh)
+elif [ -x $FD/cli-sessions.sh ]; then
+    BIN=$FD; v=fleet@$(head -1 $FD/MANIFEST | cut -c9-15)
+else echo NO-REPO; exit 0; fi
+CLI=$BIN/cli-sessions.sh; IPS=${FLEET_HOME:-$HOME/.fleet}/fleet-ips.json; [ -s $IPS ] || IPS=$BIN/fleet-ips.json
+ln -sfn $CLI /usr/local/bin/cli; ln -sfn $BIN/room.sh /usr/local/bin/room
 B=${FLEET_BOX:-}
 for ip in $(hostname -I 2>/dev/null); do
-  [ -n "$B" ] || B=$(jq -r --arg ip "$ip" '.regions[].boxes|to_entries[]|select(.value==$ip)|.key' bin/fleet-ips.json 2>/dev/null | head -1)
+  [ -n "$B" ] || B=$(jq -r --arg ip "$ip" '.regions[].boxes|to_entries[]|select(.value==$ip)|.key' $IPS 2>/dev/null | head -1)
 done
 [ -n "$B" ] || { echo "NO-BOXNAME $(hostname -I)"; exit 0; }
 blk() { cat <<'BLK'
@@ -74,7 +79,7 @@ H=$(bash -ic 'printf "%s,%s,%s" "$(command -v cli)" "$(type -t t)" "$(complete -
 C=-
 if command -v docker >/dev/null && docker ps --format '{{.Names}}' 2>/dev/null | grep -qx officeagent-dev; then
     D="docker exec -i officeagent-dev"
-    if $D test -x $CLI; then $D ln -sfn $CLI /root/local/bin/cli; $D ln -sfn $CL/bin/room.sh /root/local/bin/room; fi
+    if $D test -x $CLI; then $D ln -sfn $CLI /root/local/bin/cli; $D ln -sfn $BIN/room.sh /root/local/bin/room; fi
     put /root/.bashrc "$D"
     sshput "$D"
     C=$($D bash -ic 'printf "%s,%s,%s" "$(readlink -f $(command -v cli))" "$(type -t t)" "$COPILOT_MODEL"' 2>/dev/null | tail -1),$(gh "$D")

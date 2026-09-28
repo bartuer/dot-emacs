@@ -150,7 +150,7 @@ RUN git config --global --add safe.directory /root/etc/el \
     && cp /root/etc/el/install/pbcopy.xlicp.sh /root/local/bin/pbcopy \
     && cp /root/etc/el/install/killemacs /root/local/bin/killemacs \
     && cp /root/etc/el/install/quote0 /root/local/bin/quote0 \
-    && cp /root/etc/el/install/cli /root/local/bin/cli \
+    && ln -sfn /root/etc/el/install/fleet/cli-sessions.sh /root/local/bin/cli && ln -sfn /root/etc/el/install/fleet/room.sh /root/local/bin/room \
     && cp /root/etc/el/install/killemacs /usr/bin \
     && cp /root/etc/el/install/quote0 /usr/bin \
     && ln -sf /root/etc/el/.emacs.el /root/.emacs.el

@@ -186,7 +186,9 @@ alias t >/dev/null 2>&1 || function t {
 }
 # <<< fleet shell <<<
 # Prefer the live cluster cli/room (cli needs orch-collect.py + room.sh beside it);
-# the vendored ~/local/bin/cli is the fallback when /workspace/cluster is absent.
+# else the vendored export /root/etc/el/install/fleet (plan 49-D6); relinked each shell.
 mkdir -p /root/local/bin; for _c in cli:cli-sessions.sh room:room.sh; do
-    [ -x /workspace/cluster/bin/${_c#*:} ] && [ ! -L /root/local/bin/${_c%%:*} ] && ln -sfn /workspace/cluster/bin/${_c#*:} /root/local/bin/${_c%%:*}
-done; unset _c
+    for _d in /workspace/cluster/bin /root/etc/el/install/fleet; do
+        [ -x $_d/${_c#*:} ] && { ln -sfn $_d/${_c#*:} /root/local/bin/${_c%%:*}; break; }
+    done
+done; unset _c _d
