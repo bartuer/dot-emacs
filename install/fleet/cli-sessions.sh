@@ -44,7 +44,7 @@
 #   n  p  w  next / prev page / pick page from a tree      d  detach
 # The ~/.bashrc `cli` function is a thin wrapper around this script.
 set -uo pipefail
-CLI_VERSION=2026.09.28.5 # YYYY.MM.DD.N -- bump on every edit of this file
+CLI_VERSION=2026.09.28.6 # YYYY.MM.DD.N -- bump on every edit of this file
 
 HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)   # via /usr/local/bin/cli symlink too
 REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"
@@ -248,7 +248,9 @@ regroup() {   # [file, default $REG]
     local t; t=$(mktemp "$F.tmp.XXXX")
     { [ -x "$ROOM_SH" ] && "$ROOM_SH" rooms 2>/dev/null |
         jq -r '.chan as $c | (.joined // [])[] | "\(.)\t\($c)"' 2>/dev/null; true; } |
-    awk -F'\t' 'ph == 1 { g[$1] = ($1 in g) ? g[$1] "," $2 : $2; next }
+    # mawk creates g[$1] BEFORE testing ($1 in g) in `g[$1] = ($1 in g) ? ..`, so every
+    # group came out ",G,H" on a clean ubuntu (mawk is its only awk): test first, then assign.
+    awk -F'\t' 'ph == 1 { if ($1 in g) g[$1] = g[$1] "," $2; else g[$1] = $2; next }
         { n = split($0, f, "|"); if (n < 5) n = 5; f[6] = ($2 in g) ? g[$2] : "-"; if (n < 6) n = 6
           o = f[1]; for (i = 2; i <= n; i++) o = o "|" f[i];  print o }' ph=1 - ph=2 FS='|' "$F" > "$t" \
         && mv "$t" "$F"

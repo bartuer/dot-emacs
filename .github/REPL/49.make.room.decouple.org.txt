@@ -118,6 +118,8 @@
   - [X] D.3 `room-export.sh --check install/fleet` rc 0; commit, push
         github; post done --ref <sha>.
         :done: `OK cluster a5f157d 12 files` rc 0; pushed 11bde0e + dacee83 (49.ctr.test.sh).
+        :log: 10:10 re-export task 28cc19: cluster 6b96b07 (cli 2026.09.28.6, mawk regroup fix);
+        `--check` OK cluster 6b96b07 12 files rc 0; cli -V = 2026.09.28.6.
 
 * DONE Phase T — clean-container tests (deps D; T.24 on c06, T.26 on c07) [2/2]
   :parallel_group: clean_ctr
