@@ -88,7 +88,7 @@ Last: re-pin and rebuild the bundles (next section).
 | `amd64.emacs30.1_26.04`           | `build/emacs-30.1-treesitter-ubuntu-26.04/`               | `DOT_EMACS_COMMIT` pin — bump it |
 | `amd64.arcadia.emacs30.1_azl3.0`  | `build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/` | clones HEAD at build time |
 
-Archived bundles and their sha256 rows are in cluster `archive/README`.
+Archived bundles and their sha256 rows are in cluster `archive/README.split.md`.
 
 ## Which cli/room wins on a box
 
