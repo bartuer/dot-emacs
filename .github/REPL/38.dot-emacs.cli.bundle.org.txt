@@ -202,7 +202,7 @@
         codeexecutionjupyterext1: ssh+jq ok, `type cli` + `cli --list` ok,
         tmux fails on libevent -- a base-image gap, not a cli one.
 
-* DONE Phase 4 — light path: .bashrc + cli straight to every box (no bundle) [6/6]
+* DONE Phase 4 — light path: .bashrc + cli straight to every box (no bundle) [9/9]
   (added 2026-09-27 from user: "bundle -> archive -> push is too heavy;
   meanwhile update tested .bashrc and cli to all box" via fleet_ssh)
   - [X] 4.1 install/fleet-shell.sh (idempotent): git pull cluster; symlink
@@ -270,4 +270,22 @@
                 DOT_EMACS_COMMIT pin NOT bumped (3.4 still owns vendoring cli).
         Verified in both images: type t=function, t forwards COPILOT_PROVIDER_*
         (+ COPILOT_MODEL on azl; 26.04 sets none by design).  Not yet populated.
+  - [X] 4.7 `cps` needed `CLI_REG_TTL=10` baked into the alias.  Moved the default
+        INTO cli (cluster d0ab1ed, 2026.09.28.2): feed_kick uses ttl 10 when
+        under_watch, else 120; explicit CLI_REG_TTL still wins.  39.cli.test 90/0.
+        fleet shell block (fleet-shell + both bundle .bashrc) adds plain
+        `alias cps='watch -n 2 -c cli'`.
+  - [X] 4.8 github.com over ssh.  MEASURED before: every container + 10 hosts
+        (c09 c11-c14 cj02-05 cj09) DENIED -- the key nx.rsa was there but no
+        github Host rule, so ssh offered id_rsa.  fleet-shell now writes a managed
+        `# >>> fleet github >>>` block (Host github.com, User git, IdentityFile
+        ~/.ssh/nx.rsa, IdentitiesOnly yes) at the TOP of ~/.ssh/config on host + ctr,
+        copies the host's nx.rsa into ctrs that lack it (9 ctrs), and prints gh/NOGH
+        in its status line.  AFTER (dot-emacs b4cbfb4): 31/31 hosts gh; 21/24 ctrs gh.
+        Remaining NOGH = c06 c07 c13 ctrs: container has NO DNS (resolv.conf holds
+        only a globalsecureaccess search line) -- a docker/WSL network issue, not ssh.
+        Bundles ship no ~/.ssh config, so unpacking does not clobber the block.
+  - [X] 4.9 Bundles rebuilt with cli 2026.09.28.2 + cps (26.04 pin -> b4cbfb4);
+        both images: cli --version 2026.09.28.2, t=function, cps alias.
+        Archived (cluster 3e4a029): 26.04 702a54ce, azl 908ac7b1.
 
