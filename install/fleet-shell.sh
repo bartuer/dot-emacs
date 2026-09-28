@@ -14,6 +14,8 @@ blk() { cat <<'BLK'
 # >>> fleet shell >>>   (managed by 39.shell.sh -- replaced whole on each roll-out)
 _cli_complete() { COMPREPLY=($(compgen -W "all $(cut -d'|' -f1,2 ~/.copilot/sessions 2>/dev/null | tr '|' '\n' | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}")); }
 complete -F _cli_complete cli
+# cps: live fleet console.  cli itself defaults CLI_REG_TTL=10 under watch (cluster d0ab1ed).
+alias cps='watch -n 2 -c cli'
 # t [name] [session]: attach-or-create tmux "<box>.<name>" running GHCP CLI.
 # session (default = name) is resumed ONLY if it has events.jsonl -- a bare or unloadable
 # --resume drops copilot into its interactive picker; otherwise start it fresh under that name.
@@ -48,13 +50,33 @@ put() {  # $1 = bashrc path (reads/writes via $2 prefix cmd)
     if [ -n "$2" ]; then $2 sh -c "cat > $f" < $tmp.n; else cat $tmp.n > $f; fi
     rm -f $tmp $tmp.n
 }
+# github.com over ssh with the fleet key: a managed block at the TOP of ~/.ssh/config
+# (first match wins).  MEASURED 2026-09-28: every ctr + 10 hosts fell back to id_rsa -> denied.
+SSHB='# >>> fleet github >>>  (managed by 39.shell.sh)
+Host github.com
+     User git
+     IdentityFile ~/.ssh/nx.rsa
+     IdentitiesOnly yes
+# <<< fleet github <<<'
+sshput() {  # $1 = prefix cmd ("" host, "docker exec -i ctr")
+    [ -n "$1" ] && ! $1 test -s /root/.ssh/nx.rsa && [ -s /root/.ssh/nx.rsa ] &&   # same key as host
+        $1 sh -c 'mkdir -p /root/.ssh; umask 077; cat > /root/.ssh/nx.rsa' < /root/.ssh/nx.rsa
+    $1 test -s /root/.ssh/nx.rsa || return 0
+    local t; t=$(mktemp)
+    { printf '%s\n' "$SSHB"; $1 cat /root/.ssh/config 2>/dev/null | sed '/^# >>> fleet github >>>/,/^# <<< fleet github <<</d'; } > $t
+    if [ -n "$1" ]; then $1 sh -c 'cat > /root/.ssh/config; chmod 600 /root/.ssh/config' < $t; else cat $t > /root/.ssh/config; chmod 600 /root/.ssh/config; fi
+    rm -f $t
+}
 put ~/.bashrc ""
-H=$(bash -ic 'printf "%s,%s,%s" "$(command -v cli)" "$(type -t t)" "$(complete -p cli 2>/dev/null | grep -c _cli_complete)"' 2>/dev/null | tail -1)
+sshput ""
+gh() { $1 sh -c 'timeout 15 ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 | grep -q "Hi " && echo gh || echo NOGH'; }
+H=$(bash -ic 'printf "%s,%s,%s" "$(command -v cli)" "$(type -t t)" "$(complete -p cli 2>/dev/null | grep -c _cli_complete)"' 2>/dev/null | tail -1),$(gh "")
 C=-
 if command -v docker >/dev/null && docker ps --format '{{.Names}}' 2>/dev/null | grep -qx officeagent-dev; then
     D="docker exec -i officeagent-dev"
     if $D test -x $CLI; then $D ln -sfn $CLI /root/local/bin/cli; $D ln -sfn $CL/bin/room.sh /root/local/bin/room; fi
     put /root/.bashrc "$D"
-    C=$($D bash -ic 'printf "%s,%s,%s" "$(readlink -f $(command -v cli))" "$(type -t t)" "$COPILOT_MODEL"' 2>/dev/null | tail -1)
+    sshput "$D"
+    C=$($D bash -ic 'printf "%s,%s,%s" "$(readlink -f $(command -v cli))" "$(type -t t)" "$COPILOT_MODEL"' 2>/dev/null | tail -1),$(gh "$D")
 fi
 echo "$v host:$H ctr:$C"

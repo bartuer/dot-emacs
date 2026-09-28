@@ -121,6 +121,8 @@ export FLEET_BOX
 # >>> fleet shell >>>   (managed by 39.shell.sh -- replaced whole on each roll-out)
 _cli_complete() { COMPREPLY=($(compgen -W "all $(cut -d'|' -f1,2 ~/.copilot/sessions 2>/dev/null | tr '|' '\n' | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}")); }
 complete -F _cli_complete cli
+# cps: live fleet console.  cli itself defaults CLI_REG_TTL=10 under watch (cluster d0ab1ed).
+alias cps='watch -n 2 -c cli'
 # t [name] [session]: attach-or-create tmux "<box>.<name>" running GHCP CLI.
 # session (default = name) is resumed ONLY if it has events.jsonl -- a bare or unloadable
 # --resume drops copilot into its interactive picker; otherwise start it fresh under that name.

@@ -40,7 +40,7 @@
 #   n  p  w  next / prev page / pick page from a tree      d  detach
 # The ~/.bashrc `cli` function is a thin wrapper around this script.
 set -uo pipefail
-CLI_VERSION=2026.09.27.12 # YYYY.MM.DD.N -- bump on every edit of this file
+CLI_VERSION=2026.09.28.2 # YYYY.MM.DD.N -- bump on every edit of this file
 
 HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)   # via /usr/local/bin/cli symlink too
 REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"
@@ -269,7 +269,7 @@ under_watch() {
 # The htop view (39-D15/D16): ONE awk over $REG, $REG.state, $REG.top -- no
 # network, no fork per row.  ACT from the feeder's raw state (top f5) + since
 # (f6, epoch; aged HERE so STALL/IDLE flip with no feeder write) + owes (f7),
-# else PROBE's $REG.state.  Sorted ASK<PERM<ERR<STALL<IDLE<DEAD<GONE<-, then
+# else PROBE's $REG.state.  Sorted ASK<HITL<PERM<ERR<STALL<IDLE<DEAD<GONE<-, then
 # registry order.  POSIX awk only: mawk boxes run this too.
 acts() {   # <session width> <last width> <colour 0|1> <feed age> <work width>; stdin box|session|WORK
     awk -F'|' -v w="$1" -v c="$2" -v col="$3" -v fa="$4" -v ww="$5" -v now="$EPOCHSECONDS" \
@@ -294,7 +294,10 @@ acts() {   # <session width> <last width> <colour 0|1> <feed age> <work width>; 
           if (q[1] == "ASK" || q[1] == "PERM" || q[1] == "ERR" || q[1] == "STALL") a = q[1]
           else if (q[1] == "WAIT" && $6 == "-" && secs(q[2]) > free) a = "IDLE"   # 41 G.2 (no feed)
       }
-      r = index("ASK PERM ERR STALL IDLE DEAD GONE -", a); n[r]++; if (a != "DEAD" && a != "GONE") live++
+      # 39 I.6: WAIT whose latest room post is a hitl = waits on a human IN THE ROOM,
+      # not the terminal (ASK); before this it read IDLE (c05 41acb3, 2026-09-27)
+      if ((a == "-" || a == "IDLE") && wi[k] ~ /^hitl/ && (s0 == "WAIT" || (s0 == "" && sv ~ /^WAIT/))) a = "HITL"
+      r = index("ASK HITL PERM ERR STALL IDLE DEAD GONE -", a); n[r]++; if (a != "DEAD" && a != "GONE") live++
       if (!($1 in bx)) { bx[$1]; nb++ }
       l = (k in la && la[k] != "") ? la[k] : "-"; if (length(l) > c) l = substr(l, 1, c - 1) "~"
       g = ($6 == "") ? "-" : $6; v = (k in wk && wk[k] != "") ? wk[k] : "-"
@@ -304,12 +307,12 @@ acts() {   # <session width> <last width> <colour 0|1> <feed age> <work width>; 
     END {
       if (raw) { for (j = 1; j <= m; j++) print rw[j]; exit }   # 41 G.3: full names for --enlist
       R = col ? "\033[1;31m" : ""; Y = col ? "\033[33m" : ""; D = col ? "\033[2m" : ""; Z = col ? "\033[0m" : ""
-      printf "ASK %d PERM %d ERR %d STALL %d IDLE %d DEAD %d GONE %d | %d live/%d boxes | feed %s\n",
-          n[1], n[5], n[10], n[14], n[20], n[25], n[30], live, nb, fa   # <= 80 cols
+      printf "ASK %d HITL %d PERM %d ERR %d STALL %d IDLE %d DEAD %d GONE %d|%d live/%d box|feed %s\n",
+          n[1], n[5], n[10], n[15], n[19], n[25], n[30], n[35], live, nb, fa   # <= 80 cols (HITL added: box, no pipe pad)
       printf "%-5s %-5s %-" w "s %-8s %-13s %-" ww "s %s\n", "ACT", "BOX", "SESSION", "STATE", "GROUP", "WORK", "LAST"
-      split("1 5 10 14 20 25 30 35", o, " ")
-      for (i = 1; i <= 8; i++) for (j = 1; j <= m; j++) if (rk[j] == o[i]) {
-          p = (ac[j] ~ /^(ASK|PERM|ERR)$/) ? R : (ac[j] ~ /^(STALL|IDLE)$/) ? Y : (ac[j] ~ /^(DEAD|GONE)$/) ? D : ""
+      split("1 5 10 15 19 25 30 35 40", o, " ")
+      for (i = 1; i <= 9; i++) for (j = 1; j <= m; j++) if (rk[j] == o[i]) {
+          p = (ac[j] ~ /^(ASK|HITL|PERM|ERR)$/) ? R : (ac[j] ~ /^(STALL|IDLE)$/) ? Y : (ac[j] ~ /^(DEAD|GONE)$/) ? D : ""
           print p row[j] (p == "" ? "" : Z) }
     }' - "$REG.state" "$REG.top" "$REG" 2>/dev/null
 }
@@ -503,7 +506,10 @@ feed_kick() {
     : > "$REG.feed.read"
     # 41: the feed only streams boxes already in $REG -- a session on a NEW box stays
     # invisible until a sweep; so a stale $REG (> CLI_REG_TTL s) gets one background sweep
-    if [ -z "$(find "$REG" -newermt "-${CLI_REG_TTL:-120} seconds" 2>/dev/null)" ]; then
+    # CLI_REG_TTL default: 10 s under `watch` (a frame every 2 s wants new boxes fast; was the
+    # `cps` alias's CLI_REG_TTL=10), 120 s for a one-shot `cli`.  under_watch: /proc reads only.
+    local ttl=${CLI_REG_TTL:-}; [ -n "$ttl" ] || { under_watch && ttl=10 || ttl=120; }
+    if [ -z "$(find "$REG" -newermt "-$ttl seconds" 2>/dev/null)" ]; then
         ( flock -n 9 || exit 0; refresh >/dev/null 2>&1 ) 9> "$REG.sweep.lock" &
     fi
     local p=; { read -r p < "$REG.feed.pid"; } 2>/dev/null
