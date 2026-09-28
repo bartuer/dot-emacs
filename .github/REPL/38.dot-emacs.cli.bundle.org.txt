@@ -128,7 +128,7 @@
         FOLLOW-UP (cluster, not this plan): upstream the CLI_IPS +
         ~/.ssh/config fallback into cluster bin/cli-sessions.sh.
 
-* Phase 3 — roll the refreshed bundle into the fleet [6/7]
+* DONE Phase 3 — roll the refreshed bundle into the fleet [7/7]
   (added 2026-09-26 from user ask "push the bundle to cluster archive
   and populate to all box"; archive 15f9588 + lfs pull on 20 boxes done)
   - [X] 3.1 Untar into running officeagent-dev containers (they still
@@ -173,7 +173,7 @@
         cluster b8522b9: IPS="${CLI_IPS:-$HERE/fleet-ips.json}", ssh-config
         fallback, quiet jq.  Code (minus comments/IPS line) == install/cli;
         boxes() -> 31 via json and via ~/.ssh/config.
-  - [ ] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
+  - [X] 3.4 26.04 (WSL) bundle has NO cli.  MEASURED: archive
         amd64.emacs30.1_26.04 (d342364, 2026-09-15) lists no
         root/local/bin/cli; its builder pins DOT_EMACS_COMMIT=0521e7e
         (pre-9fa5381) and its Dockerfile has no `cp install/cli` line.
@@ -181,6 +181,12 @@
         :interrupt: the pin is load-bearing (rule 4) -- confirm the bump.
         The 26.04 .bashrc sets no COPILOT_MODEL by design (h() picker;
         verify.sh asserts `test -z ${COPILOT_MODEL+x}`), so no model edit there.
+        DONE 2026-09-28 (user: "push to finish the current job" = bump OK):
+        install/cli synced to cluster 2026.09.27.12 (dot-emacs 30fa079); 26.04
+        Dockerfile gains `cp install/cli ~/local/bin/cli`, pin 0521e7e -> 30fa079.
+        Image: cli --version 2026.09.27.12, t=function, COPILOT_MODEL unset.
+        Tarball lists root/local/bin/cli; archived 57fec256 (207,231,141 B),
+        cluster 121398f pushed.
   - [X] 3.5 cli runtime deps.  Needs bash>=4 jq ssh tmux timeout xargs awk
         sed sort -V ps(procps) date -d; `hostname -I` optional (only the
         self-box shortcut; falls back to ssh).  RESOLVED, no bundle change:
@@ -196,7 +202,7 @@
         codeexecutionjupyterext1: ssh+jq ok, `type cli` + `cli --list` ok,
         tmux fails on libevent -- a base-image gap, not a cli one.
 
-* Phase 4 — light path: .bashrc + cli straight to every box (no bundle)
+* DONE Phase 4 — light path: .bashrc + cli straight to every box (no bundle) [6/6]
   (added 2026-09-27 from user: "bundle -> archive -> push is too heavy;
   meanwhile update tested .bashrc and cli to all box" via fleet_ssh)
   - [X] 4.1 install/fleet-shell.sh (idempotent): git pull cluster; symlink
