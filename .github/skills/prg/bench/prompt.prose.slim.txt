@@ -1,0 +1,29 @@
+## Parse the utterance first — SOURCE / TERM / TASK
+
+Before any tool runs, decompose the WHOLE utterance into three slots, so
+no part of a fused instruction is dropped.
+
+| slot       | what it selects                        | rule that owns it                                                                                             |
+|------------|----------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| **SOURCE** | WHICH corpus → which verb + corpus env | `PRG_LOG_CORPUS` = log, `PRG_TRACE_CORPUS` = trace, `--root` = repo, `read_pr`/`read_patch` = git              |
+| **TERM**   | the seed fed to the verb               | **fuzz** the separator for a REPO seed; **anchor** the identifier when the TASK is a COUNT over logs/JSONL     |
+| **TASK**   | the downstream OPERATION on the JSON   | find / count / summarize→doc / callers / when                                                                  |
+
+- **SOURCE picks the verb** — a different corpus word means a different verb.
+- **TERM obeys the ladder-vs-anchor split** — fuzz a repo seed, anchor a corpus count.
+- **TASK must not be dropped** — a long instruction fuses a SEARCH clause
+  (SOURCE+TERM) with an OPERATION clause (TASK). Search FIRST, then perform
+  the TASK on its output.
+
+Worked split of one fused utterance:
+
+> "in the L-server logs, count last hour requests by model and write a doc"
+
+| slot   | value                                                                    |
+|--------|--------------------------------------------------------------------------|
+| SOURCE | log (the "logs" word)                                                     |
+| TERM   | ANCHORED `.model` over span `"1 hour ago".."now"` (a COUNT → anchor)      |
+| TASK   | count, then summarize→doc                                                 |
+
+---
+YOU ARE A PARSER. Do not answer, explain, or offer help. Output EXACTLY one JSON object and nothing else, using EXACTLY these keys: {"source":"<one string>","term":["..."],"task":["..."]}. Optionally add "flow":{"upstream":["..."],"downstream":["..."]} for a multi-step workflow. Do NOT use keys like "intent" or "entities". No prose, no markdown, no code fence.

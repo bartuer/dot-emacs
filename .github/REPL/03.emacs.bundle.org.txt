@@ -1,0 +1,516 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 03 emacs bundle — build devbase + emacs tarballs on c02, ship as archive bundles
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+  :THE_THREE_THAT_BITE_HERE, by name only — read them there, not here:
+  R-MEASURE (a number you did not run is not a number), R-FLEET (a
+  per-box row, never a fleet verdict), R-REPEATABLE (anything that
+  CHANGES state on a box is a script in bin/, fanned out — not a
+  one-liner typed twice).
+
+* Goal
+  Emacs 30.1 (+tree-sitter) and the devbase toolchain are installed and
+  runnable in BOTH tiers on the fleet:
+
+    - the WSL side (ubuntu 24.04), and
+    - the container side (azurelinux 3.0 / arcadia),
+
+  delivered the way this repo already delivers binaries that a target
+  cannot install for itself: as ROOT-EXTRACTABLE TARBALLS committed to
+  =archive/=, unpacked by a =bin/= script.
+
+  Done means, measured per box (never a fleet verdict):
+    - =emacs --version= answers in the WSL tier AND inside the container
+    - the devbase language servers answer (=typescript-language-server
+      --version=, =jedi-language-server --version=)
+    - ssh into the box still works after the drop-in (config + keys
+      intact), and =.bashrc= sources cleanly with no dead endpoint
+    - the four tarballs are committed under =archive/= and pushed
+
+* Dependencies
+  Ground truth MEASURED 2026-09-13, not assumed.  Re-measure before
+  trusting any of it; every line below is a command that was run.
+
+  - :BUILD_BOX: c02 — USER RULING, supersedes the c01 draft.
+    :USER_VERBATIM_2026-09-13: "if ghcp already ready on c02, we only
+    need plan . push, and I can ssh to c02wsl exec the plan inside CLI"
+    So this plan's deliverable is ITSELF: author + commit + push, and the
+    user runs it from a GHCP CLI session on c02wsl.  Do NOT execute the
+    build from here.
+    MEASURED on c02: GHCP CLI 1.0.84-2 present; /workspace/dot-emacs
+    ALREADY CLONED with all 11 build/ dirs; /workspace/bundles exists
+    (holds lserver.tgz).  /workspace/cluster is NOT there yet.
+    :trap: the existing c02 clone reports =fatal: detected dubious
+    ownership in repository= — it is owned by another user, so git
+    refuses it.  Fix with =git config --global --add safe.directory
+    /workspace/dot-emacs= (or re-clone) BEFORE trusting any rev-parse.
+    c01 measurement kept for reference — it MEASURED both base images
+    present plus 922G free, so it remains a valid fallback build box:
+      #+begin_src bash
+      .github/skills/fleet_ssh/fleet-ssh.sh -b c01 \
+        CEJ='docker images --format "{{.Repository}}:{{.Tag}}" | grep -c codeexecutionjupyterext1' \
+        UBU='docker images --format "{{.Repository}}:{{.Tag}}" | grep -c "^ubuntu:24.04"' \
+        DISK='df -h / | tail -1 | tr -s " " | cut -d" " -f4'
+      # c01  1  1  922G
+      #+end_src
+
+  - :SOURCE_REPO: bartuer/dot-emacs.  The build recipes live in its
+    =build/= folder and are AUTHORITATIVE; this plan does not reinvent
+    them.  HTTPS reachability MEASURED from c01 (=git ls-remote=
+    returned a674fa50 on refs/heads).
+
+  - :CLONE_OVER_SSH_NOT_HTTPS — USER RULING, and it is load-bearing.
+    :USER_VERBATIM_2026-09-13: "the clone should use ssh key, then we
+    can push fix back to github, I mean clone in c02"
+    WHY it matters here and is not a preference: this plan MODIFIES
+    dot-emacs (2.5 rewrites bashrc_patch's endpoint, 2.6 fixes the
+    ssh-asset modes).  Those fixes belong upstream, and an HTTPS clone
+    cannot push them back.  So:
+        git clone git@github.com:bartuer/dot-emacs /workspace/dot-emacs
+    :trap: THIS DOES NOT WORK ON ANY BOX TODAY — MEASURED:
+        ssh -T git@github.com  ->  Permission denied (publickey)
+        ls ~/.ssh/id_*         ->  0 keys, root AND human tier
+        test -f ~/.ssh/nx.rsa  ->  NO on c01, c02, c03, c04
+        grep ^Host github.com ~/.ssh/config -> 0 on all four
+    So a github ssh key is a PRECONDITION of this plan, not a detail
+    inside it — see 1.0, which now gates Group 1.
+    THE KEY AND THE CONFIG ARE BOTH KNOWN — user ruling:
+    :USER_VERBATIM_2026-09-13: "and dot-emacs need a special configure
+    like add a host github in ssh configure then git push will work,
+    nx.rsa works for github"
+    VERIFIED from this container: =ssh -i ~/.ssh/nx.rsa -T git@github.com=
+    -> "Hi bartuer! You've successfully authenticated" — i.e. nx.rsa is
+    already a github key for the ACCOUNT THAT OWNS dot-emacs, so no new
+    key needs minting.  What is missing on the boxes is (a) the key file
+    and (b) a Host block telling ssh to use it:
+        Host github.com
+             User git
+             IdentityFile ~/.ssh/nx.rsa
+             IdentitiesOnly yes
+             StrictHostKeyChecking no
+    :trap: =IdentitiesOnly yes= matters.  Without it ssh offers every
+    key in the agent first and github can reject the connection on
+    too-many-auth-failures BEFORE it ever reaches nx.rsa — which reads
+    as "the key is wrong" when the key is fine.
+    :trap: the pre-existing /workspace/dot-emacs on c02 has NO origin
+    remote readable (dubious-ownership refusal) — do not assume it is an
+    ssh clone just because it exists.  Re-point or re-clone it.
+
+  - :FOUR_TARGETS: exactly four of the build/ subfolders matter here:
+    | folder                                                  | produces                                 |
+    |---------------------------------------------------------|------------------------------------------|
+    | devbox-ubuntu-24.04                                     | devbase, WSL tier                        |
+    | emacs-30.1-treesitter-ubuntu-24.04                      | amd64.emacs30.1_24.04.tar.gz             |
+    | devbox-arcadia-azurelinux-3.0-photon-5.0                | devbase, container tier                  |
+    | emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0 | amd64.arcadia.emacs30.1_azl3.0.tar.gz    |
+
+  - :BUILD_CONTRACT: each folder is =docker build= then =./pack.sh=;
+    =pack.sh= bind-mounts =$PWD= to /opt and runs =tar.sh= inside the
+    image, so the tarball lands beside the Dockerfile.  Tarballs are
+    extractable at filesystem root (=tar ... -C /=).
+
+  - :NO_PRIVATE_FEED_AUTH_NEEDED.  MEASURED, and it CANCELS a work item
+    this plan would otherwise have carried.  grep over the whole build/
+    tree for =pkgs.visualstudio / @1js / _packaging / npmrc / pip.conf /
+    index-url= returns NOTHING in any of the four target Dockerfiles.
+    The npm/pip installs are public packages (typescript,
+    typescript-language-server, prettier, eslint, jedi-language-server,
+    jupyter...).  The only private-feed string in the repo is a NUGET
+    line in build/project.org.txt, which is prose and not on any build
+    path here.
+    So =bin/npm-auth.sh= (the AugmentationLoop feed minter proven for the
+    officeagent/api-server build on c02) is NOT a dependency of this
+    plan.  Keep it in mind as the fallback if a build ever does start
+    resolving a scoped package — it already proves the credential route
+    (git credential fill for dev.azure.com -> base64 into _password),
+    so that would be a known, solved problem rather than a blocker.
+
+  - :BASE_IMAGE_IS_PUBLIC.  =mcr.microsoft.com/officepy/codeexecutionjupyterext1=
+    is docker-pull-ready with no login (user ruling, then MEASURED:
+    =docker pull -q= succeeded on c01, which had zero copies before).
+    This REMOVED the cross-box constraint this plan first assumed —
+    c01 had ubuntu:24.04 and c02 had the officepy images, and an earlier
+    draft was about to split the build across two boxes for no reason.
+
+  - :PRECEDENT: (link "/workspace/research/cluster/bin/container-tmux.sh" 0)
+    is the shape to copy.  It is the third bundle in =archive/= and it
+    documents WHY bundles exist here at all: the RUNNING arcadia
+    container cannot reach its own package repo ("Failed to synchronize
+    cache for repo 'Azure Linux Official Cloud Native 3.0'"), so
+    =tdnf install= is not an option inside it.
+    :trap: that is true of the RUNNING container and NOT of the BUILD
+    image — measured, =docker run --rm <azl3 image> tdnf list gcc=
+    resolves gcc 13.2.0-7.azl3, and ubuntu:24.04 apt-get update works.
+    Build-time network is fine; run-time network is not.  That asymmetry
+    is exactly why we build a tarball instead of installing in place.
+
+* Context
+  - :ARCHIVE_CONVENTION: =archive/= already holds lserver.tar.gz (26 MB),
+    wwwrootsdx.tar.gz (6.5 MB), container-tmux.tar.gz (470 KB).  New
+    bundles join them there; a =bin/= script unpacks each.
+
+  - :SIZE_IS_THE_RISK.  container-tmux is 470 KB because tmux is ONE
+    binary with two libs already in the base.  Emacs + a devbase
+    toolchain is a different order of magnitude and these are committed
+    to git.  MEASURE each tarball before committing and record the
+    number; if a bundle is large enough to hurt the clone, say so in the
+    findings rather than committing silently.
+    :trap: the relay is ~50 KB/s container->C01 and ~68 KB/s helix->box
+    (measured earlier this session).  Anything big moves box-to-box over
+    the c01<->c02 mesh (~95 MB/s), or it does not move at all.
+
+  - :SSH_AND_BASHRC_ARE_ALREADY_IN_THE_TARBALL.  devbox-ubuntu-24.04's
+    pack.sh explicitly appends =/root/.ssh/config=,
+    =/root/.ssh/authorized_keys=, =find /etc/ssh=, and =/root/.bashrc=
+    to its file list.  So "make sure ssh config and bashrc work" is
+    mostly a VERIFY step, not an author step — but see the next item,
+    which is a live bug.
+
+  - :BASHRC_PATCH_SHIPS_A_DEAD_IP — FOUND WHILE MEASURING, must be fixed
+    before anything is shipped.  build/bashrc_patch contains:
+        export COPILOT_PROVIDER_BASE_URL="http://172.25.159.143:11434/v1"
+    =172.25.159.143= is the STALE WSL IP that caused this session's
+    helix port-22 outage (two netsh portproxy rules forwarding to a dead
+    WSL address; see
+    (link "/workspace/research/cluster/.github/REPL/fix.archive/helix-port22-cutover-postmortem.md" 0)).
+    Shipping it bakes a dead endpoint into every box's .bashrc.
+    It also pins COPILOT_MODEL="claude-opus-4-7".
+    :trap: a dead PROVIDER_BASE_URL does not fail loudly at shell
+    start — .bashrc sources fine and the breakage only appears later,
+    when the CLI tries to reach the provider.  So "bashrc sources
+    cleanly" is NOT sufficient evidence; the endpoint must be probed.
+
+* TODO Group 1 — clone and stage on c02
+** TODO 1.0 GATE: a github ssh key that can PUSH must exist on c02
+   Everything in Group 2 that fixes dot-emacs depends on this.  Do it
+   first; do not start building and discover at push time.
+   TWO PARTS, both measured missing on every box: the KEY FILE and the
+   HOST BLOCK (see :CLONE_OVER_SSH_NOT_HTTPS: for the exact block and
+   why IdentitiesOnly is required).
+   #+begin_src bash
+   # 1. ship the key (stdin, never argv -- see trap below)
+   ssh c02wsl 'umask 077; mkdir -p ~/.ssh; cat > ~/.ssh/nx.rsa' < ~/.ssh/nx.rsa
+   ssh c02wsl 'chmod 600 ~/.ssh/nx.rsa'
+   # 2. add the Host block, then PROVE it
+   ssh c02wsl 'ssh -o BatchMode=yes -T git@github.com 2>&1 | head -1'
+   # want: "Hi bartuer! You've successfully authenticated..."
+   # today: "Permission denied (publickey)."   <- MEASURED 2026-09-13
+   #+end_src
+   :trap: key material travels over ssh/scp ONLY, never through a
+   command whose argv is logged — the same rule bin/npm-auth.sh follows
+   for the feed token.  The =cat >= form above keeps it off the argv.
+   :trap: R-REPEATABLE — this CHANGES state on a box, so once it works
+   for c02 it belongs in a bin/ script fanned out, not typed per box.
+   :trap: an ssh key that authenticates is not automatically a key that
+   can PUSH to this repo; verify write access, not just auth.
+
+** TODO 1.1 clone dot-emacs on c02 over SSH into a work dir
+   Not /workspace/cluster — that is this repo.  Clone the BUILD source
+   separately so the two trees never confuse each other.
+   #+begin_src bash
+   ssh c02wsl 'git clone git@github.com:bartuer/dot-emacs /workspace/dot-emacs \
+               && cd /workspace/dot-emacs && git rev-parse --short HEAD'
+   #+end_src
+   A clone already exists there but is unusable (dubious ownership, no
+   readable origin).  Either re-clone over ssh, or re-point its remote
+   and add it to safe.directory — then PROVE it can push (a no-op push
+   or =git push --dry-run=), because that is the whole point of 1.0.
+   Record the SHA — it is the provenance of every tarball this plan
+   produces, and it belongs in the bundle findings.
+
+** TODO 1.2 confirm this repo is on c02 and the plan is readable there
+   The user asked for the plan to be picked up ON the box.
+   #+begin_src bash
+   ssh c02wsl 'ls /workspace/cluster/.github/REPL/03.emacs.bundle.org.txt'
+   #+end_src
+   If the repo is not there, clone it there first; it is the same
+   git remote this plan is committed to.
+
+** TODO 1.3 :test_tool: build-probe — one command, four answers
+   Write =bin/emacs-bundle-status.sh= that prints ONE line per tier with
+   the four facts that matter, so the main loop has a single
+   fast read.  Model it on container-tmux.sh's output shape
+   (=host KEY=value=), and probe the ARTIFACT not the package db:
+     - emacs --version in WSL
+     - emacs --version in the container
+     - typescript-language-server --version
+     - jedi-language-server --version
+   :trap: probe with the binary, never with =dpkg -s= / =rpm -q= — an
+   unpacked-but-unrunnable emacs passes a file-existence test and fails
+   the only test that matters.  container-tmux.sh makes this exact point
+   and then asserts a real tmux SESSION rather than =tmux -V=.
+
+* TODO Group 2 — fix the inputs, then build the four tarballs on c02
+  ORDER IS LOAD-BEARING: 2.1 and 2.2 edit files that the builds BAKE IN
+  (bashrc_patch's endpoint, the ssh-asset modes).  Building first means
+  building twice — the tarball is only correct if the fix landed before
+  =docker build= read the context.
+  Then ubuntu first.  Its base image was already local and its
+  Dockerfile is the simpler of the two, so a failure there is cheaper to
+  diagnose than one in the arcadia multi-stage build.
+
+  :DEVIATION_2026-09-14: this session's user explicitly scoped
+  execution to THREE of the four builds — emacs-ubuntu (2.3),
+  emacs-arcadia (2.5), devbase-arcadia (2.6) — and to THIS box, not
+  c02.  =c02wsl= was unreachable from here (no ssh alias resolves it;
+  the mesh config only has =C01=/=C02=, and neither carries a github
+  key or a =/workspace/dot-emacs= clone reachable over that path from
+  this session).  This box (=c01wsl=, container tier) already had a
+  clean HTTPS clone of dot-emacs with the four target Dockerfiles
+  present, direct (non-proxied) internet, Docker with 909G free, and
+  32 CPUs — sufficient to build and smoke-test natively.  So Group 1
+  (clone-on-c02, ssh key gating) is SKIPPED for this run; 2.1/2.2/2.3/
+  2.5/2.6 were done LOCALLY instead.  2.4 (devbox-ubuntu-24.04) was
+  NOT requested and is left TODO.  Group 3 (copy off c02 into
+  archive/, commit, push) and Group 4 (drop-in + verify on the fleet)
+  still assume the c02/fleet topology and are UNCHANGED/TODO — a
+  future session should decide whether to adapt them to "artifacts
+  already sit in this repo's build/ dirs" or to still stage through
+  c02 as originally planned.
+
+** DONE 2.1 fix the dead IP in bashrc_patch (INPUT FIX — before any build)
+   DONE 2026-09-14, executed LOCALLY (not on c02 — see Group-1 deviation
+   note at the top of this group).  Fixed all THREE occurrences of the
+   literal =172.25.159.143= for =COPILOT_PROVIDER_BASE_URL=:
+   =build/bashrc_patch=,
+   =build/emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0/.bashrc=,
+   =build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc= — all now read
+   =http://host.docker.internal:11434/v1=.  Left the unrelated
+   =Host host / Hostname 172.25.159.143= line in
+   =devbox-arcadia-azurelinux-3.0-photon-5.0/config= untouched — that is a
+   different SSH alias, not the Copilot provider endpoint this item
+   targets.  Endpoint liveness (=curl .../v1/models=) NOT re-probed here;
+   that is 4.5's job.
+   See :BASHRC_PATCH_SHIPS_A_DEAD_IP: above.
+   :interrupt_TAKEN_AND_CLOSED: — the user ruled on the endpoint.
+   :USER_VERBATIM_2026-09-13: "yes good catch should use the
+   host.docker.internal"
+   So the literal =172.25.159.143= becomes =host.docker.internal=:
+       export COPILOT_PROVIDER_BASE_URL="http://host.docker.internal:11434/v1"
+   WHY THIS IS THE RIGHT SHAPE, not just a different literal: a NAME is
+   resolved per-box at run time, so one .bashrc is correct on every box
+   and survives a WSL IP change — which is the exact failure that
+   produced the dead 172.25.159.143 in the first place.
+   MEASURED on c02: =getent hosts host.docker.internal= -> 10.4.0.10
+   (resolves, and is NOT the dead address).
+   :trap: resolving is not answering.  MEASURED the same run,
+   =curl http://host.docker.internal:11434/v1/models= -> DOWN on c02.
+   So 4.5's endpoint probe is a REAL check that currently FAILS there;
+   bringing the provider up is its own task, not silently part of this
+   one.  Also re-check COPILOT_MODEL="claude-opus-4-7" against what that
+   endpoint actually serves.
+
+** DONE 2.2 fix the ssh-asset MODES, 755 -> 644 (INPUT FIX — before any build)
+   DONE 2026-09-14.  MEASURED: the source files
+   =devbox-arcadia-azurelinux-3.0-photon-5.0/{config,authorized_keys}=
+   were ALREADY 644 in git/on disk when this session started (fixed in
+   an earlier, untracked session — no commit history shows it). Added
+   the choke-point fix this plan calls for anyway, for defense in depth:
+       COPY --chmod=644 config /root/.ssh/config
+       COPY --chmod=644 authorized_keys /root/.ssh/authorized_keys
+   in =devbox-arcadia-azurelinux-3.0-photon-5.0/Dockerfile=.  VERIFIED IN
+   THE TARBALL per the trap below: =tar tvzf
+   amd64.arcadia.dev.base.azl3.0.tar.gz | grep root/.ssh= shows
+   =-rw-r--r--= on both =config= and =authorized_keys=.
+   USER RULING.  :USER_VERBATIM_2026-09-13: "the authorized_keys and
+   config should be chmod to 644, current tar ball has not fix that"
+   MEASURED in the build tree, and it is NOT uniform — which is why a
+   blanket "chmod everything" would be the wrong fix:
+   | folder                                   | authorized_keys / config |
+   |------------------------------------------|--------------------------|
+   | devbox-ubuntu-24.04                      | 644 — already correct    |
+   | emacs-30.1-treesitter-ubuntu-24.04       | 644 — already correct    |
+   | devbox-arcadia-azurelinux-3.0-photon-5.0 | 755 — WRONG, fix this    |
+   ROOT CAUSE, found by reading the Dockerfile rather than guessing:
+   devbox-arcadia .../Dockerfile:112-113 does a bare
+       COPY config /root/.ssh/config
+       COPY authorized_keys /root/.ssh/authorized_keys
+   with no =--chmod= and no following =chmod=, so Docker PRESERVES the
+   source file's 755.  Line 101 chmods /root/.ssh to 700 but never the
+   files inside it.
+   Fix at the choke point — in the Dockerfile, so the tarball is born
+   correct rather than repaired after unpacking:
+       COPY --chmod=644 config /root/.ssh/config
+       COPY --chmod=644 authorized_keys /root/.ssh/authorized_keys
+   and normalize the two source files in git as well (=chmod 644=), so a
+   future builder that copies plainly still gets 644.
+   :trap: 755 on these is not cosmetic.  sshd REFUSES an overly
+   permissive config/authorized_keys and falls back to no-key auth — the
+   failure surfaces as "Permission denied (publickey)" on a box whose
+   key material is present and correct, which is a deeply misleading
+   symptom.
+   :trap: VERIFY IN THE TARBALL, not in the build context.  =tar tvzf=
+   shows the shipped mode; that is the artifact the box will unpack:
+   #+begin_src bash
+   tar tvzf <devbase>.tar.gz | grep -E 'root/\.ssh/(config|authorized_keys)'
+   # want -rw-r--r-- on both
+   #+end_src
+
+** DONE 2.3 build emacs-30.1-treesitter-ubuntu-24.04
+   DONE 2026-09-14, built LOCALLY (host arch amd64 == target arch amd64,
+   so plain =docker build= — no buildx/qemu, no proxy needed; direct
+   internet confirmed reachable from this box).  NOT run on c02 — see
+   the Group-1 deviation note.
+   Produced =amd64.emacs30.1_24.04.tar.gz=, MEASURED 198 MiB (207167222
+   bytes).  SMOKE-TESTED in a clean =ubuntu:24.04= container (separate
+   shell from the build): unpack + =ldconfig= +
+   =emacs --version= -> "GNU Emacs 30.1", =(princ emacs-version)= ->
+   "30.1", vterm =require= -> "VTERM OK".  No Dockerfile changes needed
+   for this build.
+
+** TODO 2.4 build devbox-ubuntu-24.04
+   Same shape.  This is the tarball that carries ssh config +
+   authorized_keys + /etc/ssh + .bashrc, so it is the one whose contents
+   must be inspected before it is trusted:
+   #+begin_src bash
+   tar tzf <devbase>.tar.gz | grep -E '^root/\.ssh/|^etc/ssh/|^root/\.bashrc$'
+   #+end_src
+
+** DONE 2.5 build emacs-30.1-treesitter-arcadia-azurelinux-3.0-photon-5.0
+   DONE 2026-09-14, built LOCALLY (see Group-1 deviation note).  TWO
+   BUGS found and fixed here, both new findings not anticipated by this
+   plan — details in
+   =.github/REPL/fix.archive/emacs-bundle-arcadia-build-fixes.md=:
+     1. Dockerfile's own header comment claimed gcc/make/tar/curl/
+        zlib-devel/pkgconf were "already in base" — MEASURED FALSE for
+        gcc, make, which (rpm -qa and a filesystem search both came up
+        empty).  devbox-arcadia never invokes gcc/make so it never
+        tripped over the same stale claim.  Added
+        =gcc make which= to the =tdnf install -y= list.
+     2. =amd64.tar.list= hardcoded exact shared-library filenames for
+        libgnutls/libhogweed/libnettle (=.30.37.1=, =.6.8=, =.8.8=) that
+        no longer match what the base image ships (=.30.42.0=, =.6.9=,
+        =.8.9=) — base-image package updates drift these version
+        suffixes.  Updated the three entries in =amd64.tar.list= to the
+        MEASURED current versions.
+   Produced =amd64.arcadia.emacs30.1_azl3.0.tar.gz=, MEASURED 265 MiB
+   (277081286 bytes).  SMOKE-TESTED in a clean
+   =codeexecutionjupyterext1:latest= container (separate shell): unpack
+   + =ldconfig= + =emacs --version= -> "GNU Emacs 30.1", vterm =require=
+   -> "VTERM OK".
+
+** DONE 2.6 build devbox-arcadia-azurelinux-3.0-photon-5.0
+   DONE 2026-09-14, built LOCALLY (see Group-1 deviation note).  ONE BUG
+   found and fixed — details in
+   =.github/REPL/fix.archive/emacs-bundle-arcadia-build-fixes.md=:
+   =tar.sh='s npm-wrapper loop ran =readlink -f= on
+   =$NPM_GPREFIX/bin/$cmd= UNCONDITIONALLY; GNU =readlink -f=
+   canonicalizes even a non-existent path, so it emitted a phantom
+   =usr/bin/tsserver= entry and =tar= aborted mid-archive.  ROOT CAUSE:
+   the pinned =typescript@7.0.2= dropped the standalone =tsserver=
+   binary (folded into the =tsc= CLI); =typescript-language-server=
+   does not need it and still answers fine.  Fixed by guarding the loop
+   with =[ -e "$NPM_GPREFIX/bin/$cmd" ] || continue= before resolving.
+   Produced =amd64.arcadia.dev.base.azl3.0.tar.gz=, MEASURED 47 MiB
+   (49034304 bytes) — comfortably the smallest of the three, as
+   expected (no compiled Emacs inside).  SMOKE-TESTED in a clean
+   =codeexecutionjupyterext1:latest= container (separate shell):
+   =typescript-language-server --version= -> "6.0.0",
+   =jedi-language-server --version= -> "0.47.0".  Also VERIFIED the
+   2.2 fix landed in the artifact: =tar tvzf ... | grep root/\.ssh=
+   shows =-rw-r--r--= on both =config= and =authorized_keys=.
+
+* TODO Group 3 — commit the bundles into archive/ and push
+** TODO 3.1 copy the four tarballs off c02 into archive/
+   Box-to-box or box-to-here; mind the relay rate in :SIZE_IS_THE_RISK:.
+
+** TODO 3.2 record provenance beside the bundles
+   A bundle with no recorded source SHA is unreproducible.  Write the
+   dot-emacs SHA from 1.1, the base image digests, the build date and
+   each tarball's measured size into
+   =.github/REPL/fix.archive/emacs-bundle-provenance.md=.
+
+** TODO 3.3 commit and push to THIS repo
+   Bundles + provenance + the bin/ scripts in one commit.
+
+** TODO 3.4 push the dot-emacs fixes UPSTREAM too
+   USER RULING (answers "btw, the plan should be in dot-emacs also,
+   right?"): yes — this plan changes dot-emacs, so dot-emacs must
+   receive those changes, and the plan that explains them.
+   TWO REPOS, DIFFERENT CONTENT — do not mirror blindly:
+     - THIS repo (cluster) keeps the plan as the EXECUTION record: the
+       fleet measurements, the archive/ bundles, the bin/ drop-ins.
+       Those are cluster facts and mean nothing upstream.
+     - dot-emacs receives the SOURCE FIXES (2.5 endpoint, 2.6 modes)
+       plus a short build note in its own =build/= folder — it already
+       carries =build/project.org.txt=, so that is where a build-level
+       document belongs, next to the recipes it describes.
+   :trap: do NOT push cluster's fleet/box details upstream.  This is a
+   public repo; box names, internal endpoints and credential routes
+   are not its business.  Send the fix, not the environment.
+   :trap: this is the step 1.0's key gate exists for — if 1.0 was
+   skipped, everything up to here still "worked" and only this fails.
+
+* TODO Group 4 — drop in, both tiers, then verify
+** TODO 4.1 write bin/wsl-emacs.sh (WSL tier drop-in)
+   Idempotent, like container-tmux.sh: a tier that already has a working
+   emacs is a no-op.
+
+** TODO 4.2 write bin/container-emacs.sh (container tier drop-in)
+   Same shape; =docker cp= + unpack at /, then assert the artifact runs.
+   :PORT_CONVENTION, so the executor does not rediscover this the hard
+   way (I did, this session):
+     | 22   | Windows sshd   | =cNNwin= |
+     | 2200 | WSL distro     | =cNNwsl= |
+     | 2222 | container sshd | =cNN=    (BARE name, like helix/devcontainer) |
+   There is NO =ctr= tier and NO port 2224.  2224 was correct only while
+   the distro held 2222; the distro moved to 2200 and vacated it.
+   :trap: A =~/.ssh/config= ON DISK MAY PREDATE THE FIX.  =bin/fleet.py=
+   is the generator and is authoritative — REGENERATE, never read:
+       python3 bin/fleet.py sshconfig > ~/.ssh/config
+   MEASURED after regenerating: =ssh c01= lands on Microsoft Azure Linux
+   3.0 (c01, c02).  c03/c04 run no container, so they are legitimately
+   (unreachable) at that tier — not a failure of this plan.
+   So the VERIFY half of this item is plain ssh (or =-t ""= through the
+   wrapper); =docker cp= is only needed for the WRITE half.
+
+** TODO 4.3 fan both out and read the table
+   #+begin_src bash
+   .github/skills/fleet_ssh/fleet-ssh.sh \
+     EMACS='emacs --version | head -1' \
+     TSLS='typescript-language-server --version 2>/dev/null || echo -' \
+     JEDI='jedi-language-server --version 2>/dev/null || echo -'
+   #+end_src
+   :trap: UNIFORM COLUMNS ARE WHAT A BROKEN PROBE LOOKS LIKE.  This
+   session was bitten twice — a quoting-death awk returned NONE on 4/4
+   while the fleet was fine, and a wrong tmux socket returned "-" on
+   4/4.  If every box answers identically, prove the probe works by
+   running it manually on one box before believing the table.
+
+** TODO 4.4 verify ssh still works after the drop-in
+   The devbase tarball overwrites =/root/.ssh/config=,
+   =authorized_keys= and =/etc/ssh= — i.e. it can lock you out of the
+   box it just landed on.
+   :hard-rule: back up the existing ssh material BEFORE unpacking, and
+   verify on ONE box with a SECOND session already open, never by
+   closing the only session you have.  Only then fan out.
+
+** TODO 4.5 verify .bashrc sources cleanly AND its endpoint answers
+   Two separate checks — see the trap in :BASHRC_PATCH_SHIPS_A_DEAD_IP:.
+   =bash -lc true= proves syntax; it does NOT prove the provider URL is
+   alive.  Probe the endpoint itself.
+
+* Main Loop
+  With :test_tool: =bin/emacs-bundle-status.sh= ready:
+    - (R) read the per-box table; find the tier/box that is not green
+    - (E) fix in the build recipe or the drop-in script, rebuild that
+          ONE tarball
+    - (P) re-run the test_tool in a SEPARATE shell from the build
+    - (L) until every box answers in both tiers
+
+  Stop conditions that are NOT success:
+    - a uniform column (see 4.3 trap)
+    - "the file is there" without the binary running
+    - ssh verified only from the session that was already open

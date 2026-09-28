@@ -18,13 +18,13 @@ usr/local/lib/libvterm.so.0.0.0
 usr/local/lib/pkgconfig/vterm.pc
 usr/lib/libgnutls.so
 usr/lib/libgnutls.so.30
-usr/lib/libgnutls.so.30.37.1
+usr/lib/libgnutls.so.30.42.0
 usr/lib/libhogweed.so
 usr/lib/libhogweed.so.6
-usr/lib/libhogweed.so.6.8
+usr/lib/libhogweed.so.6.9
 usr/lib/libnettle.so
 usr/lib/libnettle.so.8
-usr/lib/libnettle.so.8.8
+usr/lib/libnettle.so.8.9
 usr/bin/aspell
 usr/bin/ispell
 usr/bin/spell

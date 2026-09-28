@@ -11,11 +11,20 @@ FROM mcr.microsoft.com/officepy/codeexecutionjupyterext1
 WORKDIR /opt
 
 # Install only what's missing for the Emacs build.
-# gcc, make, tar, curl, zlib-devel, pkgconf already in base.
+# tar, curl, pkgconf already in base.
+# :trap: the header comment above claimed gcc/make were pre-installed —
+# MEASURED FALSE 2026-09-14 (rpm -qa and a filesystem search both come up
+# empty for gcc/make/which in codeexecutionjupyterext1:latest). This build
+# genuinely compiles aspell-dict, tree-sitter and libvterm from source, so
+# it needs a real toolchain; devbox-arcadia never invokes gcc/make so it
+# never noticed the same stale claim.
 #
 # Extra packages for libvterm + emacs-libvterm dynamic module:
 #   cmake, libtool   — build system for libvterm + emacs-libvterm
 RUN tdnf install -y \
+        gcc \
+        make \
+        which \
         glibc-devel \
         kernel-headers \
         binutils \

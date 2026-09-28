@@ -1,0 +1,47 @@
+# fleet_ssh parse gold set. REAL utterances mined from this session's
+# events.jsonl (user.message), hand-labeled per SKILL.md's three slots:
+#   SCOPE   which boxes -- csv of box names, or "all" when none is named
+#   COLS    the table columns -- one per thing asked (csv)
+#   PROBE   whether a bash probe is derivable: yes|no
+# Columns are TAB-separated:
+#   utterance <TAB> scope <TAB> cols(csv) <TAB> probe
+#
+# EVERY ROW IS A FAILURE THAT ACTUALLY HAPPENED. Repeats in the session are
+# the frustration signal -- the user re-sent the same query because the last
+# answer was wrong. The repeat count is noted per row.
+#
+# The transport was NEVER the bug: ssh fan-out worked every time. All seven
+# failures were PARSE failures, so this bench grades the parse only.
+
+# -- scope: explicit box names must be honored, not widened to the fleet --
+/fleet_ssh c01 c02 rg version	c01,c02	rg	yes
+/fleet_ssh c01, c02 git-lfs, rg, jq, paralle version	c01,c02	git-lfs,rg,jq,parallel	yes
+# -- scope: unnamed means ALL boxes, never a refusal to guess --
+/fleet_ssh rg,jq,node,python,paralle version	all	rg,jq,node,python,parallel	yes
+# -- probe: NOT a version check. "how many" is a count; any bash qualifies --
+/fleet_ssh how many apt pckage installed in each box?	all	apt_packages	yes
+# -- probe: awk/grep are not in any recipe. Refusing here is FORBIDDEN --
+/fleet_ssh awk and grep version	all	awk,grep	yes
+# -- cols: ONE utterance, TWO columns. Do not drop the second --
+/fleet_ssh cpu core number and usage	all	cores,usage	yes
+# -- probe: a bare command IS the probe. This one returned an EMPTY reply --
+/fleet_ssh docker ps	all	docker_ps	yes
+# -- recipes remain invocable BY NAME (shorthand, never a mapping target) --
+/fleet_ssh stage status	all	stages	yes
+# -- the ONLY legal zero-tool case: nothing was asked.  probe=no means ASK,
+# -- it does NOT license picking a sweep.  MEASURED 2026-09-26: recovery
+# -- printed nothing, and the blank was filled by GUESSING
+# -- `recipes.sh mesh` -- 930 dials, one turn after a ghcp question.
+# -- Expensive AND wrong.  A recipe name is never a default.
+# -- UPDATE 2026-09-27: ASK is the LAST resort, not the first.  The
+# -- events.jsonl path SKILL.md used to name is never written for the
+# -- running session (permanently dead, not a flush race); the working
+# -- recovery is the session_store_sql tool.  It returned the real
+# -- utterance -- `/fleet_ssh mesh` -- so mesh was RIGHT, and the 09-26
+# -- guess was wrong about PROCESS while landing on the answer.
+# -- Note the guess echoed `mesh` from the prior turn: a guess built from
+# -- context feels like a deduction, which is what makes it dangerous.
+# -- This row still grades probe=no, because the graded question is "is a
+# -- probe derivable FROM THIS TEXT", and from a bare `/fleet_ssh` it is
+# -- not -- recovery is a separate step that happens before parsing. --
+/fleet_ssh	all		no

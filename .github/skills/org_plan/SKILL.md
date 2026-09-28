@@ -93,6 +93,19 @@ required to open and respect whatever is currently there.
       :interrupt:
       - :test_tool: the test/verify tool to make sure our goal
         accomplished, we will use it in the *Main Loop*
+      - :interrupt: is a ONE-SHOT gate, not a permanent property of
+        the item.  The MOMENT the user answers it, the author MUST
+        rewrite the marker to :interrupt_TAKEN_AND_CLOSED: and
+        record the answer VERBATIM under a :USER_VERBATIM_<date>:
+        key right beneath it.  A live :interrupt: on an item that
+        has already been ruled on is a BUG in the plan doc: it
+        makes every later reader stop and re-ask a settled
+        question, which wastes the user's time and is the one
+        thing they will not forgive twice.
+      - the same applies when a ruling on ITEM A settles ITEM B's
+        interrupt.  Close BOTH, and cross-reference the item that
+        carries the verbatim answer.  Do not leave B looking open
+        because the words landed on A.
       - remember, never run test and test target in the same shell
         run test in a shell, run main loop in another, otherwise you
         will struggle a lot
@@ -133,6 +146,40 @@ Canonical template — paste at the very top of every new
   rules there and follow them.  This plan intentionally does
   not restate any rule — the per-repo instructions are the
   single source of truth.
+
+```
+
+### optional header — execution environment (only when the file exists)
+
+Before authoring, test for an execution-environment file at
+`${FLEET_HOME:-$HOME/.fleet}/cluster.md`. **If it is absent, skip this
+whole section.** Emit no block and run no SENSE command; the plan is
+authored exactly as before.
+
+If it exists:
+
+1. **SENSE.** Read the file, run the SENSE commands it lists, and read
+   their output before you write any work item. This skill names no
+   command; the file does.
+2. **Record it.** Add a `* MEASURED <ts>` snapshot to the plan. Quote
+   the file's session-count header verbatim. List the busy and free
+   workers. List every live session with its group and its work, and
+   mark the ones that already touch the same plan or files. Name any
+   existing group to join
+   instead of creating a new one.
+3. **Size the waves.** Each `:parallel_group:` wave is at most the number
+   of free workers.
+4. **Point at it.** Emit this block right after `* Dev process setup`.
+   It points at the file by path and restates none of its content:
+
+```org
+* Execution environment
+  This plan runs on a multi-machine environment described in:
+
+    - ${FLEET_HOME:-$HOME/.fleet}/cluster.md
+
+  Read it before executing.  Where it defines parallelism, it
+  outranks subagent fan-out.  This plan does not restate it.
 
 ```
 

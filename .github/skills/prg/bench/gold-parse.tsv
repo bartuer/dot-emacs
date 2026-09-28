@@ -1,0 +1,23 @@
+# prg parse gold set (plan 43 CKP-3). REAL utterances mined from
+# ~/.copilot/session-store.db (turns.user_message), hand-labeled per the
+# SKILL.md parse recipe: source words -> verb/corpus; fuzz-vs-anchor for term;
+# op words -> downstream task. Columns are TAB-separated:
+#   utterance <TAB> source <TAB> term(csv) <TAB> task(csv)
+# source in {repo, log, trace, git}. term/task empty => empty list.
+# Covers repo/graph, log, trace (>=3 sources). Prefer fused search+op clauses.
+grep on our trace jsonl, show me in the smoke time span, there are 18 LLM request	trace	LLM request	count
+search success trace.otel.jsonl for the correct message format	trace	message format	find
+check inside container the trace begin flow	trace	begin flow	find
+how many 429 in this test session?	log	429	count
+also include doc search count into the column	log	doc search	count
+grep on our trace josnl, show me in the smoke time span, there are 18 LLM request	trace	LLM request	count
+how many LLM request in the L-server log by model	log	LLM request	count,summarize
+review the code change, find FSM logic flaw	repo	FSM	find
+do do you find fragility catelog code definition?	repo	fragility catelog	find
+where is extract_blocks.py	repo	extract_blocks.py	find
+where is velixo-enrich system prompt?	repo	velixo-enrich system prompt	find
+who calls onSessionClosed in the websocket manager	repo	onSessionClosed	callers
+follow hasActiveTurn to find where the type mismatch is	repo	hasActiveTurn	callers,find
+when did the merge branch last change	git	merge branch	when
+how many uncommit (include untracked) leave in working tree?	git	uncommit	count
+how many such race holes in our FSM?	repo	race holes,FSM	count,find

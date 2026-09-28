@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "scope": {
+      "type": "string",
+      "description": "Comma-separated box names mentioned in the utterance (e.g. \"c01,c02\"), or the literal word \"all\" when no box name appears."
+    },
+    "cols": {
+      "type": "integer",
+      "description": "How many distinct things the utterance asks for, i.e. the number of table columns EXCLUDING the leading BOX column. 0 only when nothing at all was asked."
+    }
+  },
+  "required": ["scope", "cols"]
+}

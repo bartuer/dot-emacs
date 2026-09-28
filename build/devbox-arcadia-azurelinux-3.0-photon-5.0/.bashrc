@@ -99,6 +99,7 @@ export COPILOT_PROVIDER_TYPE="openai"
                                                                                                    
 # 2. Point to your local Ollama endpoint
 export COPILOT_PROVIDER_BASE_URL="http://host.docker.internal:11434/v1"
+export LSERVER_IP="172.25.159.143"
                                                                                                    
 # 3. Specify the model name (as seen in 'ollama list')
 export COPILOT_MODEL="claude-opus-5-5"

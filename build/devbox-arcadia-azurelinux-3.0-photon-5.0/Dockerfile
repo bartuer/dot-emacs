@@ -109,8 +109,8 @@ COPY entry.sh /bin/entry
 RUN chmod +x /bin/entry
 
 COPY .bashrc /root/.bashrc
-COPY config /root/.ssh/config
-COPY authorized_keys /root/.ssh/authorized_keys
+COPY --chmod=644 config /root/.ssh/config
+COPY --chmod=644 authorized_keys /root/.ssh/authorized_keys
 # Docker bind-mounts /etc/resolv.conf in every container, masking any baked
 # layer. Ship as .baked; entry.sh copies it into place at container start.
 COPY resolv.conf /etc/resolv.conf.baked

@@ -36,6 +36,23 @@ NOT restate any of those rules — dev-process specifics live only
 in the per-repo instruction files so a checkout in another repo
 inherits that repo's rules automatically.
 
+**Execution environment (only when the file exists).** The plan may have
+a `* Execution environment` block, or
+`${FLEET_HOME:-$HOME/.fleet}/cluster.md` may exist. In either case, read
+that file first. Then run the SENSE commands it lists and read their
+output before you pick an item. This skill names no command; the file
+does.
+
+- **Skip taken items.** Pass over any item that another live session's
+  reported work already names.
+- **Claim first.** Claim an item the way the file says before you edit
+  anything.
+- **Parallelism comes from the file.** Where the file defines
+  parallelism, use it instead of FLEET MODE and intra-doc subagents.
+
+If there is no file and no block, do none of this. The subagent sections
+below stay the default.
+
 When the user names a specific phase (e.g. "phase 17.1"), scope execution
 to that work-item group only; otherwise execute from the first non-DONE
 work-item group forward.
@@ -66,8 +83,40 @@ Conventions you must follow:
    *separate shell session* from the code being tested (the plan format
    says so explicitly). Use `mode: "async"` + a distinct `shellId` for
    long-running test loops.
-4. **`:interrupt:` items** require user confirmation — pause and call
-   `ask_user` before proceeding past one.
+4. **`:interrupt:` items — DO NOT STOP THE AUTOPILOT unless it is
+   genuinely unavoidable.** The default is to keep working. Stopping
+   is the expensive, exceptional path, and it must earn itself.
+
+   Before you even consider `ask_user`, walk this ladder and take the
+   FIRST rung that applies:
+
+   1. **Already answered?** A plan doc routinely carries a live
+      `:interrupt:` line directly above the ruling that answered it.
+      If the body holds a ruling, a `:USER_VERBATIM_…:`, a
+      `:…_TAKEN:`, or a `:SUPERSEDED_BY_…:` pointing at another item
+      — **the gate is closed.** Close the marker in place
+      (`:interrupt_TAKEN_AND_CLOSED:` + the verbatim answer) and go.
+   2. **Answerable by measurement?** If a command can decide it, the
+      question was never for the user. Run it. R-MEASURE outranks
+      asking — a number settles what an opinion cannot.
+   3. **Does the plan already `:recommend:` one?** Take it, record
+      that you took it and why. That is what the recommendation is
+      for.
+   4. **Reversible?** If a wrong choice is cheap to undo (revert one
+      commit, regenerate one artifact), just choose, say so loudly in
+      the commit, and continue. Prefer the reversible option
+      explicitly.
+   5. **Only now**: is the decision genuinely irreversible AND
+      unmeasurable AND uncovered by any recommendation — a published
+      contract, a naming API, deleting data? Then `ask_user`.
+
+   **Never stop merely to confirm, to report progress, to pick
+   between options you could measure, or because a marker exists.**
+   If you ask and the user is unavailable, do not block: decide on
+   the plan's `:recommend:` or the most reversible option, record the
+   decision and its reasoning in the item, and keep going. A stalled
+   autopilot delivers nothing; a recorded, reversible decision can
+   always be corrected.
 5. **Link format `(link "path" digit)`** — `digit` is the approximate
    character offset; use it as a hint for where to scroll/view, not a
    strict requirement.
@@ -199,8 +248,8 @@ independent subagent task, all launched in parallel by the runtime:
 
 ```
 /fleet
-  exec_plan '/workspace/OfficeAgent/.github/REPL/17.foo.org.txt'
-  exec_plan '/workspace/OfficeAgent/.github/REPL/19.bar.org.txt'
+  exec_plan '<repo-root>/.github/REPL/17.foo.org.txt'
+  exec_plan '<repo-root>/.github/REPL/19.bar.org.txt'
 ```
 
 Or the user can type it directly in the GHCP CLI terminal:
@@ -410,8 +459,15 @@ After all subagents in a wave return:
 - **Running `:test_tool:` in the same shell as the code under test**
   → the plan doc warns "you will struggle a lot". Use distinct
   `shellId` values.
-- **Skipping `:interrupt:` markers** → these are explicit human-in-
-  the-loop gates. Always `ask_user` first.
+- **Stopping the autopilot when you did not have to** → the default
+  failure, and the one the user actually complains about. Walk rule
+  4's ladder: already answered → measurable → `:recommend:` →
+  reversible → *only then* `ask_user`. Re-asking a settled question,
+  or pausing to confirm something a command could decide, is not
+  caution; it is making the user do your work.
+- **Skipping a genuinely irreversible `:interrupt:`** → the opposite
+  failure. A published contract, a naming API, or deleting data does
+  warrant `ask_user`. Rare, but real.
 - **Fleeting docs that share state** → race conditions corrupt
   sweeps. Pre-check, fall back to serial when in doubt.
 - **Intra-doc fleet writing the plan doc from subagents** → guaranteed

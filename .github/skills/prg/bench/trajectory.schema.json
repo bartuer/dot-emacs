@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://prg/bench/trajectory.schema.json",
+  "title": "prg trajectory (Round-2 connected object)",
+  "description": "The single object prg-trace.sh connect emits: a span-scoped, deterministically-linked trajectory. Every field is tool-derived (no model). A consumer parses this without reading source.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["session", "span", "turns", "edges", "keywords"],
+  "properties": {
+    "session": { "type": "string" },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      }
+    },
+    "turns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["turn", "ts", "role", "keywords", "refs", "slots"],
+        "properties": {
+          "turn": { "type": "integer", "minimum": 0 },
+          "ts": { "type": "string" },
+          "role": { "type": "string" },
+          "keywords": { "type": "array", "items": { "type": "string" } },
+          "refs": { "type": "array", "items": { "type": "string" } },
+          "slots": {
+            "type": "object",
+            "description": "Per-turn SOURCE/TERM/TASK — the same decomposition the parse recipe applies to one utterance, derived deterministically (no model) from the turn's keywords by kind. SOURCE=lens/role; TERM=seeds (symbol|path|span|commit); TASK=operation (event|tool|model).",
+            "additionalProperties": false,
+            "required": ["source", "term", "task"],
+            "properties": {
+              "source": { "type": "string" },
+              "term": { "type": "array", "items": { "type": "string" } },
+              "task": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from_turn", "to_turn", "via"],
+        "properties": {
+          "from_turn": { "type": "integer", "minimum": 0 },
+          "to_turn": { "type": "integer", "minimum": 0 },
+          "via": { "type": "string" }
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["keyword", "kind", "count", "refs"],
+        "properties": {
+          "keyword": { "type": "string" },
+          "kind": { "type": "string" },
+          "count": { "type": "integer", "minimum": 1 },
+          "refs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

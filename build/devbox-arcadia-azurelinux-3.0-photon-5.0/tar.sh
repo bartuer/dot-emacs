@@ -123,10 +123,18 @@ done
 # NOTE: the typescript package only exports `tsc` in its bin map; there is no
 # `tsserver` executable. typescript-language-server invokes tsserver
 # programmatically via node.
+# :trap: `readlink -f` canonicalizes even a NON-existent path (GNU
+# coreutils), so it returns a bogus resolved path for a command that was
+# never installed (e.g. `tsserver` was dropped as a standalone binary in
+# typescript 7.x — typescript-language-server no longer needs it). Guard
+# with `-e` on the SOURCE before resolving, or tar chokes on a phantom
+# entry. MEASURED 2026-09-14: tsserver absent from typescript@7.0.2,
+# `typescript-language-server --version` still answers fine without it.
 for cmd in tsc typescript-language-server; do
+  [ -e "$NPM_GPREFIX/bin/$cmd" ] || continue
   target=$(readlink -f "$NPM_GPREFIX/bin/$cmd" 2>/dev/null || true)
   [ -n "$target" ] && echo "${target#/}" >> "$FLIST"
-  [ -e "$NPM_GPREFIX/bin/$cmd" ] && echo "${NPM_GPREFIX#/}/bin/$cmd" >> "$FLIST"
+  echo "${NPM_GPREFIX#/}/bin/$cmd" >> "$FLIST"
 done
 
 sort -u "$FLIST" -o "$FLIST"

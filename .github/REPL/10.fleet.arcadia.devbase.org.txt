@@ -1,0 +1,127 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 10 fleet arcadia devbase
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+* Goal [2/2]
+      Bring the Arcadia devbase container environment to the requested
+      model + lserver configuration, on BOTH the build source and the
+      live fleet.
+
+      Success criteria:
+      - [X] The Arcadia devbase build-source ~/.bashrc pins
+            COPILOT_MODEL="claude-opus-5", carries
+            LSERVER_IP="172.25.159.143", and its h alias agrees on the
+            model — in BOTH synchronized copies.
+      - [X] Every live container in the fleet (c01–c05) exports
+            COPILOT_MODEL="claude-opus-5" in its running ~/.bashrc,
+            verified by an independent read-back sweep.
+
+* Dependencies
+      - The Arcadia devbase build folder, kept in two synchronized copies:
+            (link "/workspace/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+            (link "/root/etc/el/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc" 1)
+            (link "/workspace/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/Dockerfile" 1)
+            (link "/workspace/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/tar.sh" 1)
+      - The current fleet_ssh wrapper (supports the container tier and -R):
+            (link "/workspace/cluster/.github/skills/fleet_ssh/fleet-ssh.sh" 1)
+            (link "/workspace/cluster/.github/skills/fleet_ssh/recipes.sh" 1)
+      - A reachable fleet: c01–c05, container tier landing on each box.
+
+* Context
+      Facts established on 2026-09-19:
+
+      - The Arcadia devbase build exists as TWO copies of the SAME build,
+        which must stay byte-identical: a jovyan-owned copy under
+        /workspace/dot-emacs/build/... and a root-owned mirror under
+        /root/etc/el/build/... . Every build-source edit is applied to
+        both.
+
+      - git-lfs and htop were ALREADY present in the devbase build before
+        this session: Dockerfile lines 43 (git-lfs) and 50 (htop), and
+        tar.sh PKGS list plus the runtime-lib loop. No edit was needed.
+
+      - LSERVER_IP did not previously exist anywhere in the build. The
+        devbase reaches lserver via
+        COPILOT_PROVIDER_BASE_URL="http://host.docker.internal:11434/v1"
+        (a hostname). Per the user's ruling, LSERVER_IP was ADDED as a
+        standalone export and the base URL was LEFT AS-IS.
+
+      - Editing the build-source ~/.bashrc does NOT change already-running
+        containers. The build source sets what NEW container images bake;
+        existing containers keep their own ~/.bashrc until rebuilt or
+        edited live. The pre-fix container sweep showed c02=claude-opus-5
+        and c01/c03/c04/c05=claude-opus-4-8 — proof the build edit had not
+        propagated.
+
+      - The container tier is read/written with the CURRENT wrapper's
+        container tier. The build-source edit and the live-container edit
+        are two DISTINCT actions; both were required to satisfy the Goal.
+
+      :decision: Add LSERVER_IP as a standalone export and leave
+                 COPILOT_PROVIDER_BASE_URL on host.docker.internal.
+      :rejected: Rewriting the base URL to dial 172.25.159.143 directly —
+                 the user asked only for the LSERVER_IP variable, not for
+                 the CLI to consume it. Nothing currently reads LSERVER_IP;
+                 if the CLI must dial the IP later, the base URL line is
+                 what would reference $LSERVER_IP.
+      :rejected: Editing git-lfs/htop into the build — already present.
+
+* DONE fix: build-source ~/.bashrc [3/3]
+      The devbase build source, edited in BOTH synchronized copies.
+
+      - [X] Add LSERVER_IP to the build-source ~/.bashrc (both copies).
+            Placed immediately after COPILOT_PROVIDER_BASE_URL (line 101):
+                102:export LSERVER_IP="172.25.159.143"
+      - [X] Bump the default model export from claude-opus-4-8 to
+            claude-opus-5 (both copies):
+                105:export COPILOT_MODEL="claude-opus-5"
+      - [X] Confirm the h alias already agrees on the model (no edit
+            needed): 115:alias h="... --model claude-opus-5".
+
+      :verify: grep the two copies and confirm identical, correct lines:
+        for f in \
+          /workspace/dot-emacs/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc \
+          /root/etc/el/build/devbox-arcadia-azurelinux-3.0-photon-5.0/.bashrc; do
+          grep -nE 'LSERVER_IP|COPILOT_MODEL|alias h=' "$f"; done
+
+* DONE fix: live-container default model [2/2]
+      The running containers on c01–c05 — a WRITE fanned out over the
+      container tier, then an independent read-back. This is the
+      propagation the build-source edit does NOT do on its own.
+
+      - [X] Fan out an idempotent in-place edit that sets
+            COPILOT_MODEL="claude-opus-5" in each running container's
+            ~/.bashrc:
+                fleet-ssh.sh -t ctr set='sed -i -E \
+                  "s|^export COPILOT_MODEL=.*|export COPILOT_MODEL=\"claude-opus-5\"|" \
+                  ~/.bashrc && grep -m1 "^export COPILOT_MODEL=" ~/.bashrc \
+                  | sed "s/^export COPILOT_MODEL=//; s/\"//g"'
+      - [X] :test_tool: Independent read-back sweep confirms every box:
+                fleet-ssh.sh -t ctr model='grep -m1 "^export COPILOT_MODEL=" \
+                  ~/.bashrc | sed "s/^export COPILOT_MODEL=//; s/\"//g" || echo -'
+            Result — all five now claude-opus-5:
+                BOX  MODEL
+                c01  claude-opus-5
+                c02  claude-opus-5
+                c03  claude-opus-5
+                c04  claude-opus-5
+                c05  claude-opus-5
+
+* DONE record durable finding
+      - [X] The reusable lesson — "a build-source ~/.bashrc edit does NOT
+            propagate to already-running containers; the live tier is a
+            separate write" — is captured in this plan's Context and in the
+            live-container fix group above. If it recurs across builds,
+            promote it to .github/REPL/fix.archive/ with a short name.

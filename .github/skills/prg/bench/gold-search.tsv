@@ -1,0 +1,96 @@
+# example-only: gold-search.tsv is a COMPUTED fixture RE-MINED from THIS repo's
+# session history; col-2 PATTERN values are literal strings a real agent searched
+# for here (may name this-repo paths). Another repo re-mines its own via
+# PRG_REPO_ROOT. There is NO count column: prg-regress.sh recounts live
+# and gates vs regress.baseline.tsv, so a persisted count would be dead
+# data that drifts every mine. Do NOT hand-edit. See prg-bench-coverage.md.
+# class	pattern	flags	root
+alternation	^\*+ |Goal:|\[[0-9]+/[0-9]+\]|DONE|TODO|WIP		modules,.github
+alternation	UseAstOfficejsFix|AutoRepairOfficejs		modules,.github
+alternation	Gpt55|Gpt5Slot1ModelId|gpt-55-reasoning		modules,.github
+alternation	wsRecorder|WsRecorder		modules,.github
+alternation	WebSocket client (connected|disconnected)		modules,.github
+alternation	validate_cf_formulas|validate_batch		modules,.github
+alternation	^\*\*\* (TODO|DONE|HALT|ABORT)		modules,.github
+alternation	^\* (TODO|DONE|HALT|ABORT)		modules,.github
+alternation	^\* (TODO|DONE|ABORT|HALT)?\s*\w		modules,.github
+alternation	phase0|pane_never_settled|state.*loading		modules,.github
+alternation	OfficeAgentSettingsManager|ISettingsManager		modules,.github
+alternation	microsoft-reconciliation|anthropic-financial-services|officejs-performance|excel-tdd-skills|@officeagentskills/data-connection		modules,.github
+alternation	K\.19|smoke_context|SMOKE_PREFLIGHT		modules,.github
+alternation	HERO-(01|50|52)|EXACT|OData|live		modules,.github
+alternation	Gpt55|Gpt5Slot1ModelId|gpt-55-reasoning|ExcelAgent.CopilotModel		modules,.github
+alternation	excel_cycle|_make_excel_cycle|smoke_context		modules,.github
+alternation	excel-copilot-calc-with-init|excel-x10-native		modules,.github
+alternation	^def log|def log\(		modules,.github
+alternation	AsyncLocalStorage|\.run\(|getStore\(|asyncLocalStorage		modules,.github
+alternation	al_console_tap|AL tap|tap-silent|F31|health_deep		modules,.github
+alternation	xol_live|native|snapshot|recalc|calculate|velixo|oracle|headless		modules,.github
+alternation	\.xlsx|input.*file|inputFile|outputFile|loadFrom|loadOoxml		modules,.github
+alternation	^  - \[(X| )\] G[0-9]		modules,.github
+alternation	^   - \[(X| )\] 11\.		modules,.github
+alternation	^  - \[(X| )\]		modules,.github
+alternation	ws.?player|ws-player|ws_player|replay|WsRecorder|ws-capture		modules,.github
+alternation	ws-player|ws_player|player.py|player.ts|replay\.py|replayer|sendToWs|ws-send|ws_send		modules,.github
+alternation	ws.?player|player|replay.?capture|ws.replay|6010|augloop endpoint|workflow endpoint		modules,.github
+alternation	wsMessenger|sendMessageToSession|sendToSession|interface.*Messenger		modules,.github
+alternation	wsl\.localhost|9P.*equally|going in|coming out|drvfs		modules,.github
+alternation	wsCapture|ws_capture|WS_CAPTURE		modules,.github
+alternation	ws-capture|WS_CAPTURE|sessions/|messages\.jsonl		modules,.github
+alternation	WS_CAPTURE_ROOT|WS_CAPTURE_DIR		modules,.github
+alternation	WS_CAPTURE_DIR|ws-capture|captureDir|fixtureDir|fixturesDir|/agent/logs|sessions/		modules,.github
+alternation	write_metadata|metadata\.json|flush|SIGTERM|atexit		modules,.github
+alternation	/workspace/OfficeAgent|8 telemetry|THE DEV PROCESS LOOP|Before dispatching|Pre-flight: intra-doc		modules,.github
+alternation	workspaceManager|getWorkspaceDir|AGENTS_DIR|workspaceDir		modules,.github
+alternation	workspaceManager|getWorkspaceDir		modules,.github
+alternation	workspaceDir|workspaceManager		modules,.github
+alternation	workbook|xlsx|formula|snapshot|readback		modules,.github
+alternation	workbook\.name|resolved target_id|chat target|copilot.*target		modules,.github
+alternation	workbook_builder|sourceWorkbook|workbook.xlsx|projection|input workbook		modules,.github
+alternation	with_value_check|value_check|oracle_target|snapshot		modules,.github
+alternation	with_value_check|value_check|oracle_target|cdp.*oracle|snapshot		modules,.github
+alternation	with_credentials|with-credentials		modules,.github
+alternation	WI-5j|L-server|skill artifacts|package isolation|Phase|DONE|TODO		modules,.github
+alternation	WI-5j|5j|Global variable __x10|X10		modules,.github
+alternation	websockets.sync|websocket		modules,.github
+symbol	GLHistoryByPeriod		modules,.github
+symbol	getBooleanSetting		modules,.github
+symbol	formulas_placed		modules,.github
+symbol	FIXTURES		modules,.github
+symbol	excel_agent		modules,.github
+symbol	document_generated		modules,.github
+symbol	dev_loop_manifest		modules,.github
+symbol	bootstrapSchema		modules,.github
+symbol	validate_plan_and_contents		modules,.github
+symbol	todo_deps		modules,.github
+symbol	resolveEnrich		modules,.github
+symbol	org_plan		modules,.github
+regex	^\*+		modules,.github
+regex	^\* TODO Goal		modules,.github
+regex	run_slot\(		modules,.github
+regex	\.ndjson		modules,.github
+regex	^location:		modules,.github
+regex	apply_vendor_sign_in\(		modules,.github
+regex	9\.6		modules,.github
+regex	^\*		modules,.github
+casei	__x10|x10_native|Global variable|already defined	-i	modules,.github
+casei	merge main|main merge|origin/main|merge/main	-i	modules,.github
+casei	code_review|veto	-i	modules,.github
+casei	49645|child process logs|View child process logs	-i	modules,.github
+casei	x10_native|x10_excel|__x10	-i	modules,.github
+casei	x10_native|__x10	-i	modules,.github
+casei	__x10	-i	modules,.github
+casei	ws://|wss://|new WebSocket|terminal|child|logs|processId|process-id|socket	-i	modules,.github
+phrase	Phase 8		modules,.github
+phrase	RAI validation		modules,.github
+phrase	skill not found at		modules,.github
+phrase	Script execution timed out		modules,.github
+literal	49645		modules,.github
+literal	enrich		modules,.github
+jq:session-tool	grep	.tool	session-state
+jq:count-by-model	claude-opus-4-8	.model	L-server
+jq:trace-otel	GhcpOrchestrator|model=dev-gpt-55-reasoning	.keyword	agent-logs
+jq:trace-agentlog	conv.agent_dispose	.keyword	agent-logs
+jq:trace-lifecycle	E_WS_OPEN	.keyword	agent-logs
+jq:session-tool-when	bash	.tool	session-state
+git:log-s	traceparent	*.ts	repo

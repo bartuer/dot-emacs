@@ -1,0 +1,59 @@
+# gold.tsv — direction -> expected seed symbol(s), for prg-bench.sh (CKP-5b).
+#
+# WHAT THIS MEASURES
+#   prg-seed.sh turns a natural-language DIRECTION into a ranked list of
+#   def-anchored candidate SEED symbols.  The `--no-model` (tool) tier returns
+#   the whole ranked list; the model tier (prg-llm.sh) picks the best few FROM
+#   that list.  This fixture pins, per direction, the symbol(s) a correct seed
+#   MUST surface, so prg-bench.sh can score seed quality across models.
+#
+# SCORING (see prg-bench.sh)
+#   For a given tier/model, run prg-seed.sh <direction> and collect the emitted
+#   seed symbols.  A direction PASSES when the emitted set CONTAINS at least one
+#   expected symbol (case-insensitive SUBSTRING match — a candidate name that
+#   contains the expected symbol counts, e.g. `mockEmitDebugZip` ⊇ `emitDebugZip`,
+#   because that candidate still points the dive at the right code).
+#     recall    = fraction of directions that passed
+#     precision = (for the model tier) expected-hit seeds / total emitted seeds
+#   The point of the model tier is HIGHER PRECISION at comparable recall: the
+#   tool tier may emit 30 candidates to catch one gold symbol; a good model
+#   returns ~1-3 and still contains it.
+#
+# CONSTRAINT ON GOLD ROWS (important)
+#   The model tier can only PICK FROM the tool candidate list (prg-seed.sh does
+#   `grep -Fxf` against candidates).  So every gold row here is chosen such that
+#   its expected symbol already appears in the tool tier's top-30 for a TIGHT
+#   direction — otherwise both tiers would score 0 and the row would measure
+#   nothing.  Directions are deliberately tight (few generic tokens); a generic
+#   token like `table` alone floods 493 candidates and buries the target at
+#   rank ~312 (that noise case is what the model tier is meant to rescue, but it
+#   can't if the target falls outside the candidate window prg-seed emits).
+#
+#   Expected symbols are all TOP-LEVEL EXPORTS (function/const/class/…), because
+#   prg-seed.sh's DEFRE anchors on those keywords.  Class METHODS (e.g.
+#   `hasActiveTurn`, declared `public hasActiveTurn()`) are intentionally NOT in
+#   gold — they are out of prg-seed.sh's designed domain (use prg-graph.sh for
+#   method resolution; see Recipe F crash-triage).
+#
+# FORMAT  (TAB-separated, 2 columns)
+#   direction<TAB>expected_seed1|expected_seed2|...
+#   '#' comment lines and blank lines are ignored by prg-bench.sh.
+#
+# ROOTS
+#   prg-bench.sh runs each direction with --root "modules agents" from the REPO
+#   ROOT (prg-seed.sh roots are repo-relative; running elsewhere finds nothing).
+#
+# --- TIGHT directions (specific token -> ~1 candidate; both tiers precise) ---
+getActiveTraceparent	getActiveTraceparent
+resolveClientModelSelection	resolveClientModelSelection
+buildDebugZipFileName	buildDebugZipFileName
+onSessionClosed	onSessionClosed
+emitDebugZip	emitDebugZip
+parseTableAddress	parseTableAddress
+checkFormulaError	checkFormulaError
+# --- HARD directions (generic token floods candidates; target buried mid-list
+#     but INSIDE the top-30 window).  Tool tier emits ~15-30 candidates at low
+#     precision; the model tier must PICK the right one -> its precision edge
+#     shows up here.  These are the rows that make the benchmark discriminating.
+traceparent tracing	getActiveTraceparent
+debug zip	buildDebugZipFileName|emitDebugZip|DebugZip

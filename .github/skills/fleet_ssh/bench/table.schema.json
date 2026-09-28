@@ -1,0 +1,36 @@
+{
+  "$comment": "The ANSWER contract for fleet_ssh. parse.schema.json governs the INPUT (utterance -> scope/cols); this governs the OUTPUT (the table the user actually reads). Both are needed: a correct parse that renders a lying table is still a wrong answer. LIMIT, MEASURED: JSON Schema validates STRUCTURE only. A table that collapses (unreachable) into \"-\", or that silently drops a box row, BOTH VALIDATE against this file -- and those are the two ways a fleet sweep actually lies. table-bench.sh carries those as explicit checks; do not mistake schema conformance for a correct table.",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "array",
+      "description": "Column names, in order. Element 0 is ALWAYS the literal \"BOX\"; every later element is one thing the user asked for, matching parse.schema.json's cols count.",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "rows": {
+      "type": "array",
+      "description": "One row per box in SCOPE, in the order the boxes were given or discovered. Never fewer rows than boxes: a box that failed still gets a row.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "box": {
+            "type": "string",
+            "description": "The box name, i.e. column BOX."
+          },
+          "cells": {
+            "type": "array",
+            "description": "One cell per header column after BOX, same order. THREE DISTINCT STATES, never collapsed: a value (the command answered), \"-\" (the box answered but the command produced no output), or \"(unreachable)\" (the box never answered). Collapsing these is how a fleet sweep lies -- \"ssh failed\" and \"printed nothing\" need different fixes.",
+            "items": { "type": "string" }
+          },
+          "unreachable": {
+            "type": "boolean",
+            "description": "True when the box never answered. In the rendered table \"(unreachable)\" appears ONCE, in the first data column, not repeated per column: it is a fact about the box, not about each field."
+          }
+        },
+        "required": ["box", "cells"]
+      }
+    }
+  },
+  "required": ["header", "rows"]
+}
