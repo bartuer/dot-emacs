@@ -1,0 +1,131 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 49 make.room.decouple — `git clone dot-emacs` gives cli + room + tmux sessions, no cluster checkout
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+* Execution environment
+  This plan runs on a multi-machine environment described in:
+
+    - ${FLEET_HOME:-$HOME/.fleet}/cluster.md
+
+  Read it before executing.  Where it defines parallelism, it
+  outranks subagent fan-out.  This plan does not restate it.
+
+* WHY THIS PLAN EXISTS
+  :USER_VERBATIM_2026-09-28: see the twin, cluster
+    .github/REPL/49.room.cli.portable.org.txt (same words, both halves).
+  Split (user ruling _b "one on dot-emacs repo, another on cluster repo"):
+  - cluster 49 owns the CODE: portable cli/room, export + manifest, the
+    quoting fix (Phase A, Phase Q).
+  - dot-emacs 49 (this doc) owns DELIVERY: vendor the export, install from
+    a clone, test in clean ubuntu 24.04 and 26.04 containers, re-pack the
+    bundles, and a monitor that reviews every commit of the swarm.
+  Swarm roles (user: "one change, one pack, one test, one review/monitor"):
+  | role    | task(s)            | repo      | box (odsp)       |
+  |---------+--------------------+-----------+------------------|
+  | change  | cluster A, Q       | cluster   | dispatcher picks |
+  | test    | T.24, T.26         | dot-emacs | c06, c07         |
+  | pack    | P                  | dot-emacs | c08 (or here)    |
+  | monitor | M (runs whole time)| dot-emacs | c17 / this box   |
+
+* MEASURED 2026-09-28 07:40  -> recorded once, in the cluster twin
+  (cli -r header, busy/free, session_top membership, 49-F1..F4).  Local
+  extras:
+  - odsp dot-emacs clones: c06 c07 c08 behind=6 dirty=0; c17 behind=1777
+    (pull before claiming).  Docker 29.8.1 on c06/c07/c08/c17; ubuntu:24.04
+    and ubuntu:26.04 pull OK on c06, c07.
+  - prg is already vendored as .github/skills/prg; room skill as
+    .github/skills/room (6 Sep-26 copies, no manifest -> drift unknown).
+  - install/cli is a hand copy of cluster cli (38 4.9), no manifest.
+
+* Goal [0/4]
+  - [ ] G1 in a clean ubuntu:24.04 AND ubuntu:26.04 container (host network,
+        ~/.ssh + ~/.fleet read-only, NO /workspace/cluster):
+        `git clone dot-emacs && install/fleet/install.sh` -> `cli -r` lists
+        the fleet, `room -c session_top read` works, `room next` gates.
+  - [ ] G2 install/fleet/ is byte-identical to a cluster export
+        (MANIFEST check rc 0); install/cli is gone (one copy, not two).
+  - [ ] G3 both bundles carry install/fleet, built + archived.
+  - [ ] G4 monitor M reviewed every commit of the swarm; issues it posted
+        are closed or ruled.
+
+* Design record  (49-D1..D4 live in the cluster twin)
+  - :49-D5: install.sh is idempotent and local-only: symlinks
+    ~/local/bin/{cli,room} -> install/fleet/{cli-sessions.sh,room.sh},
+    links install/fleet/skills/room into ~/.copilot/skills/room if absent,
+    prints what ~/.fleet lacks.  It never writes ~/.fleet (49-D2).
+  - :49-D6: fleet-shell.sh keeps preferring a LIVE /workspace/cluster
+    checkout; falls back to install/fleet (so cluster edits still land
+    on cluster boxes first).
+  - :49-D7: test containers are throwaway `docker run --rm --network host`
+    (49-F3); no image is built for the test, only the bundle build (P).
+
+* Dependencies
+  - cluster 49 task A done (export exists) before D.1.
+  - room group session_top; tasks carry needs {"tier":"wsl","island":"odsp"}.
+
+* TODO Phase R — root + tasks in session_top (this session) [0/2]
+  - [ ] R.1 commit + push both plans; join session_top; post ROOT
+        `--ref .github/REPL/49.make.room.decouple.org.txt@<sha> --repo
+        dot-emacs@master`, and children (--parent ROOT):
+        A (cluster@master, ref cluster 49 Phase A), Q (cluster, Phase Q),
+        D (deps A), T24 + T26 (deps D), P (deps T24,T26), M (review task,
+        no deps).  Record every id here.
+  - [ ] R.2 `room rooms | grep session_top` shows dispatched non-empty and
+        `room -c session_top tasks --open` lists the 7 children.
+
+* TODO Phase D — vendor + install (deps cluster A) [0/3]
+  - [ ] D.1 `bash /workspace/cluster/bin/room-export.sh install/fleet`;
+        `git rm install/cli`; point fleet-shell.sh + both bundle .bashrc
+        fallbacks at install/fleet (49-D6).
+  - [ ] D.2 install/fleet/install.sh (49-D5).
+        :test_tool: HOME=/tmp/h49 bash install/fleet/install.sh twice ->
+        second run prints no change; `/tmp/h49/local/bin/cli -V` = cluster's.
+  - [ ] D.3 `room-export.sh --check install/fleet` rc 0; commit, push
+        github; post done --ref <sha>.
+
+* TODO Phase T — clean-container tests (deps D; T.24 on c06, T.26 on c07) [0/2]
+  :parallel_group: clean_ctr
+  Script (both): /workspace/dot-emacs/install/fleet/49.ctr.test.sh IMG
+    docker run --rm --network host -v ~/.ssh:/root/.ssh:ro -v
+    ~/.fleet:/root/.fleet:ro IMG bash -c 'apt-get -qq update && apt-get -qq
+    install -y git openssh-client python3 tmux jq parallel curl procps >/dev/null;
+    git clone -q https://github.com/bartuer/dot-emacs /d && /d/install/fleet/install.sh
+    && export PATH=~/local/bin:$PATH; test ! -e /workspace/cluster;
+    cli -V; cli -r | head -1; room -c session_top read >/dev/null && echo room=ok;
+    room -c session_top tasks >/dev/null && echo tasks=ok'
+  - [ ] T.24 ubuntu:24.04 on c06: all lines ok, cli header shows N live.
+        :parallel_group: clean_ctr
+  - [ ] T.26 ubuntu:26.04 on c07: same.
+        :parallel_group: clean_ctr
+  Any failure -> post issue --to the cluster A/Q claimant (code bug) or
+  fix here (install bug); never patch install/fleet by hand (49-D1).
+
+* TODO Phase P — pack (deps T.24, T.26) [0/1]
+  - [ ] P.1 rebuild azl + 26.04 bundles (38 recipe), 26.04 pin -> the D.3
+        sha; verify in both images `cli -V`, `room -h`, no /workspace/cluster
+        needed; archive in cluster, README rows; push both repos.
+
+* TODO Phase M — monitor / review (whole run) [0/2]
+  - [ ] M.1 every 10 min until P done: `git log` on cluster + dot-emacs for
+        the swarm's commits; check each against its item (one-source 49-D1:
+        no hand edit under install/fleet; facts 49-D2: no fleet-*.json in
+        dot-emacs; version bumped; tests cited).  Post `issue` --to the
+        author on a violation; `review` pass otherwise.
+  - [ ] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
+        leave session_top.
+
+* Main loop
+  (R) :test_tool: in its own shell  (E) edit  (P) read  (L) until clean;
+  push, then `room -c session_top post done --reply-to <task> --ref <sha>`.
