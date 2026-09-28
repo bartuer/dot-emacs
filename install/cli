@@ -17,6 +17,8 @@
 #   cli-sessions.sh --all            # + finished (EXIT, last CLI_ALL_DAYS=2)
 #                                    #   and non-tmux live rows -> $REG.all
 #                                    #   (+GROUP: vterm members show here)
+#   cli-sessions.sh --enlist [CHAN] [-n]  # 41 G.3: join every IDLE session in no
+#                                    #   room to CHAN (default: busiest dispatched)
 #   cli-sessions.sh --version|-V     # print CLI_VERSION (bump it on EVERY change)
 #   cli-sessions.sh -V all           # version on every box: spots boxes not yet pulled
 #   cli-sessions.sh <T>              # attach: ssh <box> -t tmux a -t <session>
@@ -38,14 +40,15 @@
 #   n  p  w  next / prev page / pick page from a tree      d  detach
 # The ~/.bashrc `cli` function is a thin wrapper around this script.
 set -uo pipefail
-CLI_VERSION=2026.09.27.2   # YYYY.MM.DD.N -- bump on every edit of this file
+CLI_VERSION=2026.09.27.12 # YYYY.MM.DD.N -- bump on every edit of this file
 
 HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)   # via /usr/local/bin/cli symlink too
 REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"
 # Box list: CLI_IPS (fleet-ips.json) if readable, else the Host aliases in
 # ~/.ssh/config (wildcards dropped) -- so a copy outside the repo still works
 # (dot-emacs vendors this as install/cli -> /root/local/bin/cli).
-IPS="${CLI_IPS:-$HERE/fleet-ips.json}"
+FH="${FLEET_HOME:-$HOME/.fleet}"   # 41 A.1: fleet facts live here; bin/ is the committed seed
+IPS="${CLI_IPS:-$FH/fleet-ips.json}"; [ -r "$IPS" ] || IPS="$HERE/fleet-ips.json"
 
 boxes() {
     if [ -r "$IPS" ]; then
@@ -96,7 +99,9 @@ while IFS="|" read -r s pid c; do
       [ -n "$l" ] && break 2; done; done
   e=${l%/*}/events.jsonl
   if [ -n "${l:-}" ] && [ -f "$e" ]; then
-    z=$(tail -c 65536 "$e" | tail -n 3)
+    # 41 G.1: session.* bookkeeping after a turn_end (compaction, context,
+    # model, mode, info, task_complete) is not work: skip it (41-F10)
+    z=$(tail -c 65536 "$e" | grep -vE "\"type\":\"session\.(compaction_start|compaction_complete|context_changed|permissions_changed|model_change|mode_changed|info|task_complete|truncation)\"" | tail -n 3)
     idle=$(( $(date +%s) - $(stat -c %Y "$e") ))
     case $(printf "%s" "$z" | tail -n1 | grep -oE "\"type\":\"[^\"]+" | cut -d\" -f4) in
       assistant.turn_end) st=WAIT ;;
@@ -170,15 +175,19 @@ probe_one() {   # <box> [SCRIPT var name, default PROBE]
 export -f probe_one; export PROBE STATE IPS VERPROBE HERE
 
 refresh() {
-    mkdir -p "$(dirname "$REG")"
+    mkdir -p "$(dirname "$REG")"; [ -e "$REG" ] || : > "$REG"   # first run: the f6 carry-over awk reads $REG
     # field 6 (STATE) goes to $REG.state, never $REG: 5-field readers (plan-route) stay intact
+    # $REG f6 = the OLD GROUP until regroup rewrites it: a frame drawn during the
+    # background sweep (caf4741) showed GROUP `-` on every row (39-F28)
     # per-run temp files: two `watch cli -r` loops must not rm each other's raw
     local raw t1 t2 t3 oc rl; raw=$(mktemp "$REG.raw.XXXX"); t1=$(mktemp "$REG.tmp.XXXX"); t2=$(mktemp "$REG.st.XXXX")
     t3=$(mktemp "$REG.top.XXXX"); oc=$(mktemp "$REG.oc.XXXX"); rl=$(mktemp "$REG.rl.XXXX")
     { [ -x "$ROOM_SH" ] && "$ROOM_SH" last > "$rl" 2>/dev/null; } &   # WI source, in parallel with the sweep
     boxes | xargs -P 16 -I{} bash -c 'probe_one {}' > "$oc"
     grep -v '^@' "$oc" | sort -t'|' -k1,1V -k2,2 > "$raw" \
-        && cut -d'|' -f1-5 "$raw" > "$t1" && mv "$t1" "$REG" \
+        && awk -F'|' -v OFS='|' 'FILENAME != "-" { g[$1 "|" $2] = $6; next }
+               { k = $1 "|" $2; print $1, $2, $3, $4, $5, (k in g && g[k] != "") ? g[k] : "-" }' \
+               "$REG" - < <(cut -d'|' -f1-5 "$raw") > "$t1" 2>/dev/null && mv "$t1" "$REG" \
         && awk -F'|' -v OFS='|' '{print $1,$2,$6,$7}' "$raw" > "$t2" && mv "$t2" "$REG.state"
     wait
     toprows "$raw" <(grep '^@' "$oc") "$rl" > "$t3" && mv "$t3" "$REG.top"
@@ -264,23 +273,26 @@ under_watch() {
 # registry order.  POSIX awk only: mawk boxes run this too.
 acts() {   # <session width> <last width> <colour 0|1> <feed age> <work width>; stdin box|session|WORK
     awk -F'|' -v w="$1" -v c="$2" -v col="$3" -v fa="$4" -v ww="$5" -v now="$EPOCHSECONDS" \
-        -v stall="${CLI_STALL_S:-600}" -v owe="${CLI_IDLE_OWE_S:-120}" '
+        -v fed="${CLI_FED:-1}" -v stall="${CLI_STALL_S:-600}" -v owe="${CLI_IDLE_OWE_S:-120}" -v free="${CLI_FREE_S:-600}" -v raw="${ACTS_RAW:-0}" '
     function mid(s, n,  h) { if (length(s) <= n) return s; h = int((n - 1) / 2)
         return substr(s, 1, h) "~" substr(s, length(s) - (n - 1 - h) + 1) }
+    function secs(x) { return x ~ /h$/ ? x * 3600 : x ~ /m$/ ? x * 60 : x + 0 }
     function ago(x) { return x >= 3600 ? int(x / 3600) "h" : x >= 60 ? int(x / 60) "m" : x "s" }
     FILENAME == "-" { wk[$1 "|" $2] = $3; next }
     FILENAME == ARGV[2] { st[$1 "|" $2] = $3; next }
     FILENAME == ARGV[3] { k = $1 "|" $2; wi[k] = $3; la[k] = $4; fs[k] = $5; si[k] = $6; ow[k] = $7; next }
-    { k = $1 "|" $2; s0 = fs[k]; a = "-"
+    { k = $1 "|" $2; s0 = fed ? fs[k] : ""; a = "-"
       if (s0 != "") {
           age = (si[k] ~ /^[0-9]+$/) ? now - si[k] : -1; if (age < 0) age = -1
           if (s0 == "ASK" || s0 == "PERM" || s0 == "ERR" || s0 == "DEAD" || s0 == "GONE") a = s0
           else if (s0 == "BUSY" && age > stall) a = "STALL"   # STATE keeps "BUSY 15m": 8 cols
           else if (s0 == "WAIT" && ow[k] == "1" && age > owe) a = "IDLE"
+          else if (s0 == "WAIT" && ow[k] != "1" && $6 == "-" && age > free) a = "IDLE"   # 41 G.2: free, in no room
           sv = (age >= 0 && s0 != "DEAD" && s0 != "GONE") ? s0 " " ago(age) : s0
       } else {
           sv = (k in st && st[k] != "") ? st[k] : "-"; split(sv, q, " ")
           if (q[1] == "ASK" || q[1] == "PERM" || q[1] == "ERR" || q[1] == "STALL") a = q[1]
+          else if (q[1] == "WAIT" && $6 == "-" && secs(q[2]) > free) a = "IDLE"   # 41 G.2 (no feed)
       }
       r = index("ASK PERM ERR STALL IDLE DEAD GONE -", a); n[r]++; if (a != "DEAD" && a != "GONE") live++
       if (!($1 in bx)) { bx[$1]; nb++ }
@@ -288,8 +300,9 @@ acts() {   # <session width> <last width> <colour 0|1> <feed age> <work width>; 
       g = ($6 == "") ? "-" : $6; v = (k in wk && wk[k] != "") ? wk[k] : "-"
       row[++m] = sprintf("%-5s %-5s %-" w "s %-8s %-13s %-" ww "s %s", a, mid($1, 5), mid($2, w),
                          mid(sv, 8), mid(g, 13), mid(v, ww), l)
-      rk[m] = r; ac[m] = a }
+      rk[m] = r; ac[m] = a; rw[m] = a "|" $1 "|" $2 "|" g }
     END {
+      if (raw) { for (j = 1; j <= m; j++) print rw[j]; exit }   # 41 G.3: full names for --enlist
       R = col ? "\033[1;31m" : ""; Y = col ? "\033[33m" : ""; D = col ? "\033[2m" : ""; Z = col ? "\033[0m" : ""
       printf "ASK %d PERM %d ERR %d STALL %d IDLE %d DEAD %d GONE %d | %d live/%d boxes | feed %s\n",
           n[1], n[5], n[10], n[14], n[20], n[25], n[30], live, nb, fa   # <= 80 cols
@@ -343,10 +356,17 @@ list() {   # [-v]: 39-D11 default BOX SESSION STATE GROUP WORK LAST (WI -> WORK,
         c=$((c - 6 - 5 - w - 8 - 13 - ww - 5)); [ "$c" -ge 4 ] || c=4   # LAST = the rest, cut with `~`
         local col=0 fa=-; { [ -t 1 ] || [ -n "${CLI_COLOR:-}" ] || under_watch; } && [ "${CLI_COLOR:-}" != 0 ] && col=1
         [ -f "$REG.top" ] && fa=$(( EPOCHSECONDS - $(stat -c %Y "$REG.top") ))s
+        # 41-F7: f5/f6 are the feeder's LAST word; once it exits (CLI_FEED_IDLE) a BUSY
+        # row froze and aged into a false STALL (MEASURED c03: idle on turn_end, shown
+        # STALL).  Trust them only if a live feeder wrote $REG.top since it started.
+        local fd=0 fp=; [ "${CLI_FEED:-1}" = 0 ] && fd=1   # no feeder by design (tests): f5 as given
+        { read -r fp < "$REG.feed.pid"; } 2>/dev/null
+        [ -n "$fp" ] && kill -0 "$fp" 2>/dev/null && [ "$REG.top" -nt "$REG.feed.pid" ] && fd=1
+        [ -e "$REG.top" ] || : > "$REG.top"   # 41-F6: first run, `<` fails before 2>/dev/null applies
         # WORK per row in bash (work() -> $W, no subshell), handed to acts on fd 3
         declare -A WI=(); while IFS='|' read -r b s wi _; do WI[$b\|$s]=$wi; done < "$REG.top" 2>/dev/null
         while IFS='|' read -r b s p _; do work "${WI[$b\|$s]:--}" "$p"; printf '%s|%s|%s\n' "$b" "$s" "$W"; done < "$REG" \
-            | acts "$w" "$c" "$col" "$fa" "$ww"
+            | CLI_FED=$fd acts "$w" "$c" "$col" "$fa" "$ww"
         return 0
     fi
     printf "%-5s %-${w}s %-8s %-13s %-8s %-8s %s\n" BOX SESSION STATE GROUP MODEL LAUNCHED PLAN
@@ -364,6 +384,9 @@ row() {
     r=$(awk -F'|' -v s="$1" '$2==s' "$REG" 2>/dev/null)
     [ -n "$r" ] || r=$(awk -F'|' -v s="$1" 'index($2,s)==1' "$REG" 2>/dev/null)
     [ -n "$r" ] || r=$(awk -F'|' -v s="$1" '$7=="-" && index($2,s)==1' "$REG.all" 2>/dev/null)  # vterm
+    # a~z = the list's middle-cut display name: head prefix + tail suffix (paste-back)
+    case $1 in *'~'*) [ -n "$r" ] || r=$(awk -F'|' -v h="${1%%\~*}" -v t="${1#*\~}" \
+        'index($2,h)==1 && length($2)>=length(h)+length(t) && substr($2,length($2)-length(t)+1)==t' "$REG" 2>/dev/null);; esac
     [ "$(printf '%s' "$r" | grep -c .)" = 1 ] && printf '%s\n' "$r"
 }
 resolve() {   # <T> -> row, refreshing once on a miss
@@ -478,13 +501,43 @@ logerr() { exec 2> >(while IFS= read -r l; do printf '%s %s[%s] %s\n' "$(date -u
 feed_kick() {
     [ "${CLI_FEED:-1}" != 0 ] || return 0
     : > "$REG.feed.read"
+    # 41: the feed only streams boxes already in $REG -- a session on a NEW box stays
+    # invisible until a sweep; so a stale $REG (> CLI_REG_TTL s) gets one background sweep
+    if [ -z "$(find "$REG" -newermt "-${CLI_REG_TTL:-120} seconds" 2>/dev/null)" ]; then
+        ( flock -n 9 || exit 0; refresh >/dev/null 2>&1 ) 9> "$REG.sweep.lock" &
+    fi
     local p=; { read -r p < "$REG.feed.pid"; } 2>/dev/null
     [ -n "$p" ] && kill -0 "$p" 2>/dev/null && return 0
     setsid python3 "$HERE/cli-feed.py" < /dev/null >> "$REG.feed.log" 2>&1 &
 }
 
+# 41 G.3: every IDLE session in no room (GROUP -) gets a join prompt for CHAN,
+# default the dispatched room with the most open tasks, then the most joined,
+# then the latest line.  -n: print targets + chan, send nothing.
+enlist() {   # [CHAN] [-n]
+    local chan= dry= a b s g c n t
+    for a in "$@"; do if [ "$a" = -n ]; then dry=1; else chan=$a; fi; done
+    [ -s "$REG" ] || refresh
+    if [ -z "$chan" ]; then
+        chan=$("$ROOM_SH" rooms 2>/dev/null | jq -r 'select((.dispatched // []) | length > 0)
+                   | [.chan, (.joined // [] | length), (.last_ts // "")] | @tsv' |
+            while IFS=$'\t' read -r c n t; do
+                printf '%s\t%s\t%s\t%s\n' "$("$ROOM_SH" -c "$c" tasks 2>/dev/null | awk -F'\t' '$2=="open"' | grep -c .)" "$n" "$t" "$c"
+            done | sort -t$'\t' -k1,1nr -k2,2nr -k3,3r | head -1 | cut -f4)
+    fi
+    [ -n "$chan" ] || { echo "cli: no dispatched room to enlist into" >&2; return 1; }
+    local msg="room -c $chan post join 'enlisted: idle, in no room (cli --enlist)' ; room -c $chan next -- it prints the task JSON you won (or none). Run a won task with /exec_plan on its ref plan, scoped to its title; when done_when passes post done --reply-to <task id> --ref <sha>, then room -c $chan next again. On none, stop: the dispatcher wakes you."
+    echo "enlist -> $chan"
+    [ -e "$REG.top" ] || : > "$REG.top"
+    while IFS='|' read -r a b s g; do
+        [ "$a" = IDLE ] && [ "$g" = - ] || continue
+        if [ -n "$dry" ]; then printf '%-6s %s\n' "$b" "$s"; else send "$s" "$msg"; fi
+    done < <(while IFS='|' read -r b s _; do printf '%s|%s|-\n' "$b" "$s"; done < "$REG" | ACTS_RAW=1 acts 28 20 0 - 10)
+}
+
 main() {
 case "${1:-}" in
+    --enlist)     logerr "$@"; shift; enlist "$@" ;;
     --refresh|-r) logerr "$@"; refresh; list "${2:-}" ;;
     --list|-l|'') logerr "$@"; [ -s "$REG" ] || refresh; [ -z "${1:-}" ] && feed_kick; list "${2:-}" ;;
     --feed)       exec python3 "$HERE/cli-feed.py" ;;   # foreground; `cli` starts it lazily (39-D14)
