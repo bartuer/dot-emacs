@@ -25,6 +25,10 @@
 #   cli-sessions.sh all | <T>,<T>    # ONE local window, a tiled pane per session
 #   cli-sessions.sh <T> <message..>  # TYPE <message> into the CLI + Enter
 #   cli-sessions.sh all <message..>  # ... into every session
+#   cli-sessions.sh <T> - <<'EOF'    # 49 Q: message VERBATIM from stdin, no shell
+#     it's "x" $HOME `y` a;b & !z   #   quoting needed (piped stdin with no message
+#   EOF                              #   works too: `echo hi | cli <T>`)
+#   cli-sessions.sh <T> -e           # readline prompt, one line typed as-is
 #     <T> = full session name, a unique prefix (36 -> 36-agent-room), a
 #           BOX name (cj06 -> every session on cj06), or a room GROUP (chan:
 #           room_implment -> every session joined to it).  Lists: a,b or "a, b".
@@ -40,7 +44,7 @@
 #   n  p  w  next / prev page / pick page from a tree      d  detach
 # The ~/.bashrc `cli` function is a thin wrapper around this script.
 set -uo pipefail
-CLI_VERSION=2026.09.28.3 # YYYY.MM.DD.N -- bump on every edit of this file
+CLI_VERSION=2026.09.28.5 # YYYY.MM.DD.N -- bump on every edit of this file
 
 HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)   # via /usr/local/bin/cli symlink too
 REG="${PLAN_REGISTRY:-$HOME/.copilot/sessions}"
@@ -182,14 +186,14 @@ refresh() {
     # per-run temp files: two `watch cli -r` loops must not rm each other's raw
     local raw t1 t2 t3 oc rl; raw=$(mktemp "$REG.raw.XXXX"); t1=$(mktemp "$REG.tmp.XXXX"); t2=$(mktemp "$REG.st.XXXX")
     t3=$(mktemp "$REG.top.XXXX"); oc=$(mktemp "$REG.oc.XXXX"); rl=$(mktemp "$REG.rl.XXXX")
-    { [ -x "$ROOM_SH" ] && "$ROOM_SH" last > "$rl" 2>/dev/null; } &   # WI source, in parallel with the sweep
+    { [ -x "$ROOM_SH" ] && "$ROOM_SH" last > "$rl" 2>/dev/null; } & local rlp=$!   # WI source, in parallel with the sweep
     boxes | xargs -P 16 -I{} bash -c 'probe_one {}' > "$oc"
     grep -v '^@' "$oc" | sort -t'|' -k1,1V -k2,2 > "$raw" \
         && awk -F'|' -v OFS='|' 'FILENAME != "-" { g[$1 "|" $2] = $6; next }
                { k = $1 "|" $2; print $1, $2, $3, $4, $5, (k in g && g[k] != "") ? g[k] : "-" }' \
                "$REG" - < <(cut -d'|' -f1-5 "$raw") > "$t1" 2>/dev/null && mv "$t1" "$REG" \
         && awk -F'|' -v OFS='|' '{print $1,$2,$6,$7}' "$raw" > "$t2" && mv "$t2" "$REG.state"
-    wait
+    wait "$rlp"   # 49 T.24: a bare wait also waits on logerr's 2> >(procsub), forever on bash 5.2 (ubuntu 24.04)
     toprows "$raw" <(grep '^@' "$oc") "$rl" > "$t3" && mv "$t3" "$REG.top"
     rm -f "$raw" "$t1" "$t2" "$t3" "$oc" "$rl"
     regroup
@@ -562,6 +566,19 @@ case "${1:-}" in
         T=${T%,}; set -- "$T" "$@"
         mapfile -t S < <(targets "$1") || exit 1
         [ ${#S[@]} -gt 0 ] || exit 1
+        # 49 Q: the shell eats ' " $ ` ; & ! \ before cli runs (49-Q1), so a message
+        # can come in with NO shell parsing: `cli T -` / piped stdin = verbatim bytes
+        # (one trailing newline dropped), `cli T -e` = readline prompt.
+        msg=
+        if [ "${2:-}" = - ] && [ $# = 2 ] || { [ $# = 1 ] && { [ -p /dev/stdin ] || [ -f /dev/stdin ]; }; }; then
+            msg=$(cat; printf x); msg=${msg%x}; msg=${msg%$'\n'}
+            [ -n "$msg" ] || { echo "cli: empty message on stdin" >&2; exit 1; }
+            set -- "$1" "$msg"
+        elif [ "${2:-}" = -e ] && [ $# = 2 ]; then
+            IFS= read -e -r -p "cli ${S[*]}> " msg || exit 1
+            [ -n "$msg" ] || exit 1
+            set -- "$1" "$msg"
+        fi
         if [ $# -gt 1 ]; then          # message mode
             shift; rc=0
             for s in "${S[@]}"; do send "$s" "$*" || rc=1; done; exit $rc

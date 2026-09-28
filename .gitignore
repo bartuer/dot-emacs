@@ -128,3 +128,6 @@ vendor/elisp-tree-sitter/build/devbox-ubuntu-22.04/Dockerfile.cc
 /build/devbox-ubuntu-24.04-arm64/arm64.dev.base.24.04.tar.gz
 .emacs.d/tree-sitter
 vendor/vterm/vterm-module.so
+
+# plan 49: python bytecode from running install/fleet (room.py imports room_gate)
+install/fleet/__pycache__/
