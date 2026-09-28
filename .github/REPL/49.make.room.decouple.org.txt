@@ -75,15 +75,22 @@
   - cluster 49 task A done (export exists) before D.1.
   - room group session_top; tasks carry needs {"tier":"wsl","island":"odsp"}.
 
-* TODO Phase R — root + tasks in session_top (this session) [0/2]
-  - [ ] R.1 commit + push both plans; join session_top; post ROOT
+* DONE Phase R — root + tasks in session_top (this session) [2/2]
+  - [X] R.1 commit + push both plans; join session_top; post ROOT
         `--ref .github/REPL/49.make.room.decouple.org.txt@<sha> --repo
         dot-emacs@master`, and children (--parent ROOT):
         A (cluster@master, ref cluster 49 Phase A), Q (cluster, Phase Q),
         D (deps A), T24 + T26 (deps D), P (deps T24,T26), M (review task,
         no deps).  Record every id here.
-  - [ ] R.2 `room rooms | grep session_top` shows dispatched non-empty and
+        :done: plans cluster fa09bec, dot-emacs cac56a6.  ROOT 20260928T075252Z-49d2d2
+        A 20260928T075253Z-3ae4a3  Q 20260928T075255Z-4516ff  D 20260928T075256Z-831484  T24 20260928T075257Z-26181d  T26 20260928T075258Z-b1d4ee  P 20260928T075258Z-0c3a44  M 20260928T075259Z-115eef.
+        The cluster-repo session posted twin plans 44 (cluster) / 42 (dot-emacs)
+        the same minute; it closed them "superseded by plan 49" (4710d9d,
+        99c104c) -> one tree.
+  - [X] R.2 `room rooms | grep session_top` shows dispatched non-empty and
         `room -c session_top tasks --open` lists the 7 children.
+        :done: 07:56 dispatched=[c00wsl,c16wsl,cj00wsl]; ROOT claimed by a c00
+        dot-emacs slot, A claimed by c02 cluster slot; D/T/P blocked on deps.
 
 * TODO Phase D — vendor + install (deps cluster A) [0/3]
   - [ ] D.1 `bash /workspace/cluster/bin/room-export.sh install/fleet`;
