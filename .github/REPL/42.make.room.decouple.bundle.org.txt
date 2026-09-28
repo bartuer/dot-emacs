@@ -1,0 +1,87 @@
+; -*- mode: Org;-*-
+
+#+TITLE: 42 make.room.decouple.bundle — cli + room from `git clone dot-emacs`, tested in pure ubuntu 24.04/26.04
+#+STARTUP: overview
+
+* Dev process setup
+  Before executing ANY work item in this plan, open and obey
+  the rules defined in this project's per-repo instructions:
+
+    - .github/copilot-instructions.md  (mirrored in CLAUDE.md)
+
+  Both auto-load into every GHCP CLI session.  Read the current
+  rules there and follow them.  This plan intentionally does
+  not restate any rule — the per-repo instructions are the
+  single source of truth.
+
+* Execution environment
+  This plan runs on a multi-machine environment described in:
+
+    - ${FLEET_HOME:-$HOME/.fleet}/cluster.md
+
+  Read it before executing.  Where it defines parallelism, it
+  outranks subagent fan-out.  This plan does not restate it.
+
+* WHY THIS PLAN EXISTS
+  It is the dot-emacs half of cluster plan 44
+  (/workspace/cluster/.github/REPL/44.make.room.decouple.org.txt).  Read
+  that plan's WHY (USER_VERBATIM_2026-09-28_a/b/c), MEASURED (44-F1..F5)
+  and Design record (44-D1..D5) first; they are not repeated here.
+  The goal of this plan: "finally use can have cli and access to sessions
+  by tmux simply clone dot-emacs", tested "by containers clean pure ubuntu
+  image without cluster checkout".
+  Rule: nothing under install/fleet/ is edited here.  It is written only by
+  cluster bin/pack-fleet-tools.sh (44-D3).  A fix goes to cluster, then re-pack.
+
+* Goal [0/2]
+  - [ ] G1 BUNDLE — install/fleet/ holds the packed room + cli and SOURCE,
+        install/cli -> fleet/cli-sessions.sh, and install/fleet-tools.sh
+        puts `cli` and `room` on PATH.  Check: 42.P.
+  - [ ] G2 CLEAN RUN — the T.1 script passes on ubuntu:24.04 (c06) and
+        ubuntu:26.04 (c07).  Check: 42.T.
+
+* TODO Phase P — pack  (G1) [0/2]
+  - [ ] P.1 Wait on cluster 44 A (room task dep).  Then, in /workspace/dot-emacs:
+        `/workspace/cluster/bin/pack-fleet-tools.sh install/fleet`, replace
+        install/cli with a symlink `fleet/cli-sessions.sh`, commit
+        "pack fleet tools @<cluster sha>", and push to github.com.
+        :test_tool: `cat install/fleet/SOURCE` = cluster sha, and
+        `readlink install/cli` = fleet/cli-sessions.sh.
+  - [ ] P.2 install/fleet-tools.sh [--facts-from <box>]: apt-get the 44-F4 set
+        (python3 jq tmux openssh-client git curl) when one is missing, and
+        link cli and room into ~/local/bin (or /usr/local/bin as root),
+        unless /workspace/cluster/bin exists (44-D4).  With --facts-from,
+        copy ~/.fleet/*.json, ~/.ssh/config and ~/.ssh/nx.rsa from that box.
+        Idempotent.  fleet-shell.sh calls it in place of its own cli/room ln.
+        :test_tool: run twice on c05; the 2nd run changes nothing, and
+        `readlink -f $(command -v cli)` is still /workspace/cluster/...
+
+* TODO Phase T — test in pure ubuntu containers  (G2) [0/3]
+  - [ ] T.1 bin/fleet-tools-ctr-test.sh <image>: `docker run --rm` with the
+        facts mounted read-only (from the host's ~/.fleet and ~/.ssh), no
+        /workspace/cluster.  Inside: apt-get git, `git clone
+        https://github.com/bartuer/dot-emacs`, `install/fleet-tools.sh`, then:
+          1. `cli -r` prints a header with `live/` and >= 1 row;
+          2. `cli <scratch>` send: a tmux session `t44` on the host box gets
+             a line, and capture-pane shows it verbatim;
+          3. `room -c t44.$$ post join`, `post progress x`, `read`, `post
+             leave`: rc 0 each, then delete the chan on the hubs.
+        Print `PASS n/3` or `FAIL <step>`.
+        :parallel_group: ctr_test
+        :test_tool: on c06: `bin/fleet-tools-ctr-test.sh ubuntu:24.04` = PASS 3/3.
+  - [ ] T.2 Same script on c07 with ubuntu:26.04.
+        :parallel_group: ctr_test
+        :test_tool: on c07: `bin/fleet-tools-ctr-test.sh ubuntu:26.04` = PASS 3/3.
+  - [ ] T.3 Barrier: after T.1 and T.2 pass, bump the 26.04 Dockerfile
+        DOT_EMACS_COMMIT pin to this HEAD (so the image gets install/fleet),
+        commit, push.  A failure goes back as a room `issue` to the
+        cluster A task, not a local edit (the rule above).
+        :test_tool: `grep DOT_EMACS_COMMIT build/emacs-30.1-treesitter-ubuntu-26.04/Dockerfile`
+        = a sha that has install/fleet/SOURCE.
+
+* Main loop
+  Tasks are posted in room session_top by the cluster 44 root (see its Main
+  loop).  This repo's tasks all have repo=dot-emacs@master: P (--deps the
+  cluster A task), T1 and T2 (--deps P; one box each), T.3 inside the
+  integrate.  (R) run the :test_tool: in a separate shell; (E) fix; (P)
+  read the output; (L) loop; then post done --ref <dot-emacs sha>.
