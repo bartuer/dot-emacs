@@ -152,7 +152,7 @@
         :done: 08:57 task 3bbef4 on CPC-bazho (c01).  Both images: no /workspace/cluster,
         cli/room -> /root/etc/el/install/fleet, cli 2026.09.28.5, room -h ok; tarball
         extracted on a clean base: ubuntu:26.04 and officeagent:devlatest cli .5 + room -h ok,
-        t=function.  Bundles 26.04 5dc5497e (207,717,848 B), azl de7bed1b (277,703,702 B).
+        t=function.  Bundles 26.04 5dc5497e (207,717,848 B), azl de7bed1b (277,703,702 B); archived cluster dec435d (parts + README rows), dot-emacs 44448f7.
         :finding: room needs python3; plain codeexecutionjupyterext1 and bare ubuntu:26.04
         have none -> room -h fails there (cli ok).  Base-image gap like 38/3.5, not a bundle bug.
 
