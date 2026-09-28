@@ -49,7 +49,7 @@
     .github/skills/room (6 Sep-26 copies, no manifest -> drift unknown).
   - install/cli is a hand copy of cluster cli (38 4.9), no manifest.
 
-* Goal [2/4]
+* Goal [4/4] DONE
   - [X] G1 in a clean ubuntu:24.04 AND ubuntu:26.04 container (host network,
         ~/.ssh + ~/.fleet read-only, NO /workspace/cluster):
         `git clone dot-emacs && install/fleet/install.sh` -> `cli -r` lists
@@ -61,9 +61,14 @@
         (MANIFEST check rc 0); install/cli is gone (one copy, not two).
         :evidence: `room-export.sh --check install/fleet` = OK cluster 44d06fd 12 files, rc 0;
         install/cli removed 11bde0e.
-  - [ ] G3 both bundles carry install/fleet, built + archived.
-  - [ ] G4 monitor M reviewed every commit of the swarm; issues it posted
+  - [X] G3 both bundles carry install/fleet, built + archived.
+        :evidence: M re-listed cluster dec435d archive parts: 26.04 5dc5497e and azl de7bed1b
+        both contain root/etc/el/install/fleet/{cli-sessions.sh,room.py,MANIFEST} and
+        root/local/bin/{cli,room}; README rows 17-18.
+  - [X] G4 monitor M reviewed every commit of the swarm; issues it posted
         are closed or ruled.
+        :evidence: M.1 log below -- 13 swarm commits reviewed, 0 violations; issue 02fe69
+        fixed (44d06fd); issue 13298c ruled non-blocking 48549a + cluster desire e796d7.
 
 * Design record  (49-D1..D4 live in the cluster twin)
   - :49-D5: install.sh is idempotent and local-only: symlinks
@@ -156,8 +161,8 @@
         :finding: room needs python3; plain codeexecutionjupyterext1 and bare ubuntu:26.04
         have none -> room -h fails there (cli ok).  Base-image gap like 38/3.5, not a bundle bug.
 
-* TODO Phase M — monitor / review (whole run) [0/2]
-  - [ ] M.1 every 10 min until P done: `git log` on cluster + dot-emacs for
+* DONE Phase M — monitor / review (whole run) [2/2]
+  - [X] M.1 every 10 min until P done: `git log` on cluster + dot-emacs for
         the swarm's commits; check each against its item (one-source 49-D1:
         no hand edit under install/fleet; facts 49-D2: no fleet-*.json in
         dot-emacs; version bumped; tests cited).  Post `issue` --to the
@@ -169,8 +174,12 @@
           __pycache__, dot-emacs gitignores it; cluster fix pending).  dot-emacs 11bde0e dacee83
           0f53006 61a063c (mine): no hand edit in install/fleet (--check rc 0), no fact files.
         :log: 08:44 610e282 (T DONE, plan doc only) OK; T.24 64c4ae done by dot-emacs-38.
-  - [ ] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
+        :log: 08:59 P: 44448f7 (26.04 pin 61a063c, deviation recorded) b5c422e dec435d OK;
+          install/fleet unchanged since 61a063c (--check rc 0), 0 fact files in dot-emacs.
+          13298c ruled non-blocking (48549a), follow-up desire e796d7 to cluster.
+  - [X] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
         leave session_top.
+        :done: 09:00 G1..G4 ticked; done posted on ROOT and M; left session_top.
 
 * Main loop
   (R) :test_tool: in its own shell  (E) edit  (P) read  (L) until clean;
