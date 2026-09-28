@@ -124,9 +124,12 @@
         :log: 08:10 pilot on c08 @dacee83: 6/7, cli -r hangs.  49-F5 MEASURED: bash 5.2.21
         (24.04) bare `wait` in refresh() also waits on logerr's `exec 2> >(..)` procsub,
         never returns; bash 5.3.9 returns; `wait $pid` fixes.  issue 02fe69 -> cluster Q owner.
+        :log: 08:28 fixed cluster 44d06fd (cli .5); re-export 61a063c; c08 rerun 24.04 PASS 7/7.
+        T.24 reposted 64c4ae (26181d failed pre-fix), claimed c01_39-fleet-top.
   - [ ] T.26 ubuntu:26.04 on c07: same.
         :parallel_group: clean_ctr
         :log: 08:18 pilot on c08 @dacee83: PASS 7/7 (11 live/9 box).
+        :log: 08:33 c08 rerun @61a063c PASS 7/7; task claimed c01_39-fleet-top.
   Any failure -> post issue --to the cluster A/Q claimant (code bug) or
   fix here (install bug); never patch install/fleet by hand (49-D1).
 
@@ -143,6 +146,10 @@
         author on a violation; `review` pass otherwise.
         :claimed: 07:57 M by dot-emacs-49-make-room-decouple (c08), ack 3d9ae7.
         :log: 07:58 pass1 review ca44fc: 7 commits, plan docs only, 0 facts, OK.
+        :log: 08:01 a5f157d (A) PASS b83b81; 08:17 0cad0fa (Q) PASS b9ac8c; 08:17 issue 02fe69
+          (24.04 cli hang) -> fixed 44d06fd, PASS ae3698; 08:29 issue 13298c (--check DRIFT on
+          __pycache__, dot-emacs gitignores it; cluster fix pending).  dot-emacs 11bde0e dacee83
+          0f53006 61a063c (mine): no hand edit in install/fleet (--check rc 0), no fact files.
   - [ ] M.2 final: Goal G1..G4 ticked with evidence here; post done on ROOT;
         leave session_top.
 
