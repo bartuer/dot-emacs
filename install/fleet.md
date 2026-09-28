@@ -7,6 +7,11 @@ with no `/workspace/cluster` checkout. (plan 49, `.github/REPL/49.make.room.deco
 > This README sits **beside** `install/fleet/`, not in it: that dir is generated
 > and `--check` rejects any file the export did not write.
 
+**Who needs what.** A dot-emacs user needs only this repo: `install/fleet-install.sh`
+and `install/fleet/` are committed here (public GitHub). Only a *maintainer*
+refreshing the copy after a cluster change needs the cluster checkout
+(`room-export.sh`, section "Updating after a cluster change").
+
 ## Quick start
 
 ```bash
