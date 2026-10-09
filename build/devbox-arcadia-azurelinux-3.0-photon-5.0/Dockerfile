@@ -16,9 +16,12 @@ ARG CALAMINE_SHA=d69ae3cda8725fd864269ecffe458e022050a23b
 RUN tdnf install -y rust gcc glibc-devel binutils kernel-headers git \
     && tdnf clean all
 WORKDIR /opt/calamine
-RUN git clone --no-checkout https://github.com/tafia/calamine.git . \
-    && git fetch --force origin "refs/pull/683/head:pr683" \
-    && git checkout --force pr683 \
+# Fetch the pinned SHA directly: refs/pull/683/head is force-pushed upstream
+# (MEASURED 2026-10-09: head moved d69ae3c -> 6e0f337), so fetching the PR ref
+# and asserting HEAD broke the build; the pinned object is still fetchable.
+RUN git init -q . \
+    && git fetch --depth 1 https://github.com/tafia/calamine.git "$CALAMINE_SHA" \
+    && git checkout --force FETCH_HEAD \
     && test "$(git rev-parse HEAD)" = "$CALAMINE_SHA" \
     && test -f src/chart.rs
 COPY silo/main.rs /opt/silo/src/main.rs

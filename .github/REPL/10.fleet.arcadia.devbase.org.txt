@@ -14,7 +14,7 @@
   not restate any rule — the per-repo instructions are the
   single source of truth.
 
-* Goal [2/2]
+* Goal [3/3]
       Bring the Arcadia devbase container environment to the requested
       model + lserver configuration, on BOTH the build source and the
       live fleet.
@@ -27,6 +27,8 @@
       - [X] Every live container in the fleet (c01–c05) exports
             COPILOT_MODEL="claude-opus-5" in its running ~/.bashrc,
             verified by an independent read-back sweep.
+      - [X] The SHIPPED bundle cluster/archive/amd64.arcadia.dev.base.azl3.0.tar.gz
+            contains usr/bin/git-lfs (rebuilt + republished 2026-10-09).
 
 * Dependencies
       - The Arcadia devbase build folder, kept in two synchronized copies:
@@ -48,9 +50,14 @@
         /root/etc/el/build/... . Every build-source edit is applied to
         both.
 
-      - git-lfs and htop were ALREADY present in the devbase build before
-        this session: Dockerfile lines 43 (git-lfs) and 50 (htop), and
-        tar.sh PKGS list plus the runtime-lib loop. No edit was needed.
+      - git-lfs and htop were ALREADY present in the devbase build SOURCE
+        before this session: Dockerfile lines 43 (git-lfs) and 50 (htop),
+        and tar.sh PKGS list plus the runtime-lib loop. CORRECTION
+        2026-10-09: true for the source, FALSE for the shipped bundle --
+        cluster/archive/amd64.arcadia.dev.base.azl3.0.tar.gz (583e2ef,
+        Sep 26) had NO usr/bin/git-lfs (stale build), so 25/27 reachable
+        containers lacked git-lfs and LFS checkouts stayed pointers. See
+        Phase "git-lfs in shipped dev.base".
 
       - LSERVER_IP did not previously exist anywhere in the build. The
         devbase reaches lserver via
@@ -125,3 +132,23 @@
             separate write" — is captured in this plan's Context and in the
             live-container fix group above. If it recurs across builds,
             promote it to .github/REPL/fix.archive/ with a short name.
+
+* DONE git-lfs in shipped dev.base [4/4]
+      Source was right, bundle was stale.  Rebuild + republish.
+
+      - [X] Pin check: git-lfs-3.6.1-5.azl3 still resolves (tdnf list
+            available shows -2..-6); pin kept, no bump.
+      - [X] docker build + pack.sh.  Build was broken independently:
+            calamine refs/pull/683/head was force-pushed (d69ae3c ->
+            6e0f337) so the HEAD==CALAMINE_SHA assert failed.  Fix: fetch
+            the pinned SHA directly (git fetch --depth 1 URL $CALAMINE_SHA);
+            pin unchanged.  Bundle 49 MB -> 78 MB (current source now also
+            ships perl closure + terminfo the stale build lacked).
+      - [X] :test_tool: clean container
+            (mcr.microsoft.com/officepy/codeexecutionjupyterext1):
+            tar -zxf BUNDLE -C / && git lfs version
+              -> git-lfs/3.6.1 (GitHub; linux amd64; go 1.26.5)
+            also git 2.45.4, rg 14.1.1, silo, jq, htop 3.2.2, parallel,
+            perl all run.
+      - [X] Copied to /workspace/cluster/archive/ and pushed cluster.
+            :verify: tar tzf /workspace/cluster/archive/amd64.arcadia.dev.base.azl3.0.tar.gz | grep -q usr/bin/git-lfs
